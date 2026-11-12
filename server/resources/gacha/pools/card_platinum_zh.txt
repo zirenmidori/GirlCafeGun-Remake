@@ -1,0 +1,11 @@
+INT	GDPL	NUL	INT	BOOL	STR	STR	INT	INT
+奖励id	奖励GDPLN	说明	权重	是否展示	卡片图片	剧情文件	UP标记	排序
+ID	GDPLN	Nul	Rate	IsPreview	CardTexture	Story	UpFlag	Sort
+384	[1-3-8-4]	水着·朱诺	100			Gacha/Gacha_girl0308		7
+444	[1-4-4-4]	女仆装·沐恩	100			Gacha/Gacha_girl0404		5
+544	[1-5-4-4]	女仆装·苏小真	100			Gacha/Gacha_girl0504		6
+674	[1-6-7-4]	战术装备·千姬	100	1	Card/All/girl06_card07.png	Gacha/Gacha_girl0607		1
+774	[1-7-7-4]	战术装备·艾琳	100			Gacha/Gacha_girl0707		2
+944	[1-9-4-4]	女仆装·时无瑕	100	1	Card/All/girl09_card04.png	Gacha/Gacha_girl0904		3
+1044	[1-10-4-4]	女仆装·时无忧	100			Gacha/Gacha_girl1004		22
+1284	[1-12-8-4]	水着·伊珂丝	100	1	Card/All/girl12_card08.png	Gacha/Gacha_girl1208		8

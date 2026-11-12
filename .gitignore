@@ -1,0 +1,16 @@
+**/node_modules/
+**/__pycache__/
+release/artifacts/
+release/private/
+release/work/
+release/reports/
+server/data/
+server/logs/
+server/dist/
+*.apk
+*.gcgupdate
+*.zip
+*.p12
+*.jks
+*.keystore
+.env

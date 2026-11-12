@@ -1,0 +1,1148 @@
+INT	INT	NUL	STR	INT	INT	INT	INT	STR	STR	STR	STR	STR	STR	STR	STR
+类型（1角色卡 2武器 3CG图 4美宣L2D 5战斗 6剧情 7家具 8bgm)	Id(计算task，不能重复)	备注	屏蔽地区(不填则全上，填-1则全屏蔽。单填数字则屏蔽对应地区。1中国2繁体3日本4英语5韩语。如填[1,3]代表屏蔽中国和日本)	G	D	P	L	无视获得状态	解锁时间(地区:时间|地区:时间)	扩展参数1	扩展参数2	扩展参数3	扩展参数4	音乐会特殊少女配置	活动剧情解锁所需道具数量
+Type	Id	NUL	IgnoreList	G	D	P	L	IsIgnoreLock	UnLockTime	Extension1	Extension2	Extension3	Extension4	MultiGirlStr	RatdisNum
+1	1001	公式服·洛可可1		1	1	1	1			0,-167,1.7					
+1	1002	训练服·洛可可		1	1	2	2			-20.8,-216.9,1.9					
+1	1003	拉拉队·洛可可		1	1	3	2			0,-193,1.8					
+1	1004	私服·洛可可		1	1	1	3			-50.9,-91.3,1.45	-50,-80,1280,720				
+1	1005	女仆装·洛可可		1	1	4	3			0,-42.9,1.2					
+1	1006	战术装备·洛可可		1	1	7	3			160.2,-63.7,2.1	80,-60,1536,864				
+1	1007	水着·洛可可		1	1	8	4			29.8,-43.73,1.35					
+1	1008	公式服·高奈利亚		1	2	1	1			-21.7,-165.3,1.7					
+1	1009	训练服·高奈利亚		1	2	2	2			56.7,-231.7,2					
+1	1010	拉拉队·高奈利亚		1	2	3	2			-1.8,-217.2,1.9					
+1	1011	私服·高奈利亚		1	2	1	3			59.1,-101.9,1.5	46,-96,1280,720				
+1	1012	女仆装·高奈利亚		1	2	4	3			11.5,-55,1.23	0,-64,1104,620				
+1	1013	战术装备·高奈利亚		1	2	7	3			-20.01,-7.15,1.05					
+1	1014	小礼服·高奈利亚		1	2	17	3			63.6,-84.2,1.5					
+1	1015	小礼服·高奈利亚		1	2	17	4			-2.1,-32.6,1.25					
+1	1016	小礼服·高奈利亚		1	2	17	5				-21.1,-37.9,1104,620				
+1	1017	西洋棋·高奈利亚		1	2	16	4			74.7,-52.3,1.4	26,-114,1280,720				
+1	1018	公式服·朱诺		1	3	1	1			-13.8,-247,2.1					
+1	1019	训练服·朱诺		1	3	2	2			1.7,-239.4,2					
+1	1020	拉拉队·朱诺		1	3	3	2			-1.3,-234.13,2					
+1	1021	私服·朱诺		1	3	1	3			-37.5,-67.4,1.46	-34,-29,1104,620				
+1	1022	女仆装·朱诺		1	3	4	3			1.7,-50,1.2					
+1	1023	水着·朱诺		1	3	8	4			-41.56,-93.5,1.45	0,-80,1280,720				
+1	1024	睡衣·朱诺		1	3	15	3			9.89,-116.4,1.5					
+1	1025	公式服·沐恩		1	4	1	1			-6.1,-264.37,2.1					
+1	1026	训练服·沐恩		1	4	2	2			9.77,-229.7,2					
+1	1027	拉拉队·沐恩		1	4	3	2			-21.2,-238.8,2					
+1	1028	私服·沐恩		1	4	1	3			37.9,-59.1,1.35					
+1	1029	女仆装·沐恩		1	4	4	4			-14.6,-69.5,1.35					
+1	1030	水着·沐恩		1	4	8	3			-29.9,-65.27,1.35					
+1	1031	睡衣·沐恩		1	4	15	4			11.33,-23.86,1.1					
+1	1032	公式服·苏小真		1	5	1	1			0.3,-238.66,2					
+1	1033	训练服·苏小真		1	5	2	2			-7.2,-225.26,2					
+1	1034	拉拉队·苏小真		1	5	3	2			11.14,-144.2,1.6					
+1	1035	私服·苏小真		1	5	1	3			-5.58,-14.1,1.35	-25,0,1104,620				
+1	1036	女仆装·苏小真		1	5	4	4			-35.1,-117,1.55					
+1	1037	水着·苏小真		1	5	8	3			2.4,-22.9,1.1					
+1	1038	睡衣·苏小真		1	5	15	3			10.3,-40.2,1.3					
+1	1039	公式服·千姬		1	6	1	1			16.2,-235.3,2					
+1	1040	训练服·千姬		1	6	2	2			15,-190.12,1.85					
+1	1041	拉拉队·千姬		1	6	3	2			10,-206,1.85					
+1	1042	私服·千姬		1	6	1	3			14.5,-80.1,1.4	12,-68,1104,620				
+1	1043	女仆装·千姬		1	6	4	3			-2.1,-83,1.35	12,-68,1104,620				
+1	1044	战术装备·千姬		1	6	7	4			-18.8,-208.9,1.95	0,-170,1536,864				
+1	1045	水着·千姬		1	6	8	4			-24.6,-70.48,1.3					
+1	1046	睡衣·千姬		1	6	15	4			-33.1,-43.43,1.2					
+1	1047	公式服·艾琳		1	7	1	1			-17.3,-208.26,1.9					
+1	1048	训练服·艾琳		1	7	2	2			-13,-233.76,2					
+1	1049	拉拉队·艾琳		1	7	3	2			38.7,-215.1,1.9					
+1	1050	私服·艾琳		1	7	1	3			19.3,-60.39,1.5					
+1	1051	女仆装·艾琳		1	7	4	3			-1.6,-38.9,1.2	0,-60,1104,620				
+1	1052	战术装备·艾琳		1	7	7	4			-4.4,-32,1.23					
+1	1053	水着·艾琳		1	7	8	3			16.35,24.36,1.1					
+1	1054	公式服·格兰妮		1	8	1	1			25.7,-193.9,1.8					
+1	1055	训练服·格兰妮		1	8	2	2			0,-238.3,2.1					
+1	1056	拉拉队·格兰妮		1	8	3	2			19.5,-246.5,2.1					
+1	1057	私服·格兰妮		1	8	1	3			2.4,-16.5,1.15	0,-30,1028.5,580.8				
+1	1058	女仆装·格兰妮		1	8	4	3			6.1,-66.5,1.45					
+1	1059	战术装备·格兰妮		1	8	7	4			47.66,-52.72,1.4					
+1	1060	小礼服·格兰妮		1	8	17	3			15,-71.6,1.4					
+1	1061	小礼服·格兰妮		1	8	17	4			-2.16,-69.14,1.35					
+1	1062	小礼服·格兰妮		1	8	17	5				-1.6,-75.72,1175,660				
+1	1063	西洋棋·格兰妮		1	8	16	4			-17.9,-166.71,1.9					
+1	1064	公式服·时无瑕		1	9	1	1			13.7,-240.5,2					
+1	1065	训练服·时无瑕		1	9	2	2			-7.1,-218.7,2					
+1	1066	拉拉队·时无瑕		1	9	3	2			8.5,-186.3,1.8					
+1	1067	私服·时无瑕		1	9	1	3			-15.31,-48.5,1.4	-15,-30,1104,620				
+1	1068	女仆装·时无瑕		1	9	4	4			-46.8,-38,1.28	-36,-36,1104,620				
+1	1069	战术装备·时无瑕		1	9	7	3			22.6,-123,1.9					
+1	1070	水着·时无瑕		1	9	8	3			3.2,-77.7,1.4					
+1	1071	污染者·时无瑕		1	9	9	4			61,-92.2,1.55					
+1	1072	公式服·时无忧		1	10	1	1			57.6,-185,1.85					
+1	1073	训练服·时无忧		1	10	2	2			3.7,-192.2,1.85					
+1	1074	拉拉队·时无忧		1	10	3	2			5,-126,1.6					
+1	1075	私服·时无忧		1	10	1	3			4.5,-26.8,1.35					
+1	1076	女仆装·时无忧		1	10	4	4			-6.4,-25.1,1.1	-50,-60,1104,620				
+1	1077	战术装备·时无忧		1	10	7	4			48.7,-70.1,1.5					
+1	1078	水着·时无忧		1	10	8	3			29.1,-33.4,1.45					
+1	1079	西洋棋·时无忧		1	10	16	3			-17.82,-87,1.45	-15,-75,1280,720				
+1	1080	公式服·丽达		1	11	1	1			-67.4,-110.5,1.7					
+1	1081	训练服·丽达		1	11	2	2			-3,-230.3,2					
+1	1082	拉拉队·丽达		1	11	3	2			-25.7,-226.3,2					
+1	1083	私服·丽达		1	11	1	3			-3.2,-35.6,1.27					
+1	1084	女仆装·丽达		1	11	4	3			3,-15.3,1.1	0,-30,1028.5,580.8				
+1	1085	战术装备·丽达		1	11	7	3			65.7,-103.51,1.7					
+1	1086	水着·丽达		1	11	8	4			8.4,-73.8,1.6					
+1	1088	公式服·伊珂丝		1	12	1	1			53.7,-171.8,2					
+1	1089	训练服·伊珂丝		1	12	2	2			20.1,-165.1,1.8					
+1	1090	拉拉队·伊珂丝		1	12	3	2			-1.6,-168.98,1.8					
+1	1091	私服·伊珂丝		1	12	1	3			-71.6,-39.2,1.4	-50,-28,1104,620				
+1	1092	女仆装·伊珂丝		1	12	4	3			8.7,-60,1.3	0,-60,1104,620				
+1	1093	水着·伊珂丝		1	12	8	4			-9.1,-38,1.15	0,-60,1104,620				
+1	1094	西洋棋·伊珂丝		1	12	16	3			58.8,-101.82,1.6					
+1	1095	小礼服·千姬		1	6	17	3			40.8,-33.8,1.37					
+1	1096	小礼服·千姬		1	6	17	4			0,-59.11,1.3					
+1	1097	小礼服·千姬		1	6	17	5				-11.5,-72.7,1280,720				
+1	1098	小礼服·丽达		1	11	17	3			0,-25.14,1.15					
+1	1099	小礼服·丽达		1	11	17	4			35.8,-96.13,1.4					
+1	1100	小礼服·丽达		1	11	17	5				12.6,-112.5,1280,720				
+1	1101	圣诞·苏小真		1	5	18	5				130.7,-1.48,850,480				
+1	1102	新年·千姬		1	6	18	3			0,-36.39,1.3					
+1	1103	新年·时无瑕		1	9	18	5				206.66,0.22,935,528				
+1	1104	圣诞·伊珂丝		1	12	18	3			21,0,1.2					
+1	1105	旗袍·沐恩		1	4	12	4			35,-50,1.3					
+1	1106	旗袍·时无瑕		1	9	12	4			-12,-30,1.3					
+1	1107	旗袍·时无忧		1	10	12	4			-14,-59,1.25					
+1	1108	生日·苏小真		1	5	22	4				0,0,935,528				
+1	1109	生日·艾琳		1	7	22	4				27,-20,935,528				
+1	1110	战术装备·朱诺		1	3	7	4			36,-50,1.25					
+1	1111	战术装备·沐恩		1	4	7	3			-57,-68,1.3	-62,-55,1104,620				
+1	1112	战术装备·苏小真		1	5	7	4			39.77,-59,1.25					
+1	1113	战术装备·伊珂丝		1	12	7	3			25.9,-9.79,1.17					
+1	1114	情人节·伊珂丝		1	12	81	5				178.79,0,850,480				
+1	1115	公式服·聂诗柔		1	14	1	1			-45.3,-183.3,1.8					
+1	1116	私服·聂诗柔		1	14	1	3			4.15,-78.8,1.4					
+1	1117	机动套装·聂诗柔		1	14	14	4			18.4,-57.64,1.2					
+1	1118	公式服·阿尼娅		1	15	1	1			36.89,-125.6,1.6					
+1	1119	私服·阿尼娅		1	15	1	3			0,-32.9,1.2					
+1	1120	机动套装·阿尼娅		1	15	14	4			0,-42.4,1.2					
+1	1121	事务官·洛可可		1	1	13	4			-16.9,-10.33,1.15					
+1	1122	事务官·艾琳		1	7	13	4			0,-42,1.2					
+1	1123	事务官·时无瑕		1	9	13	3			0,-102.71,1.45					
+1	1124	事务官·丽达		1	11	13	3			0,-54.3,1.3					
+1	1125	水着·高奈利亚		1	2	8	3			-20,-55,1.4					
+1	1126	水着·格兰妮		1	8	8	4			10,0,1.1					
+1	1127	水着·聂诗柔		1	14	8	3			12,-68,1.3					
+1	1128	朱诺·生日		1	3	22	4				0,-130,1548.8,871.2				
+1	1129	小礼服·朱诺		1	3	17	3			0,-45,1.3					
+1	1130	小礼服·朱诺		1	3	17	4			0,-70,1.4					
+1	1131	小礼服·朱诺		1	3	17	5				20,-80,1175.43,663.77				
+1	1132	小礼服·时无忧		1	10	17	3			0,-68,1.35					
+1	1133	小礼服·时无忧		1	10	17	4			-10,-68,1.5					
+1	1134	小礼服·时无忧		1	10	17	5				-20,-80,1271,718				
+1	1135	童话·洛可可		1	1	6	3			-180,0,1,850,480					
+1	1136	童话·朱诺		1	3	6	4			200,0,1,850,480					
+1	1137	童话·格兰妮		1	8	6	3			-210,0,1,850,480					
+1	1138	童话·伊珂丝		1	12	6	4			-180,-14,1,935,528					
+1	1139	生日·时无瑕		1	9	22	4				8.5,-51,1234.2,696.96				
+1	1140	约会·艾琳		1	7	81	5				178.79,0,850,480				
+1	1141	约会·时无忧		1	10	81	5				178.79,0,850,480				
+1	1142	生日·洛可可		1	1	22	4				15.2,-86.5,1209.516,683.0208				
+1	1143	生日·格兰妮		1	8	22	4				-32,-24,1104,620				
+1	1144	闲趣·丽达		1	11	81	5				216,0,850,480				
+1	1145	爱好·聂诗柔		1	14	81	5				178.79,0,850,480				
+1	1146	偶像·时无瑕		1	9	23	4			-21,-41,1.2					
+1	1147	生日·丽达		1	11	22	4				-38,-98,1280,720				
+1	1148	爵士·洛可可		1	1	20	3			16,-44,1.2					
+1	1149	爵士·沐恩		1	4	20	4			-58,-96,1.5					
+1	1150	爵士·时无瑕		1	9	20	3			12,-50,1.3					
+1	1151	爵士·时无忧		1	10	20	4			18,-86,1.4					
+1	1152	电音·高奈利亚		1	2	20	3			44,-24,1.4					
+1	1153	电音·苏小真		1	5	20	4			-17,-57,1.25					
+1	1154	电音·伊珂丝		1	12	20	4			-34,-50,1.3					
+1	1155	电音·阿尼娅		1	15	20	3			5,-40,1.25					
+1	1156	浴衣·洛可可		1	1	10	4			-30,-64,1.4	0,-60,1104,620				
+1	1157	浴衣·艾琳		1	7	10	4			-30,-42,1.3					
+1	1158	浴衣·时无忧		1	10	10	3			0,-35,1.25					
+1	1159	浴衣·伊珂丝		1	12	10	3			-34,28,1.3					
+1	1160	生日·千姬		1	6	22	4				0,-40,1104,620				
+1	1161	小礼服·艾琳		1	7	17	3			0,-45,1.4					
+1	1162	小礼服·艾琳		1	7	17	4			0,-44,1.2					
+1	1163	小礼服·艾琳		1	7	17	5				20,-45,1028.5,580.8				
+1	1164	小礼服·沐恩		1	4	17	3			25,-35,1.3					
+1	1165	小礼服·沐恩		1	4	17	4			40,-50,1.4					
+1	1166	小礼服·沐恩		1	4	17	5				50,-50,1104,620				
+1	1167	生日·聂诗柔		1	14	22	4				-27,-45,1028.5,580.8				
+1	1168	赏月·高奈利亚		1	2	81	5				155,0,850,480				
+1	1169	观杏·格兰妮		1	8	81	5				180,0,850,480				
+1	1170	生日·沐恩		1	4	22	4				-36,-47,1028.5,580.8				
+1	1171	污染者·高奈利亚		1	2	9	3			20,8,1.05					
+1	1172	污染者·艾琳		1	7	9	4			36,-44,1.2					
+1	1173	污染者·格兰妮		1	8	9	3			150,-55,2.2					
+1	1174	污染者·聂诗柔		1	14	9	4			0,-12,1.2					
+1	1175	品枫·艾琳		1	7	82	5				180,-60,1104,620				
+1	1176	万圣节·苏小真		1	5	25	4			20,-55,1.25					
+1	1177	万圣节·千姬		1	6	25	4			-14.6,-55,1.32					
+1	1178	万圣节·时无瑕		1	9	25	3			0,0,1.1					
+1	1179	万圣节·丽达		1	11	25	3			44,-15,1.25					
+1	1180	生日·伊珂丝		1	12	22	4				0,0,850,480				
+1	1181	捕心·洛可可		1	1	81	5				150,-30,1028.5,580.8				
+1	1182	共枕·朱诺		1	3	81	5				250,0,850,480				
+1	1183	生日·时无忧		1	10	22	4				5,-10,935,528				
+1	1184	公式服·卡萝		1	13	1	1			0,-155,1.8					
+1	1185	私服·卡萝		1	13	1	3			0,0,1.2					
+1	1186	结晶战衣·卡萝		1	13	14	4			0,-45,1.2					
+1	1187	公式服·唯		1	16	1	1			0,-170,1.8					
+1	1188	私服·唯		1	16	1	3			0,-30,1.2					
+1	1189	结晶战衣·唯		1	16	14	4			0,0,1.1					
+1	1190	圣诞·洛可可		1	1	26	4			40,-20,1.3					
+1	1191	圣诞·沐恩		1	4	26	3			0,-40,1.3					
+1	1192	圣诞·时无忧		1	10	26	4			0,-30,1.2					
+1	1193	圣诞·卡萝		1	13	26	3			35,-70,1.3					
+1	1194	生日·高奈利亚		1	2	22	4				0,-34,1028.5,580.8				
+1	1195	清理者·沐恩		1	4	11	3			50,-80,1.35					
+1	1196	清理者·苏小真		1	5	11	4			60,-130,1.7					
+1	1197	清理者·千姬		1	6	11	3			60,-110,1.6					
+1	1087	清理者·丽达		1	11	11	4			-53.2,-91.3,1.5					
+1	1198	小礼服·洛可可		1	1	17	3			0,-20,1.1					
+1	1199	小礼服·洛可可		1	1	17	4			0,-60,1.3					
+1	1200	小礼服·洛可可		1	1	17	5				0,-60,1104,620				
+1	1201	小礼服·时无瑕		1	9	17	3			-15,-38,1.2					
+1	1202	小礼服·时无瑕		1	9	17	4			0,-24,1.15					
+1	1203	小礼服·时无瑕		1	9	17	5				-20,-40,1028.5,580.8				
+1	1204	氤氲·千姬		1	6	81	5				170,-20,935,528				
+1	1205	砌玉·阿尼娅		1	15	81	5				210,0,850,480				
+1	1206	生日·阿尼娅		1	15	22	4				0,-45,1028.5,580.8				
+1	1207	冬装·高奈利亚		1	2	27	4			0,-20,1.2					
+1	1208	冬装·苏小真		1	5	27	3			0,-50,1.2					
+1	1209	冬装·伊珂丝		1	12	27	4			30,-20,1.1					
+1	1210	冬装·阿尼娅		1	15	27	3			0,-66,1.4					
+1	1211	快餐厅·朱诺		1	3	24	3			0,-58,1.3					
+1	1212	快餐厅·沐恩		1	4	24	4			-17,-42,1.4					
+1	1213	快餐厅·时无瑕		1	9	24	4			0,-60,1.3					
+1	1214	快餐厅·时无忧		1	10	24	3			0,0,1					
+1	1215	警察·高奈利亚		1	2	19	4			36,-60,1.4					
+1	1216	警察·千姬		1	6	19	3			0,16,1					
+1	1217	警察·丽达		1	11	19	3			0,0,1.1					
+1	1218	警察·聂诗柔		1	14	19	4			-45,-12,1.2	0,-45,1028.5,580.8				
+1	1219	生日·卡萝		1	13	22	4				0,0,850,480				
+1	1220	昨日星光·朱诺		1	3	82	5				156,0,935,528				
+1	1221	回忆滋味·时无瑕		1	9	82	5				180,-15,935,528				
+1	1222	小礼服·伊珂丝		1	12	17	3			-28,0,1.2					
+1	1223	小礼服·伊珂丝		1	12	17	4			25,-40,1.25					
+1	1224	小礼服·伊珂丝		1	12	17	5				25,-55,1104,620				
+1	1225	旗袍·高奈利亚		1	2	12	3			20,-30,1.25					
+1	1226	旗袍·格兰妮		1	8	12	4			-20,-44,1.3					
+1	1227	旗袍·丽达		1	11	12	3			-30,-70,1.3					
+1	1228	旗袍·阿尼娅		1	15	12	4			15,0,1.2					
+1	1229	小礼服·苏小真		1	5	17	3			40,-40,1.2					
+1	1230	小礼服·苏小真		1	5	17	4			50,-64,1.3					
+1	1231	小礼服·苏小真		1	5	17	5				38,-64,1104,620				
+1	1232	水手服·朱诺		1	3	21	4			-20,-66,1.3					
+1	1233	水手服·艾琳		1	7	21	4			20,-65,1.35					
+1	1234	水手服·格兰妮		1	8	21	3			40,0,1.15					
+1	1235	水手服·聂诗柔		1	14	21	3			0,-40,1.2					
+1	1236	夕驰·沐恩		1	4	81	5				234,5,935,528				
+1	1237	华灯·唯		1	16	81	5				123,28,858,480				
+1	1238	侦探·洛可可		1	1	29	3			42,-66,1.35					
+1	1239	怪盗·格兰妮		1	8	29	4			-35,-65,1.4					
+1	1240	怪盗·时无忧		1	10	29	3			0,18,1.15					
+1	1241	侦探·丽达		1	11	29	4			0,0,1.2	20,-20,1104,620				
+1	1242	生日·唯		1	16	22	4				15,-30,1104,620				
+1	1243	童话·高奈利亚		1	2	6	3			226,-40,1,1028.5,580.8					
+1	1244	童话·千姬		1	6	6	3			44,-38,1,1028.5,580.8					
+1	1245	童话·时无瑕		1	9	6	4			16,-28,1,1028.5,580.8					
+1	1246	童话·阿尼娅		1	15	6	4			138,0,1,820,480					
+1	1247	猫耳·洛可可		1	1	30	3			0,0,1					
+1	1248	猫耳·苏小真		1	5	30	4			24,-74,1.4					
+1	1249	猫耳·伊珂丝		1	12	30	3			18,-56,1.3					
+1	1250	猫耳·卡萝		1	13	30	4			0,0,1.2	0,0,1104,620				
+1	1251	小礼服·聂诗柔		1	14	17	3			-18,-40,1.3					
+1	1252	小礼服·聂诗柔		1	14	17	4			0,-86,1.5					
+1	1253	小礼服·聂诗柔		1	14	17	5				0,-88,1280,720				
+1	1254	神曲·艾琳		1	7	28	4			-35,-60,1.35					
+1	1255	神曲·时无瑕		1	9	28	4			-52,-41,1.4					
+1	1256	小礼服·阿尼娅		1	15	17	3			0,-40,1.3					
+1	1257	小礼服·阿尼娅		1	15	17	4			0,-145.4,1.6					
+1	1258	小礼服·阿尼娅		1	15	17	5				0,-155,1408,792				
+1	1259	神曲·千姬		1	6	28	4			0,-16,1.35					
+1	1260	神曲·唯		1	16	28	4			0,-54,1.45					
+1	1261	巷循·时无忧		1	10	82	5				260,-20,935,528				
+1	1262	海月·卡萝		1	13	81	5				196,0,935,528				
+1	1263	异界传说·沐恩		1	4	34	4			0,-60,1.35					
+1	1264	异界传说·格兰妮		1	8	34	3			0,-76,1.6					
+1	1265	异界传说·丽达		1	11	34	4			0,-20,1.2					
+1	1266	异界传说·唯		1	16	34	3			0,-40,1.3					
+1	1267	旗袍·洛可可		1	1	12	4			0,0,1					
+1	1268	旗袍·朱诺		1	3	12	4			0,-40,1.2					
+1	1269	旗袍·千姬		1	6	12	3			0,-40,1.2					
+1	1270	旗袍·伊珂丝		1	12	12	3			0,-40,1.2					
+1	1271	旗袍·苏小真		1	5	12	3			0,-40,1.2					
+1	1272	旗袍·艾琳		1	7	12	4			0,-40,1.2					
+1	1273	旗袍·卡萝		1	13	12	4			0,-40,1.2					
+1	1274	旗袍·聂诗柔		1	14	12	3			0,-40,1.2					
+															
+1	1501	联动·御坂美琴		1	201	1	4				72,0,1408,792				
+1	1502	联动·白井黑子		1	202	1	3			0,-50,1.2					
+1	1503	联动·食蜂操祈		1	203	1	4				0,-67,1104,620				
+1	1504	联动·御坂妹妹		1	204	1	3			0,-66,1.4					
+															
+															
+2	2001	军用手枪（基础扭蛋）		2	1	2	1								
+2	2002	红蝎双尾（基础扭蛋）		2	1	6	1								
+2	2003	冰山撕裂（基础扭蛋）		2	1	7	1								
+2	2004	半神刺杀（基础扭蛋）		2	1	12	1								
+2	2005	九九式军官手枪（基础扭蛋）		2	1	14	1								
+2	2006	宏原子手枪（基础扭蛋）		2	1	8	1								
+2	2007	致命移液枪（基础扭蛋）		2	1	9	1								
+2	2008	阿尔忒弥斯（基础扭蛋）		2	1	11	1								
+2	2009	指引星辰（基础扭蛋）		2	1	13	1								
+2	2010	荒野之狼（基础扭蛋）		2	1	15	1								
+2	2011	反击军号(四期爬塔）		2	1	16	1								
+2	2012	实战水枪（六期爬塔）		2	1	19	1								
+2	2013	群星道标（基础扭蛋）		2	1	3	1								
+2	2014	灵魂惩戒（儿童节扭蛋）	[4]	2	1	4	1								
+2	2015	光梭手枪（基础扭蛋）		2	1	5	1								
+2	2016	暮色游侠	-1	2	1	17	1								
+2	2017	引力扳机		2	1	18	1		4:202204080400						
+2	2018	战斗步枪（基础扭蛋）		2	2	2	1								
+2	2019	高斯脉冲步枪（基础扭蛋）		2	2	6	1								
+2	2020	精准射击步枪（基础扭蛋）		2	2	9	1								
+2	2021	原型源力步枪（基础扭蛋）		2	2	14	1								
+2	2022	空降兵突击步枪（基础扭蛋）		2	2	15	1								
+2	2023	野牛风钻（基础扭蛋）		2	2	3	1								
+2	2024	残忍造物主（基础扭蛋）		2	2	5	1								
+2	2025	光束步枪（基础扭蛋）		2	2	8	1								
+2	2026	烧蚀步枪（基础扭蛋）		2	2	12	1								
+2	2027	风暴巫师（基础扭蛋）		2	2	16	1								
+2	2028	暴躁教育者（七期爬塔）		2	2	17	1		5:202101130900						
+2	2029	海神之矛（二期爬塔）		2	2	20	1								
+2	2030	十方萤火（基础扭蛋）		2	2	4	1								
+2	2031	命运水瓶（基础扭蛋）		2	2	10	1								
+2	2033	腐朽蛛后（扭蛋新增）		2	2	18	1		5:202010011200						
+2	2034	无情之瞳	-1	2	2	19	1								
+2	2035	短管霰弹枪（基础扭蛋）		2	3	2	1								
+2	2036	腐蚀散布者（基础扭蛋）		2	3	4	1								
+2	2037	蜂群（基础扭蛋）		2	3	5	1								
+2	2038	不朽骑士（基础扭蛋）		2	3	10	1								
+2	2039	双倍正义（基础扭蛋）		2	3	13	1								
+2	2040	千本红莲（一期爬塔）		2	3	3	1								
+2	2041	真空清道夫（基础扭蛋）		2	3	6	1								
+2	2042	无情医者（基础扭蛋）		2	3	7	1								
+2	2043	逆转先生（基础扭蛋）		2	3	11	1								
+2	2044	诱变发生仪（基础扭蛋）		2	3	14	1								
+2	2045	阵地消防员（基础扭蛋）		2	3	15	1								
+2	2046	七夜绯花（日服预约武器）	[1,2,4,5]	2	3	18	1								
+2	2047	妒火怨灵（基础扭蛋）		2	3	8	1								
+2	2048	扩散型冬神（扭蛋新增）		2	3	9	1		5:202010011200						
+2	2049	前沿勇士（基础扭蛋）		2	3	12	1								
+2	2050	混沌见证	-1	2	3	16	1								
+2	2051	涅墨西斯（扭蛋新增）	[3,4,5]	2	3	17	1								
+2	2052	支援狙击步枪（基础扭蛋）		2	4	2	1								
+2	2053	下马威（基础扭蛋）		2	4	3	1								
+2	2054	养由基之弓（基础扭蛋）		2	4	6	1								
+2	2055	反器材狙击（基础扭蛋）		2	4	7	1								
+2	2056	秦王之剑（基础扭蛋）		2	4	10	1								
+2	2057	天河之星（基础扭蛋）		2	4	5	1								
+2	2058	地狱獠牙（基础扭蛋）		2	4	8	1								
+2	2059	炽热荆棘（基础扭蛋）		2	4	11	1								
+2	2060	死境藤蔓（基础扭蛋）		2	4	15	1								
+2	2061	子夜宣告（三期爬塔）		2	4	16	1								
+2	2062	冥界诅咒（基础扭蛋）		2	4	17	1								
+2	2063	苍白龙息（基础扭蛋）		2	4	4	1								
+2	2064	特斯拉极光（基础扭蛋）		2	4	9	1								
+2	2065	堕落使徒	-1	2	4	12	1								
+2	2067	忘川神威	-1	2	4	19	1								
+2	2068	烈焰放射器（基础扭蛋）		2	5	2	1								
+2	2069	废土之星（基础扭蛋）		2	5	4	1								
+2	2070	极地风暴（基础扭蛋）		2	5	6	1								
+2	2071	加压震击炮（基础扭蛋）		2	5	8	1								
+2	2072	寒夜问候（基础扭蛋）		2	5	11	1								
+2	2073	河豚射线发生仪（基础扭蛋）		2	5	5	1								
+2	2074	磁暴辉光炮（五期爬塔）		2	5	7	1								
+2	2075	垃圾粉碎者（基础扭蛋）		2	5	9	1								
+2	2076	小丑手杖（基础扭蛋）		2	5	12	1								
+2	2077	深渊之锤（基础扭蛋）		2	5	14	1								
+2	2078	净罪清洗（基础扭蛋）		2	5	15	1								
+2	2079	万圣闪灵（万圣南瓜枪）		2	5	18	1								
+2	2080	银河法典（扭蛋新增）	[3,4,5]	2	5	3	1								
+2	2081	指向性放射炮（基础扭蛋）		2	5	10	1								
+2	2082	引力指向仪（基础扭蛋）		2	5	13	1								
+2	2083	长岛冰茶		2	5	16	1		4:202204080400						
+2	2085	黄金枪		2	2	10000	1								
+2	2086	白银枪		2	2	10001	1								
+2	2087	迎新板羽球（新年武器）		2	1	20	1		5:202009110900						
+2	2088	圣诞拐杖（圣诞武器）		2	4	20	1		5:202009110900						
+2	2089	次声波震荡炮（八期爬塔）		2	5	19	1								
+2	2090	胜利呼唤		2	3	19	1								
+2	2091	天鹅舞步		2	5	20	1								
+2	2092	厨师否决（九期爬塔）		2	4	21	1		5:202101260900						
+2	2093	阿难陀之首（十期爬塔）		2	3	20	1		4:202205060400						
+2	2094	六弦吉他（音乐节）		2	2	22	1								
+2	2095	电音绝响（音乐节）		2	4	23	1								
+2	2096	世界树（十一期爬塔）		2	5	22	1		4:202205200400						
+2	2097	失落圣城	[2]	2	1	21	1								
+2	2098	诺维科夫收束器	[2]	2	5	21	1								
+2	2099	污染脉冲步枪（十二期爬塔）		2	2	23	1								
+2	2100	红烬（万圣节）	[4]	2	2	11	1								
+2	2101	炽焰魔剑（万圣节）	[4]	2	4	18	1								
+2	2102	魔法少女（新少女）	[4]	2	1	22	1								
+2	2103	尘埃咆哮（新少女）	[4]	2	5	17	1								
+2	2104	清理者之握（十三期爬塔）		2	1	23	1								
+2	2105	魅影波澜	[4]	2	2	24	1								
+2	2106	恒星贯穿	[4]	2	3	21	1								
+2	2107	斯普拉特（十四期爬塔）	[4]	2	3	22	1								
+2	2108	拆迁队长（十五期爬塔）	[4]	2	4	24	1								
+2	2109	约克公爵（儿童节扭蛋）	[4]	2	4	22	1								
+2	2110	赛驳壳（十六期爬塔）	[4]	2	1	24	1								
+2	2111	水手喷枪（十七期爬塔）	[4]	2	2	25	1								
+2	2112	捕梦网(十八期爬塔）	[3,4,5]	2	5	23	1								
+2	2113	无情之瞳(国庆首发武器）	[3,4]	2	2	26	1								
+2	2114	金银法厄同(国庆首发武器）	[3,4]	2	4	25	1								
+2	2115	榴弹	[3,4,5]	2	5	24	1								
+2	2116	霰弹	[3,4,5]	2	3	23	1								
+2	2117	纯暗迪斯科	[3,4]	2	2	27	1								
+2	2118	喵喵铁锤	[3,4]	2	4	26	1								
+															
+3	3001	拯救，与被拯救		16	1	1	1			Riki/CGSmall/cg_01_s.png	BG/CG/cg_01.png				
+3	3002	一击		16	1	2	1			Riki/CGSmall/cg_02_1_s.png	BG/CG/cg_02_1.png				
+3	3003	Weight of the World		16	1	3	1			Riki/CGSmall/cg_03_s.png	BG/CG/cg_03.png	1			
+3	3004	再会的约定		16	1	4	1			Riki/CGSmall/cg_04_s.png	BG/CG/cg_04.png				
+3	3005	道别		16	1	5	1			Riki/CGSmall/cg_07_s.png	BG/CG/cg_07.png	2			
+3	3006	伤员即使命		16	1	6	1			Riki/CGSmall/cg_06_s.png	BG/CG/cg_06.png	3			
+3	3007	迷路旅雁		16	1	7	1			Riki/CGSmall/cg_05_s.png	BG/CG/cg_05.png	4			
+3	3008	异世界的骑士		16	1	8	1			Riki/CGSmall/cg_24_s.png	BG/CG/cg_24.png	5			
+3	3009	新世纪古斯塔夫		16	1	9	1			Riki/CGSmall/cg_gusitanfu1_s.png	BG/CG/cg_gusitanfu1.png				
+3	3010	发射		16	1	10	1			Riki/CGSmall/cg_gusitanfu2_s.png	BG/CG/cg_gusitanfu2.png				
+3	3011	决斗		16	1	11	1			Riki/CGSmall/cg_16_s.png	BG/CG/cg_16.png	6			
+3	3012	剑拔弩张		16	1	12	1			Riki/CGSmall/cg_26_s.png	BG/CG/cg_26.png	7			
+3	3013	阴影		16	1	13	1			Riki/CGSmall/cg_main08_1_s.png	BG/CG/cg_main08_1.png	8			
+3	3014	契约终止		16	1	14	1			Riki/CGSmall/cg_main09_1_s.png	BG/CG/cg_main09_1.png	9			
+3	3015	决战		16	1	15	1			Riki/CGSmall/cg_main010_1_s.png	BG/CG/cg_main010_1.png	10			
+3	3016	Los！Los！Los！		16	1	16	1			Riki/CGSmall/cg_main010_2_s.png	BG/CG/cg_main010_2.png				
+3	3017	Processors Assemble！		16	1	17	1			Riki/CGSmall/cg_main010_3_s.png	BG/CG/cg_main010_3.png				
+3	3018	王座上的大小姐		16	2	1	1			Riki/CGSmall/cg_19_s.png	BG/CG/cg_19.png				
+3	3019	偷懒禁止		16	2	2	1			Riki/CGSmall/cg_17_s.png	BG/CG/cg_17.png				
+3	3020	画中人		16	2	3	1			Riki/CGSmall/cg_18_s.png	BG/CG/cg_18.png				
+3	3021	童话故事？		16	2	4	1			Riki/CGSmall/cg_13_s.png	BG/CG/cg_13.png				
+3	3022	美食之愿		16	2	5	1			Riki/CGSmall/cg_20_s.png	BG/CG/cg_20.png				
+3	3023	山猫大人		16	2	6	1			Riki/CGSmall/cg_12_s.png	BG/CG/cg_12.png				
+3	3024	身体检查		16	2	7	1			Riki/CGSmall/cg_11_s.png	BG/CG/cg_11.png				
+3	3025	柔软的梦境		16	2	8	1			Riki/CGSmall/cg_10_s.png	BG/CG/cg_10.png				
+3	3026	迷路小姐		16	2	9	1			Riki/CGSmall/cg_15_s.png	BG/CG/cg_15.png				
+3	3027	最棒的晚餐		16	2	10	1			Riki/CGSmall/cg_14_s.png	BG/CG/cg_14.png				
+3	3028	穷人的感动		16	2	11	1			Riki/CGSmall/cg_08_s.png	BG/CG/cg_08.png				
+3	3029	高能宣传		16	2	12	1			Riki/CGSmall/cg_09_s.png	BG/CG/cg_09.png				
+3	3030	Fade Away		16	2	13	1			Riki/CGSmall/cg_23_s.png	BG/CG/cg_23.png				
+3	3031	鱼的诅咒		16	2	14	1			Riki/CGSmall/cg_girl02_2_s.png	BG/CG/cg_girl02_2.png				
+3	3032	堂堂正正		16	2	15	1			Riki/CGSmall/cg_girl03_2_s.png	BG/CG/cg_girl03_2.png				
+3	3033	晚餐		16	2	16	1			Riki/CGSmall/cg_girl04_2_s.png	BG/CG/cg_girl04_2.png				
+3	3034	偶像应援		16	2	17	1			Riki/CGSmall/cg_girl05_2_s.png	BG/CG/cg_girl05_2.png				
+3	3035	请信任在下		16	2	18	1			Riki/CGSmall/cg_21_s.png	BG/CG/cg_21.png				
+3	3036	遗憾成为礼物		16	2	19	1			Riki/CGSmall/cg_girl07_2_s.png	BG/CG/cg_girl07_2.png				
+3	3037	久远之风		16	2	20	1			Riki/CGSmall/cg_22_s.png	BG/CG/cg_22.png				
+3	3038	并非为了胜利		16	2	21	1			Riki/CGSmall/cg_girl09_2_s.png	BG/CG/cg_girl09_2.png				
+3	3039	真情流露		16	2	22	1			Riki/CGSmall/cg_girl10_2_s.png	BG/CG/cg_girl10_2.png				
+3	3040	感谢之吻		16	2	23	1			Riki/CGSmall/cg_girl11_2_s.png	BG/CG/cg_girl11_2.png				
+3	3041	海的深夜		16	2	24	1			Riki/CGSmall/cg_girl12_2_s.png	BG/CG/cg_girl12_2.png				
+3	3042	可可卧室		16	2	25	1			Riki/CGSmall/bg_kekewoshi_s.png	BG/bg_kekewoshi.png				
+3	3043	奈乐卧室		16	2	26	1			Riki/CGSmall/bg_nailewoshi_s.png	BG/bg_nailewoshi.png				
+3	3044	朱诺房间		16	2	27	1			Riki/CGSmall/bg_xuejiewoshi_s.png	BG/bg_xuejiewoshi.png				
+3	3045	沐恩卧室		16	2	28	1			Riki/CGSmall/bg_bingjiaofangjian_s.png	BG/bg_bingjiaofangjian.png				
+3	3046	小真卧室		16	2	29	1			Riki/CGSmall/bg_xiaozhenfangjian_s.png	BG/bg_xiaozhenfangjian.png				
+3	3047	千姬卧室		16	2	30	1			Riki/CGSmall/bg_qianjiwoshi_s.png	BG/bg_qianjiwoshi.png				
+3	3048	艾琳卧室		16	2	31	1			Riki/CGSmall/bg_ailinwoshi_s.png	BG/bg_ailinwoshi.png				
+3	3049	格兰妮卧室		16	2	32	1			Riki/CGSmall/bg_gelanniwoshi_s.png	BG/bg_gelanniwoshi.png				
+3	3050	无瑕卧室		16	2	33	1			Riki/CGSmall/bg_shiwuxiawoshi_s.png	BG/bg_shiwuxiawoshi.png				
+3	3051	无忧卧室		16	2	34	1			Riki/CGSmall/bg_shiwuyouwoshi_s.png	BG/bg_shiwuyouwoshi.png				
+3	3052	丽达卧室		16	2	35	1			Riki/CGSmall/bg_lidawoshi_s.png	BG/bg_lidawoshi.png				
+3	3053	伊珂丝卧室		16	2	36	1			Riki/CGSmall/bg_exwoshi1_s.png	BG/bg_exwoshi1.png				
+3	3054	血色夏日纪念碑		16	3	1	1			Riki/CGSmall/bg_jinianbei_s.png	BG/bg_jinianbei.png				
+3	3055	SOLOMON		16	3	2	1			Riki/CGSmall/bg_solomon_s.png	BG/bg_solomon.png				
+3	3056	咖啡馆		16	3	3	1			Riki/CGSmall/bg_cafe_s.png	BG/bg_cafe.png				
+3	3057	更衣室		16	3	4	1			Riki/CGSmall/bg_dress1_s.png	BG/bg_dress2.png				
+3	3058	你的卧室		16	3	5	1			Riki/CGSmall/bg_playerwoshi_s.png	BG/bg_playerwoshi.png				
+3	3059	你的卧室（夜晚）		16	3	6	1			Riki/CGSmall/bg_playerwoshiye_s.png	BG/bg_playerwoshiye.png				
+3	3060	战斗的少女		16	4	1	1			Riki/CGSmall/cg_25_s.png	BG/CG/cg_25.png				
+3	3061	安全区		16	4	2	1			Riki/CGSmall/cg_anquanqu_s.png	BG/CG/cg_anquanqu.png				
+3	3062	地球1		16	4	3	1			Riki/CGSmall/cg_diqiu_s.png	BG/CG/cg_diqiu.png				
+3	3063	视觉概念图		16	4	4	1			Riki/CGSmall/bg_loading02_s.png	BG/bg_loading02.png				
+3	3064	迷茫的阴云		16	4	5	1			Riki/CGSmall/bg_loading03_s.png	BG/bg_loading03.png				
+3	3065	给未来的岛屿		16	4	6	1			Riki/CGSmall/bg_loading04_s_Mul.png	BG/bg_loading04_Mul.png				
+3	3066	岔路上的二人		16	4	7	1			Riki/CGSmall/bg_loading05_s.png	BG/bg_loading05.png				
+3	3067	斜光		16	4	8	1			Riki/CGSmall/bg_loading06_s.png	BG/bg_loading06.png				
+3	3068	公主岛咖啡馆合影	[4]	16	4	9	1			Riki/CGSmall/bg_loading07_s.png	BG/bg_loading07.png				
+3	3072	明知故犯		16	1	18	1			Riki/CGSmall/cg_main011_1_s.png	BG/CG/cg_main011_1.png	11			
+3	3073	战场上见		16	4	10	1	1		Riki/CGSmall/bg_loading10_s.png	BG/bg_loading10.png				
+3	3097	少女胜负师	[1,4]	16	4	11	1	1		Riki/CGSmall/bg_loading14_s.png	BG/bg_loading14.png				
+3	3074	暴雨		16	2	37	1			Riki/CGSmall/cg_girl14_1_s.png	BG/CG/cg_girl14_1.png				
+3	3075	充电中		16	2	38	1			Riki/CGSmall/cg_girl15_1_s.png	BG/CG/cg_girl15_1.png				
+3	3076	出发，向着大海		16	2	40	1			Riki/CGSmall/bg_loading13_s.png	BG/bg_loading13.png				
+3	3077	聂诗柔卧室		16	2	39	1			Riki/CGSmall/bg_shirouwoshi_s.png	BG/bg_shirouwoshi.png				
+3	3078	Eh-khah		16	1	19	1			Riki/CGSmall/cg_main012_1_s.png	BG/CG/cg_main012_1.png	12			
+3	3079	形影成双		16	4	12	1			Riki/CGSmall/bg_loading15_s.png	BG/bg_loading15.png				
+3	3080	安洛瑟		16	4	13	1			Riki/CGSmall/bg_loading09_s.png	BG/bg_loading09.png				
+3	3081	错失	[4]	16	1	20	1			Riki/CGSmall/cg_main013_1_s.png	BG/CG/cg_main013_1.png				
+3	3082	迷航	[4]	16	1	21	1			Riki/CGSmall/cg_main013_2_s.png	BG/CG/cg_main013_2.png	13			
+3	3083	星尘交响曲	[4]	16	4	14	1	1		Riki/CGSmall/bg_loading16_s.png	BG/bg_loading16.png				
+3	3085	Final Stage -最终舞台-		16	4	15	1	1		Riki/CGSmall/bg_loading17_s.png	BG/bg_loading17.png				
+3	3088	纯白羽翼	[4]	16	4	16	1			Riki/CGSmall/bg_loading19_s.png	BG/bg_loading19.png				
+3	3089	少女	[4]	16	4	17	1			Riki/CGSmall/bg_loading20_s.png	BG/bg_loading20.png				
+3	3090	极光	[4]	16	4	18	1			Riki/CGSmall/bg_loading21_s.png	BG/bg_loading21.png				
+3	3091	献给咖啡馆	[4]	16	4	19	1			Riki/CGSmall/bg_loading23_s.png	BG/bg_loading23.png				
+3	3092	Hello,manager	[4]	16	1	22	1		2:202103180400	Riki/CGSmall/cg_main014_1_s.png	BG/CG/cg_main014_1.png	14			
+3	3098	花重灯昼		16	5	7	1			Riki/CGSmall/bg_loading24_s.png	BG/bg_loading24.png				
+3	3087	在此世间最难传达的心意	[4]	16	5	6	1	1		Riki/CGSmall/bg_loading18_s.png	BG/bg_loading18.png				
+3	3084	群青之翼的鼓动	[1]	16	5	4	1	1		Riki/CGSmall/bg_concert2_s.png	BG/bg_concert2.png			-469_-76.5:1_3020:1_1_20_3|-118_-37.45:9_3020:1_9_20_3|463_-59.8:10_3020:1_10_20_4|212_-111:4_3020:1_4_20_4	
+3	3086	少女们奏响星辰	[1]	16	5	5	1	1		Riki/CGSmall/bg_concert1_s.png	BG/bg_concert3.png			-489_6.44:2_3020:1_2_20_3|-211_106.2:15_3020:1_15_20_3|462.4_36:12_3020:1_12_20_4|115_107.6:5_3020:1_5_20_4	
+3	3071	春节贺图	[4,5]	16	5	3	1	1		Riki/CGSmall/bg_loading12_s.png	BG/bg_loading12.png				
+3	3070	圣诞节贺图	[1,4,5]	16	5	2	1	1		Riki/CGSmall/bg_loading11_s.png	BG/bg_loading11.png				
+3	3069	万圣节贺图	[1,4]	16	5	1	1	1		Riki/CGSmall/bg_loading08_s.png	BG/bg_loading08.png				
+3	3093	伴她左右	[4]	16	2	41	1			Riki/CGSmall/cg_girl13_1_s.png	BG/CG/cg_girl13_1.png				
+3	3094	月下枸那	[4]	16	2	42	1			Riki/CGSmall/cg_girl16_1_s.png	BG/CG/cg_girl16_1.png				
+3	3095	卡萝卧室	[4]	16	2	43	1			Riki/CGSmall/bg_13room_s.png	BG/bg_13room.png				
+3	3096	唯卧室	[4]	16	2	44	1			Riki/CGSmall/bg_16room_s.png	BG/bg_16room.png				
+3	3099	相思丹叶	[4,5]	16	3	7	1			Riki/CGSmall/bg_loading25_s.png	BG/bg_loading25.png				
+3	3100	孩子气战争	[4]	16	3	8	1			Riki/CGSmall/bg_loading26_s.png	BG/bg_loading26.png				
+3	3101	捕雀笼	[2,4]	16	1	23	1			Riki/CGSmall/cg_main015_2_s.png	BG/CG/cg_main015_2.png				
+3	3102	拥抱	[2,4]	16	1	24	1			Riki/CGSmall/cg_main015_1_s.png	BG/CG/cg_main015_1.png	15			
+3	3103	那些季节	[4,5]	16	4	20	1			Riki/CGSmall/bg_loading27_s.png	BG/bg_loading27.png				
+3	3104	告白战争	[4]	16	4	21	1			BG/bg_loading28.png	BG/bg_loading28.png				
+3	3105	公主岛咖啡馆合影	[1,2,3,5]	16	4	22	1	1		Riki/CGSmall/bg_loading07_s.png	BG/bg_loading07.png				
+3	3106	规则重置	[3,4]	16	4	23	1			BG/bg_loading29.png	BG/bg_loading29.png				
+3	3107	天际流光	[3,4]	16	4	24	1			BG/bg_loading30.png	BG/bg_loading30.png				
+3	3108	诗柔100CG	[2,3,4,5]	16	2	45	1			BG/CG/cg_girl14_2.png	BG/CG/cg_girl14_2.png				
+3	3109	阿尼娅100CG	[2,3,4,5]	16	2	46	1			BG/CG/cg_girl15_2.png	BG/CG/cg_girl15_2.png				
+3	3110	圣夜派对	[3]	16	4	25	1			BG/bg_loading31.png	BG/bg_loading31.png				
+3	3111	陌生友谊	[3,4]	16	4	26	1			BG/bg_loading32.png	BG/bg_loading32.png				
+3	3112	相伴在天明	[2,3,4,5]	16	2	47	1			BG/CG/cg_girl13_2.png	BG/CG/cg_girl13_2.png				
+3	3113	花落无痕	[2,3,4,5]	16	2	48	1			BG/CG/cg_girl16_2.png	BG/CG/cg_girl16_2.png				
+															
+															
+4	4001	污染者·时无瑕（八日签到）		1	9	9	4			9|3009	OtherBig/riki_bg_pollute.png|BG/bg_riki.png	0,-30.2,1			
+4	4002	水着·时无忧（礼包购买）		1	10	8	3			10|3008	OtherBig/riki_bg_swimsuit.png|BG/bg_riki.png	0,-29.3,1			
+4	4003	战术装备·丽达（一期爬塔）		1	11	7	3			11|3007	OtherBig/riki_bg_ote.png|BG/bg_riki.png	0,-37.7,1.1			
+4	4004	水着·沐恩（二期爬塔）		1	4	8	3			4|3008	OtherBig/riki_bg_swimsuit.png|BG/bg_riki.png	0,-32.3,1			
+4	4005	西洋棋·时无忧（五期爬塔）		1	10	16	3			10|3015	OtherBig/riki_bg_common.png|BG/bg_riki.png	0,-41.2,1.1			
+4	4006	水着·时无瑕（六期爬塔）		1	9	8	3			9|3008	OtherBig/riki_bg_swimsuit.png|BG/bg_riki.png	0,-37.14,1			
+4	4007	旗袍·时无忧（春节活动）		1	10	12	4			10|3012	OtherBig/riki_bg_common.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4008	聂诗柔·水着（九期爬塔）		1	14	8	3			14|3008	OtherBig/riki_bg_swimsuit.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4009	污染者·高奈利亚（十一期爬塔）		1	2	9	3			2|3009	OtherBig/riki_bg_pollute.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4010	清理者·千姬（十三期爬塔）		1	6	11	3			6|3011	OtherBig/riki_bg_common.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4011	警察·丽达（十五期爬塔）		1	11	19	3			11|3019	OtherBig/riki_bg_ote.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4012	侦探·洛可可（十八期爬塔）		1	1	29	3			1|3029	OtherBig/riki_bg_ote.png|BG/bg_riki.png	0,-38.33,1.1			
+4	4013	猫耳·EX（二十期爬塔）		1	12	30	3			12|3030	OtherBig/riki_bg_ote.png|BG/bg_riki.png	0,-41.2,1.1			
+															
+9	9001	国服漫画	[2,3,4,5]	-1	-1	-1	-1	1		0	https://manga.bilibili.com/m/mc27419/383240				
+9	9002	日服漫画	[1,2,4,5]	-1	-1	-1	-1	1		1	https://gcg.xoyo.jp/comic/				
+															
+															
+8	8004	店长时刻待命		17	1	4	1	1		5	Riki/Music/riki_music_home.png		1:38		
+8	8001	血色夏日		17	1	1	1	1			Riki/Music/riki_music_fight.png		1:35		
+8	8002	血色夏日aria		17	1	2	1	1			Riki/Music/riki_music_fight.png		1:35		
+8	8003	Lemegeton		17	1	3	1	1			Riki/Music/riki_music_fight.png		1:50		
+8	8005	与她相伴		17	1	5	1	1		3043	Riki/Music/riki_music_home.png		0:41		
+8	8006	准备交战		17	1	6	1	1		1004	Riki/Music/riki_music_fight.png		2:11		
+8	8007	行动展开		17	1	7	1	1		1005	Riki/Music/riki_music_fight.png		1:35		
+8	8008	A Bistro		17	1	8	1	1		5013	Riki/Music/riki_music_story.png		1:01		
+8	8009	呼吸之间		17	1	9	1	1		5022	Riki/Music/riki_music_story.png		0:54		
+8	8010	and shadow moving…		17	1	10	1	1		1070	Riki/Music/riki_music_story.png		1:38		
+8	8011	红唇爱丽丝		17	1	11	1	1		1062	Riki/Music/riki_music_fight.png		1:00		
+8	8012	阵地转移		17	1	12	1			1008	Riki/Music/riki_music_fight.png		2:03		
+8	8013	Cyberbeat		17	1	13	1			1058	Riki/Music/riki_music_fight.png		2:03		
+8	8014	沉重的呼吸		17	1	14	1			5020	Riki/Music/riki_music_story.png		1:14		
+8	8015	自由射击		17	1	15	1			1006	Riki/Music/riki_music_fight.png		2:02		
+8	8016	火力压制		17	1	16	1			1007	Riki/Music/riki_music_fight.png		1:36		
+8	8017	Ha Det		17	1	17	1			1057	Riki/Music/riki_music_fight.png		1:55		
+8	8018	C'est La Destin 		17	1	18	1			5023	Riki/Music/riki_music_story.png		0:53		
+8	8019	打扫战场		17	1	19	1			1011	Riki/Music/riki_music_fight.png		1:36		
+8	8020	另一个世界		17	1	20	1			5012	Riki/Music/riki_music_story.png		1:01		
+8	8021	攻坚战斗		17	1	21	1			1012	Riki/Music/riki_music_fight.png		1:32		
+8	8022	战线巡逻		17	1	22	1			1013	Riki/Music/riki_music_fight.png		1:37		
+8	8023	魔神兵		17	1	23	1			1055	Riki/Music/riki_music_fight.png		1:47		
+8	8024	Pycnonotus		17	1	24	1			5018	Riki/Music/riki_music_story.png		1:00		
+8	8025	Alone in the rain		17	1	25	1			5016	Riki/Music/riki_music_story.png		2:10		
+8	8026	全员突击		17	1	26	1			1014	Riki/Music/riki_music_fight.png		1:30		
+8	8027	Slapstick Alice		17	1	27	1			1066	Riki/Music/riki_music_fight.png		2:00		
+8	8028	Yellow Burlesca		17	1	28	1			1067	Riki/Music/riki_music_fight.png		2:03		
+8	8029	休憩时间		17	1	29	1			5011	Riki/Music/riki_music_story.png		0:55		
+8	8030	决斗		17	1	30	1			1054	Riki/Music/riki_music_fight.png		1:40		
+8	8031	棣棠花落		17	1	31	1			1059	Riki/Music/riki_music_fight.png		1:22		
+8	8032	Into the Basement		17	1	32	1			1065	Riki/Music/riki_music_fight.png		2:11		
+8	8033	战场处理者		17	1	33	1			1068	Riki/Music/riki_music_fight.png		2:05		
+8	8034	森然庭前		17	1	34	1			1069	Riki/Music/riki_music_story.png		2:01		
+8	8035	斩首行动		17	1	35	1			1056	Riki/Music/riki_music_fight.png		2:20		
+8	8036	十点半的阳光		17	1	36	1			5014	Riki/Music/riki_music_story.png		0:53		
+8	8037	暖红调的天空		17	1	37	1			5019	Riki/Music/riki_music_story.png		1:23		
+8	8038	伴奏带1号		17	2	1	1				Riki/Music/riki_music_girl01.png		2:45		
+8	8040	伴奏带2号		17	2	2	1				Riki/Music/riki_music_girl02.png		3:14		
+8	8042	伴奏带3号		17	2	3	1				Riki/Music/riki_music_girl03.png		3:11		
+8	8044	伴奏带4号		17	2	4	1				Riki/Music/riki_music_girl04.png		3:18		
+8	8046	伴奏带5号		17	2	5	1				Riki/Music/riki_music_girl05.png		3:14		
+8	8048	伴奏带6号		17	2	6	1				Riki/Music/riki_music_girl06.png		2:34		
+8	8050	伴奏带7号		17	2	7	1				Riki/Music/riki_music_girl07.png		3:06		
+8	8052	伴奏带8号		17	2	8	1				Riki/Music/riki_music_girl08.png		2:04		
+8	8054	伴奏带9号		17	2	9	1				Riki/Music/riki_music_girl09.png		2:42		
+8	8056	伴奏带10号		17	2	10	1				Riki/Music/riki_music_girl10.png		3:05		
+8	8058	伴奏带11号		17	2	11	1				Riki/Music/riki_music_girl11.png		3:04		
+8	8060	伴奏带12号		17	2	12	1				Riki/Music/riki_music_girl12.png		3:42		
+8	8039	洛可可印象曲		17	2	1	2				Riki/Music/riki_music_girl01.png		2:45		
+8	8041	高奈利亚印象曲		17	2	2	2				Riki/Music/riki_music_girl02.png		3:14		
+8	8043	朱诺印象曲		17	2	3	2				Riki/Music/riki_music_girl03.png		3:11		
+8	8045	沐恩印象曲		17	2	4	2				Riki/Music/riki_music_girl04.png		3:18		
+8	8047	小真印象曲		17	2	5	2				Riki/Music/riki_music_girl05.png		3:14		
+8	8049	千姬印象曲		17	2	6	2				Riki/Music/riki_music_girl06.png		2:34		
+8	8051	艾琳印象曲		17	2	7	2				Riki/Music/riki_music_girl07.png		3:06		
+8	8053	格兰妮印象曲		17	2	8	2				Riki/Music/riki_music_girl08.png		2:04		
+8	8055	时无瑕印象曲		17	2	9	2				Riki/Music/riki_music_girl09.png		2:42		
+8	8057	时无忧印象曲		17	2	10	2				Riki/Music/riki_music_girl10.png		3:05		
+8	8059	丽达印象曲		17	2	11	2				Riki/Music/riki_music_girl11.png		3:04		
+8	8061	伊珂丝印象曲		17	2	12	2				Riki/Music/riki_music_girl12.png		3:42		
+8	8062	安心之处		17	3	1	1	1		6	Riki/Music/riki_music_cafe2.png		1:51		
+8	8063	柠檬苏打		17	3	2	1			17	Riki/Music/riki_music_cafe3.png	14-3-1-5	0:56		
+8	8065	暖冬		17	3	4	1			1073	Riki/Music/riki_music_cafe1.png	14-3-1-14	2:05		
+8	8064	雪景掩映圣诞夜		17	3	3	1			1072	Riki/Music/riki_music_cafe4.png	14-3-1-14	2:30		
+8	8066	Firm Resolution		17	4	1	1	1		1082	Riki/Music/riki_music_theme.png		1:44		
+8	8067	春至光生		17	3	5	1			1074	Riki/Music/riki_music_cafe6.png	14-3-1-47	2:02		
+8	8068	Recollection		17	1	38	1	1		1075	Riki/Music/riki_music_story.png		1:03		
+8	8069	韩服ost	[1,2,3,4]	17	4	2	1			1080	Riki/Music/riki_music_theme.png		4:00		
+8	8070	爵士音乐会主题曲		17	3	6	1			1076	Riki/Music/riki_music_concert.png	14-3-1-83	2:30		
+8	8071	摇滚音乐会主题曲		17	3	7	1			1077	Riki/Music/riki_music_concert.png	14-3-1-83	2:30		
+8	8072	学园祭主题曲		17	3	8	1			1097	Riki/Music/riki_music_campus.png	14-3-1-114	1:41		
+8	8073	霜糖城堡	[4]	17	3	9	1			1098	Riki/Music/riki_music_park.png	14-3-1-137	2:05		
+8	8074	麦芽糖	[4]	17	3	10	1			1101	Riki/Music/riki_music_cafe7.png	14-3-1-167	1:57		
+8	8075	星球	[4]	17	3	11	1			1103	Riki/Music/riki_music_cafe8.png	14-3-1-210	2:11		
+8	8080	神曲外景音乐	[3,4]	17	3	12	1			1104	Riki/Music/riki_music_cafe9.png	14-3-1-268	2:04		
+8	8076	伴奏带14号	[3,4]	17	2	14	1			9327	Riki/Music/riki_music_girl14.png		1:43		
+8	8077	聂诗柔印象曲	[3,4]	17	2	14	2			9326	Riki/Music/riki_music_girl14.png		1:43		
+8	8078	伴奏带15号	[3,4]	17	2	15	1			9329	Riki/Music/riki_music_girl15.png		2:10		
+8	8079	阿尼娅印象曲	[3,4]	17	2	15	2			9328	Riki/Music/riki_music_girl15.png		2:10		
+															
+6	6001	章间剧情1		-1	-1	-1	-1	1		main1-2/masterstroke_1_lf1	1,6|cafe2	UI_RikiStory.Chapter01			
+6	6002	章间剧情2		-1	-1	-1	-1	1		main1-2/masterstroke_1_op	1,6|phone2	UI_RikiStory.Chapter02			
+6	6003	章间剧情3		-1	-1	-1	-1	1		main1-2/masterstroke_2_lf2	2,6|outdoor2	UI_RikiStory.Chapter03			
+6	6004	章间剧情4		-1	-1	-1	-1	1		main1-2/masterstroke_2_lf1	2,6|reward2	UI_RikiStory.Chapter04			
+6	6005	章间剧情5		-1	-1	-1	-1	1		main5-6/masterstroke_4k001	3,6|phone6	UI_RikiStory.Chapter05			
+6	6006	章间剧情6		-1	-1	-1	-1	1		main3-4/masterstroke_4_z01	3,6|phone5	UI_RikiStory.Chapter06			
+6	6007	章间剧情7		-1	-1	-1	-1	1		main3-4/masterstroke_4_z03	4,12|story4B	UI_RikiStory.Chapter07			
+6	6008	章间剧情8		-1	-1	-1	-1	1		main5-6/masterstroke_5ke04	5,12|story1.1	UI_RikiStory.Chapter08			
+6	6009	章间剧情9		-1	-1	-1	-1	1		main5-6/masterstroke_6ke03	6,12|story2	UI_RikiStory.Chapter09			
+6	6010	章间剧情10		-1	-1	-1	-1	1		main7-8/masterstroke_8if01	8,12|story8B	UI_RikiStory.Chapter10			
+6	6011	章间剧情11		-1	-1	-1	-1	1		main9-10/masterstroke_9_1202after1	9,12|story9B	UI_RikiStory.Chapter11			
+6	6012	章间剧情12		-1	-1	-1	-1	1		main9-10/masterstroke_10_602after	10,6|story10A	UI_RikiStory.Chapter12			
+6	6013	章间剧情13		-1	-1	-1	-1	1		main9-10/masterstroke_10_1202after_1	10,12|story10B	UI_RikiStory.Chapter13			
+6	6014	章间剧情14		-1	-1	-1	-1	1		main9-10/masterstroke_10_1202after_2	10,12|story10BA	UI_RikiStory.Chapter14			
+6	6015	章间剧情15		-1	-1	-1	-1	1	1:202005051200|3:202005051200	main11-13/masterstroke_12_1202after	12,12|story12B	UI_RikiStory.Chapter15			
+6	6016	章间剧情16		-1	-1	-1	-1	1		main11-13/masterstroke_13_1202after	13,12|story13over	UI_RikiStory.Chapter16			
+6	6017	章间剧情17		-1	-1	-1	-1	1	2:202103180400	main14-16/masterstroke_14_0101before	13,12|story14first	UI_RikiStory.Chapter17			
+6	6018	章间剧情18		-1	-1	-1	-1	1	2:202103180400	main14-16/masterstroke_14_12after1	14,12|story14second	UI_RikiStory.Chapter18			
+6	6019	章间剧情19		-1	-1	-1	-1	1	2:202103180400	main14-16/masterstroke_14_12after2	14,12|story14last	UI_RikiStory.Chapter19			
+6	6020	章间剧情20		-1	-1	-1	-1	1		main14-16/masterstroke_15_0101before	15,1|story15first	UI_RikiStory.Chapter20			
+6	6021	章间剧情21		-1	-1	-1	-1	1		main14-16/masterstroke_15_06after07before	15,6|story15second	UI_RikiStory.Chapter21			
+6	6022	章间剧情22		-1	-1	-1	-1	1		main14-16/masterstroke_15_12after	15,12|story15last	UI_RikiStory.Chapter22			
+6	6023	章间剧情23		-1	-1	-1	-1	1		main14-16/masterstroke_16before	16,1|story16first	UI_RikiStory.Chapter23			
+6	6024	章间剧情24		-1	-1	-1	-1	1		main14-16/masterstroke_16_07before	16,6|story16second	UI_RikiStory.Chapter24			
+6	6025	章间剧情25		-1	-1	-1	-1	1		main14-16/masterstroke_16after	16,12|story16over	UI_RikiStory.Chapter25			
+															
+6	6605	23期活动（最高级咖啡馆大战Ω）1	[2,3,4,5]	-1	-1	23	1	1		activityhypercafewars/hcw_0201	tower.Tower.Name23	activityconcert.cafewarsmain06000	Riki/Activity/girl05_card12_activity.png		3
+6	6606	23期活动（最高级咖啡馆大战Ω）2	[2,3,4,5]	-1	-1	23	2	1		activityhypercafewars/hcw_0202	tower.Tower.Name23	activityconcert.cafewarsmain07000	Riki/Activity/girl05_card12_activity.png		3
+6	6607	23期活动（最高级咖啡馆大战Ω）3	[2,3,4,5]	-1	-1	23	3	1		activityhypercafewars/hcw_0203	tower.Tower.Name23	activityconcert.cafewarsmain08000	Riki/Activity/girl05_card12_activity.png		3
+6	6608	23期活动（最高级咖啡馆大战Ω）4	[2,3,4,5]	-1	-1	23	4	1		activityhypercafewars/hcw_0204	tower.Tower.Name23	activityconcert.cafewarsmain09000	Riki/Activity/girl05_card12_activity.png		3
+6	6609	23期活动（最高级咖啡馆大战Ω）5	[2,3,4,5]	-1	-1	23	5	1		activityhypercafewars/hcw_0205	tower.Tower.Name23	activityconcert.cafewarsmain10000	Riki/Activity/girl05_card12_activity.png		3
+6	6610	23期活动（最高级咖啡馆大战Ω）6	[2,3,4,5]	-1	-1	23	6	1		activityhypercafewars/hcw_0206	tower.Tower.Name23	activityconcert.cafewarsmain00000	Riki/Activity/girl05_card12_activity.png		3
+6	6611	23期活动（最高级咖啡馆大战Ω）7	[2,3,4,5]	-1	-1	23	7	1		activityhypercafewars/hcw_enteract_le0201	tower.Tower.Name23	activityconcert.cafewarsbattlele0500	Riki/Activity/girl05_card12_activity.png		3
+6	6612	23期活动（最高级咖啡馆大战Ω）8	[2,3,4,5]	-1	-1	23	8	1		activityhypercafewars/hcw_enteract_le0202	tower.Tower.Name23	activityconcert.cafewarsbattlele0600	Riki/Activity/girl05_card12_activity.png		3
+6	6613	23期活动（最高级咖啡馆大战Ω）9	[2,3,4,5]	-1	-1	23	9	1		activityhypercafewars/hcw_enteract_al0201	tower.Tower.Name23	activityconcert.cafewarsbattleal0500	Riki/Activity/girl05_card12_activity.png		3
+6	6614	23期活动（最高级咖啡馆大战Ω）10	[2,3,4,5]	-1	-1	23	10	1		activityhypercafewars/hcw_enteract_al0202	tower.Tower.Name23	activityconcert.cafewarsbattleal0600	Riki/Activity/girl05_card12_activity.png		3
+6	6615	23期活动（最高级咖啡馆大战Ω）11	[2,3,4,5]	-1	-1	23	11	1		activityhypercafewars/hcw_enteract_al0203	tower.Tower.Name23	activityconcert.cafewarsbattleal0700	Riki/Activity/girl05_card12_activity.png		3
+6	6616	23期活动（最高级咖啡馆大战Ω）12	[2,3,4,5]	-1	-1	23	12	1		activityhypercafewars/hcw_enteract_al0204	tower.Tower.Name23	activityconcert.cafewarsbattlece0000	Riki/Activity/girl05_card12_activity.png		3
+6	6617	23期活动（最高级咖啡馆大战Ω）13	[2,3,4,5]	-1	-1	23	13	1		activityhypercafewars/hcw_enteract_fu0201	tower.Tower.Name23	activityconcert.cafewarsbattlefu0500	Riki/Activity/girl05_card12_activity.png		3
+6	6618	23期活动（最高级咖啡馆大战Ω）14	[2,3,4,5]	-1	-1	23	14	1		activityhypercafewars/hcw_enteract_in0201	tower.Tower.Name23	activityconcert.cafewarsbattleri0500	Riki/Activity/girl05_card12_activity.png		3
+6	6619	23期活动（最高级咖啡馆大战Ω）15	[2,3,4,5]	-1	-1	23	15	1		activityhypercafewars/hcw_enteract_in0202	tower.Tower.Name23	activityconcert.cafewarsbattleka0000	Riki/Activity/girl05_card12_activity.png		3
+															
+															
+6	6581	22期活动（最高级咖啡馆大战α）1	[3,4,5]	-1	-1	22	1	1		activityhypercafewars/hcw_0101	tower.Tower.Name22	activityconcert.cafewarsmain0100	Riki/Activity/girl06_card12_activity.png		3
+6	6582	22期活动（最高级咖啡馆大战α）2	[3,4,5]	-1	-1	22	2	1		activityhypercafewars/hcw_0102	tower.Tower.Name22	activityconcert.cafewarsmain0200	Riki/Activity/girl06_card12_activity.png		3
+6	6583	22期活动（最高级咖啡馆大战α）3	[3,4,5]	-1	-1	22	3	1		activityhypercafewars/hcw_0103	tower.Tower.Name22	activityconcert.cafewarsmain0300	Riki/Activity/girl06_card12_activity.png		3
+6	6584	22期活动（最高级咖啡馆大战α）4	[3,4,5]	-1	-1	22	4	1		activityhypercafewars/hcw_0104	tower.Tower.Name22	activityconcert.cafewarsmain0400	Riki/Activity/girl06_card12_activity.png		3
+6	6585	22期活动（最高级咖啡馆大战α）5	[3,4,5]	-1	-1	22	5	1		activityhypercafewars/hcw_0105	tower.Tower.Name22	activityconcert.cafewarsmain0500	Riki/Activity/girl06_card12_activity.png		3
+6	6586	22期活动（最高级咖啡馆大战α）6	[3,4,5]	-1	-1	22	6	1		activityhypercafewars/hcw_enteract_al0101	tower.Tower.Name22	ui.hcw_enteract_al0101	Riki/Activity/girl06_card12_activity.png		3
+6	6587	22期活动（最高级咖啡馆大战α）7	[3,4,5]	-1	-1	22	7	1		activityhypercafewars/hcw_enteract_al0102	tower.Tower.Name22	ui.hcw_enteract_al0102	Riki/Activity/girl06_card12_activity.png		3
+6	6588	22期活动（最高级咖啡馆大战α）8	[3,4,5]	-1	-1	22	8	1		activityhypercafewars/hcw_enteract_al0103	tower.Tower.Name22	ui.hcw_enteract_al0103	Riki/Activity/girl06_card12_activity.png		3
+6	6589	22期活动（最高级咖啡馆大战α）9	[3,4,5]	-1	-1	22	9	1		activityhypercafewars/hcw_enteract_al0104	tower.Tower.Name22	ui.hcw_enteract_al0104	Riki/Activity/girl06_card12_activity.png		3
+6	6590	22期活动（最高级咖啡馆大战α）10	[3,4,5]	-1	-1	22	10	1		activityhypercafewars/hcw_enteract_fu0101	tower.Tower.Name22	ui.hcw_enteract_fu0101	Riki/Activity/girl06_card12_activity.png		3
+6	6591	22期活动（最高级咖啡馆大战α）11	[3,4,5]	-1	-1	22	11	1		activityhypercafewars/hcw_enteract_fu0102	tower.Tower.Name22	ui.hcw_enteract_fu0102	Riki/Activity/girl06_card12_activity.png		3
+6	6592	22期活动（最高级咖啡馆大战α）12	[3,4,5]	-1	-1	22	12	1		activityhypercafewars/hcw_enteract_fu0103	tower.Tower.Name22	ui.hcw_enteract_fu0103	Riki/Activity/girl06_card12_activity.png		3
+6	6593	22期活动（最高级咖啡馆大战α）13	[3,4,5]	-1	-1	22	13	1		activityhypercafewars/hcw_enteract_fu0104	tower.Tower.Name22	ui.hcw_enteract_fu0104	Riki/Activity/girl06_card12_activity.png		3
+6	6594	22期活动（最高级咖啡馆大战α）14	[3,4,5]	-1	-1	22	14	1		activityhypercafewars/hcw_enteract_in0101	tower.Tower.Name22	ui.hcw_enteract_in0101	Riki/Activity/girl06_card12_activity.png		3
+6	6595	22期活动（最高级咖啡馆大战α）15	[3,4,5]	-1	-1	22	15	1		activityhypercafewars/hcw_enteract_in0102	tower.Tower.Name22	ui.hcw_enteract_in0102	Riki/Activity/girl06_card12_activity.png		3
+6	6596	22期活动（最高级咖啡馆大战α）16	[3,4,5]	-1	-1	22	16	1		activityhypercafewars/hcw_enteract_in0103	tower.Tower.Name22	ui.hcw_enteract_in0103	Riki/Activity/girl06_card12_activity.png		3
+6	6597	22期活动（最高级咖啡馆大战α）17	[3,4,5]	-1	-1	22	17	1		activityhypercafewars/hcw_enteract_in0104	tower.Tower.Name22	ui.hcw_enteract_in0104	Riki/Activity/girl06_card12_activity.png		3
+6	6598	22期活动（最高级咖啡馆大战α）18	[3,4,5]	-1	-1	22	18	1		activityhypercafewars/hcw_enteract_le0101	tower.Tower.Name22	ui.hcw_enteract_le0101	Riki/Activity/girl06_card12_activity.png		3
+6	6599	22期活动（最高级咖啡馆大战α）19	[3,4,5]	-1	-1	22	19	1		activityhypercafewars/hcw_enteract_le0102	tower.Tower.Name22	ui.hcw_enteract_le0102	Riki/Activity/girl06_card12_activity.png		3
+6	6600	22期活动（最高级咖啡馆大战α）20	[3,4,5]	-1	-1	22	20	1		activityhypercafewars/hcw_enteract_le0103	tower.Tower.Name22	ui.hcw_enteract_le0103	Riki/Activity/girl06_card12_activity.png		3
+6	6601	22期活动（最高级咖啡馆大战α）21	[3,4,5]	-1	-1	22	21	1		activityhypercafewars/hcw_enteract_le0104	tower.Tower.Name22	ui.hcw_enteract_le0104	Riki/Activity/girl06_card12_activity.png		3
+															
+															
+															
+															
+															
+6	6566	电磁炮活动1	[3,4]	-1	-1	217	1	1		activityrailgun/activityrailgunmain_op	ui.activityrailgun.Title	railgun.railgun_OP00	Riki/Activity/girl201_card01_activity.png		7
+6	6567	电磁炮活动2	[3,4]	-1	-1	217	2	1		activityrailgun/activityrailgunmain_ep1	ui.activityrailgun.Title	railgun.railgun_EP0100	Riki/Activity/girl201_card01_activity.png		7
+6	6568	电磁炮活动3	[3,4]	-1	-1	217	3	1		activityrailgun/activityrailgunmain_ep2	ui.activityrailgun.Title	railgun.railgun_EP0200	Riki/Activity/girl201_card01_activity.png		7
+6	6569	电磁炮活动4	[3,4]	-1	-1	217	4	1		activityrailgun/activityrailgunmain_ep3	ui.activityrailgun.Title	railgun.railgun_EP0300	Riki/Activity/girl201_card01_activity.png		7
+6	6570	电磁炮活动5	[3,4]	-1	-1	217	5	1		activityrailgun/activityrailgunmain_ep4	ui.activityrailgun.Title	railgun.railgun_EP0400	Riki/Activity/girl201_card01_activity.png		7
+6	6571	电磁炮活动6	[3,4]	-1	-1	217	6	1		activityrailgun/activityrailgunmain_ep5	ui.activityrailgun.Title	railgun.railgun_EP0500	Riki/Activity/girl201_card01_activity.png		7
+6	6572	电磁炮活动7	[3,4]	-1	-1	217	7	1		activityrailgun/activityrailgunmain_eps1	ui.activityrailgun.Title	railgun.railgun_S0100	Riki/Activity/girl201_card01_activity.png		7
+6	6573	电磁炮活动8	[3,4]	-1	-1	217	8	1		activityrailgun/activityrailgunmain_eps2	ui.activityrailgun.Title	railgun.railgun_S0200	Riki/Activity/girl201_card01_activity.png		7
+6	6574	电磁炮活动9	[3,4]	-1	-1	217	9	1		activityrailgun/activityrailgunmain_ept1	ui.activityrailgun.Title	railgun.railgun_T0100	Riki/Activity/girl201_card01_activity.png		7
+6	6575	电磁炮活动10	[3,4]	-1	-1	217	10	1		activityrailgun/activityrailgunmain_ept2	ui.activityrailgun.Title	railgun.railgun_T0200	Riki/Activity/girl201_card01_activity.png		7
+6	6576	电磁炮活动11	[3,4]	-1	-1	217	11	1		activityrailgun/activityrailgunmain_common	ui.activityrailgun.Title	railgun.railgun_COMMON00	Riki/Activity/girl201_card01_activity.png		7
+6	6577	电磁炮活动12	[3,4]	-1	-1	217	12	1		activityrailgun/activityrailgunmain_ed	ui.activityrailgun.Title	railgun.railgun_ED00	Riki/Activity/girl201_card01_activity.png		7
+															
+6	6549	大富翁2（芸神竞会）开场剧情	[3,4]	-1	-1	216	1	1		activityspringfes2022/springfes2022_opening	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_op00	Riki/Activity/springfes2022_activity.png		2
+6	6550	大富翁3（芸神竞会）开场剧情	[3,4]	-1	-1	216	2	1		activityspringfes2022/springfes2022_personal01	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0100	Riki/Activity/springfes2022_activity.png		2
+6	6551	大富翁4（芸神竞会）开场剧情	[3,4]	-1	-1	216	3	1		activityspringfes2022/springfes2022_personal02	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0200	Riki/Activity/springfes2022_activity.png		2
+6	6552	大富翁5（芸神竞会）开场剧情	[3,4]	-1	-1	216	4	1		activityspringfes2022/springfes2022_personal03	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0300	Riki/Activity/springfes2022_activity.png		2
+6	6553	大富翁6（芸神竞会）开场剧情	[3,4]	-1	-1	216	5	1		activityspringfes2022/springfes2022_personal04	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0400	Riki/Activity/springfes2022_activity.png		2
+6	6554	大富翁7（芸神竞会）开场剧情	[3,4]	-1	-1	216	6	1		activityspringfes2022/springfes2022_personal05	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0500	Riki/Activity/springfes2022_activity.png		2
+6	6555	大富翁8（芸神竞会）开场剧情	[3,4]	-1	-1	216	7	1		activityspringfes2022/springfes2022_personal06	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0600	Riki/Activity/springfes2022_activity.png		2
+6	6556	大富翁9（芸神竞会）开场剧情	[3,4]	-1	-1	216	8	1		activityspringfes2022/springfes2022_personal07	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0700	Riki/Activity/springfes2022_activity.png		2
+6	6557	大富翁10（芸神竞会）开场剧情	[3,4]	-1	-1	216	9	1		activityspringfes2022/springfes2022_personal08	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0800	Riki/Activity/springfes2022_activity.png		2
+6	6558	大富翁11（芸神竞会）开场剧情	[3,4]	-1	-1	216	10	1		activityspringfes2022/springfes2022_personal09	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_0900	Riki/Activity/springfes2022_activity.png		2
+6	6559	大富翁12（芸神竞会）开场剧情	[3,4]	-1	-1	216	11	1		activityspringfes2022/springfes2022_personal10	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1000	Riki/Activity/springfes2022_activity.png		2
+6	6560	大富翁13（芸神竞会）开场剧情	[3,4]	-1	-1	216	12	1		activityspringfes2022/springfes2022_personal11	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1100	Riki/Activity/springfes2022_activity.png		2
+6	6561	大富翁14（芸神竞会）开场剧情	[3,4]	-1	-1	216	13	1		activityspringfes2022/springfes2022_personal12	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1200	Riki/Activity/springfes2022_activity.png		2
+6	6562	大富翁15（芸神竞会）开场剧情	[3,4]	-1	-1	216	14	1		activityspringfes2022/springfes2022_personal13	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1300	Riki/Activity/springfes2022_activity.png		2
+6	6563	大富翁16（芸神竞会）开场剧情	[3,4]	-1	-1	216	15	1		activityspringfes2022/springfes2022_personal14	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1400	Riki/Activity/springfes2022_activity.png		2
+6	6564	大富翁17（芸神竞会）开场剧情	[3,4]	-1	-1	216	16	1		activityspringfes2022/springfes2022_personal15	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1500	Riki/Activity/springfes2022_activity.png		2
+6	6565	大富翁18（芸神竞会）开场剧情	[3,4]	-1	-1	216	17	1		activityspringfes2022/springfes2022_personal16	ui.UI_RichmanMap.Title2	activitytower.astoryspringfes2022_1600	Riki/Activity/springfes2022_activity.png		2
+															
+6	6544	21期活动（电子世界大冒险）1	[3,4,5]	-1	-1	21	1	1		activitytower22/activitytower22_ep1	tower.Tower.Name21	activitytower.astory22_ep0100	Riki/Activity/girl16_card34_activity.png		3
+6	6545	21期活动（电子世界大冒险）2	[3,4,5]	-1	-1	21	2	1		activitytower22/activitytower22_ep2	tower.Tower.Name21	activitytower.astory22_ep0200	Riki/Activity/girl16_card34_activity.png		3
+6	6546	21期活动（电子世界大冒险）3	[3,4,5]	-1	-1	21	3	1		activitytower22/activitytower22_ep3	tower.Tower.Name21	activitytower.astory22_ep0300	Riki/Activity/girl16_card34_activity.png		3
+6	6547	21期活动（电子世界大冒险）4	[3,4,5]	-1	-1	21	4	1		activitytower22/activitytower22_ep4	tower.Tower.Name21	activitytower.astory22_ep0400	Riki/Activity/girl16_card34_activity.png		3
+6	6548	21期活动（电子世界大冒险）5	[3,4,5]	-1	-1	21	5	1		activitytower22/activitytower22_ep5	tower.Tower.Name21	activitytower.astory22_ep0500	Riki/Activity/girl16_card34_activity.png		3
+															
+6	6510	2周年感谢信（二周年咖啡馆坦言）1	[2,3,4,5]	-1	-1	214	1	1		activityanniversary2nd/anniversary2ndgreeting_op	ui.2ndThanksLetter.title	ui.2ndThanksLetter.op	Riki/Activity/2anniversary_activity2.png		2
+6	6511	2周年感谢信（二周年咖啡馆坦言）2	[2,3,4,5]	-1	-1	214	2	1		activityanniversary2nd/anniversary2ndgreeting_01	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl01	Riki/Activity/2anniversary_activity2.png		2
+6	6512	2周年感谢信（二周年咖啡馆坦言）3	[2,3,4,5]	-1	-1	214	3	1		activityanniversary2nd/anniversary2ndgreeting_02	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl02	Riki/Activity/2anniversary_activity2.png		2
+6	6513	2周年感谢信（二周年咖啡馆坦言）4	[2,3,4,5]	-1	-1	214	4	1		activityanniversary2nd/anniversary2ndgreeting_03	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl03	Riki/Activity/2anniversary_activity2.png		2
+6	6514	2周年感谢信（二周年咖啡馆坦言）5	[2,3,4,5]	-1	-1	214	5	1		activityanniversary2nd/anniversary2ndgreeting_04	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl04	Riki/Activity/2anniversary_activity2.png		2
+6	6515	2周年感谢信（二周年咖啡馆坦言）6	[2,3,4,5]	-1	-1	214	6	1		activityanniversary2nd/anniversary2ndgreeting_05	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl05	Riki/Activity/2anniversary_activity2.png		2
+6	6516	2周年感谢信（二周年咖啡馆坦言）7	[2,3,4,5]	-1	-1	214	7	1		activityanniversary2nd/anniversary2ndgreeting_06	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl06	Riki/Activity/2anniversary_activity2.png		2
+6	6517	2周年感谢信（二周年咖啡馆坦言）8	[2,3,4,5]	-1	-1	214	8	1		activityanniversary2nd/anniversary2ndgreeting_07	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl07	Riki/Activity/2anniversary_activity2.png		2
+6	6518	2周年感谢信（二周年咖啡馆坦言）9	[2,3,4,5]	-1	-1	214	9	1		activityanniversary2nd/anniversary2ndgreeting_08	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl08	Riki/Activity/2anniversary_activity2.png		2
+6	6519	2周年感谢信（二周年咖啡馆坦言）10	[2,3,4,5]	-1	-1	214	10	1		activityanniversary2nd/anniversary2ndgreeting_09	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl09	Riki/Activity/2anniversary_activity2.png		2
+6	6520	2周年感谢信（二周年咖啡馆坦言）11	[2,3,4,5]	-1	-1	214	11	1		activityanniversary2nd/anniversary2ndgreeting_10	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl10	Riki/Activity/2anniversary_activity2.png		2
+6	6521	2周年感谢信（二周年咖啡馆坦言）12	[2,3,4,5]	-1	-1	214	12	1		activityanniversary2nd/anniversary2ndgreeting_11	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl11	Riki/Activity/2anniversary_activity2.png		2
+6	6522	2周年感谢信（二周年咖啡馆坦言）13	[2,3,4,5]	-1	-1	214	13	1		activityanniversary2nd/anniversary2ndgreeting_12	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl12	Riki/Activity/2anniversary_activity2.png		2
+6	6523	2周年感谢信（二周年咖啡馆坦言）14	[2,3,4,5]	-1	-1	214	14	1		activityanniversary2nd/anniversary2ndgreeting_13	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl13	Riki/Activity/2anniversary_activity2.png		2
+6	6524	2周年感谢信（二周年咖啡馆坦言）15	[2,3,4,5]	-1	-1	214	15	1		activityanniversary2nd/anniversary2ndgreeting_14	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl14	Riki/Activity/2anniversary_activity2.png		2
+6	6525	2周年感谢信（二周年咖啡馆坦言）16	[2,3,4,5]	-1	-1	214	16	1		activityanniversary2nd/anniversary2ndgreeting_15	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl15	Riki/Activity/2anniversary_activity2.png		2
+6	6526	2周年感谢信（二周年咖啡馆坦言）17	[2,3,4,5]	-1	-1	214	17	1		activityanniversary2nd/anniversary2ndgreeting_16	ui.2ndThanksLetter.title	ui.2ndThanksLetter.girl16	Riki/Activity/2anniversary_activity2.png		2
+6	6527	2周年感谢信（二周年咖啡馆坦言）18	[2,3,4,5]	-1	-1	214	18	1		activityanniversary2nd/anniversary2ndgreeting_ed	ui.2ndThanksLetter.title	ui.2ndThanksLetter.ed	Riki/Activity/2anniversary_activity2.png		2
+															
+6	6528	2周年爬塔（喜剧溯回歌） 1	[2,3,4,5]	-1	-1	215	1	1		activityanniversary2nd/anniversary2nd01_op	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_op00	Riki/Activity/2anniversary_activity1.png		4
+6	6529	2周年爬塔（喜剧溯回歌） 2	[2,3,4,5]	-1	-1	215	2	1		activityanniversary2nd/anniversary2nd01_girl02	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl0200	Riki/Activity/2anniversary_activity1.png		4
+6	6530	2周年爬塔（喜剧溯回歌） 3	[2,3,4,5]	-1	-1	215	3	1		activityanniversary2nd/anniversary2nd01_girl04	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl0400	Riki/Activity/2anniversary_activity1.png		4
+6	6531	2周年爬塔（喜剧溯回歌） 4	[2,3,4,5]	-1	-1	215	4	1		activityanniversary2nd/anniversary2nd01_girl08	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl0800	Riki/Activity/2anniversary_activity1.png		4
+6	6532	2周年爬塔（喜剧溯回歌） 5	[2,3,4,5]	-1	-1	215	5	1		activityanniversary2nd/anniversary2nd01_girl10	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl1000	Riki/Activity/2anniversary_activity1.png		4
+6	6533	2周年爬塔（喜剧溯回歌） 6	[2,3,4,5]	-1	-1	215	6	1		activityanniversary2nd/anniversary2nd01_girl12	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl1200	Riki/Activity/2anniversary_activity1.png		4
+6	6534	2周年爬塔（喜剧溯回歌） 7	[2,3,4,5]	-1	-1	215	7	1		activityanniversary2nd/anniversary2nd01_girl14	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_girl1400	Riki/Activity/2anniversary_activity1.png		4
+6	6535	2周年爬塔（喜剧溯回歌） 8	[2,3,4,5]	-1	-1	215	8	1		activityanniversary2nd/anniversary2nd01_ed	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd01_ed00	Riki/Activity/2anniversary_activity1.png		4
+6	6536	2周年爬塔（喜剧溯回歌） 9	[2,3,4,5]	-1	-1	215	9	1		activityanniversary2nd/anniversary2nd02_op	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_op00	Riki/Activity/2anniversary_activity1.png		4
+6	6537	2周年爬塔（喜剧溯回歌） 10	[2,3,4,5]	-1	-1	215	10	1		activityanniversary2nd/anniversary2nd02_girl01	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl0100	Riki/Activity/2anniversary_activity1.png		4
+6	6538	2周年爬塔（喜剧溯回歌） 11	[2,3,4,5]	-1	-1	215	11	1		activityanniversary2nd/anniversary2nd02_girl03	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl0300	Riki/Activity/2anniversary_activity1.png		4
+6	6539	2周年爬塔（喜剧溯回歌） 12	[2,3,4,5]	-1	-1	215	12	1		activityanniversary2nd/anniversary2nd02_girl05	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl0500	Riki/Activity/2anniversary_activity1.png		4
+6	6540	2周年爬塔（喜剧溯回歌） 13	[2,3,4,5]	-1	-1	215	13	1		activityanniversary2nd/anniversary2nd02_girl11	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl1100	Riki/Activity/2anniversary_activity1.png		4
+6	6541	2周年爬塔（喜剧溯回歌） 14	[2,3,4,5]	-1	-1	215	14	1		activityanniversary2nd/anniversary2nd02_girl13	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl1300	Riki/Activity/2anniversary_activity1.png		4
+6	6542	2周年爬塔（喜剧溯回歌） 15	[2,3,4,5]	-1	-1	215	15	1		activityanniversary2nd/anniversary2nd02_girl15	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_girl1500	Riki/Activity/2anniversary_activity1.png		4
+6	6543	2周年爬塔（喜剧溯回歌） 16	[2,3,4,5]	-1	-1	215	16	1		activityanniversary2nd/anniversary2nd02_ed	ui.UI_2ndAnniversaryMain.Tower	activityanniversary.anniversary2nd02_ed00	Riki/Activity/2anniversary_activity1.png		4
+															
+6	6502	20期活动（猫耳咖啡入场券）1	[3,4,5]	-1	-1	19	1	1		activitytower20/activitytower20_ep1	tower.Tower.Name20	activitytower.astory20_ep0100	Riki/Activity/girl12_card30_activity.png		3
+6	6503	20期活动（猫耳咖啡入场券）2	[3,4,5]	-1	-1	19	2	1		activitytower20/activitytower20_ep2	tower.Tower.Name20	activitytower.astory20_ep0200	Riki/Activity/girl12_card30_activity.png		3
+6	6504	20期活动（猫耳咖啡入场券）3	[3,4,5]	-1	-1	19	3	1		activitytower20/activitytower20_ep3	tower.Tower.Name20	activitytower.astory20_ep0300	Riki/Activity/girl12_card30_activity.png		3
+6	6505	20期活动（猫耳咖啡入场券）4	[3,4,5]	-1	-1	19	4	1		activitytower20/activitytower20_ep4	tower.Tower.Name20	activitytower.astory20_ep0400	Riki/Activity/girl12_card30_activity.png		3
+6	6506	20期活动（猫耳咖啡入场券）5	[3,4,5]	-1	-1	19	5	1		activitytower20/activitytower20_ep5	tower.Tower.Name20	activitytower.astory20_ep0500	Riki/Activity/girl12_card30_activity.png		3
+															
+6	6494	猜拳二期（正义猜决大赛）1	[3,4]	-1	-1	213	1	1		activityGuess/guess2_openning	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story1	Riki/Activity/anniversary_guess2.png		2
+6	6495	猜拳二期（正义猜决大赛）2	[3,4]	-1	-1	213	2	1		activityGuess/guess2_chose1	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story7	Riki/Activity/anniversary_guess2.png		2
+6	6496	猜拳二期（正义猜决大赛）3	[3,4]	-1	-1	213	3	1		activityGuess/guess2_chose1win	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story3	Riki/Activity/anniversary_guess2.png		2
+6	6497	猜拳二期（正义猜决大赛）4	[3,4]	-1	-1	213	4	1		activityGuess/guess2_chose1final	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story5	Riki/Activity/anniversary_guess2.png		2
+6	6498	猜拳二期（正义猜决大赛）5	[3,4]	-1	-1	213	5	1		activityGuess/guess2_chose2	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story8	Riki/Activity/anniversary_guess2.png		2
+6	6499	猜拳二期（正义猜决大赛）6	[3,4]	-1	-1	213	6	1		activityGuess/guess2_chose2win	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story4	Riki/Activity/anniversary_guess2.png		2
+6	6500	猜拳二期（正义猜决大赛）7	[3,4]	-1	-1	213	7	1		activityGuess/guess2_chose2final	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story6	Riki/Activity/anniversary_guess2.png		2
+6	6501	猜拳二期（正义猜决大赛）8	[3,4]	-1	-1	213	8	1		activityGuess/guess2_ending	ui.UI_Guess2.Maintitle22	ui.UI_GuessMain.story2	Riki/Activity/anniversary_guess2.png		2
+															
+6	6493	宠物系统（萌宠物语）1	[3,4]	-1	-1	212	1	1		activitydaily/pettime_opening	ui.Riki.PetTitle0	ui.Riki.PetTitle1	Riki/Activity/pet_activity.png		2
+															
+															
+6	6486	十九期活动（马戏团童话）1	[3,4,5]	-1	-1	19	1	1		activitytower19/activitytower19_ep1	tower.Tower.Name19	activitytower.astory19_ep01000	Riki/Activity/girl06_card06_activity.png		3
+6	6487	十九期活动（马戏团童话）2	[3,4,5]	-1	-1	19	2	1		activitytower19/activitytower19_ep2	tower.Tower.Name19	activitytower.astory19_ep02000	Riki/Activity/girl06_card06_activity.png		3
+6	6488	十九期活动（马戏团童话）3	[3,4,5]	-1	-1	19	3	1		activitytower19/activitytower19_ep3	tower.Tower.Name19	activitytower.astory19_ep03000	Riki/Activity/girl06_card06_activity.png		3
+6	6489	十九期活动（马戏团童话）4	[3,4,5]	-1	-1	19	4	1		activitytower19/activitytower19_ep4	tower.Tower.Name19	activitytower.astory19_ep04000	Riki/Activity/girl06_card06_activity.png		3
+6	6490	十九期活动（马戏团童话）5	[3,4,5]	-1	-1	19	5	1		activitytower19/activitytower19_ep5	tower.Tower.Name19	activitytower.astory19_ep05000	Riki/Activity/girl06_card06_activity.png		3
+															
+6	6461	双子生日（为她们的生日而庆贺）1	[4]	-1	-1	211	1	1		activitytwinsbirthday/activitytwinsbrithday_op	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.activitytwinsbrithday_op	Riki/Activity/girl16_card22_activity.png		4
+6	6462	双子生日（为她们的生日而庆贺）2	[4]	-1	-1	211	2	1		activitytwinsbirthday/yui01	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui01	Riki/Activity/girl16_card22_activity.png		1
+6	6463	双子生日（为她们的生日而庆贺）3	[4]	-1	-1	211	3	1		activitytwinsbirthday/yui02	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui02	Riki/Activity/girl16_card22_activity.png		1
+6	6464	双子生日（为她们的生日而庆贺）4	[4]	-1	-1	211	4	1		activitytwinsbirthday/yui03	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui03	Riki/Activity/girl16_card22_activity.png		1
+6	6465	双子生日（为她们的生日而庆贺）5	[4]	-1	-1	211	5	1		activitytwinsbirthday/yui04	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui04	Riki/Activity/girl16_card22_activity.png		1
+6	6466	双子生日（为她们的生日而庆贺）6	[4]	-1	-1	211	6	1		activitytwinsbirthday/yui05	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui05	Riki/Activity/girl16_card22_activity.png		1
+6	6467	双子生日（为她们的生日而庆贺）7	[4]	-1	-1	211	7	1		activitytwinsbirthday/yui06	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui06	Riki/Activity/girl16_card22_activity.png		1
+6	6468	双子生日（为她们的生日而庆贺）8	[4]	-1	-1	211	8	1		activitytwinsbirthday/yui07	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui07	Riki/Activity/girl16_card22_activity.png		1
+6	6469	双子生日（为她们的生日而庆贺）9	[4]	-1	-1	211	9	1		activitytwinsbirthday/yui08	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui08	Riki/Activity/girl16_card22_activity.png		1
+6	6470	双子生日（为她们的生日而庆贺）10	[4]	-1	-1	211	10	1		activitytwinsbirthday/yui09	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yui09	Riki/Activity/girl16_card22_activity.png		1
+6	6471	双子生日（为她们的生日而庆贺）11	[4]	-1	-1	211	11	1		activitytwinsbirthday/yuied	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuied	Riki/Activity/girl16_card22_activity.png		4
+6	6472	双子生日（为她们的生日而庆贺）12	[4]	-1	-1	211	12	1		activitytwinsbirthday/yuki01	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki01	Riki/Activity/girl16_card22_activity.png		1
+6	6473	双子生日（为她们的生日而庆贺）13	[4]	-1	-1	211	13	1		activitytwinsbirthday/yuki02	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki02	Riki/Activity/girl16_card22_activity.png		1
+6	6474	双子生日（为她们的生日而庆贺）14	[4]	-1	-1	211	14	1		activitytwinsbirthday/yuki03	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki03	Riki/Activity/girl16_card22_activity.png		1
+6	6475	双子生日（为她们的生日而庆贺）15	[4]	-1	-1	211	15	1		activitytwinsbirthday/yuki04	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki04	Riki/Activity/girl16_card22_activity.png		1
+6	6476	双子生日（为她们的生日而庆贺）16	[4]	-1	-1	211	16	1		activitytwinsbirthday/yuki05	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki05	Riki/Activity/girl16_card22_activity.png		1
+6	6477	双子生日（为她们的生日而庆贺）17	[4]	-1	-1	211	17	1		activitytwinsbirthday/yuki06	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki06	Riki/Activity/girl16_card22_activity.png		1
+6	6478	双子生日（为她们的生日而庆贺）18	[4]	-1	-1	211	18	1		activitytwinsbirthday/yuki07	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki07	Riki/Activity/girl16_card22_activity.png		1
+6	6479	双子生日（为她们的生日而庆贺）19	[4]	-1	-1	211	19	1		activitytwinsbirthday/yuki08	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki08	Riki/Activity/girl16_card22_activity.png		1
+6	6480	双子生日（为她们的生日而庆贺）20	[4]	-1	-1	211	20	1		activitytwinsbirthday/yuki09	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yuki09	Riki/Activity/girl16_card22_activity.png		1
+6	6481	双子生日（为她们的生日而庆贺）21	[4]	-1	-1	211	21	1		activitytwinsbirthday/yukied	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.yukied	Riki/Activity/girl16_card22_activity.png		4
+6	6482	双子生日（为她们的生日而庆贺）22	[4]	-1	-1	211	22	1		activitytwinsbirthday/activitytwinsbrithday_final	ui.activitytwinsbirthday.title	ui.activitytwinsbirthday.activitytwinsbrithday_final	Riki/Activity/girl16_card22_activity.png		7
+															
+6	6451	十八期活动（第三条仪规）1	[3,4,5]	-1	-1	18	1	1		activitytower18/activitytower18_hr01	tower.Tower.Name18	activitytower.astory18_hr0100	Riki/Activity/girl01_card29_activity.png		3
+6	6452	十八期活动（第三条仪规）2	[3,4,5]	-1	-1	18	2	1		activitytower18/activitytower18_dr01	tower.Tower.Name18	activitytower.astory18_dr0100	Riki/Activity/girl01_card29_activity.png		3
+6	6453	十八期活动（第三条仪规）3	[3,4,5]	-1	-1	18	3	1		activitytower18/activitytower18_hr02	tower.Tower.Name18	activitytower.astory18_hr0200	Riki/Activity/girl01_card29_activity.png		3
+6	6454	十八期活动（第三条仪规）4	[3,4,5]	-1	-1	18	4	1		activitytower18/activitytower18_dr02	tower.Tower.Name18	activitytower.astory18_dr0200	Riki/Activity/girl01_card29_activity.png		3
+6	6455	十八期活动（第三条仪规）5	[3,4,5]	-1	-1	18	5	1		activitytower18/activitytower18_hr03	tower.Tower.Name18	activitytower.astory18_hr0300	Riki/Activity/girl01_card29_activity.png		3
+6	6456	十八期活动（第三条仪规）6	[3,4,5]	-1	-1	18	6	1		activitytower18/activitytower18_dr03	tower.Tower.Name18	activitytower.astory18_dr0300	Riki/Activity/girl01_card29_activity.png		3
+6	6457	十八期活动（第三条仪规）7	[3,4,5]	-1	-1	18	7	1		activitytower18/activitytower18_hr04	tower.Tower.Name18	activitytower.astory18_hr0400	Riki/Activity/girl01_card29_activity.png		3
+6	6458	十八期活动（第三条仪规）8	[3,4,5]	-1	-1	18	8	1		activitytower18/activitytower18_dr04	tower.Tower.Name18	activitytower.astory18_dr0400	Riki/Activity/girl01_card29_activity.png		3
+6	6459	十八期活动（第三条仪规）9	[3,4,5]	-1	-1	18	9	1		activitytower18/activitytower18_hr05	tower.Tower.Name18	activitytower.astory18_hr0500	Riki/Activity/girl01_card29_activity.png		3
+6	6460	十八期活动（第三条仪规）10	[3,4,5]	-1	-1	18	10	1		activitytower18/activitytower18_dr05	tower.Tower.Name18	activitytower.astory18_dr0500	Riki/Activity/girl01_card29_activity.png		3
+															
+6	6415	2019·高奈利亚生日	[4]	-1	-1	210	1	1		girl02/girl02_bi2019	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle1	Riki/Activity/girlbirth_activity.png		10
+6	6416	2020·艾琳生日	[4]	-1	-1	210	2	1		girl07/girl07_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle2	Riki/Activity/girlbirth_activity.png		10
+6	6417	2020·苏小真生日	[4]	-1	-1	210	3	1		girl05/girl05_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle3	Riki/Activity/girlbirth_activity.png		10
+6	6418	2020·朱诺生日	[4]	-1	-1	210	4	1		girl03/girl03_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle4	Riki/Activity/girlbirth_activity.png		10
+6	6419	2020·时无瑕生日	[4]	-1	-1	210	5	1		girl09/girl09_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle5	Riki/Activity/girlbirth_activity.png		10
+6	6420	2020·洛可可生日	[4]	-1	-1	210	6	1		girl01/girl01_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle6	Riki/Activity/girlbirth_activity.png		10
+6	6421	2020·格兰妮生日	[4]	-1	-1	210	7	1		girl08/girl08_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle7	Riki/Activity/girlbirth_activity.png		10
+6	6422	2020·丽达生日	[4]	-1	-1	210	8	1		girl11/girl11_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle8	Riki/Activity/girlbirth_activity.png		10
+6	6423	2020·千姬生日	[4]	-1	-1	210	9	1		girl06/girl06_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle9	Riki/Activity/girlbirth_activity.png		10
+6	6424	2020·聂诗柔生日	[4]	-1	-1	210	10	1		girl14/girl14_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle10	Riki/Activity/girlbirth_activity.png		10
+6	6425	2020·沐恩生日	[4]	-1	-1	210	11	1		girl04/girl04_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle11	Riki/Activity/girlbirth_activity.png		10
+6	6426	2020·伊珂丝生日	[4]	-1	-1	210	12	1		girl12/girl12_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle12	Riki/Activity/girlbirth_activity.png		10
+6	6427	2020·时无忧生日	[4]	-1	-1	210	13	1		girl10/girl10_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle13	Riki/Activity/girlbirth_activity.png		10
+6	6428	2020·高奈利亚生日	[4]	-1	-1	210	14	1		girl02/girl02_bi2020	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle14	Riki/Activity/girlbirth_activity.png		10
+6	6429	2021·苏小真生日	[4]	-1	-1	210	15	1		girl05/girl05_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle15	Riki/Activity/girlbirth_activity.png		10
+6	6430	2021·阿尼娅生日	[4]	-1	-1	210	16	1		girl15/girl15_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle16	Riki/Activity/girlbirth_activity.png		10
+6	6431	2021·朱诺生日	[4]	-1	-1	210	17	1		girl03/girl03_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle17	Riki/Activity/girlbirth_activity.png		10
+6	6432	2021·时无瑕生日	[4]	-1	-1	210	18	1		girl09/girl09_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle18	Riki/Activity/girlbirth_activity.png		10
+6	6433	2021·卡萝生日	[4]	-1	-1	210	19	1		girl13/girl13_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle19	Riki/Activity/girlbirth_activity.png		10
+6	6434	2021·洛可可生日	[4]	-1	-1	210	20	1		girl01/girl01_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle20	Riki/Activity/girlbirth_activity.png		10
+6	6435	2021·艾琳生日	[4]	-1	-1	210	21	1		girl07/girl07_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle21	Riki/Activity/girlbirth_activity.png		10
+6	6436	2021·格兰妮生日	[4]	-1	-1	210	22	1		girl08/girl08_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle22	Riki/Activity/girlbirth_activity.png		10
+6	6483	2021·千姬和唯生日	[4]	-1	-1	210	23	1		activitytwinsbirthday/activitytwinsbrithday_yuiyukibi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle23	Riki/Activity/girlbirth_activity.png		10
+6	6484	2021·聂诗柔生日	[4]	-1	-1	210	24	1		girl14/girl14_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle24	Riki/Activity/girlbirth_activity.png		10
+6	6491	2021·丽达生日	[4]	-1	-1	210	25	1		girl11/girl11_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle25	Riki/Activity/girlbirth_activity.png		10
+6	6492	2021·沐恩生日	[4]	-1	-1	210	26	1		girl04/girl04_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle26	Riki/Activity/girlbirth_activity.png		10
+6	6507	2021·伊珂丝生日	[4]	-1	-1	210	27	1		girl12/girl12_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle27	Riki/Activity/girlbirth_activity.png		10
+6	6508	2021·时无忧生日	[4]	-1	-1	210	28	1		girl10/girl10_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle28	Riki/Activity/girlbirth_activity.png		10
+6	6578	2021·高奈利亚生日	[4]	-1	-1	210	29	1		girl02/girl02_bi2021	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle29	Riki/Activity/girlbirth_activity.png		10
+6	6579	2022·苏小真生日	[4]	-1	-1	210	30	1		girl05/girl05_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle30	Riki/Activity/girlbirth_activity.png		10
+6	6580	2022·阿尼娅生日	[4]	-1	-1	210	31	1		girl15/girl15_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle31	Riki/Activity/girlbirth_activity.png		10
+6	6602	2022·朱诺生日	[4]	-1	-1	210	32	1		girl03/girl03_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle32	Riki/Activity/girlbirth_activity.png		10
+6	6603	2022·艾琳生日	[4]	-1	-1	210	33	1		girl07/girl07_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle33	Riki/Activity/girlbirth_activity.png		10
+6	6604	2022·时无瑕生日	[4]	-1	-1	210	34	1		girl09/girl09_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle34	Riki/Activity/girlbirth_activity.png		10
+6	6620	2022·卡萝生日	[4]	-1	-1	210	35	1		girl05/girl05_bi2022	ui.Riki.BirthdayTitle	ui.Riki.BirthdayTitle35	Riki/Activity/girlbirth_activity.png		10
+															
+6	6442	十七期活动（竞斗圆舞）1	[2,4,5]	-1	-1	17	1	1		activitytower17/activitytower17_op	tower.Tower.Name17	activitytower.astory17_op00	Riki/Activity/girl14_card21_activity.png		3
+6	6443	十七期活动（竞斗圆舞）2	[2,4,5]	-1	-1	17	2	1		activitytower17/activitytower17_epW	tower.Tower.Name17	activitytower.astory17_EPW00	Riki/Activity/girl14_card21_activity.png		3
+6	6444	十七期活动（竞斗圆舞）3	[2,4,5]	-1	-1	17	3	1		activitytower17/activitytower17_spW	tower.Tower.Name17	activitytower.astory17_SPW00	Riki/Activity/girl14_card21_activity.png		3
+6	6445	十七期活动（竞斗圆舞）4	[2,4,5]	-1	-1	17	4	1		activitytower17/activitytower17_epA	tower.Tower.Name17	activitytower.astory17_EPA00	Riki/Activity/girl14_card21_activity.png		3
+6	6446	十七期活动（竞斗圆舞）5	[2,4,5]	-1	-1	17	5	1		activitytower17/activitytower17_spA	tower.Tower.Name17	activitytower.astory17_SPA00	Riki/Activity/girl14_card21_activity.png		3
+6	6447	十七期活动（竞斗圆舞）6	[2,4,5]	-1	-1	17	6	1		activitytower17/activitytower17_epR	tower.Tower.Name17	activitytower.astory17_EPR00	Riki/Activity/girl14_card21_activity.png		3
+6	6448	十七期活动（竞斗圆舞）7	[2,4,5]	-1	-1	17	7	1		activitytower17/activitytower17_spR	tower.Tower.Name17	activitytower.astory17_SPR00	Riki/Activity/girl14_card21_activity.png		3
+6	6449	十七期活动（竞斗圆舞）8	[2,4,5]	-1	-1	17	8	1		activitytower17/activitytower17_epO	tower.Tower.Name17	activitytower.astory17_EPO00	Riki/Activity/girl14_card21_activity.png		3
+6	6450	十七期活动（竞斗圆舞）9	[2,4,5]	-1	-1	17	9	1		activitytower17/activitytower17_spO	tower.Tower.Name17	activitytower.astory17_SPO00	Riki/Activity/girl14_card21_activity.png		3
+															
+6	6437	十六期活动（同胡客栈）1	[2,4]	-1	-1	16	1	1		activitytower16/activitytower1601_op	tower.Tower.Name16	activitytower.astory16_op001	Riki/Activity/girl02_card12_activity.png		3
+6	6438	十六期活动（同胡客栈）2	[2,4]	-1	-1	16	2	1		activitytower16/activitytower1602_act1	tower.Tower.Name16	activitytower.astory16_act101	Riki/Activity/girl02_card12_activity.png		3
+6	6439	十六期活动（同胡客栈）3	[2,4]	-1	-1	16	3	1		activitytower16/activitytower1603_act2	tower.Tower.Name16	activitytower.astory16_act201	Riki/Activity/girl02_card12_activity.png		3
+6	6440	十六期活动（同胡客栈）4	[2,4]	-1	-1	16	4	1		activitytower16/activitytower1604_act3	tower.Tower.Name16	activitytower.astory16_act301	Riki/Activity/girl02_card12_activity.png		3
+6	6441	十六期活动（同胡客栈）5	[2,4]	-1	-1	16	5	1		activitytower16/activitytower1605_ed	tower.Tower.Name16	activitytower.astory16_ed001	Riki/Activity/girl02_card12_activity.png		3
+															
+6	6409	十五期活动（警戒的守护者）1	[4]	-1	-1	15	1	1		activitytower15/activitytower15_ep1	tower.Tower.Name15	activitytower.astory15_ep01000	Riki/Activity/girl11_card19_activity.png		3
+6	6410	十五期活动（警戒的守护者）2	[4]	-1	-1	15	2	1		activitytower15/activitytower15_ep2A	tower.Tower.Name15	activitytower.astory15_ep02000	Riki/Activity/girl11_card19_activity.png		3
+6	6411	十五期活动（警戒的守护者）3	[4]	-1	-1	15	3	1		activitytower15/activitytower15_ep2B	tower.Tower.Name15	activitytower.astory15_ep04000	Riki/Activity/girl11_card19_activity.png		3
+6	6412	十五期活动（警戒的守护者）4	[4]	-1	-1	15	4	1		activitytower15/activitytower15_ep3A	tower.Tower.Name15	activitytower.astory15_ep03000	Riki/Activity/girl11_card19_activity.png		3
+6	6413	十五期活动（警戒的守护者）5	[4]	-1	-1	15	5	1		activitytower15/activitytower15_ep3B	tower.Tower.Name15	activitytower.astory15_ep05000	Riki/Activity/girl11_card19_activity.png		3
+6	6414	十五期活动（警戒的守护者）6	[4]	-1	-1	15	6	1		activitytower15/activitytower15_ep4	tower.Tower.Name15	activitytower.astory15_ep06000	Riki/Activity/girl11_card19_activity.png		3
+															
+6	6404	十四期活动（西部世界危机）1	[4]	-1	-1	14	1	1		activitytower14/activitytower14_ep1	tower.Tower.Name14	activitytower.astory14_ep01000	Riki/Activity/girl10_card24_activity.png		3
+6	6405	十四期活动（西部世界危机）2	[4]	-1	-1	14	2	1		activitytower14/activitytower14_ep2	tower.Tower.Name14	activitytower.astory14_ep02000	Riki/Activity/girl10_card24_activity.png		3
+6	6406	十四期活动（西部世界危机）3	[4]	-1	-1	14	3	1		activitytower14/activitytower14_ep3	tower.Tower.Name14	activitytower.astory14_ep03000	Riki/Activity/girl10_card24_activity.png		3
+6	6407	十四期活动（西部世界危机）4	[4]	-1	-1	14	4	1		activitytower14/activitytower14_ep4	tower.Tower.Name14	activitytower.astory14_ep04000	Riki/Activity/girl10_card24_activity.png		3
+6	6408	十四期活动（西部世界危机）5	[4]	-1	-1	14	5	1		activitytower14/activitytower14_ep5	tower.Tower.Name14	activitytower.astory14_ep05000	Riki/Activity/girl10_card24_activity.png		3
+															
+6	6401	天生购物狂 1	[4]	-1	-1	209	1	1		activitytowerwinterholiday21/activitytowerwinterholiday21_op	activity.ShoppingTower	ui.ShoppingTower.Title1	Riki/Activity/girl05_card27_activity.png		3
+6	6402	天生购物狂 2	[4]	-1	-1	209	2	1		activitytowerwinterholiday21/activitytowerwinterholiday21_ed	activity.ShoppingTower	ui.ShoppingTower.Title2	Riki/Activity/girl05_card27_activity.png		3
+															
+6	6383	大富翁（缘牵节场）开场剧情	[4]	-1	-1	208	1	1		activityspringfes2021/springfes2021_opening	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_op00	Riki/Activity/springfes2021_activity.png		2
+6	6384	大富翁（缘牵节场）少女1剧情	[4]	-1	-1	208	2	1		activityspringfes2021/springfes2021_personal01	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0100	Riki/Activity/springfes2021_activity.png		2
+6	6385	大富翁（缘牵节场）少女2剧情	[4]	-1	-1	208	3	1		activityspringfes2021/springfes2021_personal02	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0200	Riki/Activity/springfes2021_activity.png		2
+6	6386	大富翁（缘牵节场）少女3剧情	[4]	-1	-1	208	4	1		activityspringfes2021/springfes2021_personal03	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0300	Riki/Activity/springfes2021_activity.png		2
+6	6387	大富翁（缘牵节场）少女4剧情	[4]	-1	-1	208	5	1		activityspringfes2021/springfes2021_personal04	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0400	Riki/Activity/springfes2021_activity.png		2
+6	6388	大富翁（缘牵节场）少女5剧情	[4]	-1	-1	208	6	1		activityspringfes2021/springfes2021_personal05	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0500	Riki/Activity/springfes2021_activity.png		2
+6	6389	大富翁（缘牵节场）少女6剧情	[4]	-1	-1	208	7	1		activityspringfes2021/springfes2021_personal06	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0600	Riki/Activity/springfes2021_activity.png		2
+6	6390	大富翁（缘牵节场）少女7剧情	[4]	-1	-1	208	8	1		activityspringfes2021/springfes2021_personal07	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0700	Riki/Activity/springfes2021_activity.png		2
+6	6391	大富翁（缘牵节场）少女8剧情	[4]	-1	-1	208	9	1		activityspringfes2021/springfes2021_personal08	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0800	Riki/Activity/springfes2021_activity.png		2
+6	6392	大富翁（缘牵节场）少女9剧情	[4]	-1	-1	208	10	1		activityspringfes2021/springfes2021_personal09	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_0900	Riki/Activity/springfes2021_activity.png		2
+6	6393	大富翁（缘牵节场）少女10剧情	[4]	-1	-1	208	11	1		activityspringfes2021/springfes2021_personal10	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1000	Riki/Activity/springfes2021_activity.png		2
+6	6394	大富翁（缘牵节场）少女11剧情	[4]	-1	-1	208	12	1		activityspringfes2021/springfes2021_personal11	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1100	Riki/Activity/springfes2021_activity.png		2
+6	6395	大富翁（缘牵节场）少女12剧情	[4]	-1	-1	208	13	1		activityspringfes2021/springfes2021_personal12	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1200	Riki/Activity/springfes2021_activity.png		2
+6	6396	大富翁（缘牵节场）少女13剧情	[4,5]	-1	-1	208	14	1		activityspringfes2021/springfes2021_personal13	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1300	Riki/Activity/springfes2021_activity.png		2
+6	6397	大富翁（缘牵节场）少女14剧情	[4]	-1	-1	208	15	1		activityspringfes2021/springfes2021_personal14	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1400	Riki/Activity/springfes2021_activity.png		2
+6	6398	大富翁（缘牵节场）少女15剧情	[4]	-1	-1	208	16	1		activityspringfes2021/springfes2021_personal15	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1500	Riki/Activity/springfes2021_activity.png		2
+6	6399	大富翁（缘牵节场）少女16剧情	[4,5]	-1	-1	208	17	1		activityspringfes2021/springfes2021_personal16	ui.UI_RichmanMap.Title	activitytower.astoryspringfes2021_1600	Riki/Activity/springfes2021_activity.png		2
+															
+6	6378	十三期活动（非异常收容）1	[4]	-1	-1	13	1	1		activitytower13/activitytower13_ep1	tower.Tower.Name13	activitytower.astory13_ep01000	Riki/Activity/girl06_card11_activity.png		3
+6	6379	十三期活动（非异常收容）2	[4]	-1	-1	13	2	1		activitytower13/activitytower13_ep2	tower.Tower.Name13	activitytower.astory13_ep02000	Riki/Activity/girl06_card11_activity.png		3
+6	6380	十三期活动（非异常收容）3	[4]	-1	-1	13	3	1		activitytower13/activitytower13_ep3	tower.Tower.Name13	activitytower.astory13_ep03000	Riki/Activity/girl06_card11_activity.png		3
+6	6381	十三期活动（非异常收容）4	[4]	-1	-1	13	4	1		activitytower13/activitytower13_ep4	tower.Tower.Name13	activitytower.astory13_ep04000	Riki/Activity/girl06_card11_activity.png		3
+6	6382	十三期活动（非异常收容）5	[4]	-1	-1	13	5	1		activitytower13/activitytower13_ep5	tower.Tower.Name13	activitytower.astory13_ep05000	Riki/Activity/girl06_card11_activity.png		3
+															
+6	6369	圣诞活动（她最后的颂歌）1	[4,5]	-1	-1	207	1	1		activitytowerchristmas2020/activitytowerchristmas202001_op	ui.Activity_2020xmas.Title	activitytower.christmas2020_01000	Riki/Activity/girl04_card26_activity.png		3
+6	6370	圣诞活动（她最后的颂歌）2	[4,5]	-1	-1	207	2	1		activitytowerchristmas2020/activitytowerchristmas202002_ep	ui.Activity_2020xmas.Title	activitytower.christmas2020_02000	Riki/Activity/girl04_card26_activity.png		3
+6	6371	圣诞活动（她最后的颂歌）3	[4,5]	-1	-1	207	3	1		activitytowerchristmas2020/activitytowerchristmas202008_ed	ui.Activity_2020xmas.Title	activitytower.christmas2020_03000	Riki/Activity/girl04_card26_activity.png		3
+6	6372	圣诞活动（她最后的颂歌）4	[4,5]	-1	-1	207	4	1		activitytowerchristmas2020/activitytowerchristmas202003_memory01	ui.Activity_2020xmas.Title	activitytower.christmas2020_memory01000	Riki/Activity/girl04_card26_activity.png		3
+6	6373	圣诞活动（她最后的颂歌）5	[4,5]	-1	-1	207	5	1		activitytowerchristmas2020/activitytowerchristmas202004_memory02	ui.Activity_2020xmas.Title	activitytower.christmas2020_memory02000	Riki/Activity/girl04_card26_activity.png		3
+6	6374	圣诞活动（她最后的颂歌）6	[4,5]	-1	-1	207	6	1		activitytowerchristmas2020/activitytowerchristmas202005_memory03	ui.Activity_2020xmas.Title	activitytower.christmas2020_memory03000	Riki/Activity/girl04_card26_activity.png		3
+6	6375	圣诞活动（她最后的颂歌）7	[4,5]	-1	-1	207	7	1		activitytowerchristmas2020/activitytowerchristmas202006_memory04	ui.Activity_2020xmas.Title	activitytower.christmas2020_memory04000	Riki/Activity/girl04_card26_activity.png		3
+6	6376	圣诞活动（她最后的颂歌）8	[4,5]	-1	-1	207	8	1		activitytowerchristmas2020/activitytowerchristmas202007_memory05	ui.Activity_2020xmas.Title	activitytower.christmas2020_memory05000	Riki/Activity/girl04_card26_activity.png		3
+6	6377	圣诞活动（她最后的颂歌）9	[4,5]	-1	-1	207	9	1		activitytowerchristmas2020/activitytowerchristmas202008_ted	ui.Activity_2020xmas.Title	activitytower.christmas2020_te000	Riki/Activity/girl04_card26_activity.png		30
+															
+6	6211	可可周年庆告白剧情	[3,4]	18	2	1	1	1		1stanniversaryblessing/anniversary_girl01	ui.UI_Anniversary.Title	ui.UI_Anniversary.Love01	Riki/Activity/anniversary_activity.png		7
+6	6212	小真周年庆告白剧情	[3,4]	18	2	1	5	1		1stanniversaryblessing/anniversary_girl05	ui.UI_Anniversary.Title	ui.UI_Anniversary.Love05	Riki/Activity/anniversary_activity.png		7
+6	6213	艾琳周年庆告白剧情	[3,4]	18	2	1	7	1		1stanniversaryblessing/anniversary_girl07	ui.UI_Anniversary.Title	ui.UI_Anniversary.Love07	Riki/Activity/anniversary_activity.png		7
+6	6214	无瑕周年庆告白剧情	[3,4]	18	2	1	9	1		1stanniversaryblessing/anniversary_girl09	ui.UI_Anniversary.Title	ui.UI_Anniversary.Love09	Riki/Activity/anniversary_activity.png		7
+6	6215	诗柔周年庆告白剧情	[3,4]	18	2	1	14	1		1stanniversaryblessing/anniversary_girl14	ui.UI_Anniversary.Title	ui.UI_Anniversary.Love14	Riki/Activity/anniversary_activity.png		7
+															
+6	6216	周年庆肝塔剧情op	[4]	-1	-1	202	1	1		activityanniversary/anniversary01_op	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_op000	Riki/Activity/anniversaryall_activity.png		7
+6	6217	巧克力剧情1	[4]	-1	-1	202	2	1		activityanniversary/anniversary01_girl01_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl01_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6218	巧克力剧情2	[4]	-1	-1	202	3	1		activityanniversary/anniversary01_girl01_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl01_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6219	巧克力剧情3	[4]	-1	-1	202	4	1		activityanniversary/anniversary01_girl01_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl01_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6220	巧克力剧情4	[4]	-1	-1	202	5	1		activityanniversary/anniversary01_girl02_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl02_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6221	巧克力剧情5	[4]	-1	-1	202	6	1		activityanniversary/anniversary01_girl02_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl02_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6222	巧克力剧情6	[4]	-1	-1	202	7	1		activityanniversary/anniversary01_girl02_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl02_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6223	巧克力剧情7	[4]	-1	-1	202	8	1		activityanniversary/anniversary01_girl03_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl03_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6224	巧克力剧情8	[4]	-1	-1	202	9	1		activityanniversary/anniversary01_girl03_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl03_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6225	巧克力剧情9	[4]	-1	-1	202	10	1		activityanniversary/anniversary01_girl03_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl03_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6226	巧克力剧情10	[4]	-1	-1	202	11	1		activityanniversary/anniversary01_girl04_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl04_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6227	巧克力剧情11	[4]	-1	-1	202	12	1		activityanniversary/anniversary01_girl04_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl04_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6228	巧克力剧情12	[4]	-1	-1	202	13	1		activityanniversary/anniversary01_girl04_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl04_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6229	巧克力剧情13	[4]	-1	-1	202	14	1		activityanniversary/anniversary01_girl05_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl05_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6230	巧克力剧情14	[4]	-1	-1	202	15	1		activityanniversary/anniversary01_girl05_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl05_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6231	巧克力剧情15	[4]	-1	-1	202	16	1		activityanniversary/anniversary01_girl05_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl05_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6232	巧克力剧情16	[4]	-1	-1	202	17	1		activityanniversary/anniversary01_girl06_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl06_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6233	巧克力剧情17	[4]	-1	-1	202	18	1		activityanniversary/anniversary01_girl06_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl06_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6234	巧克力剧情18	[4]	-1	-1	202	19	1		activityanniversary/anniversary01_girl06_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl06_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6235	巧克力剧情19	[4]	-1	-1	202	20	1		activityanniversary/anniversary01_girl07_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl07_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6236	巧克力剧情20	[4]	-1	-1	202	21	1		activityanniversary/anniversary01_girl07_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl07_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6237	巧克力剧情21	[4]	-1	-1	202	22	1		activityanniversary/anniversary01_girl07_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl07_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6238	巧克力剧情22	[4]	-1	-1	202	23	1		activityanniversary/anniversary01_girl08_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl08_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6239	巧克力剧情23	[4]	-1	-1	202	24	1		activityanniversary/anniversary01_girl08_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl08_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6240	巧克力剧情24	[4]	-1	-1	202	25	1		activityanniversary/anniversary01_girl08_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl08_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6241	巧克力剧情25	[4]	-1	-1	202	26	1		activityanniversary/anniversary01_girl09_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl09_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6242	巧克力剧情26	[4]	-1	-1	202	27	1		activityanniversary/anniversary01_girl09_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl09_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6243	巧克力剧情27	[4]	-1	-1	202	28	1		activityanniversary/anniversary01_girl09_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl09_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6244	巧克力剧情28	[4]	-1	-1	202	29	1		activityanniversary/anniversary01_girl10_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl10_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6245	巧克力剧情29	[4]	-1	-1	202	30	1		activityanniversary/anniversary01_girl10_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl10_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6246	巧克力剧情30	[4]	-1	-1	202	31	1		activityanniversary/anniversary01_girl10_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl10_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6247	巧克力剧情31	[4]	-1	-1	202	32	1		activityanniversary/anniversary01_girl11_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl11_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6248	巧克力剧情32	[4]	-1	-1	202	33	1		activityanniversary/anniversary01_girl11_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl11_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6249	巧克力剧情33	[4]	-1	-1	202	34	1		activityanniversary/anniversary01_girl11_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl11_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6250	巧克力剧情34	[4]	-1	-1	202	35	1		activityanniversary/anniversary01_girl12_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl12_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6251	巧克力剧情35	[4]	-1	-1	202	36	1		activityanniversary/anniversary01_girl12_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl12_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6252	巧克力剧情36	[4]	-1	-1	202	37	1		activityanniversary/anniversary01_girl12_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl12_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6253	巧克力剧情37	[4]	-1	-1	202	38	1		activityanniversary/anniversary01_girl14_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl14_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6254	巧克力剧情38	[4]	-1	-1	202	39	1		activityanniversary/anniversary01_girl14_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl14_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6255	巧克力剧情39	[4]	-1	-1	202	40	1		activityanniversary/anniversary01_girl14_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl14_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6256	巧克力剧情40	[4]	-1	-1	202	41	1		activityanniversary/anniversary01_girl15_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl15_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6257	巧克力剧情41	[4]	-1	-1	202	42	1		activityanniversary/anniversary01_girl15_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl15_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6258	巧克力剧情42	[4]	-1	-1	202	43	1		activityanniversary/anniversary01_girl15_03	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl15_0300	Riki/Activity/anniversaryall_activity.png		7
+6	6259	巧克力剧情43	[4]	-1	-1	202	44	1		activityanniversary/anniversary01_girl102nanachan01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl102nanachan0100	Riki/Activity/anniversaryall_activity.png		7
+6	6260	巧克力剧情44	[4]	-1	-1	202	45	1		activityanniversary/anniversary01_girl102nanachan02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl102nanachan0200	Riki/Activity/anniversaryall_activity.png		7
+6	6261	巧克力剧情45	[4]	-1	-1	202	46	1		activityanniversary/anniversary01_man103luozhen_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_man103luozhen_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6262	巧克力剧情46	[4]	-1	-1	202	47	1		activityanniversary/anniversary01_man103luozhen_02	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_man103luozhen_0200	Riki/Activity/anniversaryall_activity.png		7
+6	6263	巧克力剧情47	[4]	-1	-1	202	48	1		activityanniversary/anniversary01_girl105katherine01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl105katherine0100	Riki/Activity/anniversaryall_activity.png		7
+6	6264	巧克力剧情48	[4]	-1	-1	202	49	1		activityanniversary/anniversary01_girl112soshichan01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl112soshichan0100	Riki/Activity/anniversaryall_activity.png		7
+6	6265	巧克力剧情49	[4]	-1	-1	202	50	1		activityanniversary/anniversary01_girl113allocer01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_girl113allocer0100	Riki/Activity/anniversaryall_activity.png		7
+6	6266	巧克力剧情50	[4]	-1	-1	202	51	1		activityanniversary/anniversary01_man108leraje_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_man108leraje_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6267	巧克力剧情51	[4]	-1	-1	202	52	1		activityanniversary/anniversary01_monster120jokeralice	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_monster120jokeralice00	Riki/Activity/anniversaryall_activity.png		7
+6	6268	巧克力剧情52	[4]	-1	-1	202	53	1		activityanniversary/anniversary01_boy111forneus_01	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_boy111forneus_0100	Riki/Activity/anniversaryall_activity.png		7
+6	6269	周年庆肝塔剧情ed	[4]	-1	-1	202	54	1		activityanniversary/anniversary01_ed	ui.UI_AnniversaryMain.Title	activityanniversary.anniversary01_ed000	Riki/Activity/anniversaryall_activity.png		7
+															
+6	6270	猜拳剧情1	[4]	-1	-1	203	1	1		activityGuess/guess_open	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_open	Riki/Activity/anniversary_guess.png		3
+6	6271	猜拳剧情2	[4]	-1	-1	203	2	1		activityGuess/guess_girl01	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl01	Riki/Activity/anniversary_guess.png		3
+6	6272	猜拳剧情3	[4]	-1	-1	203	3	1		activityGuess/guess_girl02	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl02	Riki/Activity/anniversary_guess.png		3
+6	6273	猜拳剧情4	[4]	-1	-1	203	4	1		activityGuess/guess_girl03	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl03	Riki/Activity/anniversary_guess.png		3
+6	6274	猜拳剧情5	[4]	-1	-1	203	5	1		activityGuess/guess_girl04	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl04	Riki/Activity/anniversary_guess.png		3
+6	6275	猜拳剧情6	[4]	-1	-1	203	6	1		activityGuess/guess_girl05	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl05	Riki/Activity/anniversary_guess.png		3
+6	6276	猜拳剧情7	[4]	-1	-1	203	7	1		activityGuess/guess_girl06	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl06	Riki/Activity/anniversary_guess.png		3
+6	6277	猜拳剧情8	[4]	-1	-1	203	8	1		activityGuess/guess_girl07	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl07	Riki/Activity/anniversary_guess.png		3
+6	6278	猜拳剧情9	[4]	-1	-1	203	9	1		activityGuess/guess_girl08	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl08	Riki/Activity/anniversary_guess.png		3
+6	6279	猜拳剧情10	[4]	-1	-1	203	10	1		activityGuess/guess_girl09	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl09	Riki/Activity/anniversary_guess.png		3
+6	6280	猜拳剧情11	[4]	-1	-1	203	11	1		activityGuess/guess_girl10	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl10	Riki/Activity/anniversary_guess.png		3
+6	6281	猜拳剧情12	[4]	-1	-1	203	12	1		activityGuess/guess_girl11	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl11	Riki/Activity/anniversary_guess.png		3
+6	6282	猜拳剧情13	[4]	-1	-1	203	13	1		activityGuess/guess_girl12	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl12	Riki/Activity/anniversary_guess.png		3
+6	6283	猜拳剧情14	[4]	-1	-1	203	14	1		activityGuess/guess_girl14	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl14	Riki/Activity/anniversary_guess.png		3
+6	6284	猜拳剧情15	[4]	-1	-1	203	15	1		activityGuess/guess_girl15	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_girl15	Riki/Activity/anniversary_guess.png		3
+6	6286	猜拳剧情16	[4]	-1	-1	203	16	1		activityGuess/guess_end	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_end	Riki/Activity/anniversary_guess.png		3
+6	6285	猜拳剧情17	[4]	-1	-1	203	17	1		activityGuess/guess_Victory	ui.UI_AnniversaryGuess.MainTitle	story.activityGuess/guess_Victory	Riki/Activity/anniversary_guess.png		3
+															
+6	6363	社团战（黑境攻略）1	[4]	-1	-1	301	1	1		activitydaily/guild_blackreach_opening01	ui.Club.boss	ui.clubboss.ep1	Riki/Activity/clubboss_activity.png		5
+6	6364	社团战（黑境攻略）2	[4]	-1	-1	301	2	1		activitydaily/guild_blackreach_opening02	ui.Club.boss	ui.clubboss.ep2	Riki/Activity/clubboss_activity.png		5
+6	6365	社团战（黑境攻略）3	[4]	-1	-1	301	3	1		activitydaily/guild_blackreach_opening03	ui.Club.boss	ui.clubboss.ep3	Riki/Activity/clubboss_activity.png		5
+6	6366	社团战（黑境攻略）4	[4]	-1	-1	301	4	1		activitydaily/guild_blackreach_opening04	ui.Club.boss	ui.clubboss.ep4	Riki/Activity/clubboss_activity.png		5
+6	6367	社团战（黑境攻略）5	[4]	-1	-1	301	5	1		activitydaily/guild_blackreach_opening05	ui.Club.boss	ui.clubboss.ep5	Riki/Activity/clubboss_activity.png		5
+6	6368	社团战（黑境攻略）6	[4,5]	-1	-1	301	6	1		activitydaily/guild_blackreach_opening06	ui.Club.boss	ui.clubboss.ep6	Riki/Activity/clubboss_activity.png		5
+6	6400	社团战（黑境攻略）7	[2,4,5]	-1	-1	301	7	1		activitydaily/guild_blackreach_opening07	ui.Club.boss	ui.clubboss.ep7	Riki/Activity/clubboss_activity.png		5
+6	6403	社团战（黑境攻略）8	[2,4,5]	-1	-1	301	8	1		activitydaily/guild_blackreach_opening08	ui.Club.boss	ui.clubboss.ep8	Riki/Activity/clubboss_activity.png		5
+6	6485	社团战（黑境攻略）9	[2,4,5]	-1	-1	301	9	1		activitydaily/guild_blackreach_opening09	ui.Club.boss	ui.clubboss.ep9	Riki/Activity/clubboss_activity.png		5
+6	6509	社团战（黑境攻略）10	[2,4,5]	-1	-1	301	10	1		activitydaily/guild_blackreach_opening10	ui.Club.boss	ui.clubboss.ep10	Riki/Activity/clubboss_activity.png		5
+															
+6	6201	2020中秋开场剧情（秋夜之约）	[4]	-1	-1	201	1	1		activitymidautumn2020/midautumn2020_opening	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep1	Riki/Activity/midautumn_activity.png		5
+6	6202	2020中秋个人剧情1（秋夜之约）	[4]	-1	-1	201	6	1		activitymidautumn2020/midautumn2020_personal0709	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep2	Riki/Activity/midautumn_activity.png		5
+6	6203	2020中秋个人剧情2（秋夜之约）	[4]	-1	-1	201	2	1		activitymidautumn2020/midautumn2020_personal0112	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep3	Riki/Activity/midautumn_activity.png		5
+6	6204	2020中秋个人剧情3（秋夜之约）	[4]	-1	-1	201	8	1		activitymidautumn2020/midautumn2020_personal1415	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep4	Riki/Activity/midautumn_activity.png		5
+6	6205	2020中秋个人剧情4（秋夜之约）	[4]	-1	-1	201	7	1		activitymidautumn2020/midautumn2020_personal0811	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep5	Riki/Activity/midautumn_activity.png		5
+6	6206	2020中秋个人剧情5（秋夜之约）	[4]	-1	-1	201	4	1		activitymidautumn2020/midautumn2020_personal0410	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep6	Riki/Activity/midautumn_activity.png		5
+6	6207	2020中秋个人剧情6（秋夜之约）	[4]	-1	-1	201	3	1		activitymidautumn2020/midautumn2020_personal0203	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep7	Riki/Activity/midautumn_activity.png		5
+6	6208	2020中秋个人剧情7（秋夜之约）	[4]	-1	-1	201	5	1		activitymidautumn2020/midautumn2020_personal0506	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep8	Riki/Activity/midautumn_activity.png		5
+6	6209	2020中秋结束剧情（秋夜之约）	[4]	-1	-1	201	9	1		activitymidautumn2020/midautumn2020_ending	ui.UI_MidAutumn.Title	ui.activitymidautumn2020.ep9	Riki/Activity/midautumn_activity.png		5
+															
+6	6287	音乐会上期剧情1	[4]	-1	-1	204	1	1		activitytowerconcert/activitytowerconcert_commonep	ui.Rune.Rune20.1	story.activitytowerconcert_commonep	Riki/Activity/girl01_card20_activity.png		5
+6	6288	音乐会上期剧情2	[4]	-1	-1	204	2	1		activitytowerconcert/activitytowerconcert_jazzep01	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep01	Riki/Activity/girl01_card20_activity.png		5
+6	6289	音乐会上期剧情3	[4]	-1	-1	204	3	1		activitytowerconcert/activitytowerconcert_relay01choice01	ui.Rune.Rune20.1	story.activitytowerconcert_relay01	Riki/Activity/girl01_card20_activity.png		5
+6	6290	音乐会上期剧情4	[4]	-1	-1	204	4	1		activitytowerconcert/activitytowerconcert_relay01choice02	ui.Rune.Rune20.1	story.activitytowerconcert_relay01	Riki/Activity/girl01_card20_activity.png		5
+6	6291	音乐会上期剧情5	[4]	-1	-1	204	5	1		activitytowerconcert/activitytowerconcert_relay01touch	ui.Rune.Rune20.1	story.activitytowerconcert_relay01	Riki/Activity/girl01_card20_activity.png		5
+6	6292	音乐会上期剧情6	[4]	-1	-1	204	6	1		activitytowerconcert/activitytowerconcert_jazzep01_1s1	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep01_1s1	Riki/Activity/girl01_card20_activity.png		5
+6	6293	音乐会上期剧情7	[4]	-1	-1	204	7	1		activitytowerconcert/activitytowerconcert_jazzep02	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep02	Riki/Activity/girl01_card20_activity.png		5
+6	6294	音乐会上期剧情8	[4]	-1	-1	204	8	1		activitytowerconcert/activitytowerconcert_relay02choice01	ui.Rune.Rune20.1	story.activitytowerconcert_relay02	Riki/Activity/girl01_card20_activity.png		5
+6	6295	音乐会上期剧情9	[4]	-1	-1	204	9	1		activitytowerconcert/activitytowerconcert_relay02choice02	ui.Rune.Rune20.1	story.activitytowerconcert_relay02	Riki/Activity/girl01_card20_activity.png		5
+6	6296	音乐会上期剧情10	[4]	-1	-1	204	10	1		activitytowerconcert/activitytowerconcert_relay02hide	ui.Rune.Rune20.1	story.activitytowerconcert_relay02	Riki/Activity/girl01_card20_activity.png		5
+6	6297	音乐会上期剧情11	[4]	-1	-1	204	11	1		activitytowerconcert/activitytowerconcert_relay02touch	ui.Rune.Rune20.1	story.activitytowerconcert_relay02	Riki/Activity/girl01_card20_activity.png		5
+6	6298	音乐会上期剧情12	[4]	-1	-1	204	12	1		activitytowerconcert/activitytowerconcert_jazzep02_1s1	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep02_1s1	Riki/Activity/girl01_card20_activity.png		5
+6	6299	音乐会上期剧情13	[4]	-1	-1	204	13	1		activitytowerconcert/activitytowerconcert_jazzep03	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep03	Riki/Activity/girl01_card20_activity.png		5
+6	6300	音乐会上期剧情14	[4]	-1	-1	204	14	1		activitytowerconcert/activitytowerconcert_relay03choice01	ui.Rune.Rune20.1	story.activitytowerconcert_relay03	Riki/Activity/girl01_card20_activity.png		5
+6	6301	音乐会上期剧情15	[4]	-1	-1	204	15	1		activitytowerconcert/activitytowerconcert_relay03choice02	ui.Rune.Rune20.1	story.activitytowerconcert_relay03	Riki/Activity/girl01_card20_activity.png		5
+6	6302	音乐会上期剧情16	[4]	-1	-1	204	16	1		activitytowerconcert/activitytowerconcert_relay03hide	ui.Rune.Rune20.1	story.activitytowerconcert_relay03	Riki/Activity/girl01_card20_activity.png		5
+6	6303	音乐会上期剧情17	[4]	-1	-1	204	17	1		activitytowerconcert/activitytowerconcert_relay03touch	ui.Rune.Rune20.1	story.activitytowerconcert_relay03	Riki/Activity/girl01_card20_activity.png		5
+6	6304	音乐会上期剧情18	[4]	-1	-1	204	18	1		activitytowerconcert/activitytowerconcert_jazzep03_1s1	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep03_1s1	Riki/Activity/girl01_card20_activity.png		5
+6	6305	音乐会上期剧情19	[4]	-1	-1	204	19	1		activitytowerconcert/activitytowerconcert_jazzep03_1s2	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep03_1s2	Riki/Activity/girl01_card20_activity.png		5
+6	6306	音乐会上期剧情20	[4]	-1	-1	204	20	1		activitytowerconcert/activitytowerconcert_jazzep03_2s1	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep03_2s1	Riki/Activity/girl01_card20_activity.png		5
+6	6307	音乐会上期剧情21	[4]	-1	-1	204	21	1		activitytowerconcert/activitytowerconcert_jazzep03_2s2	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep03_2s2	Riki/Activity/girl01_card20_activity.png		5
+6	6308	音乐会上期剧情22	[4]	-1	-1	204	22	1		activitytowerconcert/activitytowerconcert_jazzep04	ui.Rune.Rune20.1	story.activitytowerconcert_jazzep04	Riki/Activity/girl01_card20_activity.png		5
+6	6309	音乐会上期剧情23	[4]	-1	-1	204	23	1		activitytowerconcert/activitytowerconcert_commonepj	ui.Rune.Rune20.1	story.activitytowerconcert_commonepj	Riki/Activity/girl01_card20_activity.png		5
+															
+6	6310	音乐会下期剧情1	[4]	-1	-1	205	1	1		activitytowerconcert/activitytowerconcert_rrep01	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep01	Riki/Activity/girl15_card20_activity.png		5
+6	6311	音乐会下期剧情2	[4]	-1	-1	205	2	1		activitytowerconcert/activitytowerconcert_relay04choice01	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay04	Riki/Activity/girl15_card20_activity.png		5
+6	6312	音乐会下期剧情3	[4]	-1	-1	205	3	1		activitytowerconcert/activitytowerconcert_relay04choice02	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay04	Riki/Activity/girl15_card20_activity.png		5
+6	6313	音乐会下期剧情4	[4]	-1	-1	205	4	1		activitytowerconcert/activitytowerconcert_relay04touch	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay04	Riki/Activity/girl15_card20_activity.png		5
+6	6314	音乐会下期剧情5	[4]	-1	-1	205	5	1		activitytowerconcert/activitytowerconcert_rrep04_1s1	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep04_1s1	Riki/Activity/girl15_card20_activity.png		5
+6	6315	音乐会下期剧情6	[4]	-1	-1	205	6	1		activitytowerconcert/activitytowerconcert_rrep02	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep02	Riki/Activity/girl15_card20_activity.png		5
+6	6316	音乐会下期剧情7	[4]	-1	-1	205	7	1		activitytowerconcert/activitytowerconcert_relay05choice01	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay05	Riki/Activity/girl15_card20_activity.png		5
+6	6317	音乐会下期剧情8	[4]	-1	-1	205	8	1		activitytowerconcert/activitytowerconcert_relay05choice02	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay05	Riki/Activity/girl15_card20_activity.png		5
+6	6318	音乐会下期剧情9	[4]	-1	-1	205	9	1		activitytowerconcert/activitytowerconcert_relay05hide	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay05	Riki/Activity/girl15_card20_activity.png		5
+6	6319	音乐会下期剧情10	[4]	-1	-1	205	10	1		activitytowerconcert/activitytowerconcert_relay05touch	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay05	Riki/Activity/girl15_card20_activity.png		5
+6	6320	音乐会下期剧情11	[4]	-1	-1	205	11	1		activitytowerconcert/activitytowerconcert_rrep05_1s1	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep05_1s1	Riki/Activity/girl15_card20_activity.png		5
+6	6321	音乐会下期剧情12	[4]	-1	-1	205	12	1		activitytowerconcert/activitytowerconcert_rrep03	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep03	Riki/Activity/girl15_card20_activity.png		5
+6	6322	音乐会下期剧情13	[4]	-1	-1	205	13	1		activitytowerconcert/activitytowerconcert_relay06choice01	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay06	Riki/Activity/girl15_card20_activity.png		5
+6	6323	音乐会下期剧情14	[4]	-1	-1	205	14	1		activitytowerconcert/activitytowerconcert_relay06choice02	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay06	Riki/Activity/girl15_card20_activity.png		5
+6	6324	音乐会下期剧情15	[4]	-1	-1	205	15	1		activitytowerconcert/activitytowerconcert_relay06hide	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay06	Riki/Activity/girl15_card20_activity.png		5
+6	6325	音乐会下期剧情16	[4]	-1	-1	205	16	1		activitytowerconcert/activitytowerconcert_relay06touch	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay06	Riki/Activity/girl15_card20_activity.png		5
+6	6326	音乐会下期剧情17	[4]	-1	-1	205	17	1		activitytowerconcert/activitytowerconcert_rrep06_1s1	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep06_1s1	Riki/Activity/girl15_card20_activity.png		5
+6	6327	音乐会下期剧情18	[4]	-1	-1	205	18	1		activitytowerconcert/activitytowerconcert_rrep06_1s2	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep06_1s2	Riki/Activity/girl15_card20_activity.png		5
+6	6328	音乐会下期剧情19	[4]	-1	-1	205	19	1		activitytowerconcert/activitytowerconcert_rrep06_2s1	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep06_2s1	Riki/Activity/girl15_card20_activity.png		5
+6	6329	音乐会下期剧情20	[4]	-1	-1	205	20	1		activitytowerconcert/activitytowerconcert_rrep06_2s2	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep06_2s2	Riki/Activity/girl15_card20_activity.png		5
+6	6330	音乐会下期剧情21	[4]	-1	-1	205	21	1		activitytowerconcert/activitytowerconcert_commoneprr	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_commoneprr	Riki/Activity/girl15_card20_activity.png		5
+6	6331	音乐会下期剧情22	[4]	-1	-1	205	22	1		activitytowerconcert/activitytowerconcert_relay07choice01	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay07	Riki/Activity/girl15_card20_activity.png		5
+6	6332	音乐会下期剧情23	[4]	-1	-1	205	23	1		activitytowerconcert/activitytowerconcert_relay07choice02	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay07	Riki/Activity/girl15_card20_activity.png		5
+6	6333	音乐会下期剧情24	[4]	-1	-1	205	24	1		activitytowerconcert/activitytowerconcert_relay07hide	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_relay07	Riki/Activity/girl15_card20_activity.png		5
+6	6334	音乐会下期剧情25	[4]	-1	-1	205	25	1		activitytowerconcert/activitytowerconcert_jazzep05	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_jazzep05	Riki/Activity/girl15_card20_activity.png		5
+6	6335	音乐会下期剧情26	[4]	-1	-1	205	26	1		activitytowerconcert/activitytowerconcert_rrep05	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrep05	Riki/Activity/girl15_card20_activity.png		5
+6	6336	音乐会下期剧情27	[4]	-1	-1	205	27	1		activitytowerconcert/activitytowerconcert_ending	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_ending	Riki/Activity/girl15_card20_activity.png		5
+6	6337	音乐会下期剧情28	[4]	-1	-1	205	28	1		activitytowerconcert/activitytowerconcert_rrsp	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_rrsp	Riki/Activity/girl15_card20_activity.png		5
+6	6338	音乐会下期剧情29	[4]	-1	-1	205	29	1		activitytowerconcert/activitytowerconcert_dr5_1	ui.Rune.Rune20.2	story.activitytowerconcert/activitytowerconcert_dr5_1	Riki/Activity/girl15_card20_activity.png		5
+															
+6	6339	音乐会应援剧情1	[4]	-1	-1	206	1	1		activitytowerconcert/girl01_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl01_lp1	Riki/Activity/fans_activity.png		3
+6	6340	音乐会应援剧情2	[4]	-1	-1	206	2	1		activitytowerconcert/girl01_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl01_lp2	Riki/Activity/fans_activity.png		3
+6	6341	音乐会应援剧情3	[4]	-1	-1	206	3	1		activitytowerconcert/girl01_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl01_lp3	Riki/Activity/fans_activity.png		3
+6	6342	音乐会应援剧情4	[4]	-1	-1	206	4	1		activitytowerconcert/girl02_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl02_lp1	Riki/Activity/fans_activity.png		3
+6	6343	音乐会应援剧情5	[4]	-1	-1	206	5	1		activitytowerconcert/girl02_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl02_lp2	Riki/Activity/fans_activity.png		3
+6	6344	音乐会应援剧情6	[4]	-1	-1	206	6	1		activitytowerconcert/girl02_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl02_lp3	Riki/Activity/fans_activity.png		3
+6	6345	音乐会应援剧情7	[4]	-1	-1	206	7	1		activitytowerconcert/girl04_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl04_lp1	Riki/Activity/fans_activity.png		3
+6	6346	音乐会应援剧情8	[4]	-1	-1	206	8	1		activitytowerconcert/girl04_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl04_lp2	Riki/Activity/fans_activity.png		3
+6	6347	音乐会应援剧情9	[4]	-1	-1	206	9	1		activitytowerconcert/girl04_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl04_lp3	Riki/Activity/fans_activity.png		3
+6	6348	音乐会应援剧情10	[4]	-1	-1	206	10	1		activitytowerconcert/girl05_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl05_lp1	Riki/Activity/fans_activity.png		3
+6	6349	音乐会应援剧情11	[4]	-1	-1	206	11	1		activitytowerconcert/girl05_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl05_lp2	Riki/Activity/fans_activity.png		3
+6	6350	音乐会应援剧情12	[4]	-1	-1	206	12	1		activitytowerconcert/girl05_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl05_lp3	Riki/Activity/fans_activity.png		3
+6	6351	音乐会应援剧情13	[4]	-1	-1	206	13	1		activitytowerconcert/girl09_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl09_lp1	Riki/Activity/fans_activity.png		3
+6	6352	音乐会应援剧情14	[4]	-1	-1	206	14	1		activitytowerconcert/girl09_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl09_lp2	Riki/Activity/fans_activity.png		3
+6	6353	音乐会应援剧情15	[4]	-1	-1	206	15	1		activitytowerconcert/girl09_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl09_lp3	Riki/Activity/fans_activity.png		3
+6	6354	音乐会应援剧情16	[4]	-1	-1	206	16	1		activitytowerconcert/girl10_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl10_lp1	Riki/Activity/fans_activity.png		3
+6	6355	音乐会应援剧情17	[4]	-1	-1	206	17	1		activitytowerconcert/girl10_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl10_lp2	Riki/Activity/fans_activity.png		3
+6	6356	音乐会应援剧情18	[4]	-1	-1	206	18	1		activitytowerconcert/girl10_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl10_lp3	Riki/Activity/fans_activity.png		3
+6	6357	音乐会应援剧情19	[4]	-1	-1	206	19	1		activitytowerconcert/girl12_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl12_lp1	Riki/Activity/fans_activity.png		3
+6	6358	音乐会应援剧情20	[4]	-1	-1	206	20	1		activitytowerconcert/girl12_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl12_lp2	Riki/Activity/fans_activity.png		3
+6	6359	音乐会应援剧情21	[4]	-1	-1	206	21	1		activitytowerconcert/girl12_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl12_lp3	Riki/Activity/fans_activity.png		3
+6	6360	音乐会应援剧情22	[4]	-1	-1	206	22	1		activitytowerconcert/girl15_lp1	ui.UI_Fans.Title	story.activitytowerconcert/girl15_lp1	Riki/Activity/fans_activity.png		3
+6	6361	音乐会应援剧情23	[4]	-1	-1	206	23	1		activitytowerconcert/girl15_lp2	ui.UI_Fans.Title	story.activitytowerconcert/girl15_lp2	Riki/Activity/fans_activity.png		3
+6	6362	音乐会应援剧情24	[4]	-1	-1	206	24	1		activitytowerconcert/girl15_lp3	ui.UI_Fans.Title	story.activitytowerconcert/girl15_lp3	Riki/Activity/fans_activity.png		3
+															
+6	6137	十二期活动（黑星的持剑人）1	[4]	-1	-1	12	1	1		activitytower12/activitytower12_ep1	tower.Tower.Name12	ui.activity12.ep1	Riki/Activity/girl02_card09_activity.png		3
+6	6138	十二期活动（黑星的持剑人）2	[4]	-1	-1	12	2	1		activitytower12/activitytower12_ep2	tower.Tower.Name12	ui.activity12.ep2	Riki/Activity/girl02_card09_activity.png		3
+6	6139	十二期活动（黑星的持剑人）3	[4]	-1	-1	12	3	1		activitytower12/activitytower12_ep3	tower.Tower.Name12	ui.activity12.ep3	Riki/Activity/girl02_card09_activity.png		3
+6	6140	十二期活动（黑星的持剑人）4	[4]	-1	-1	12	4	1		activitytower12/activitytower12_ep4	tower.Tower.Name12	ui.activity12.ep4	Riki/Activity/girl02_card09_activity.png		3
+6	6141	十二期活动（黑星的持剑人）5	[4]	-1	-1	12	5	1		activitytower12/activitytower12_ep5	tower.Tower.Name12	ui.activity12.ep5	Riki/Activity/girl02_card09_activity.png		3
+6	6132	十一期活动（硫硝碳镁的夹缝间）1	[4]	-1	-1	11	1	1		activitytower11/activitytower11_ep1	tower.Tower.Name11	ui.activity11.ep1	Riki/Activity/girl10_card10_activity.png		3
+6	6133	十一期活动（硫硝碳镁的夹缝间）2	[4]	-1	-1	11	2	1		activitytower11/activitytower11_ep2	tower.Tower.Name11	ui.activity11.ep2	Riki/Activity/girl10_card10_activity.png		3
+6	6134	十一期活动（硫硝碳镁的夹缝间）3	[4]	-1	-1	11	3	1		activitytower11/activitytower11_ep3	tower.Tower.Name11	ui.activity11.ep3	Riki/Activity/girl10_card10_activity.png		3
+6	6135	十一期活动（硫硝碳镁的夹缝间）4	[4]	-1	-1	11	4	1		activitytower11/activitytower11_ep4	tower.Tower.Name11	ui.activity11.ep4	Riki/Activity/girl10_card10_activity.png		3
+6	6136	十一期活动（硫硝碳镁的夹缝间）5	[4]	-1	-1	11	5	1		activitytower11/activitytower11_ep5	tower.Tower.Name11	ui.activity11.ep5	Riki/Activity/girl10_card10_activity.png		3
+6	6127	十期活动（过山车童话）1	[4]	-1	-1	10	1	1		activitytower10/activitytower10_ep1	tower.Tower.Name10	ui.activity10.ep1	Riki/Activity/girl08_card06_activity.png		3
+6	6128	十期活动（过山车童话）2	[4]	-1	-1	10	2	1		activitytower10/activitytower10_ep2	tower.Tower.Name10	ui.activity10.ep2	Riki/Activity/girl08_card06_activity.png		3
+6	6129	十期活动（过山车童话）3	[4]	-1	-1	10	3	1		activitytower10/activitytower10_ep3	tower.Tower.Name10	ui.activity10.ep3	Riki/Activity/girl08_card06_activity.png		3
+6	6130	十期活动（过山车童话）4	[4]	-1	-1	10	4	1		activitytower10/activitytower10_ep4	tower.Tower.Name10	ui.activity10.ep4	Riki/Activity/girl08_card06_activity.png		3
+6	6131	十期活动（过山车童话）5	[4]	-1	-1	10	5	1		activitytower10/activitytower10_ep5	tower.Tower.Name10	ui.activity10.ep5	Riki/Activity/girl08_card06_activity.png		3
+6	6122	九期活动（沙滩厨王）1	[4]	-1	-1	9	1	1		activitytower9/activitytower09_ep1	tower.Tower.Name9	ui.activity8.ep1	Riki/Activity/girl14_card08_activity.png		3
+6	6123	九期活动（沙滩厨王）2	[4]	-1	-1	9	2	1		activitytower9/activitytower09_ep2	tower.Tower.Name9	ui.activity8.ep2	Riki/Activity/girl14_card08_activity.png		3
+6	6124	九期活动（沙滩厨王）3	[4]	-1	-1	9	3	1		activitytower9/activitytower09_ep3	tower.Tower.Name9	ui.activity8.ep3	Riki/Activity/girl14_card08_activity.png		3
+6	6125	九期活动（沙滩厨王）4	[4]	-1	-1	9	4	1		activitytower9/activitytower09_ep4	tower.Tower.Name9	ui.activity8.ep4	Riki/Activity/girl14_card08_activity.png		3
+6	6126	九期活动（沙滩厨王）5	[4]	-1	-1	9	5	1		activitytower9/activitytower09_ep5	tower.Tower.Name9	ui.activity8.ep5	Riki/Activity/girl14_card08_activity.png		3
+6	6117	八期活动（请出示证据）1	[4]	-1	-1	8	1	1		activitytower8/activitytower08_ep1	tower.Tower.Name8	ui.activity8.ep1	Riki/Activity/girl11_card13_activity.png		3
+6	6118	八期活动（请出示证据）2	[4]	-1	-1	8	2	1		activitytower8/activitytower08_ep2	tower.Tower.Name8	ui.activity8.ep2	Riki/Activity/girl11_card13_activity.png		3
+6	6119	八期活动（请出示证据）3	[4]	-1	-1	8	3	1		activitytower8/activitytower08_ep3	tower.Tower.Name8	ui.activity8.ep3	Riki/Activity/girl11_card13_activity.png		3
+6	6120	八期活动（请出示证据）4	[4]	-1	-1	8	4	1		activitytower8/activitytower08_ep4	tower.Tower.Name8	ui.activity8.ep4	Riki/Activity/girl11_card13_activity.png		3
+6	6121	八期活动（请出示证据）5	[4]	-1	-1	8	5	1		activitytower8/activitytower08_ep5	tower.Tower.Name8	ui.activity8.ep5	Riki/Activity/girl11_card13_activity.png		3
+6	6112	七期活动（湾区坏灭）1	[4]	-1	-1	7	1	1		activitytower7/activitytower07_ep1	tower.Tower.Name7	ui.activity7.ep1	Riki/Activity/girl12_card07_activity.png		3
+6	6113	七期活动（湾区坏灭）2	[4]	-1	-1	7	2	1		activitytower7/activitytower07_ep2	tower.Tower.Name7	ui.activity7.ep2	Riki/Activity/girl12_card07_activity.png		3
+6	6114	七期活动（湾区坏灭）3	[4]	-1	-1	7	3	1		activitytower7/activitytower07_ep3	tower.Tower.Name7	ui.activity7.ep3	Riki/Activity/girl12_card07_activity.png		3
+6	6115	七期活动（湾区坏灭）4	[4]	-1	-1	7	4	1		activitytower7/activitytower07_ep4	tower.Tower.Name7	ui.activity7.ep4	Riki/Activity/girl12_card07_activity.png		3
+6	6116	七期活动（湾区坏灭）5	[4]	-1	-1	7	5	1		activitytower7/activitytower07_ep5	tower.Tower.Name7	ui.activity7.ep5	Riki/Activity/girl12_card07_activity.png		3
+6	6107	五期活动（决定性优势）1	[4]	-1	-1	5	1	1		activitytower5/activitytower05_ep1	tower.Tower.Name5	ui.activity5.ep1	Riki/Activity/girl10_card16_activity.png		3
+6	6108	五期活动（决定性优势）2	[4]	-1	-1	5	2	1		activitytower5/activitytower05_ep2	tower.Tower.Name5	ui.activity5.ep2	Riki/Activity/girl10_card16_activity.png		3
+6	6109	五期活动（决定性优势）3	[4]	-1	-1	5	3	1		activitytower5/activitytower05_ep3	tower.Tower.Name5	ui.activity5.ep3	Riki/Activity/girl10_card16_activity.png		3
+6	6110	五期活动（决定性优势）4	[4]	-1	-1	5	4	1		activitytower5/activitytower05_ep4	tower.Tower.Name5	ui.activity5.ep4	Riki/Activity/girl10_card16_activity.png		3
+6	6111	五期活动（决定性优势）5	[4]	-1	-1	5	5	1		activitytower5/activitytower05_ep5	tower.Tower.Name5	ui.activity5.ep5	Riki/Activity/girl10_card16_activity.png		3
+6	6101	三期活动(封底行动）1	[4]	-1	-1	3	1	1		activitytower2/activitytower02_ep1	tower.Tower.Name3	ui.activity2.ep1	Riki/Activity/girl02_card07_activity.png		3
+6	6102	三期活动(封底行动）2	[4]	-1	-1	3	2	1		activitytower2/activitytower02_ep2	tower.Tower.Name3	ui.activity2.ep2	Riki/Activity/girl02_card07_activity.png		3
+6	6103	三期活动(封底行动）3	[4]	-1	-1	3	3	1		activitytower2/activitytower02_ep3	tower.Tower.Name3	ui.activity2.ep3	Riki/Activity/girl02_card07_activity.png		3
+6	6104	三期活动(封底行动）4	[4]	-1	-1	3	4	1		activitytower2/activitytower02_ep4	tower.Tower.Name3	ui.activity2.ep4	Riki/Activity/girl02_card07_activity.png		3
+6	6105	三期活动(封底行动）5	[4]	-1	-1	3	5	1		activitytower2/activitytower02_ep5	tower.Tower.Name3	ui.activity2.ep5	Riki/Activity/girl02_card07_activity.png		3
+6	6106	三期活动(封底行动）6	[4]	-1	-1	3	6	1		activitytower2/activitytower02_ep6	tower.Tower.Name3	ui.activity2.ep6	Riki/Activity/girl02_card07_activity.png		3
+6	6142	一期活动（海岸监察）1		-1	-1	1	1	1		activitytower/masterstroke_1_101	tower.Tower.Name1	ui.activity.tower.1	Riki/Activity/girl11_card07_activity.png		3
+6	6143	一期活动（海岸监察）2		-1	-1	1	2	1		activitytower/masterstroke_3_302	tower.Tower.Name1	ui.activity.tower.1	Riki/Activity/girl11_card07_activity.png		3
+6	6144	一期活动（海岸监察）3		-1	-1	1	3	1		activitytower/masterstroke_3_402	tower.Tower.Name1	ui.activity.tower.1	Riki/Activity/girl11_card07_activity.png		3
+6	6145	一期活动（海岸监察）4		-1	-1	1	4	1		activitytower/masterstroke_1_201	tower.Tower.Name1	ui.activity.tower.2	Riki/Activity/girl11_card07_activity.png		3
+6	6146	一期活动（海岸监察）5		-1	-1	1	5	1		activitytower/masterstroke_3_501	tower.Tower.Name1	ui.activity.tower.2	Riki/Activity/girl11_card07_activity.png		3
+6	6147	一期活动（海岸监察）6		-1	-1	1	6	1		activitytower/masterstroke_1_301	tower.Tower.Name1	ui.activity.tower.3	Riki/Activity/girl11_card07_activity.png		3
+6	6148	一期活动（海岸监察）7		-1	-1	1	7	1		activitytower/masterstroke_3_602	tower.Tower.Name1	ui.activity.tower.3	Riki/Activity/girl11_card07_activity.png		3
+6	6149	一期活动（海岸监察）8		-1	-1	1	8	1		activitytower/masterstroke_1_401	tower.Tower.Name1	ui.activity.tower.4	Riki/Activity/girl11_card07_activity.png		3
+6	6150	一期活动（海岸监察）9		-1	-1	1	9	1		activitytower/masterstroke_3_702	tower.Tower.Name1	ui.activity.tower.4	Riki/Activity/girl11_card07_activity.png		3
+6	6151	一期活动（海岸监察）10		-1	-1	1	10	1		activitytower/masterstroke_1_501	tower.Tower.Name1	ui.activity.tower.5	Riki/Activity/girl11_card07_activity.png		3
+6	6152	一期活动（海岸监察）11		-1	-1	1	11	1		activitytower/masterstroke_3_801	tower.Tower.Name1	ui.activity.tower.5	Riki/Activity/girl11_card07_activity.png		3
+6	6153	一期活动（海岸监察）12		-1	-1	1	12	1		activitytower/masterstroke_1_601	tower.Tower.Name1	ui.activity.tower.6	Riki/Activity/girl11_card07_activity.png		3

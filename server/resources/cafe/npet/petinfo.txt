@@ -1,0 +1,27 @@
+INT	INT	NUL	STR	INT	INT	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	FLT	STR
+宠物大类(1-狗 2-猫 3-熊）	宠物小类	备注	小类名称	稀有度(1-普通 2-稀有 3-超级稀有）	图鉴爪印数目	图标路径	男性模型路径	女性模型路径	性别池子[0-无性别，1-男，2-女]	性格池子[1-撒娇怪 2-没烦恼 3-捣蛋精 4-独行侠]	IQ池子	爱好池子	获取弹窗宠物大小	获取弹窗宠物位置(x,y,朝向）	养成界面宠物位置(x,y,朝向）（PetInfo）	远征奖励指数加成(相乘)	自身属性描述
+Type	Id	Note	Name	Rare	Paw	PicPath	Mpath	Fpath	Gender	Nature	IQ	Hobby	MeetUIScale	MeetUIPos	MeetUIPos2	TourNumEx	Desc
+1	101	博美	ui.Pet.Name101	1	3	Npc/pet_dog001_	NCafePet/pet_dog/pet_dog003_M.prefab	NCafePet/pet_dog/pet_dog003_F.prefab	[1,2]	{{1,20},{2,20},{3,20},{4,80}}	[1,200]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+1	102	哈士奇	ui.Pet.Name102	2	5	Npc/pet_dog002_	NCafePet/pet_dog/pet_dog002_M.prefab	NCafePet/pet_dog/pet_dog002_F.prefab	[1,2]	{{1,20},{2,20},{3,100},{4,20}}	[1,100]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+1	103	柴犬	ui.Pet.Name103	3	8	Npc/pet_dog003_	NCafePet/pet_dog/pet_dog001_M.prefab	NCafePet/pet_dog/pet_dog001_F.prefab	[1,2]	{{1,50},{2,80},{3,20},{4,20}}	[1,400]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+1	104	泰迪	ui.Pet.Name104	1	3	Npc/pet_dog004_	NCafePet/pet_dog/pet_dog004_M.prefab	NCafePet/pet_dog/pet_dog004_F.prefab	[1,2]	{{1,50},{2,80},{3,20},{4,20}}	[1,400]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+1	105	圣诞雪纳瑞	ui.Pet.Name105	2	5	Npc/pet_dog005_	NCafePet/pet_dog/pet_dog005_M.prefab	NCafePet/pet_dog/pet_dog005_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+1	106	贺岁柯基	ui.Pet.Name106	3	8	Npc/pet_dog006_	NCafePet/pet_dog/pet_dog006_M.prefab	NCafePet/pet_dog/pet_dog006_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[101,102,103,104,105]	6	[-3,-1,150]	[-4.26,0.1,148]		
+																	
+2	201	英短	ui.Pet.Name201	1	3	Npc/pet_cat001_	NCafePet/pet_cat/pet_cat003_M.prefab	NCafePet/pet_cat/pet_cat003_F.prefab	[1,2]	{{1,60},{2,20},{3,20},{4,40}}	[1,200]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+2	202	暹罗	ui.Pet.Name202	2	5	Npc/pet_cat002_	NCafePet/pet_cat/pet_cat002_M.prefab	NCafePet/pet_cat/pet_cat002_F.prefab	[1,2]	{{1,20},{2,20},{3,60},{4,20}}	[1,300]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+2	203	肥橘	ui.Pet.Name203	3	8	Npc/pet_cat003_	NCafePet/pet_cat/pet_cat001_M.prefab	NCafePet/pet_cat/pet_cat001_F.prefab	[1,2]	{{1,20},{2,80},{3,20},{4,20}}	[1,400]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+2	204	奶牛猫	ui.Pet.Name204	2	5	Npc/pet_cat004_	NCafePet/pet_cat/pet_cat004_M.prefab	NCafePet/pet_cat/pet_cat004_F.prefab	[1,2]	{{1,20},{2,80},{3,20},{4,20}}	[1,400]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+2	205	圣诞豹猫	ui.Pet.Name205	3	8	Npc/pet_cat005_	NCafePet/pet_cat/pet_cat005_M.prefab	NCafePet/pet_cat/pet_cat005_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+2	206	虎头小咪	ui.Pet.Name206	1	3	Npc/pet_cat006_	NCafePet/pet_cat/pet_cat006_M.prefab	NCafePet/pet_cat/pet_cat006_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[201,202,203,204,205]	6	[-3,-1,150]	[-4.26,0.19,149.01]		
+																	
+3	301	北极熊	ui.Pet.Name301	1	3	Npc/pet_bear001_	NCafePet/pet_bear/pet_bear001_M.prefab	NCafePet/pet_bear/pet_bear001_F.prefab	[1,2]	{{1,20},{2,50},{3,20},{4,20}}	[1,200]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+3	302	棕熊	ui.Pet.Name302	2	5	Npc/pet_bear002_	NCafePet/pet_bear/pet_bear002_F.prefab	NCafePet/pet_bear/pet_bear002_M.prefab	[1,2]	{{1,20},{2,20},{3,50},{4,20}}	[1,300]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+3	303	熊猫	ui.Pet.Name303	3	8	Npc/pet_bear003_	NCafePet/pet_bear/pet_bear003_M.prefab	NCafePet/pet_bear/pet_bear003_F.prefab	[1,2]	{{1,60},{2,20},{3,20},{4,20}}	[1,400]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+3	304	机械熊	ui.Pet.Name304	3	8	Npc/pet_bear004_	NCafePet/pet_bear/pet_bear004_M.prefab	NCafePet/pet_bear/pet_bear004_F.prefab	[1,2]	{{1,60},{2,20},{3,20},{4,20}}	[1,400]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+3	305	圣诞黑熊	ui.Pet.Name305	1	3	Npc/pet_bear005_	NCafePet/pet_bear/pet_bear005_M.prefab	NCafePet/pet_bear/pet_bear005_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+3	306	下山萌虎	ui.Pet.Name306	2	5	Npc/pet_bear006_	NCafePet/pet_bear/pet_bear006_M.prefab	NCafePet/pet_bear/pet_bear006_F.prefab	[1,2]	{{1,25},{2,25},{3,25},{4,25}}	[1,400]	[301,302,303,304,305]	7	[-2.8,-1.14,180]	[-4.26,0,180]		
+																	
+4	401	独角兽	ui.Pet.Name401	3	0	Npc/pet_activity01_	NCafePet/pet_activity/pet_activity001.prefab	NCafePet/pet_activity/pet_activity001.prefab	[0]	{{1,60},{2,20},{3,20},{4,20}}	[900,999]	[401]	2	[-2.8,-1.14,140]	[-4.26,-0.2,140]	1.3	PetInfo.Desc401
+4	402	圣诞雪人	ui.Pet.Name402	3	0	Npc/pet_activity02_	NCafePet/pet_activity/pet_activity002.prefab	NCafePet/pet_activity/pet_activity002.prefab	[0]	{{1,25},{2,25},{3,25},{4,25}}	[900,999]	[402]	4	[-2.8,-1.14,140]	[-4.26,-0.2,140]	1.3	PetInfo.Desc401
+4	403	拜年陶猪	ui.Pet.Name403	3	0	Npc/pet_activity03_	NCafePet/pet_activity/pet_activity003.prefab	NCafePet/pet_activity/pet_activity003.prefab	[0]	{{1,25},{2,25},{3,25},{4,25}}	[900,999]	[403]	2	[-2.8,-1.14,140]	[-4.26,-0.2,140]	1.3	PetInfo.Desc401

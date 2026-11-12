@@ -1,0 +1,8 @@
+INT	INT	STR	STR	STR	INT	INT	INT	STR	STR	STR
+Զ��λ��id	��ʾ����Ʒ������	����ͼ	����	����	ʱ��	��������	����ָ��Ҫ��	��������1(��ɶ�ӦƷ���������)	��������2(ӵ�г�������)	��������3(���Ĵ���)
+Index	Rare	bg	Name	Area	Hour	EnergyCost	ExNum	Unlock1	Unlock2	Unlock3
+1	1	OtherBig/pet_bg01_expedition.png	ui.PetTour.Name1	ui.PetTour.Desc1	4	20	100			
+2	1	OtherBig/pet_bg01_expedition.png	ui.PetTour.Name1	ui.PetTour.Desc1	4	20	100			
+3	2	OtherBig/pet_bg02_expedition.png	ui.PetTour.Name2	ui.PetTour.Desc2	6	50	200	[1,2]	10	[2,20000]
+4	2	OtherBig/pet_bg02_expedition.png	ui.PetTour.Name2	ui.PetTour.Desc2	6	50	200	[1,5]	30	[2,30000]
+5	3	OtherBig/pet_bg03_expedition.png	ui.PetTour.Name3	ui.PetTour.Desc3	8	80	300	[2,5]	50	[2,50000]

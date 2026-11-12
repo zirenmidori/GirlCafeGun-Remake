@@ -1,0 +1,61 @@
+INT	STR	STR	INT	STR	STR	STR	STR	STR	STR	INT	INT	STR	STR	STR	STR	INT	INT	INT	INT
+	名字	标签说明	开关	开放时间	结束时间	每次展示商品数	1-单次刷新限量2每日3每周4活动期5货架期	每日自动刷新时间点	手动每次费用	刷新代币类型(仅常驻)	每日最大刷新限次	使用的代币	对应活动ID(主|子)	图标	桐子介绍	需求咖啡馆等级	版本号	红点版本号(家具商店)	商店显示类型（默认0 周年庆特殊1）
+ShopId	Name	Label	OnOff	Begin	End	Columns	RefreshRule	RefreshTime	RefreshFee	MoneyType	RefreshLimits	ShopMoneyType	tbActType	IconId	Say	NeedCafeLevel	Version	RedVersion	ShowType
+30026	shop30026.Name	丽达的补给站	1	2022-01-06-08-00-00	2022-01-26-04-00-00	999	4					3| 12		UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		11		
+30007	shop30007.Name	丽达补给点	1	2021-02-24-08-00-00	2021-03-10-04-00-00	999	4					2| 3| 12		UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		8		
+20001	shop20001.Name	万物交易所 地球币商店 	1			8	1	040000|180000	15| 30| 60| 90| 120	3	5	3| 12		UI/UI_Shop/shopnew_tab_normal.png	shop20001.Desc		4		
+20002	shop20002.Name	军需换购 晶币商店 	1			8	1	040000|180000	15| 30| 60| 90| 120	3	5	2| 3| 12		UI/UI_Shop/shopnew_tab_normal.png	shop20002.Desc		4		
+20005	shop20005.Name	内勤管理 角色卡商店	1			9	3					10|16		UI/UI_Shop/shopnew_tab_card.png	shop20005.Desc		5		
+20006	shop20006.Name	社团后勤 社团商店	1			17	3					11		UI/UI_Shop/shopnew_tab_normal.png	shop20006.Desc		8		
+20007	shop20007.Name	合成换购 分解道具	1			6	5					22		UI/UI_Shop/shopnew_tab_normal.png	shop20007.Desc				
+20011	shop20011.Name	表情商店 地球币商店 	1			12	5					3		UI/UI_Shop/shopnew_tab_normal.png	shop21000.Desc		1		
+30001	shop30001.Name	特设联络 活动商店	1	2019-11-23-12-00-00	2019-12-06-04-00-00	999	4	40000				6| 5	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		5		
+30002	shop30001.Name	特设联络 活动商店	1	2020-02-28-08-00-00	2020-03-17-04-00-00	999	4	40000				20| 19	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		5		
+30003	shop30001.Name	特设联络 活动商店	1	2020-05-29-08-00-00	2020-06-17-04-00-00	999	4	40000				26| 25	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30004	shop30001.Name	特设联络 活动商店	1	2020-06-14-12-00-00	2020-07-02-04-00-00	999	4	40000				28	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+40001	shop40001.Name	家具商店	2			999	4	40000				3| 2| 12	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop40001.Desc		4	[202105130800]	
+20008	shop20008.Name	演习物资	1			999	3					24		UI/UI_Shop/shopnew_tab_normal.png	shop20006.Desc		1		
+20009	shop20009.Name	佣兵赌注商店	1			999	3					27		UI/UI_Shop/shopnew_tab_normal.png	shop20006.Desc		2		
+20010	shop20010.Name	宠物商店	1			10	2	40000				2| 3| 12		UI/UI_Shop/shopnew_tab_normal.png	shop20001.Desc		2		
+30005	shop30001.Name	杂色塔1期商店	1	2022-04-06-08-00-00	2022-04-30-04-00-00	999	4	40000				30| 29	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		2		
+30006	shop30001.Name	复刻1期商店	1	2019-11-23-12-00-00	2019-12-06-04-00-00	999	4	40000				6	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		5		
+30008	shop30008.Name	配给交换 通行证商店	1	2022-03-16-08-00-00	2022-04-30-04-00-00	20	4					31		UI/UI_Shop/shopnew_tab_normal.png	shop30008.Desc		7		
+30009	shop30009.Name	配给交换 通行证商店	1	2022-01-26-08-00-00	2022-03-12-04-00-00	19	4					31		UI/UI_Shop/shopnew_tab_normal.png	shop30009.Desc		6		
+30010	shop30001.Name	杂色塔2期商店	1	2020-06-29-08-00-00	2020-07-17-04-00-00	999	4	40000				32| 34	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30011	UI_Dnaxcat.Shop	九藏喵商店	1	2020-07-13-08-00-00	2020-07-27-04-00-00	999	4					35		UI/UI_Shop/shopnew_tab_activity.png	UI_Dnaxcat.Shop		1		
+30012	CafeSteel.Shop	咖啡馆大劫案商店	1	2030-07-13-08-00-00	2030-07-27-04-00-00	999	4					43		UI/UI_Shop/shopnew_tab_activity.png	CafeSteel.Shop		1		
+30013	shop30013.Name	音乐会上期 活动商店	1	2020-07-24-08-00-00	2020-08-29-04-00-00	999	4	40000				3| 41	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30013.Desc		1		
+30014	shop30014.Name	音乐会下期 活动商店	1	2020-08-09-04-00-00	2020-08-29-04-00-00	999	4	40000				3| 42	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30014.Desc		1		
+30015	White.Shop	雪地小屋	1	2020-09-11-08-00-00	2020-09-28-04-00-00	999	4					47		UI/UI_Shop/shopnew_tab_activity.png	White.Shop		1		
+30016	shop30001.Name	杂色塔3期商店	1	2020-09-25-08-00-00	2020-10-18-04-00-00	999	4	40000				33| 30	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30017	shop30001.Name	肝塔12期	1	2020-10-15-08-00-00	2020-11-02-04-00-00	999	4	40000				48| 49	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30018	shop30015.Name	收获小铺	1	2020-10-23-09-00-00	2020-11-05-04-00-00	999	4					53		UI/UI_Shop/shopnew_tab_activity.png	shop30015.Name		1		
+30019	Halloween.Shop	狩猎派对	1	2020-10-30-08-00-00	2020-11-22-04-00-00	999	4					50|51		UI/UI_Shop/shopnew_tab_activity.png	Halloween.Shop		1		
+30020	shop30020.Name	周年庆上期 活动商店	1	2020-11-19-08-00-00	2020-12-27-04-00-00	999	4	40000				56	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30020.Desc		1		
+30021	shop30021.Name	周年庆下期 活动商店	1	2020-12-08-08-00-00	2020-12-27-04-00-00	999	4	40000				57	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30021.Desc		1		
+30022	shop30001.Name	肝塔13期	1	2021-01-13-08-00-00	2021-02-05-04-00-00	999	4	40000				60	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30092	UI_XmasEvent.shop	落花小铺（圣诞肝塔商店）	1	2020-12-24-08-00-00	2021-01-16-04-00-00	999	4					92		UI/UI_Shop/shopnew_tab_activity.png	UI_Dnaxcat.Shop		1		
+30023	shop30001.Name	杂色塔4期商店	1	2022-03-16-08-00-00	2022-04-06-04-00-00	999	4	40000				33| 32| 64	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		2		
+30024	WZKCshop.Name	考察集散地	1	2021-02-24-08-00-00	2021-03-13-04-00-00	999	4					66		UI/UI_Shop/shopnew_tab_activity.png	WZKCshop.Name		1		
+30025	UI_WinterCloth.shop	收银总台（冬日常服商店）	1	2021-03-10-08-00-00	2021-04-03-04-00-00	999	4					67| 68		UI/UI_Shop/shopnew_tab_activity.png	UI_Dnaxcat.Shop		1		
+30027	shop30001.Name	肝塔14期	1	2021-03-31-08-00-00	2021-04-26-04-00-00	999	4	40000				69	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30028	shop30028.Name	电磁炮联动	1	2022-01-26-08-00-00	2022-02-26-04-00-00	999	4	40000				70	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30028.Desc		1		
+30029	shop30029.Name	寻踪·家具兑换	1	2021-04-09-04-00-00	2021-04-25-04-00-00	999	4					71		UI/UI_Shop/shopnew_tab_activity.png	shop30029.Desc		1		
+30030	shop30001.Name	杂色塔5期商店	1	2021-04-23-08-00-00	2021-05-16-04-00-00	999	4	40000				32| 34	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30031	shop30001.Name	肝塔15期	1	2021-05-13-08-00-00	2021-06-04-04-00-00	999	4	40000				72	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30032	shop30001.Name	杂色塔6期商店	1	2022-06-08-08-00-00	2022-07-02-04-00-00	999	4	40000				30| 34| 73	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		2		
+30033	shop30033.Name	柜台（肝塔16商店）	1	2021-06-21-08-00-00	2021-07-15-04-00-00	999	4					75| 76		UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30034	shop30001.Name	肝塔17期	1	2021-07-12-08-00-00	2021-08-03-04-00-00	999	4	40000				77	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30035	shop30001.Name	杂色塔7期商店	1	2022-05-18-08-00-00	2022-06-08-04-00-00	999	4	40000				30| 29	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		2		
+30036	shop30001.Name	肝塔18期	1	2021-08-20-08-00-00	2021-09-12-04-00-00	999	4	40000				80	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30037	shop30001.Name	肝塔19期	1	2021-09-09-08-00-00	2021-10-02-04-00-00	999	4	40000				81	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		2		
+30038	shop30001.Name	杂色塔3期复刻	1	2021-09-29-08-00-00	2021-10-22-04-00-00	999	4	40000				33| 30	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30001.Desc		1		
+30039	Halloween.Shop	狩猎派对	1	2021-11-09-08-00-00	2021-11-22-04-00-00	999	4					50|51		UI/UI_Shop/shopnew_tab_activity.png	Halloween.Shop		1		
+30040	shop30040.Name	两周年庆上期 活动商店	1	2021-11-19-08-00-00	2021-12-26-04-00-00	999	4	40000				83	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30040.Desc		2		
+30041	shop30041.Name	两周年庆下期 活动商店	1	2021-12-07-08-00-00	2021-12-26-04-00-00	999	4	40000				84	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30041.Desc		3		
+30042	shop30042.Name	两周年庆-万声殿	1	2021-11-19-08-00-00	2021-12-26-04-00-00	999	4	40000				85		UI/UI_Shop/shopnew_tab_activity.png	shop30042.Desc		1		1
+30043	White.Shop	雪地小屋	1	2021-12-23-08-00-00	2022-01-16-04-00-00	999	4					47		UI/UI_Shop/shopnew_tab_activity.png	White.Shop		1		
+30044	shop30044.Name	寻踪·家具兑换	1	2022-01-06-04-00-00	2022-01-29-04-00-00	999	4					71		UI/UI_Shop/shopnew_tab_activity.png	shop30029.Desc		1		
+30045	shop30045.Name	电子世界大冒险 活动商店	1	2022-01-06-08-00-00	2022-01-29-04-00-00	999	4	40000				87	5| 1	UI/UI_Shop/shopnew_tab_activity.png	shop30045.Desc		2		
+30046	HyperCafe.Shop	最高级咖啡馆	1	2022-02-23-08-00-00	2022-03-19-04-00-00	999	4					89| 90		UI/UI_Shop/shopnew_tab_activity.png	UI_Dnaxcat.Shop		1		
+30047	HyperCafe.Shop2	最终据点（棋盘肝塔下商店）	1	2022-04-27-08-00-00	2022-05-21-04-00-00	999	4					93| 94		UI/UI_Shop/shopnew_tab_activity.png	UI_Dnaxcat.Shop		1		

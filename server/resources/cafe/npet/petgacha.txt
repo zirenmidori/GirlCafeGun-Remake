@@ -1,0 +1,10 @@
+INT	INT	INTARR	STR	INT	INT
+����Id	��������(1��פ2��ʱ3����)	��ͷ�б�(���ͷId����[1,2])	��������	���ſ�ʼʱ��	���Ž���ʱ��
+GachaId	OpenType	PetFoodList	Desc	OpenBeginTime	OpenEndTime
+6	3	[8]	PetFood.desc1	[202105010000]	[202305010000]
+7	2	[7]	PetFood.desc4	[202201260800]	[202202230400]
+4	3	[6]	PetFood.desc1	[202105010000]	[202305010000]
+5	2	[5]	PetFood.desc3	[202112230800]	[202201130400]
+1	3	[4]	PetFood.desc1	[202105010000]	[202305010000]
+2	2	[3]	PetFood.desc2	[202111190000]	[202112170000]
+3	1	[1,2]	PetFood.desc	[202105010000]	[202305010000]

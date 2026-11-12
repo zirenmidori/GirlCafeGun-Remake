@@ -1,0 +1,11 @@
+INT	NUL	STR	INT	STR	INT	STR	STR	INT
+��ͷid	��ע	GDPL	��ͷ����(1.���ǹ�ͷ 2.���ǹ�ͷ 3.����ָ����ͷ 4.����ר�� 5.��޶�)	����۸�	���ټ۸�(ÿ10����)	Ͷι������	���ʴ�����	����ϡ�ж�
+Id	NUL	GDPL	Type	PriceGet	PricePer	Desc	ProDesc	GetPetRare
+7	3�ڻ��ͷ	[21-2-3-3]	2	[2,5000]	[3,1]	item.PetFood07D.desc	ui.PetFood07.desc	{{1,45},{2,35},{3,20}}
+8	3��ר���ͷ	[21-3-3-3]	5	[2,5000]	[3,1]	item.PetFood08D.desc	ui.PetFood08.desc	{{3,100}}
+1	���ǹ�ͷ	[21-1-1-2]	1	[2,5000]	[3,1]	item.PetFood01D.desc	ui.PetFood01.desc	{{1,90},{2,10}}
+2	���ǹ�ͷ	[21-1-2-4]	2	[2,5000]	[3,1]	item.PetFood02D.desc	ui.PetFood02.desc	{{2,90},{3,10}}
+3	1�ڻ��ͷ	[21-2-1-3]	2	[2,5000]	[3,1]	item.PetFood03D.desc	ui.PetFood03.desc	{{1,45},{2,35},{3,20}}
+4	1��ר���ͷ	[21-3-1-3]	5	[2,5000]	[3,1]	item.PetFood04D.desc	ui.PetFood04.desc	{{3,100}}
+5	2�ڻ��ͷ	[21-2-2-3]	2	[2,5000]	[3,1]	item.PetFood05D.desc	ui.PetFood05.desc	{{1,45},{2,35},{3,20}}
+6	2��ר���ͷ	[21-3-2-3]	5	[2,5000]	[3,1]	item.PetFood06D.desc	ui.PetFood06.desc	{{3,100}}

@@ -1,0 +1,9 @@
+STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR
+Genre	Detail	Particular	Level	RarityColor	AutoUse	ClassName	DescriptionIndex	SellingPrice	IconId	awardIconId	ExtParam1	ExtParam2	ExtParam3	ShowType	TagIcon	DisableDropWay	LimitTime	ExpiredDelete
+Genre	Detail	Particular	Level	RarityColor	AutoUse	ClassName	DescriptionIndex	SellingPrice	IconId	awardIconId	ExtParam1	ExtParam2	ExtParam3	ShowType	TagIcon	DisableDropWay	LimitTime	ExpiredDelete
+22	1	1	1	1	0	PetItem	PetToy01	0	Item/pet_toy01.png	Item/pet_toy01.png	30			5		1	0	1
+22	1	2	1	2	0	PetItem	PetToy02	0	Item/pet_toy02.png	Item/pet_toy02.png	60			5		1	0	1
+22	1	3	1	3	0	PetItem	PetToy03	0	Item/pet_toy03.png	Item/pet_toy03.png	90			5		1	0	1
+22	2	1	1	1	0	PetItem	PetClean01	0	Item/pet_clean01.png	Item/pet_clean01.png	20			5		1	0	1
+22	2	2	1	2	0	PetItem	PetClean02	0	Item/pet_clean02.png	Item/pet_clean02.png	50			5		1	0	1
+22	2	3	1	3	0	PetItem	PetClean03	0	Item/pet_clean03.png	Item/pet_clean03.png	80			5		1	0	1

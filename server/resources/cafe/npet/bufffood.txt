@@ -1,0 +1,7 @@
+INT	NUL	STR	STR	INT	INT	INT	INT
+id	��ע	ͼ��	����۸�	���ӵ���	����ÿСʱ����	���ܶ�ÿСʱ����	Ʒ��
+Id	NUL	Icon	PriceGet	AddPoint	Energy	Love	Rarity
+1	foodbuff1	Item/pet_food01.png	[7,500]	200	0	0	1
+2	foodbuff2	Item/pet_food02.png	[2,10000]	300	0	0	2
+3	foodbuff3	Item/pet_food02.png	[2,50000]	1500	0	0	3
+4	foodbuff4	Item/pet_food03.png	[3,20]	3000	0	0	4

@@ -1,0 +1,44 @@
+{
+  "http": {
+    "host": "127.0.0.1",
+    "port": 18080
+  },
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 30400,
+    "advertisedHost": "127.0.0.1",
+    "maxPacketBytes": 16777216
+  },
+  "serverList": {
+    "id": 1,
+    "aid": 1,
+    "sid": 1,
+    "name": "离线研究服",
+    "state": 1,
+    "level": 1
+  },
+  "logging": {
+    "level": "info",
+    "file": "logs/server.log",
+    "maxBytes": 20971520,
+    "maxFiles": 5,
+    "maxPayloadHexBytes": 4096
+  },
+  "persistence": {
+    "file": "data/state.json"
+  },
+  "pvp": {
+    "fightHost": "127.0.0.1",
+    "fightPort": 30402,
+    "robotCount": 2,
+    "roomCloseSeconds": 3600
+  },
+  "playerDefaults": {
+    "name": "",
+    "level": 1,
+    "exp": 0,
+    "fightPower": 0,
+    "serverZone": 8,
+    "firstLevelComplete": false
+  }
+}

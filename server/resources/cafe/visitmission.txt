@@ -1,0 +1,5 @@
+INT	NUL	STRARR	STR
+����ID	��ע	��������ID	���Ķ���
+MissionId	Desc	Awards	Action
+1	��ǽ	[15-12-1-1-30,15-14-1-1-40,15-13-1-1-40]	CleanWall1
+2	ɨ��	[15-12-1-1-30,15-14-1-1-40,15-13-1-1-40]	RandomSaodi

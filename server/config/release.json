@@ -1,0 +1,48 @@
+{
+  "http": {
+    "host": "127.0.0.1",
+    "port": 28080
+  },
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 31400,
+    "advertisedHost": "127.0.0.1",
+    "maxPacketBytes": 16777216
+  },
+  "serverList": {
+    "id": 1,
+    "aid": 1,
+    "sid": 1,
+    "name": "GCG Offline",
+    "state": 1,
+    "level": 1
+  },
+  "logging": {
+    "level": "info",
+    "file": "logs/server.log",
+    "maxBytes": 20971520,
+    "maxFiles": 5,
+    "maxPayloadHexBytes": 4096
+  },
+  "persistence": {
+    "file": "data/state.json"
+  },
+  "pvp": {
+    "fightHost": "127.0.0.1",
+    "fightPort": 31402,
+    "robotCount": 2,
+    "roomCloseSeconds": 3600
+  },
+  "playerDefaults": {
+    "name": "",
+    "level": 1,
+    "exp": 0,
+    "fightPower": 0,
+    "serverZone": 8,
+    "firstLevelComplete": false
+  },
+  "release": {
+    "singlePlayerAccount": "gcg-offline-player-v1",
+    "welcomeGift": true
+  }
+}

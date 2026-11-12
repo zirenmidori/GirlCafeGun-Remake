@@ -1,0 +1,7 @@
+INT	GDPL	NUL	INT	BOOL	STR	STR	INT	INT
+奖励id	奖励GDPLN	说明	权重	是否展示	卡片图片	剧情文件	UP标记	排序
+ID	GDPLN	Nul	Rate	IsPreview	CardTexture	Story	UpFlag	Sort
+444	[1-4-4-4]	女仆装·沐恩	100	1	Card/All/girl04_card04.png	Gacha/Gacha_girl0404		5
+544	[1-5-4-4]	女仆装·苏小真	100	1	Card/All/girl05_card04.png	Gacha/Gacha_girl0504		6
+944	[1-9-4-4]	女仆装·时无瑕	100	1	Card/All/girl09_card04.png	Gacha/Gacha_girl0904		3
+1044	[1-10-4-4]	女仆装·时无忧	100			Gacha/Gacha_girl1004		22

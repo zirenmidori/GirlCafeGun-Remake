@@ -1,0 +1,15 @@
+INT	NUL	STR	STR	STR	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	INT	C-l-d	girlid-v	melv	GDPLN
+编号	名称	名称索引	图标	说明	星级	酸度	醇度	苦度	风味	时间	成本	售价	单次上限	匹配收益Base晶币	晶币附加	匹配收益Base咖啡币	咖啡币附加	匹配收益Base人气	人气附加	解锁条件1(关卡)	条件2(亲密)	条件3-等级	解锁消耗道具
+Id	NUL	NameIndex	IconId	Desc	star	Sweet	Appearance	Concentration	Flavor	Time	Cost	Price	Max	AwardA	RateA	AwardB	RateB	AwardC	RateC	Cond1	Cond2	Cond3	UnlockCostItem
+1	洛氏咖啡	coffee.name1	DIY/icon_cafe_044.png	由士兵口粮包中的咖啡粉兑水而成，非常难喝，有种战场的味道	1	25	55	25	25	240	5	10	500	10	0	1	0	1	0				
+2	曼特宁	coffee.name21	DIY/icon_cafe_001.png	恰到好处的苦味，适合深度烘焙	1	25	25	55	25	240	5	10	500	10	0	1	0	1	0				
+3	哥斯达	coffee.name5	DIY/icon_cafe_063.png	光滑而且酸度高，具有诱人的香味	1	55	25	25	25	240	5	10	500	10	0	1	0	1	0				
+4	玛奇朵	coffee.name3	DIY/icon_cafe_084.png	在热牛奶上加入浓缩咖啡、香草再淋上焦糖而成，寓意“甜蜜的印记”	1	25	25	25	55	240	5	10	500	10	0	1	0	1	0				
+5	冷粹咖啡	coffee.name7	DIY/icon_cafe_041.png	和冷泡茶一个意思，都是低温长时间萃取而得	2	30	65	30	30	240	5	12	500	12	0	1	0	1	0			10	
+6	炭烧咖啡	coffee.name25	DIY/icon_cafe_101.png	用碳火深度烘焙，色泽较黑，强烈的焦苦和甘醇	2	30	30	65	30	240	5	12	500	12	0	1	0	1	0	[4-12-1]			
+7	耶加雪菲	coffee.name10	DIY/icon_cafe_092.png	浅度烘焙有着独特的香气，柔和的果酸及柑橘味，口感清新明亮	2	65	30	30	30	240	5	12	500	12	0	1	0	1	0			20	
+8	维也纳	coffee.name13	DIY/icon_cafe_064.png	以浓浓的鲜奶油和巧克力的甜美风味倾倒众生，外观也非常漂亮	2	30	30	30	65	240	5	12	500	12	0	1	0	1	0	[5-12-1]			
+9	冰滴咖啡	coffee.name12	DIY/icon_cafe_051.png	使用冰水、冷水或冰块萃取咖啡，过程十分缓慢，往往要进行数小时之久	3	35	75	35	35	240	5	15	500	15	0	1	0	1	0			30	
+10	意式浓缩	coffee.name6	DIY/icon_cafe_074.png	用意式咖啡机的蒸汽高压下快速萃取出的极浓极少的咖啡之精华	3	35	35	75	35	240	5	15	500	15	0	1	0	1	0	[6-12-2]			
+11	危地马拉	coffee.name15	DIY/icon_cafe_091.png	"带有上等的酸味与甜味滑润顺口,是混合咖啡的最佳材料"	3	75	35	35	35	240	5	15	500	15	0	1	0	1	0			50	
+12	爱尔兰咖啡	coffee.name18	DIY/icon_cafe_054.png	由热咖啡、爱尔兰威士忌、奶油和糖混合搅拌而成的一种花式咖啡	3	35	35	35	75	240	5	15	500	15	0	1	0	1	0	[8-12-2]			

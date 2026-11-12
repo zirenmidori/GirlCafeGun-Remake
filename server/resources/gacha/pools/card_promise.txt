@@ -1,0 +1,27 @@
+INT	GDPL	NUL	INT	BOOL	STR	STR	INT	INT
+奖励id	奖励GDPLN	说明	权重	是否展示	卡片图片	剧情文件	UP标记	排序
+ID	GDPLN	Nul	Rate	IsPreview	CardTexture	Story	UpFlag	Sort
+113	[1-1-1-3]	私服·洛可可	100			Gacha/Gacha_girl0105		26
+143	[1-1-4-3]	女仆装·洛可可	100			Gacha/Gacha_girl0104		27
+213	[1-2-1-3]	私服·高奈利亚	100			Gacha/Gacha_girl0205		11
+243	[1-2-4-3]	女仆装·高奈利亚	100	1	Card/All/girl02_card04	Gacha/Gacha_girl0204		4
+313	[1-3-1-3]	私服·朱诺	100			Gacha/Gacha_girl0305		29
+343	[1-3-4-3]	女仆装·朱诺	100			Gacha/Gacha_girl0304		30
+413	[1-4-1-3]	私服·沐恩	100			Gacha/Gacha_girl0405		31
+444	[1-4-4-4]	女仆装·沐恩	100			Gacha/Gacha_girl0404		5
+513	[1-5-1-3]	私服·苏小真	100			Gacha/Gacha_girl0505		32
+544	[1-5-4-4]	女仆装·苏小真	100			Gacha/Gacha_girl0504		6
+613	[1-6-1-3]	私服·千姬	100			Gacha/Gacha_girl0605		12
+643	[1-6-4-3]	女仆装·千姬	100			Gacha/Gacha_girl0604		19
+713	[1-7-1-3]	私服·艾琳	100			Gacha/Gacha_girl0705		13
+743	[1-7-4-3]	女仆装·艾琳	100	1	Card/All/girl07_card04	Gacha/Gacha_girl0704		20
+813	[1-8-1-3]	私服·格兰妮	100			Gacha/Gacha_girl0805		14
+843	[1-8-4-3]	女仆装·格兰妮	100			Gacha/Gacha_girl0804		21
+913	[1-9-1-3]	私服·时无瑕	100			Gacha/Gacha_girl0905		15
+944	[1-9-4-4]	女仆装·时无瑕	100			Gacha/Gacha_girl0904		3
+1013	[1-10-1-3]	私服·时无忧	100			Gacha/Gacha_girl1005		16
+1044	[1-10-4-4]	女仆装·时无忧	100	1	Card/All/girl10_card04	Gacha/Gacha_girl1004		22
+1113	[1-11-1-3]	私服·丽达	100			Gacha/Gacha_girl1105		17
+1143	[1-11-4-3]	女仆装·丽达	100			Gacha/Gacha_girl1104		24
+1213	[1-12-1-3]	私服·伊珂丝	100			Gacha/Gacha_girl1205		18
+1243	[1-12-4-3]	女仆装·伊珂丝	100			Gacha/Gacha_girl1204		25

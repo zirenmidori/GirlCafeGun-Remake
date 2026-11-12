@@ -1,0 +1,996 @@
+INT	STRARR	NUL	STR	STR	STR	STR	INT	INT	Vector2	INTARR	INTARR	VECTOR2	VECTOR3	INT	INTARR	INT	STRARR	INT	INT	INT	INT	INT	INT	INT	INT	INT	STRARR	INT	STR	STR	INT	INT	STR	FLOAT	STR	INT	INT	INT	INT	INT
+编号	家具关联道具	备注	名称	描述	Obj图标	资源路径	类型	父节点(固定物件使用)	大小	摆放房间 0-全部 1-咖啡馆 2-宿舍 6-新宿舍	可以放置区域（区域指的是 房间+父物件）	物件内部格子大小	物件内部格子偏移	默认物件Index（如果场景中没有该类物件，则显示默认物件）	附加物件	是否为附加物件	网格附加物	主题类型	星级	舒适度	分解价格	影响顾客类型	顾客权重加成	晶币加成率x/万	家具商店对应商品Id	家具拥有最大值	物件点配置,妹子以girl_开头,客人以guest_开头,客人位置以biz_开头位置动作类型		交互事件类型	交互少女（不填则所有都可以互动，填了就是括号内的才可以互动）	交互事件人数	宠物类型	物件点击事件 PointLight	物件点击事件CD	奖励道具	触发奖励概率万	渲染类型	电力储备比例	是否在地面显示网格	是否自动添加碰撞盒
+Id	ItemInfo	Explain	Name	Desc	Icon	Res	Type	Parent	Size	DicPlace	DicArea	InnerSize	InnerOffset	DefaultShow	AddObjs	IsAddObj	GridObjs	ThemeType	Level	AddScore	SellPrice	AddCustomerType	AddCustomerValue	CoinGainRate	GoodsId	OwnMax	Points	SeatType	EventType	EventGirlId	EventGirlCount	PetType	ClickType	ClickCD	AwardID	Rate	RenderType	PowerScale	IsShowGroundGrid	AutoAddBoxCollider
+1		场景根				SceneRoot	1					[0,0]													1															
+2		经营区地板				SceneRoot/Cafe/Floor	2	1		1		[45,38]	[0,0.01,0]												2															
+3		经营区墙1				SceneRoot/Cafe/Wall1	3	1		1															3															1
+4		经营区墙2				SceneRoot/Cafe/Wall2	4	1		1		[33,10]	[-1.67,1.7,-0.001]												4															1
+5		经营区墙3(门窗)				SceneRoot/Cafe/Wall3	5	1		1		[45,10]	[0,1.7,-0.001]												5															1
+6		经营区墙4				SceneRoot/Cafe/Wall4	6	1		1		[38,10]	[0,1.7,-0.001]												6															1
+7		经营区天花板				SceneRoot/Cafe/Top	7	1		1															7															
+8		经营区吧台				SceneRoot/Cafe/Batai	8	1		1															8															
+9		经营区吧台墙上部分				SceneRoot/Cafe/Bataiqiang	9	1		1															9															
+10		休息区地板				SceneRoot/Rest/Floor	10	1		2		[28,28]	[0,0.01,0]												10															
+11		休息区窗				SceneRoot/Rest/Wall1	11	1		2		[28,10]	[0,1.771,-0.001]												11															1
+12		休息区墙				SceneRoot/Rest/Wall2	12	1		2		[28,10]	[0,1.771,-0.001]												12															1
+13		休息区墙-门				SceneRoot/Rest/Wall3	13	1		2		[17,10]	[1.56,1.771,-0.001]												13															1
+14		休息区门				SceneRoot/Rest/Wall4	14	1		2		[17,10]	[-1.6,1.771,-0.001]												14															1
+15		休息区天花板				SceneRoot/Rest/Top	15	1		2															15															
+16		默认外景特训1				SceneRoot/Train1	16	1		2															16															
+17		默认外景特训2				SceneRoot/Train2	17	1		2															17															
+18		默认外景特训3				SceneRoot/Train3	18	1		2															18															
+19		默认外景特训4				SceneRoot/Train4	19	1		2															19															
+20		**经营默认光照-废弃				SceneRoot/Cafe/Light	20	1		1															20															
+21		**休息区默认光照-废弃				SceneRoot/Rest/Light	21	1		2															21															
+22		外景				SceneRoot/Scene	22	1		1															22															
+23		外景光照				SceneRoot/Light	23	1		1															23															
+																																								
+30		新休息区地板				SceneRoot/Dorm/Floor	30	1		6		[30,34]	[0,0.03,0]												10															
+31		新休息区墙				SceneRoot/Dorm/Wall1	31	1		6		[33,10]	[0,1.75,-0.001]												31															1
+32		新休息区墙-门				SceneRoot/Dorm/Wall2	32	1		6		[20,10]	[1.42,1.75,-0.001]												32															1
+33		新休息区窗				SceneRoot/Dorm/Wall3	33	1		6		[30,10]	[0,1.75,-0.001]												33															1
+34		新休息区门				SceneRoot/Dorm/Wall4	34	1		6		[20,10]	[-1.9,1.75,-0.001]												34															1
+35		新休息区天花板				SceneRoot/Dorm/Top	35	1		6															35															
+																																								
+																																								
+																																								
+																																								
+																																								
+50		经营区默认地板	furniture50	furniture50.desc	DIY/icon_cafe_a_road01.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_road01.prefab	50	2		1									1	0					50	99														
+51		经营区默认墙1	furniture51	furniture51.desc	DIY/icon_cafe_a_wall001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall002.prefab	51	3		1									1	0					51	99														
+52		经营区默认墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall003.prefab	52	4		1									1						52	99														
+53		经营区默认墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall001.prefab	53	5		1									1						53	99														
+54		经营区默认墙4				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall004.prefab	54	6		1									1						54	99														
+55		经营区默认窗	furniture55	furniture55.desc	DIY/icon_cafe_a_window002.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_window001.prefab	55	5		1									1	0					55	99														
+56		经营区默认门	furniture56	furniture56.desc	DIY/icon_cafe_a_door001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_door001.prefab	56	5		1									1	0					56	99														
+57		经营区默认外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_roof_wall005.prefab	57	7		1									1						57	99														
+58		经营区默认吧台	furniture58	furniture58.desc	DIY/icon_cafe_a_bar001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_bar001.prefab	58	8		1					59				1	0					58	99	BossPos											10		
+59		经营区默认吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_bar001_1.prefab	59	9		1									1						59	99														
+60		休息区默认地板	furniture60	furniture60.desc	DIY/icon_cafe_a_road02.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_road02.prefab	60	10		2									1	0					60	99														
+61		休息区默认窗	furniture61	furniture61.desc	DIY/icon_cafe_a_window001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall012.prefab	61	11		2									1	0					61	99														
+62		休息区默认墙	furniture62	furniture62.desc	DIY/icon_cafe_a_wall001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall013.prefab	62	12		2									1	0					62	99														
+63		休息区默认墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall011.prefab	63	13		2									1						63	99														
+64		休息区默认门	furniture64	furniture64.desc	DIY/icon_cafe_a_door001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall014.prefab	64	14		2									1	0					64	99														
+65		休息区默认外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_roof_wall015.prefab	65	15		2									1						65	99														
+66		默认外景特训-跳舞				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_Train_Dance.prefab	66	16		5						1			1						66	99	girl_1|girl_2|girl_3													
+67		默认外景特训-瑜伽				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_Train_Yoga.prefab	67	17		5						1			1						67	99	girl_1|girl_2|girl_3													
+68		默认外景特训-飞镖				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_Train_Darts.prefab	68	18		5						1			1						68	99	girl_1|girl_2|girl_3													
+69		默认外景特训-漫画				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_Train_Cartoon.prefab	69	19		5						1			1						69	99	girl_1|girl_2|girl_3													
+70		**经营默认光照-废弃				Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_001.prefab	70	20		1									1						70	99														
+71		**休息区默认光照-废弃				Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_001.prefab	71	21		2									1						71	99														
+72		默认外景	outdoor01	outdoor01.desc	Poster/cafe_outpic_default.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/cf_house_02.prefab	72	22		0					[66,67,68,69,57,65,85]				1						72	99														
+73		外景光照	furniture73	furniture73.desc	DIY/icon_cafe_a_mr.png	Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_001.prefab	73	23		0									1						73	99											1			
+																																								
+																																								
+80		扩展区默认地板	furniture60	furniture60.desc	DIY/icon_cafe_a_road01.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_road03.prefab	80	30		6									1	0					60	99														
+81		扩展区默认墙	furniture62	furniture62.desc	DIY/icon_cafe_a_wall001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall022.prefab	81	31		6									1	0					61	99														
+82		扩展区默认墙-门	furniture62	furniture62.desc	DIY/icon_cafe_a_wall001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall023.prefab	82	32		6									1	0					62	99														
+83		扩展区默认-窗	furniture61	furniture61.desc	DIY/icon_cafe_a_window001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall021.prefab	83	33		6									1						63	99														
+84		扩展区默认门	furniture64	furniture64.desc	DIY/icon_cafe_a_door001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_wall024.prefab	84	34		6									1	0					64	99														
+85		扩展区默认外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor01/Outdoor01_roof_wall025.prefab	85	35		6									1						65	99														
+																																								
+																																								
+201	11-6-2-2	咖啡-和风-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_HF		200	2400				201	99														
+202	11-7-2-2	咖啡-和风-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_window001.prefab	55	5		1				55				NCI_HF		200	2400				202	99														1
+203	11-8-2-2	咖啡-和风-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_door001.prefab	56	5		1				56				NCI_HF		200	2400				203	99														1
+204	11-9-2-2	咖啡-和风-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_bar001.prefab	58	8		1				58	206			NCI_HF		200	2400				204	99												20		1
+205	11-10-2-2	咖啡-和风-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall002.prefab	51	3		1				51				NCI_HF		200	2400				205	99														1
+206	11-9-2-2	咖啡-和风-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_bar001_1.prefab	59	9		1				59		1		NCI_HF		0					206	99														
+																																								
+211	11-6-3-3	咖啡-工业-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_GY		300	3600				211	99														
+212	11-7-3-3	咖啡-工业-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_window001.prefab	55	5		1				55				NCI_GY		300	3600				212	99														1
+213	11-8-3-3	咖啡-工业-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_door001.prefab	56	5		1				56				NCI_GY		300	3600				213	99														1
+214	11-9-3-3	咖啡-工业-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_bar001_1.prefab	58	8		1				58	216			NCI_GY		300	3600				214	99												30		1
+215	11-10-3-3	咖啡-工业-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall002.prefab	51	3		1				51				NCI_GY		300	3600				215	99														1
+216	11-9-3-3	咖啡-工业-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_bar001_2.prefab	59	9		1				59		1		NCI_GY		0					216	99														
+																																								
+221	11-6-4-3	咖啡-科技-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_KE		300	3600				221	99														
+222	11-7-4-3	咖啡-科技-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_window001.prefab	55	5		1				55				NCI_KE		300	3600				222	99														1
+223	11-8-4-3	咖啡-科技-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_door001.prefab	56	5		1				56				NCI_KE		300	3600				223	99														1
+224	11-9-4-3	咖啡-科技-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_bar002.prefab	58	8		1				58	226			NCI_KE		300	3600				224	99												40		1
+225	11-10-4-3	咖啡-科技-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall002.prefab	51	3		1				51				NCI_KE		300	3600				225	99														1
+226	11-9-4-3	咖啡-科技-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_bar001.prefab	59	9		1				59		1		NCI_KE		0					226	99														
+																																								
+251	11-6-7-3	咖啡-夏日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_XR		300	3600				251	99														
+252	11-7-7-3	咖啡-夏日-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_window001.prefab	55	5		1				55				NCI_XR		300	3600				252	99														1
+253	11-8-7-3	咖啡-夏日-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_door001.prefab	56	5		1				56				NCI_XR		300	3600				253	99														1
+254	11-9-7-3	咖啡-夏日-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_bar001.prefab	58	8		1				58	256			NCI_XR		300	3600				254	99												40		1
+255	11-10-7-3	咖啡-夏日-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall002.prefab	51	3		1				51				NCI_XR		300	3600				255	99														1
+256	11-9-7-3	咖啡-夏日-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_bar002.prefab	59	9		1				59		1		NCI_XR		0					256	99														
+																																								
+261	11-6-8-3	咖啡-bilibili-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_BILI		10					261	99														
+262	11-7-8-3	咖啡-bilibili-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_window001.prefab	55	5		1				55				NCI_BILI		10					262	99														1
+263	11-8-8-3	咖啡-bilibili-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_door001.prefab	56	5		1				56				NCI_BILI		10					263	99														1
+264	11-9-8-3	咖啡-bilibili-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_bar001_02.prefab	58	8		1				58	266			NCI_BILI		10					264	99												40		1
+265	11-10-8-3	咖啡-bilibili-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall002.prefab	51	3		1				51				NCI_BILI		10					265	99														1
+266	11-9-8-3	咖啡-bilibili-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_bar001_01.prefab	59	9		1				59		1		NCI_BILI		0					266	99														
+																																								
+271	11-6-9-3	咖啡-西洋棋-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_XYQ		300	3600				271	99														
+272	11-7-9-3	咖啡-西洋棋-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_window001.prefab	55	5		1				55				NCI_XYQ		300	3600				272	99														1
+273	11-8-9-3	咖啡-西洋棋-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_door001.prefab	56	5		1				56				NCI_XYQ		300	3600				273	99														1
+274	11-9-9-3	咖啡-西洋棋-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_bar001_2.prefab	58	8		1				58	276			NCI_XYQ		300	3600				274	99												40		1
+275	11-10-9-3	咖啡-西洋棋-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall002.prefab	51	3		1				51				NCI_XYQ		300	3600				275	99														1
+276	11-9-9-3	咖啡-西洋棋-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_bar001_1.prefab	59	9		1				59		1		NCI_XYQ		0					276	99														
+																																								
+281	11-6-10-3	咖啡-冬日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_DR		300	3600				281	99														
+282	11-7-10-3	咖啡-冬日-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_window001.prefab	55	5		1				55				NCI_DR		300	3600				282	99														1
+283	11-8-10-3	咖啡-冬日-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_door001.prefab	56	5		1				56				NCI_DR		300	3600				283	99														1
+284	11-9-10-3	咖啡-冬日-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_bar001_1.prefab	58	8		1				58	286			NCI_DR		300	3600				284	99												40		1
+285	11-10-10-3	咖啡-冬日-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall002.prefab	51	3		1				51				NCI_DR		300	3600				285	99														1
+286	11-9-10-3	咖啡-冬日-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_bar001_2.prefab	59	9		1				59		1		NCI_DR		0					286	99														
+																																								
+291	11-6-11-3	咖啡-春节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_CJ		300					291	99														
+292	11-7-11-3	咖啡-春节-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_window001.prefab	55	5		1				55				NCI_CJ		300					292	99														1
+293	11-8-11-3	咖啡-春节-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_door001.prefab	56	5		1				56				NCI_CJ		300					293	99														1
+294	11-9-11-3	咖啡-春节-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_bar001_2.prefab	58	8		1				58	296			NCI_CJ		300					294	99												40		1
+295	11-10-11-3	咖啡-春节-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_wall002.prefab	51	3		1				51				NCI_CJ		300					295	99														1
+296	11-9-11-3	咖啡-春节-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_bar001_1.prefab	59	9		1				59		1		NCI_CJ		0					296	99														
+																																								
+2001	11-6-12-3	咖啡-学校-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_XX		300	3600				2001	99														
+2002	11-7-12-3	咖啡-学校-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_window001.prefab	55	5		1				55				NCI_XX		300	3600				2002	99														1
+2003	11-8-12-3	咖啡-学校-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_door001.prefab	56	5		1				56				NCI_XX		300	3600				2003	99														1
+2004	11-9-12-3	咖啡-学校-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_bar001_2.prefab	58	8		1				58	2006			NCI_XX		300	3600				2004	99												40		1
+2005	11-10-12-3	咖啡-学校-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall002.prefab	51	3		1				51				NCI_XX		300	3600				2005	99														1
+2006	11-9-12-3	咖啡-学校-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_bar001_1.prefab	59	9		1				59		1		NCI_XX		0					2006	99														
+																																								
+2021	11-6-14-3	咖啡-健身房-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_GYM		300	3600				2021	99														
+2022	11-7-14-3	咖啡-健身房-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_window001.prefab	55	5		1				55				NCI_GYM		300	3600				2022	99														1
+2023	11-8-14-3	咖啡-健身房-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_door001.prefab	56	5		1				56				NCI_GYM		300	3600				2023	99														1
+2024	11-9-14-3	咖啡-健身房-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_bar001_01.prefab	58	8		1				58	2026			NCI_GYM		300	3600				2024	99												40		1
+2025	11-10-14-3	咖啡-健身房-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall002.prefab	51	3		1				51				NCI_GYM		300	3600				2025	99														1
+2026	11-9-14-3	咖啡-健身房-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_bar001_02.prefab	59	9		1				59		1		NCI_GYM		0					2026	99														
+																																								
+2031	11-6-15-3	咖啡-音乐节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_MUSIC		300	3600				2031	99														
+2032	11-7-15-3	咖啡-音乐节-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_window001.prefab	55	5		1				55				NCI_MUSIC		300	3600				2032	99														1
+2033	11-8-15-3	咖啡-音乐节-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_door001.prefab	56	5		1				56				NCI_MUSIC		300	3600				2033	99														1
+2034	11-9-15-3	咖啡-音乐节-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_bar001_2.prefab	58	8		1				58	2036			NCI_MUSIC		300	3600				2034	99												40		1
+2035	11-10-15-3	咖啡-音乐节-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall002.prefab	51	3		1				51				NCI_MUSIC		300	3600				2035	99														1
+2036	11-9-15-3	咖啡-音乐节-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_bar001_1.prefab	59	9		1				59		1		NCI_MUSIC		0					2036	99														
+																																								
+2041	11-6-16-3	咖啡-地中海-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_DZH		300	3600				2041	99														
+2042	11-7-16-3	咖啡-地中海-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_Window001.prefab	55	5		1				55				NCI_DZH		300	3600				2042	99														1
+2043	11-8-16-3	咖啡-地中海-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_door001.prefab	56	5		1				56				NCI_DZH		300	3600				2043	99														1
+2044	11-9-16-3	咖啡-地中海-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_bar001_2.prefab	58	8		1				58	2046			NCI_DZH		300	3600				2044	99												40		1
+2045	11-10-16-3	咖啡-地中海-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall002.prefab	51	3		1				51				NCI_DZH		300	3600				2045	99														1
+2046	11-9-16-3	咖啡-地中海-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_bar001_1.prefab	59	9		1				59		1		NCI_DZH		0					2046	99														
+																																								
+2051	11-6-17-3	咖啡-韩国秋夕-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_KR		300					2051	99														
+2052	11-7-17-3	咖啡-韩国秋夕-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_window001.prefab	55	5		1				55				NCI_KR		300					2052	99														1
+2053	11-8-17-3	咖啡-韩国秋夕-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_door001.prefab	56	5		1				56				NCI_KR		300					2053	99														1
+2054	11-9-17-3	咖啡-韩国秋夕-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_bar001_1.prefab	58	8		1				58	2056			NCI_KR		300					2054	99												40		1
+2055	11-10-17-3	咖啡-韩国秋夕-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_wall002.prefab	51	3		1				51				NCI_KR		300					2055	99														1
+2056	11-9-17-3	咖啡-韩国秋夕-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_bar001_2.prefab	59	9		1				59		1		NCI_KR		0					2056	99														
+																																								
+2061	11-6-18-3	咖啡-电影院-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_CINEMA		300	3600				2061	99														
+2062	11-7-18-3	咖啡-电影院-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_window001.prefab	55	5		1				55				NCI_CINEMA		300	3600				2062	99														1
+2063	11-8-18-3	咖啡-电影院-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_door001.prefab	56	5		1				56				NCI_CINEMA		300	3600				2063	99														1
+2064	11-9-18-3	咖啡-电影院-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_bar001_2.prefab	58	8		1				58	2066			NCI_CINEMA		300	3600				2064	99												40		1
+2065	11-10-18-3	咖啡-电影院-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall002.prefab	51	3		1				51				NCI_CINEMA		300	3600				2065	99														1
+2066	11-9-18-3	咖啡-电影院-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_bar001_1.prefab	59	9		1				59		1		NCI_CINEMA		0					2066	99														
+																																								
+2071	11-6-19-3	咖啡-圣诞节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_CHRIST		300	3600				2071	99														
+2072	11-7-19-3	咖啡-圣诞节-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_window001.prefab	55	5		1				55				NCI_CHRIST		300	3600				2072	99														1
+2073	11-8-19-3	咖啡-圣诞节-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_door001.prefab	56	5		1				56				NCI_CHRIST		300	3600				2073	99														1
+2074	11-9-19-3	咖啡-圣诞节-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_bar001_1.prefab	58	8		1				58	2076			NCI_CHRIST		300	3600				2074	99												40		1
+2075	11-10-19-3	咖啡-圣诞节-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_wall002.prefab	51	3		1				51				NCI_CHRIST		300	3600				2075	99														1
+2076	11-9-19-3	咖啡-圣诞节-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_bar001_2.prefab	59	9		1				59		1		NCI_CHRIST		0					2076	99														
+																																								
+2081	11-6-20-3	咖啡-春节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_TEA		300					2081	99														
+2082	11-7-20-3	咖啡-春节-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_window001.prefab	55	5		1				55				NCI_TEA		300					2082	99														1
+2083	11-8-20-3	咖啡-春节-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_door001.prefab	56	5		1				56				NCI_TEA		300					2083	99														1
+2084	11-9-20-3	咖啡-春节-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_bar001_1.prefab	58	8		1				58	2086			NCI_TEA		300					2084	99												40		1
+2085	11-10-20-3	咖啡-春节-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_wall002.prefab	51	3		1				51				NCI_TEA		300					2085	99														1
+2086	11-9-20-3	咖啡-春节-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_bar001_2.prefab	59	9		1				59		1		NCI_TEA		0					2086	99														
+																																								
+2091	11-6-21-3	咖啡-烤肉-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_ND		300	3600				2091	99														
+2092	11-7-21-3	咖啡-烤肉-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_window001.prefab	55	5		1				55				NCI_ND		300	3600				2092	99														1
+2093	11-8-21-3	咖啡-烤肉-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_door001.prefab	56	5		1				56				NCI_ND		300	3600				2093	99														1
+2094	11-9-21-3	咖啡-烤肉-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_bar001_2.prefab	58	8		1				58	2096			NCI_ND		300	3600				2094	99												40		1
+2095	11-10-21-3	咖啡-烤肉-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall002.prefab	51	3		1				51				NCI_ND		300	3600				2095	99														1
+2096	11-9-21-3	咖啡-烤肉-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_bar001_1.prefab	59	9		1				59		1		NCI_ND		0					2096	99														
+																																								
+2111	11-6-22-3	咖啡-警署-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_PO		300	3600				2111	99														
+2112	11-7-22-3	咖啡-警署-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_window001.prefab	55	5		1				55				NCI_PO		300	3600				2112	99														1
+2113	11-8-22-3	咖啡-警署-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_door001.prefab	56	5		1				56				NCI_PO		300	3600				2113	99														1
+2114	11-9-22-3	咖啡-警署-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_bar001_2.prefab	58	8		1				58	2116			NCI_PO		300	3600				2114	99												40		1
+2115	11-10-22-3	咖啡-警署-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall002.prefab	51	3		1				51				NCI_PO		300	3600				2115	99														1
+2116	11-9-22-3	咖啡-警署-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_bar001_1.prefab	59	9		1				59		1		NCI_PO		0					2116	99														
+																																								
+2121	11-6-23-3	咖啡-西餐厅-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_XCT		300	3600				2121	99														
+2122	11-7-23-3	咖啡-西餐厅-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_window001.prefab	55	5		1				55				NCI_XCT		300	3600				2122	99														1
+2123	11-8-23-3	咖啡-西餐厅-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_door001.prefab	56	5		1				56				NCI_XCT		300	3600				2123	99														1
+2124	11-9-23-3	咖啡-西餐厅-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_bar001_2.prefab	58	8		1				58	2126			NCI_XCT		300	3600				2124	99												40		1
+2125	11-10-23-3	咖啡-西餐厅-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall002.prefab	51	3		1				51				NCI_XCT		300	3600				2125	99														1
+2126	11-9-23-3	咖啡-西餐厅-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_bar001_1.prefab	59	9		1				59		1		NCI_XCT		0					2126	99														
+																																								
+301	11-11-2-2	宿舍-和风-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_road02.prefab	60	10		2				60				NCI_HF		200	2400				301	99														
+302	11-12-2-2	宿舍-和风-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall012.prefab	61	11		2				61				NCI_HF		200	2400				302	99														1
+303	11-13-2-2	宿舍-和风-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall013.prefab	62	12		2				62				NCI_HF		200	2400				303	99														1
+304	11-14-2-2	宿舍-和风-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall011.prefab	63	13		2				63				NCI_HF		200					304	99														1
+305	11-15-2-2	宿舍-和风-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall014.prefab	64	14		2				64				NCI_HF		200	2400				305	99														1
+																																								
+311	11-11-3-3	宿舍-工业-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_road02.prefab	60	10		2				60				NCI_GY		300	3600				311	99														
+312	11-12-3-3	宿舍-工业-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall012.prefab	61	11		2				61				NCI_GY		300	3600				312	99														1
+313	11-13-3-3	宿舍-工业-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall013.prefab	62	12		2				62				NCI_GY		300	3600				313	99														1
+314	11-14-3-3	宿舍-工业-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall011.prefab	63	13		2				63				NCI_GY		300					314	99														1
+315	11-15-3-3	宿舍-工业-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall014.prefab	64	14		2				64				NCI_GY		300	3600				315	99														1
+																																								
+321	11-11-4-3	宿舍-科技-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_road02.prefab	60	10		2				60				NCI_KE		300	3600				321	99														
+322	11-12-4-3	宿舍-科技-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall012.prefab	61	11		2				61				NCI_KE		300	3600				322	99														1
+323	11-13-4-3	宿舍-科技-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall013.prefab	62	12		2				62				NCI_KE		300	3600				323	99														1
+324	11-14-4-3	宿舍-科技-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall011.prefab	63	13		2				63				NCI_KE		300					324	99														1
+325	11-15-4-3	宿舍-科技-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall014.prefab	64	14		2				64				NCI_KE		300	3600				325	99														1
+																																								
+351	11-11-7-3	宿舍-夏日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_road02.prefab	60	10		2				60				NCI_XR		300	3600				351	99														
+352	11-12-7-3	宿舍-夏日-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall012.prefab	61	11		2				61				NCI_XR		300	3600				352	99														1
+353	11-13-7-3	宿舍-夏日-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall013.prefab	62	12		2				62				NCI_XR		300	3600				353	99														1
+354	11-14-7-3	宿舍-夏日-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall011.prefab	63	13		2				63				NCI_XR		300					354	99														1
+355	11-15-7-3	宿舍-夏日-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall014.prefab	64	14		2				64				NCI_XR		300	3600				355	99														1
+																																								
+361	11-11-8-3	宿舍-bilibili-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_road02.prefab	60	10		2				60				NCI_BILI		10					361	99														
+362	11-12-8-3	宿舍-bilibili-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall012.prefab	61	11		2				61				NCI_BILI		10					362	99														1
+363	11-13-8-3	宿舍-bilibili-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall013.prefab	62	12		2				62				NCI_BILI		10					363	99														1
+364	11-14-8-3	宿舍-bilibili-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall011.prefab	63	13		2				63				NCI_BILI		10					364	99														1
+365	11-15-8-3	宿舍-bilibili-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall014.prefab	64	14		2				64				NCI_BILI		10					365	99														1
+																																								
+371	11-11-9-3	宿舍-西洋棋-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_road02.prefab	60	10		2				60				NCI_XYQ		300	3600				371	99														
+372	11-12-9-3	宿舍-西洋棋-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall012.prefab	61	11		2				61				NCI_XYQ		300	3600				372	99														1
+373	11-13-9-3	宿舍-西洋棋-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall013.prefab	62	12		2				62				NCI_XYQ		300	3600				373	99														1
+374	11-14-9-3	宿舍-西洋棋-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall011.prefab	63	13		2				63				NCI_XYQ		300					374	99														1
+375	11-15-9-3	宿舍-西洋棋-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall014.prefab	64	14		2				64				NCI_XYQ		300	3600				375	99														1
+																																								
+381	11-11-10-3	宿舍-冬日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_road02.prefab	60	10		2				60				NCI_DR		300	3600				381	99														
+382	11-12-10-3	宿舍-冬日-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall012.prefab	61	11		2				61				NCI_DR		300	3600				382	99														1
+383	11-13-10-3	宿舍-冬日-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall013.prefab	62	12		2				62				NCI_DR		300	3600				383	99														1
+384		宿舍-冬日-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall011.prefab	63	13		2				63				NCI_DR		300					384	99														1
+385	11-15-10-3	宿舍-冬日-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall014.prefab	64	14		2				64				NCI_DR		300	3600				385	99														1
+																																								
+3001	11-11-11-3	宿舍-学校-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_road02.prefab	60	10		2				60				NCI_XX		300	3600				3001	99														
+3002	11-12-11-3	宿舍-学校-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall012.prefab	61	11		2				61				NCI_XX		300	3600				3002	99														1
+3003	11-13-11-3	宿舍-学校-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall013.prefab	62	12		2				62				NCI_XX		300	3600				3003	99														1
+3004	11-13-11-3	宿舍-学校-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall011.prefab	63	13		2				63				NCI_XX		300					3004	99														1
+3005	11-15-11-3	宿舍-学校-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall014.prefab	64	14		2				64				NCI_XX		300	3600				3005	99														1
+																																								
+3021	11-11-12-3	宿舍-健身房-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_road02.prefab	60	10		2				60				NCI_GYM		300	3600				3021	99														
+3022	11-12-12-3	宿舍-健身房-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall012.prefab	61	11		2				61				NCI_GYM		300	3600				3022	99														1
+3023	11-13-12-3	宿舍-健身房-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall013.prefab	62	12		2				62				NCI_GYM		300	3600				3023	99														1
+3024	11-13-12-3	宿舍-健身房-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall011.prefab	63	13		2				63				NCI_GYM		300					3024	99														1
+3025	11-15-12-3	宿舍-健身房-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall014.prefab	64	14		2				64				NCI_GYM		300	3600				3025	99														1
+																																								
+3031	11-11-13-3	宿舍-音乐节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_road02.prefab	60	10		2				60				NCI_MUSIC		300	3600				3031	99														
+3032	11-12-13-3	宿舍-音乐节-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall012.prefab	61	11		2				61				NCI_MUSIC		300	3600				3032	99														1
+3033	11-13-13-3	宿舍-音乐节-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall013.prefab	62	12		2				62				NCI_MUSIC		300	3600				3033	99														1
+3034	11-13-13-3	宿舍-音乐节-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall011.prefab	63	13		2				63				NCI_MUSIC		300					3034	99														1
+3035	11-15-13-3	宿舍-音乐节-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall014.prefab	64	14		2				64				NCI_MUSIC		300	3600				3035	99														1
+																																								
+3041	11-11-14-3	宿舍-地中海-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_road02.prefab	60	10		2				60				NCI_DZH		300	3600				3041	99														
+3042	11-12-14-3	宿舍-地中海-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall012.prefab	61	11		2				61				NCI_DZH		300	3600				3042	99														1
+3043	11-13-14-3	宿舍-地中海-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall013.prefab	62	12		2				62				NCI_DZH		300	3600				3043	99														1
+3044	11-13-14-3	宿舍-地中海-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall011.prefab	63	13		2				63				NCI_DZH		300					3044	99														1
+3045	11-15-14-3	宿舍-地中海-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall014.prefab	64	14		2				64				NCI_DZH		300	3600				3045	99														1
+																																								
+3061	11-11-15-3	宿舍-电影院-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_road02.prefab	60	10		2				60				NCI_CINEMA		300	3600				3061	99														
+3062	11-12-15-3	宿舍-电影院-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall012.prefab	61	11		2				61				NCI_CINEMA		300	3600				3062	99														1
+3063	11-13-15-3	宿舍-电影院-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall013.prefab	62	12		2				62				NCI_CINEMA		300	3600				3063	99														1
+3064	11-13-15-3	宿舍-电影院-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall011.prefab	63	13		2				63				NCI_CINEMA		300					3064	99														1
+3065	11-15-15-3	宿舍-电影院-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall014.prefab	64	14		2				64				NCI_CINEMA		300	3600				3065	99														1
+																																								
+3091	11-11-16-3	宿舍-烤肉-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_road02.prefab	60	10		2				60				NCI_ND		300	3600				3091	99														
+3092	11-12-16-3	宿舍-烤肉-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall012.prefab	61	11		2				61				NCI_ND		300	3600				3092	99														1
+3093	11-13-16-3	宿舍-烤肉-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall013.prefab	62	12		2				62				NCI_ND		300	3600				3093	99														1
+3094	11-13-16-3	宿舍-烤肉-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall011.prefab	63	13		2				63				NCI_ND		300					3094	99														1
+3095	11-15-16-3	宿舍-烤肉-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall014.prefab	64	14		2				64				NCI_ND		300	3600				3095	99														1
+																																								
+3111	11-11-17-3	宿舍-警署-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_road02.prefab	60	10		2				60				NCI_PO		300	3600				3111	99														
+3112	11-12-17-3	宿舍-警署-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall012.prefab	61	11		2				61				NCI_PO		300	3600				3112	99														1
+3113	11-13-17-3	宿舍-警署-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall013.prefab	62	12		2				62				NCI_PO		300	3600				3113	99														1
+3114	11-13-17-3	宿舍-警署-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall011.prefab	63	13		2				63				NCI_PO		300					3114	99														1
+3115	11-15-17-3	宿舍-警署-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall014.prefab	64	14		2				64				NCI_PO		300	3600				3115	99														1
+																																								
+3121	11-11-18-3	宿舍-西餐厅-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_road02.prefab	60	10		2				60				NCI_XCT		300	3600				3121	99														
+3122	11-12-18-3	宿舍-西餐厅-（窗）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall012.prefab	61	11		2				61				NCI_XCT		300	3600				3121	99														1
+3123	11-13-18-3	宿舍-西餐厅-墙2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall013.prefab	62	12		2				62				NCI_XCT		300	3600				3121	99														1
+3124	11-13-18-3	宿舍-西餐厅-墙3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall011.prefab	63	13		2				63				NCI_XCT		300					3121	99														1
+3125	11-15-18-3	宿舍-西餐厅-（门）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall014.prefab	64	14		2				64				NCI_XCT		300	3600				3121	99														1
+																																								
+2301	11-21-2-2	扩展-和风-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_road03.prefab	80	30		6				80				NCI_HF		200	2400				2301	99														
+2302	11-22-2-2	扩展-和风-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall022.prefab	81	31		6				81				NCI_HF		200	2400				2302	99														1
+2303	11-23-2-2	扩展-和风-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall023.prefab	82	32		6				82				NCI_HF		200					2303	99														1
+2304	11-24-2-2	扩展-和风-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall021.prefab	83	33		6				83				NCI_HF		200	2400				2304	99														1
+2305	11-25-2-2	扩展-和风-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_wall024.prefab	84	34		6				84				NCI_HF		200	2400				2305	99														1
+																																								
+2311	11-21-3-3	扩展-工业-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_road03.prefab	80	30		6				80				NCI_GY		300	3600				2311	99														
+2312	11-22-3-3	扩展-工业-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall022.prefab	81	31		6				81				NCI_GY		300	3600				2312	99														1
+2313	11-23-3-3	扩展-工业-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall023.prefab	82	32		6				82				NCI_GY		300					2313	99														1
+2314	11-24-3-3	扩展-工业-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall021.prefab	83	33		6				83				NCI_GY		300	3600				2314	99														1
+2315	11-25-3-3	扩展-工业-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_wall024.prefab	84	34		6				84				NCI_GY		300	3600				2315	99														1
+																																								
+2321	11-21-4-3	扩展-科技-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_road03.prefab	80	30		6				80				NCI_KE		300					2321	99														
+2322	11-22-4-3	扩展-科技-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall022.prefab	81	31		6				81				NCI_KE		300					2322	99														1
+2323	11-23-4-3	扩展-科技-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall023.prefab	82	32		6				82				NCI_KE		300					2323	99														1
+2324	11-24-4-3	扩展-科技-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall021.prefab	83	33		6				83				NCI_KE		300					2324	99														1
+2325	11-25-4-3	扩展-科技-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_wall024.prefab	84	34		6				84				NCI_KE		300					2325	99														1
+																																								
+2351	11-21-7-3	扩展-夏日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_road03.prefab	80	30		6				80				NCI_XR		300					2351	99														
+2352	11-22-7-3	扩展-夏日-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall022.prefab	81	31		6				81				NCI_XR		300					2352	99														1
+2353	11-23-7-3	扩展-夏日-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall023.prefab	82	32		6				82				NCI_XR		300					2353	99														1
+2354	11-24-7-3	扩展-夏日-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall021.prefab	83	33		6				83				NCI_XR		300					2354	99														1
+2355	11-25-7-3	扩展-夏日-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_wall024.prefab	84	34		6				84				NCI_XR		300					2355	99														1
+																																								
+2361	11-21-8-3	扩展-bili-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_road03.prefab	80	30		6				80				NCI_BILI		10					2361	99														
+2362	11-22-8-3	扩展-bili-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall022.prefab	81	31		6				81				NCI_BILI		10					2362	99														1
+2363	11-23-8-3	扩展-bili-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall023.prefab	82	32		6				82				NCI_BILI		10					2363	99														1
+2364	11-24-8-3	扩展-bili-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall021.prefab	83	33		6				83				NCI_BILI		10					2364	99														1
+2365	11-25-8-3	扩展-bili-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_wall024.prefab	84	34		6				84				NCI_BILI		10					2365	99														1
+																																								
+2371	11-21-9-3	扩展-西洋棋-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_road03.prefab	80	30		6				80				NCI_XYQ		300					2371	99														
+2372	11-22-9-3	扩展-西洋棋-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall022.prefab	81	31		6				81				NCI_XYQ		300					2372	99														1
+2373	11-23-9-3	扩展-西洋棋-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall023.prefab	82	32		6				82				NCI_XYQ		300					2373	99														1
+2374	11-24-9-3	扩展-西洋棋-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_k_WJ_wall021.prefab	83	33		6				83				NCI_XYQ		300					2374	99														1
+2375	11-25-9-3	扩展-西洋棋-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_wall024.prefab	84	34		6				84				NCI_XYQ		300					2375	99														1
+																																								
+2381	11-21-10-3	扩展-冬日-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_road03.prefab	80	30		6				80				NCI_DR		300	3600				2381	99														
+2382	11-22-10-3	扩展-冬日-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall022.prefab	81	31		6				81				NCI_DR		300	3600				2382	99														1
+2383		扩展-冬日-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall023.prefab	82	32		6				82				NCI_DR		300					2383	99														1
+2384	11-24-10-3	扩展-冬日-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall021.prefab	83	33		6				83				NCI_DR		300	3600				2384	99														1
+2385	11-25-10-3	扩展-冬日-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_wall024.prefab	84	34		6				84				NCI_DR		300	3600				2385	99														1
+																																								
+4001	11-21-11-3	扩展-学校-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_road03.prefab	80	30		6				80				NCI_XX		300					4001	99														
+4002	11-22-11-3	扩展-学校-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall022.prefab	81	31		6				81				NCI_XX		300					4002	99														1
+4003	11-22-11-3	扩展-学校-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall023.prefab	82	32		6				82				NCI_XX		300					4003	99														1
+4004	11-24-11-3	扩展-学校-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall021.prefab	83	33		6				83				NCI_XX		300					4004	99														1
+4005	11-25-11-3	扩展-学校-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_wall024.prefab	84	34		6				84				NCI_XX		300					4005	99														1
+																																								
+4021	11-21-12-3	扩展-健身房-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_road03.prefab	80	30		6				80				NCI_GYM		300					4021	99														
+4022	11-22-12-3	扩展-健身房-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall022.prefab	81	31		6				81				NCI_GYM		300					4022	99														1
+4023	11-22-12-3	扩展-健身房-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall023.prefab	82	32		6				82				NCI_GYM		300					4023	99														1
+4024	11-24-12-3	扩展-健身房-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall021.prefab	83	33		6				83				NCI_GYM		300					4024	99														1
+4025	11-25-12-3	扩展-健身房-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_wall024.prefab	84	34		6				84				NCI_GYM		300					4025	99														1
+																																								
+4031	11-21-13-3	扩展-音乐节-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_road03.prefab	80	30		6				80				NCI_MUSIC		300					4031	99														
+4032	11-22-13-3	扩展-音乐节-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall022.prefab	81	31		6				81				NCI_MUSIC		300					4032	99														1
+4033	11-22-13-3	扩展-音乐节-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall023.prefab	82	32		6				82				NCI_MUSIC		300					4033	99														1
+4034	11-24-13-3	扩展-音乐节-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall021.prefab	83	33		6				83				NCI_MUSIC		300					4034	99														1
+4035	11-25-13-3	扩展-音乐节-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_wall024.prefab	84	34		6				84				NCI_MUSIC		300					4035	99														1
+																																								
+4041	11-21-14-3	扩展-地中海-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_road03.prefab	80	30		6				80				NCI_DZH		300	3600				4041	99														
+4042	11-22-14-3	扩展-地中海-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall022.prefab	81	31		6				81				NCI_DZH		300	3600				4042	99														1
+4043	11-22-14-3	扩展-地中海-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall023.prefab	82	32		6				82				NCI_DZH		300	3600				4043	99														1
+4044	11-24-14-3	扩展-地中海-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall021.prefab	83	33		6				83				NCI_DZH		300	3600				4044	99														1
+4045	11-25-14-3	扩展-地中海-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_wall024.prefab	84	34		6				84				NCI_DZH		300	3600				4045	99														1
+																																								
+4061	11-21-15-3	扩展-电影院-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_road03.prefab	80	30		6				80				NCI_CINEMA		300					4061	99														
+4062	11-22-15-3	扩展-电影院-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall022.prefab	81	31		6				81				NCI_CINEMA		300					4062	99														1
+4063	11-22-15-3	扩展-电影院-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall023.prefab	82	32		6				82				NCI_CINEMA		300					4063	99														1
+4064	11-24-15-3	扩展-电影院-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall021.prefab	83	33		6				83				NCI_CINEMA		300					4064	99														1
+4065	11-25-15-3	扩展-电影院-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_wall024.prefab	84	34		6				84				NCI_CINEMA		300					4065	99														1
+																																								
+4091	11-21-16-3	扩展-烤肉-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_road03.prefab	80	30		6				80				NCI_ND		300	3600				4091	99														
+4092	11-22-16-3	扩展-烤肉-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall022.prefab	81	31		6				81				NCI_ND		300	3600				4092	99														1
+4093	11-22-16-3	扩展-烤肉-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall023.prefab	82	32		6				82				NCI_ND		300					4093	99														1
+4094	11-24-16-3	扩展-烤肉-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall021.prefab	83	33		6				83				NCI_ND		300	3600				4094	99														1
+4095	11-25-16-3	扩展-烤肉-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_wall024.prefab	84	34		6				84				NCI_ND		300	3600				4095	99														1
+																																								
+4111	11-21-17-3	扩展-警署-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_x_WJ_road03.prefab	80	30		6				80				NCI_PO		300					4111	99														
+4112	11-22-17-3	扩展-警署-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_x_WJ_wall022.prefab	81	31		6				81				NCI_PO		300					4112	99														1
+4113	11-22-17-3	扩展-警署-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_x_WJ_wall023.prefab	82	32		6				82				NCI_PO		300					4113	99														1
+4114	11-24-17-3	扩展-警署-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_wall021.prefab	83	33		6				83				NCI_PO		300					4114	99														1
+4115	11-25-17-3	扩展-警署-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_x_WJ_wall024.prefab	84	34		6				84				NCI_PO		300					4115	99														1
+																																								
+4121	11-21-18-3	扩展-西餐厅-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_road03.prefab	80	30		6				80				NCI_XCT		300					4121	99														
+4122	11-22-18-3	扩展-西餐厅-墙				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall022.prefab	81	31		6				81				NCI_XCT		300					4121	99														1
+4123	11-22-18-3	扩展-西餐厅-墙-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall023.prefab	82	32		6				82				NCI_XCT		300					4121	99														1
+4124	11-24-18-3	扩展-西餐厅-窗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall021.prefab	83	33		6				83				NCI_XCT		300					4121	99														1
+4125	11-25-18-3	扩展-西餐厅-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_wall024.prefab	84	34		6				84				NCI_XCT		300					4121	99														1
+																																								
+																																								
+101	11-1-1-1	廉价单人桌椅	furniture101	furniture101.desc	DIY/icon_cafe_a_table001.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_table001.prefab	100		[6,3]	1	[2,10]							NCI_XD	1	35	210				101	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+102	11-1-2-1	廉价双人桌椅	furniture102	furniture102.desc	DIY/icon_cafe_a_table002.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_table002.prefab	100		[8,3]	1	[2,10]							NCI_XD	1	40	238				102	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+103	11-1-3-1	廉价四人沙发	furniture103	furniture103.desc	DIY/icon_cafe_a_table003.png	Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_table003.prefab	100		[11,7]	1	[2,10]							NCI_XD	1	82	500				103	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+104	11-1-4-2	和风单人桌椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_Table001.prefab	100		[5,5]	1	[2,10]	[3,2]						NCI_HF	2	137	825				104	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1	1												
+105	11-1-5-2	和风双人桌椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_Table002.prefab	100		[7,5]	1	[2,10]	[2,2]	[0,0.38,0]					NCI_HF	2	145	875				105	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2	1												
+106	11-1-6-2	和风四人桌椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_Table003.prefab	100		[9,7]	1	[2,10]	[2,2]	[0,0.38,0]					NCI_HF	2	169	1025				106	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4	1												
+107	11-1-7-3	棕木单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_GY	3	227	1350				107	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+108	11-1-8-3	棕木双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_GY	3	232	1400				108	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+109	11-1-9-3	工业风沙发组				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_Table003.prefab	100		[7,11]	1	[2,10]							NCI_GY	3	280	1675				109	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+110	11-1-10-3	空间站单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_KE	3	227	1350				110	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+111	11-1-11-3	空间站双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_KE	3	232	1400				111	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+112	11-1-12-3	空间站沙发组				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_Table003.prefab	100		[11,7]	1	[2,10]							NCI_KE	3	280	1675				112	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+119	11-1-19-3	夏日单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_XR	3	227	1350				119	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+120	11-1-20-3	夏日双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_XR	3	232	1400				120	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+121	11-1-21-3	夏日四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_Table003.prefab	100		[10,10]	1	[2,10]							NCI_XR	3	300	1800				121	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+122	11-1-22-3	bilibili单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_BILI	2	5					122	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+123	11-1-23-3	bilibili双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_BILI	2	10					123	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+124	11-1-24-3	bilibili四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_Table003.prefab	100		[10,7]	1	[2,10]							NCI_BILI	2	15					124	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+125	11-1-25-3	西洋棋单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_XYQ	3	227	1350				125	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+126	11-1-26-3	西洋棋双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_XYQ	3	232	1400				126	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+127	11-1-27-3	西洋棋四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_Table003.prefab	100		[10,7]	1	[2,10]							NCI_XYQ	3	300	1800				127	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+128	11-1-28-3	冬日单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_DR	3	227	1350				128	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+129	11-1-29-3	冬日双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_DR	3	232	1400				129	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+130	11-1-30-3	冬日四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_Table003.prefab	100		[10,7]	1	[2,10]							NCI_DR	3	280	1675				130	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+131	11-1-31-3	传统单人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_Table001.prefab	100		[5,3]	1	[2,10]							NCI_CJ	3	224					131	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+132	11-1-32-3	传统双人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_CJ	3	232					132	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+133	11-1-33-3	传统四人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_Table003.prefab	100		[9,6]	1	[2,10]							NCI_CJ	3	261					133	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+141	11-1-34-3	学校单人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_Table001.prefab	100		[4,3]	1	[2,10]							NCI_XX	3	224	1350				141	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+142	11-1-35-3	学校双人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_XX	3	232	1400				142	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+143	11-1-36-3	学校四人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_Table003.prefab	100		[9,6]	1	[2,10]							NCI_XX	3	261	1550				143	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+161	11-1-40-3	健身单人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_GYM	3	227	1350				161	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+162	11-1-41-3	健身双人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_GYM	3	232	1400				162	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+163	11-1-42-3	健身四人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_Table003.prefab	100		[10,7]	1	[2,10]							NCI_GYM	3	280	1675				163	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+171	11-1-43-3	音乐节单人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_MUSIC	3	227	1350				171	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+172	11-1-44-3	音乐节双人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_MUSIC	3	232	1400				172	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+173	11-1-45-3	音乐节四人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_Table003.prefab	100		[9,11]	1	[2,10]							NCI_MUSIC	3	280	1800				173	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+181	11-1-46-3	地中海单人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_DZH	3	227	1350				181	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+182	11-1-47-3	地中海双人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_DZH	3	232	1400				182	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+183	11-1-48-3	地中海四人主题桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_Table003.prefab	100		[9,7]	1	[2,10]							NCI_DZH	3	267	1600				183	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+191	11-1-49-3	韩国秋夕单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_Table001.prefab	100		[7,3]	1	[2,10]	[3,2]						NCI_KR	3	229	1375				191	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1	1												
+192	11-1-50-3	韩国秋夕双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_Table002.prefab	100		[8,3]	1	[2,10]	[2,2]	[0,0.38,0]					NCI_KR	3	232	1400				192	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2	1												
+193	11-1-51-3	韩国秋夕四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_Table003.prefab	100		[10,7]	1	[2,10]	[2,2]	[0,0.38,0]					NCI_KR	3	267	1600				193	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4	1												
+5023	11-2-291-1	S型单人茶座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_Table001.prefab	100		[5,3]	1	[2,10]							NCI_CINEMA	3	224	1350				5023	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5024	11-2-292-1	S型双人茶座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_CINEMA	3	232	1400				5024	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5025	11-2-293-1	S型四人茶座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_Table003.prefab	100		[9,7]	1	[2,10]							NCI_CINEMA	3	267	1600				5025	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+5027	11-2-295-1	榉木沙发单人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_Table001.prefab	100		[7,4]	1	[2,10]							NCI_CHRIST	3	236	1400				5027	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5028	11-2-296-1	榉木沙发双人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_Table002.prefab	100		[10,4]	1	[2,10]							NCI_CHRIST	3	246	1475				5028	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5029	11-2-297-1	榉木沙发四人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_Table003.prefab	100		[10,7]	1	[2,10]							NCI_CHRIST	3	267	1600				5029	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+5040	11-2-316-1	春节单人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_table001.prefab	100		[6,4]	1	[2,10]							NCI_TEA	3	236	1400				5040	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5041	11-2-317-1	春节双人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_table002.prefab	100		[8,4]	1	[2,10]							NCI_TEA	3	246	1475				5041	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5042	11-2-318-1	春节四人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_table003.prefab	100		[9,9]	1	[2,10]							NCI_TEA	3	300	1800				5042	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+5070	11-2-338-1	单人独享烤肉座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_ND	3	227	1350				5070	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5071	11-2-339-1	双人分享烤肉座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_ND	3	232	1400				5071	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5072	11-2-340-1	四人欢乐烤肉座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_Table003.prefab	100		[9,6]	1	[2,10]							NCI_ND	3	255	1525				5072	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+5073	11-2-341-1	单人屏风隔位				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_Table001.prefab	100		[5,5]	1	[2,10]							NCI_PO	3	233	1400				5073	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5074	11-2-342-1	双人屏风隔位				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_Table002.prefab	100		[10,5]	1	[2,10]							NCI_PO	3	255	1525				5074	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5075	11-2-343-1	四人屏风隔位				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_Table003.prefab	100		[10,10]	1	[2,10]							NCI_PO	3	300	1800				5075	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+5116	11-2-384-1	西餐厅单人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_XCT	3	227	1350				5116	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+5117	11-2-385-1	西餐厅双人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_XCT	3	232	1400				5117	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+5118	11-2-386-1	西餐厅四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_Table003.prefab	100		[9,6]	1	[2,10]							NCI_XCT	3	255	1525				5118	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+																																								
+401	11-3-1-1	挂板盆栽				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_QS001.prefab	103		[4,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XD		30	180				401	99														
+402	11-3-2-1	艺术挂画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_QS002.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XD		24	143				402	99														
+403	11-3-3-1	抽象画派				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_QS003.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XD		25	150				403	99														
+404	11-3-4-1	战斗海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_QS004.prefab	103		[3,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_XD		30	180				404	99														
+405	11-3-5-1	生活海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_QS005.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XD		24	143				405	99														
+406	11-3-6-2	和风壁灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_QS001.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_HF		121	725				406	99			OpenLight				PointLight	0.5						
+407	11-3-7-2	风林火山				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_QS002.prefab	103		[3,8]		[4,6,11,12,13,14,31,32,33,34]							NCI_HF		136	825				407	99														
+408	11-3-8-2	和风圆镜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_QS003.prefab	103		[3,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_HF		123	750				408	99														
+409	11-3-9-3	智商粉刷器				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS001.prefab	103		[3,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		216	1300				409	99														
+410	11-3-10-3	机械纪元				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS002.prefab	103		[2,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		218	1300				410	99														
+411	11-3-11-3	硬派壁炉				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS003.prefab	103		[6,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		264	1575				411	99													1	
+412	11-3-12-3	古比雪夫灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS004.prefab	103		[4,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		225	1350				412	99														
+413	11-3-13-3	力量的化身				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS005.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		219	1300				413	99														
+414	11-3-14-3	铸铁构件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS006.prefab	103		[6,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		264	1575				414	99													1	
+415	11-3-15-3	灵感的诞生				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_QS007.prefab	103		[5,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_GY		255	1525				415	99														
+416	11-3-16-3	网络灯管				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_QS001.prefab	103		[1,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_KE		213	1275				416	99			OpenLight				PointLight	0.5						
+417	11-3-17-3	应急工具箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_QS002.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_KE		216	1300				417	99														
+427	11-3-27-3	夏日泳圈				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_QS002.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XR		219	1300				427	99														
+428	11-3-28-3	夏日海星				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_QS003.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XR		219	1300				428	99														
+429	11-3-29-3	夏日冰激凌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_QS004.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XR		216	1300				429	99														
+430	11-3-30-3	神秘小门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_QS002.prefab	103		[3,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		20					430	99														
+431	11-3-31-3	城堡墙饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_QS001.prefab	103		[5,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_XYQ		224	1350				431	99														
+432	11-3-32-3	宫廷立柱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_QS002.prefab	103		[2,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_XYQ		221	1325				432	99														
+433	11-3-33-3	禁断油画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_QS003.prefab	103		[5,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_XYQ		228	1375				433	99														
+434	11-3-34-3	万圣南瓜壁挂				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_QS001.prefab	103		[8,7]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		261					434	99														
+778	11-2-81-1	白熊之桨				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_QS001.prefab	103		[7,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		242	1450				778	99														
+779	11-2-82-1	冠军大马哈鱼				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_QS002.prefab	103		[5,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		224	1350				779	99														
+780	11-2-83-1	抽象派挂画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_QS003.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		214	1275				780	99														
+781	11-2-84-1	船灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_QS005.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		214	1275				781	99														
+782	11-2-85-1	维京盾牌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_QS006.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		219	1300				782	99														
+811	11-2-108-1	圣诞花环				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN006.prefab	103		[4,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_DR		232					811	99														
+826	11-2-119-1	福字挂饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_QS001.prefab	103		[3,8]		[4,6,11,12,13,14,31,32,33,34]							NCI_CJ		232					826	99														
+827	11-2-120-1	新春小灯笼				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_QS002.prefab	103		[2,7]		[4,6,11,12,13,14,31,32,33,34]							NCI_CJ		223					827	99														
+838	11-2-131-1	日光灯管				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS001.prefab	103		[5,1]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		215	1300				838	99														
+839	11-2-132-1	悬挂电视				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS002.prefab	103		[4,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		228	1375				839	99														
+840	11-2-133-1	学校时钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS003.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		219	1300				840	99														
+841	11-2-134-1	学校广播				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS004.prefab	103		[3,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		216	1300				841	99														
+842	11-2-135-1	笔走龙蛇				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS005.prefab	103		[4,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		218	1300				842	99														
+843	11-2-136-1	名人书信				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS006.prefab	103		[3,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		221	1325				843	99														
+844	11-2-137-1	公告黑板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS007.prefab	103		[7,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		242	1450				844	99														
+845	11-2-138-1	教室黑板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_QS008.prefab	103		[24,7]		[4,6,11,12,13,14,31,32,33,34]							NCI_XX		300	1800				845	99														
+864	11-2-157-1	海报-奔跑者				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_QS001.prefab	103		[4,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_GYM		228	1375				864	99														
+865	11-2-158-1	健身主题时钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_QS002.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_GYM		300	1800				865	99														
+927	11-2-208-1	记不住的指针表				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_QS001.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_MUSIC		239	1300				927	99														
+928	11-2-209-1	很热闹牌壁灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_QS002.prefab	103		[1,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_MUSIC		228	1275				928	99														
+929	11-2-210-1	音浪不够音响				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_QS003.prefab	103		[4,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_MUSIC		300	1300				929	99														
+940	11-2-221-1	风车房风景挂画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_QS001.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DZH		216	1300				940	99														
+941	11-2-222-1	铜制壁挂蜡台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_QS002.prefab	103		[3,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_DZH		221	1325				941	99														
+942	11-2-223-1	和善的老路灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_QS003.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DZH		216	1300				942	99														
+943	11-2-224-1	海边小镇挂画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_QS004.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DZH		216	1300				943	99														
+934	11-2-215-1	蓝漆原木置物架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS004.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_DZH		223	1300				934	99														
+																																								
+																																								
+																																								
+501	11-2-1-1	小型花架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS001.prefab	104		[2,6]		[2,10,30]							NCI_XD		30	180				501	99														
+502	11-2-2-1	立体花架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS002.prefab	104		[7,2]		[2,10,30]							NCI_XD		32	180				502	99														
+503	11-2-3-1	绿植花坛				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS003.prefab	104		[5,2]		[2,10,30]							NCI_XD		28	168				503	99														
+504	11-2-4-1	景观盆栽				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS004.prefab	104		[2,2]		[2,10,30]							NCI_XD		24	143				504	99														
+505	11-2-5-1	今日特供				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS005.prefab	104		[3,2]		[2,10,30]							NCI_XD		25					505	99									[15-1-1-1-1]	5000				
+506	11-2-6-1	简约立灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS006.prefab	104		[3,3]		[2,10,30]							NCI_XD		28	168				506	99			OpenLight				PointLight	0.5						
+507	11-2-7-1	全身装饰镜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS007.prefab	104		[2,2]		[2,10,30]							NCI_XD		24	143				507	99														
+508	11-2-8-1	简约书架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS008.prefab	104		[4,2]		[2,10,30]							NCI_XD		27	163				508	99	event_1|event_2		LookBookSJ											
+509	11-2-9-1	枯盆景				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_ZS009.prefab	201		[7,13]		[2,10,30]							NCI_XD		52	325				509	99														
+510	11-2-10-2	和风柜子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS001.prefab	104		[2,5]		[2,10,30]							NCI_HF		124	750				510	99														
+511	11-2-11-2	樱花盆栽				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS002.prefab	104		[3,4]		[2,10,30]							NCI_HF		126	750				511	99														
+512	11-2-12-2	和纸屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS003.prefab	104		[6,2]		[2,10,30]							NCI_HF		126	750				512	99														
+513	11-2-13-2	纸灯笼				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS004.prefab	104		[2,2]		[2,10,30]							NCI_HF		119	725				513	99			OpenLight				PointLight	0.5						
+514	11-2-14-2	宁静屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS005.prefab	104		[2,5]		[2,10,30]							NCI_HF		124	750				514	99														
+515	11-2-15-2	和式屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS006.prefab	104		[2,5]		[2,10,30]							NCI_HF		124	750				515	99			OpenLight				PointLight	0.5						
+516	11-2-16-2	和风刀架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_ZS007.prefab	104		[4,3]		[2,10,30]							NCI_HF		126	750				516	99														
+517	11-2-17-3	油桶花盆				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS001.prefab	104		[2,2]		[2,10,30]							NCI_GY		214	1275				517	99														
+518	11-2-18-3	复古播放机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS002.prefab	104		[2,3]		[2,10,30]							NCI_GY		216	1300				518	99														
+519	11-2-19-3	工业风铁艺				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS003.prefab	104		[1,5]		[2,10,30]							NCI_GY		215	1300				519	99														
+520	11-2-20-3	工业风隔断				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS004.prefab	104		[2,7]		[2,10,30]							NCI_GY		223	1325				520	99														
+521	11-2-21-3	棕木报刊架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS005.prefab	104		[2,5]		[2,10,30]							NCI_GY		219	1300				521	99														
+522	11-2-22-3	工业风饮料机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS006.prefab	201		[4,5]		[2,10,30]							NCI_GY		228	1375				522	99														
+523	11-2-23-3	老厂区台球桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_ZS007.prefab	201		[11,7]		[2,10,30]							NCI_GY		280	1675				523	99														
+524	11-2-24-3	空间站饮料机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS001.prefab	104		[3,3]		[2,10,30]							NCI_KE		219	1300				524	99	event_1		FridgeKJ											
+525	11-2-25-3	投影屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS002.prefab	201		[2,9]		[2,10,30]							NCI_KE		227	1350				525	99														
+526	11-2-26-3	智能储物箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS003.prefab	104		[3,2]		[2,10,30]							NCI_KE		216	1300				526	99														
+527	11-2-27-3	垃圾销毁桶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS004.prefab	104		[2,2]		[2,10,30]							NCI_KE		214	1275				527	99														
+528	11-2-28-3	星球仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS005.prefab	201		[4,4]		[2,10,30]							NCI_KE		225	1350				528	99														
+529	11-2-29-3	海拉尔氧草				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS006.prefab	104		[2,5]		[2,10,30]							NCI_KE		219	1300				529	99														
+530	11-2-30-3	贞德草				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_ZS007.prefab	104		[2,2]		[2,10,30]							NCI_KE		214	1275				530	99														
+541	11-2-41-3	夏日货架（冰淇淋机）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS001.prefab	201		[6,3]		[2,10,30]							NCI_XR		227	1350				541	99	event_1|event_1_1		Icecream											
+542	11-2-42-3	夏日冰激凌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS002.prefab	104		[3,3]		[2,10,30]							NCI_XR		219	1300				542	99														
+543	11-2-43-3	夏日球				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS003.prefab	104		[2,2]		[2,10,30]							NCI_XR		214	1275				543	99														
+544	11-2-44-3	夏日伞				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS004.prefab	201		[6,6]		[2,10,30]							NCI_XR		243	1450				544	99														
+545	11-2-45-3	夏日滑板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS005.prefab	104		[4,1]		[2,10,30]							NCI_XR		214	1275				545	99														
+546	11-2-46-3	夏日隔板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS006.prefab	104		[7,1]		[2,10,30]							NCI_XR		217	1300				546	99														
+547	11-2-47-3	夏日花台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS007.prefab	201		[6,3]		[2,10,30]							NCI_XR		227	1350				547	99														
+548	11-2-48-3	夏日椰子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_ZS008.prefab	104		[3,4]		[2,10,30]							NCI_XR		221	1325				548	99														
+549	11-2-54-1	路边圣剑				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS011.prefab	104		[3,2]		[2,10,30]							NCI_XYQ		216	1300				549	99	event_1|event_1_1		bajian											
+550	11-2-55-1	胜利宝座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS014.prefab	201		[4,9]		[2,10,30]							NCI_XYQ		243					550	99	event_1|event_1_1		QueenSit											
+553	11-2-58-1	西洋棋讲台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS001.prefab	201		[4,7]		[2,10,30]							NCI_XYQ		236	1400				553	99														
+554	11-2-59-1	王后纪念石				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS002.prefab	201		[6,6]		[2,10,30]							NCI_XYQ		243	1450				554	99														
+555	11-2-60-1	国王纪念石				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS003.prefab	201		[6,6]		[2,10,30]							NCI_XYQ		243	1450				555	99														
+556	11-2-61-1	宫廷座钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS004.prefab	104		[3,2]		[2,10,30]							NCI_XYQ		216	1300				556	99														
+557	11-2-62-1	西洋棋对弈桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS005.prefab	104		[3,3]		[2,10,30]							NCI_XYQ		219	1300				557	99														
+558	11-2-63-1	板甲骑士雕像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS006.prefab	201		[6,6]		[2,10,30]							NCI_XYQ		243	1450				558	99														
+559	11-2-64-1	棋子绿植				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS007.prefab	201		[7,7]		[2,10,30]							NCI_XYQ		255	1525				559	99														
+560	11-2-65-1	爱丽丝王后				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS008.prefab	104		[3,3]		[2,10,30]							NCI_XYQ		219	1300				560	99														
+561	11-2-66-1	爱丽丝国王				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS009.prefab	104		[3,3]		[2,10,30]							NCI_XYQ		219	1300				561	99														
+562	11-2-67-1	爱丽丝骑士				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS010.prefab	104		[4,3]		[2,10,30]							NCI_XYQ		221	1325				562	99														
+563	11-2-68-1	城堡饮水池				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS012.prefab	201		[4,4]		[2,10,30]							NCI_XYQ		255	1350				563	99														
+564	11-2-69-1	爱丽丝士兵				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS013.prefab	104		[3,3]		[2,10,30]							NCI_XYQ		219	1300				564	99														
+565	11-2-70-1	宫廷橡木立柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS015.prefab	104		[4,2]		[2,10,30]							NCI_XYQ		218	1300				565	99														
+566	11-2-71-1	城门围栏				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_ZS016.prefab	104		[9,1]		[2,10,30]							NCI_XYQ		219	1300				566	99														
+601	11-4-1-1	清爽大地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_carpet001.prefab	101		[9,5]		[2,10,30]							NCI_XD		56	350				601	99														
+602	11-4-2-1	格子地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_carpet002.prefab	101		[6,3]		[2,10,30]							NCI_XD		35	225				602	99														
+603	11-4-3-1	绒毛地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_carpet003.prefab	101		[5,5]		[2,10,30]							NCI_XD		40	250				603	99														
+604	11-4-4-3	羊驼毛地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_carpet_001.prefab	101		[8,5]		[2,10,30]							NCI_GY		246	1475				604	99														
+607	11-4-7-3	夏日地毯1				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_carpet001.prefab	101		[5,3]		[2,10,30]							NCI_XR		224	1350				607	99														
+608	11-4-8-3	夏日地毯2				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_carpet002.prefab	101		[4,4]		[2,10,30]							NCI_XR		225	1350				608	99														
+609	11-4-9-3	夏日地毯3				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_carpet003.prefab	101		[4,4]		[2,10,30]							NCI_XR		225	1350				609	99														
+610	11-4-10-3	俱乐部地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiyangqi/CF_K_WJ_carpet001.prefab	101		[5,9]		[2,10,30]							NCI_XYQ		251	1500				610	99														
+611	11-4-11-3	万圣南瓜地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_carpet001.prefab	101		[9,7]		[2,10,30]							NCI_FES		267					611	99														
+788	11-2-86-1	毛绒地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_carpet001.prefab	101		[5,6]		[2,10,30]							NCI_DR		239	1425				788	99														
+789	11-2-87-1	极地地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_carpet002.prefab	101		[4,6]		[2,10,30]							NCI_DR		232	1400				789	99														
+790	11-2-88-1	白熊地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_carpet003.prefab	101		[5,5]		[2,10,30]							NCI_DR		233	1400				790	99														
+872	11-2-165-1	瑜伽垫				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_carpet001.prefab	101		[4,8]		[2,10,30]							NCI_GYM		239	1425				872	99														
+930	11-2-211-1	晶芯设计毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_carpet001.prefab	101		[3,7]		[2,10,30]							NCI_MUSIC		223	1375				930	99														
+944	11-2-225-1	蓝白软毛圆毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_carpet001.prefab	101		[9,5]		[2,10,30]							NCI_DZH		251	1500				944	99														
+																																								
+																																								
+																																								
+701	11-5-1-1	单门冰箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS001.prefab	104		[3,3]		[2,10,30]							NCI_XD		28	168				701	99	event_1|event_1_1		EatFood											
+702	11-5-2-1	清爽小独凳				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS002.prefab	104		[2,2]		[2,10,30]							NCI_XD		24	143				702	99														
+703	11-5-3-1	清爽单人沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS003.prefab	104		[3,5]		[2,10,30]							NCI_XD		32	190				703	99	event_1|event_1_1		SitSS											
+704	11-5-4-1	清爽双人沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS004.prefab	201		[8,3]		[2,10,30]							NCI_XD		30	180				704	99	event_1|event_2|event_1_1|event_1_2|event_2_1|event_2_2		SitSS											
+705	11-5-5-1	现代风茶几				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS005.prefab	201		[7,4]		[2,10,30]							NCI_XD		43	258				705	99														
+706	11-5-6-1	简约电视柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS006.prefab	201		[7,3]		[2,10,30]							NCI_XD		37	220				706	99														
+707	11-5-7-1	简约电脑桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS007.prefab	201		[7,3]		[2,10,30]							NCI_XD		37	220				707	99														
+708	11-5-8-1	简约椅子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS008.prefab	104		[2,2]		[2,10,30]							NCI_XD		24	143				708	99														
+709	11-5-9-1	简约多用柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS009.prefab	104		[2,4]		[2,10,30]							NCI_XD		27	163				709	99														
+710	11-5-10-1	简约衣柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS010.prefab	104		[6,2]		[2,10,30]							NCI_XD		30	180				710	99														
+711	11-5-11-1	清爽床头柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS011.prefab	104		[2,2]		[2,10,30]							NCI_XD		24	143				711	99														
+712	11-5-12-1	清爽大床				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_SS012.prefab	201		[8,7]		[2,10,30]							NCI_XD		65	400				712	99	event_1|event_2|event_1_1|event_2_1		SleepBed											
+713	11-5-13-2	和风方坐垫				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS001.prefab	104		[2,2]		[2,10,30]							NCI_HF		119	725				713	99														
+714	11-5-14-2	榻榻米椅子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS002.prefab	104		[2,2]		[2,10,30]							NCI_HF		119	725				714	99														
+715	11-5-15-2	橡木书案				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS003.prefab	104		[6,2]		[2,10,30]							NCI_HF		126	750				715	99														
+716	11-5-16-2	将棋				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS004.prefab	201		[7,3]		[2,10,30]							NCI_HF		133	800				716	99	event_1|event_2		PlayJiangqi											
+717	11-5-17-2	猫游策划				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS005.prefab	104		[3,2]		[2,10,30]							NCI_HF		121	725				717	99	event_1		PlayHuijian											
+718	11-5-18-2	剑道护具架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS006.prefab	201		[6,3]		[2,10,30]							NCI_HF		131	800				718	99														
+719	11-5-19-2	剑道竹刀架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS007.prefab	104		[4,2]		[2,10,30]							NCI_HF		122	725				719	99														
+720	11-5-20-2	无双演武				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS008.prefab	104		[4,2]		[2,10,30]							NCI_HF		122	725				720	99														
+721	11-5-21-2	面具封印柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS009.prefab	104		[5,2]		[2,10,30]							NCI_HF		124	750				721	99														
+722	11-5-22-2	所罗门之虎				Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_SS010.prefab	201		[8,3]		[2,10,30]							NCI_HF		136	825				722	99														
+723	11-5-23-3	远方茶几				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS001.prefab	104		[5,3]		[2,10,30]							NCI_GY		224	1350				723	99														
+724	11-5-24-3	棕木座椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS002.prefab	104		[2,2]		[2,10,30]							NCI_GY		214	1275				724	99														
+725	11-5-25-3	棕木小圆桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS003.prefab	104		[3,3]		[2,10,30]							NCI_GY		219	1300				725	99														
+726	11-5-26-3	工业风沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS004.prefab	104		[5,3]		[2,10,30]							NCI_GY		224	1350				726	99	event_1|event_1_1		SitSS											
+727	11-5-27-3	工业风长沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS005.prefab	201		[8,3]		[2,10,30]							NCI_GY		232	1400				727	99	event_1|event_2|event_1_1|event_2_1		SitSS											
+728	11-5-28-3	弹子机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS006.prefab	201		[7,4]		[2,10,30]							NCI_GY		227	1350				728	99	event_1|event_1_1		PlayGameBall											
+729	11-5-29-3	拳击之夜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS007.prefab	201		[4,5]		[2,10,30]							NCI_GY		228	1375				729	99	event_1|event_1_1		PlayBox											
+730	11-5-30-3	西部大枪客				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS008.prefab	201		[12,8]		[2,10,30]							NCI_GY		297	1775				730	99	event_1|event_2|event_1_1|event_1_2|event_2_1|event_2_2		PlayCar		2									
+731	11-5-31-3	待定功能				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS009.prefab	201		[4,4]		[2,10,30]							NCI_GY		0					731	99														
+732	11-5-32-3	桌上冰球				Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_SS010.prefab	201		[4,7]		[2,10,30]							NCI_GY		236	1400				732	99	event_1|event_2		PlayTableBall		2									
+733	11-5-33-3	增材制造仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS001.prefab	201		[6,6]		[2,10,30]							NCI_KE		243	1450				733	99														
+734	11-5-34-3	原型机床				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS002.prefab	201		[7,4]		[2,10,30]							NCI_KE		236	1400				734	99														
+735	11-5-35-3	轨道联络仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS003.prefab	201		[10,6]		[2,10,30]							NCI_KE		264	1575				735	99	event_1|event_1_1|event_1_2		WorkGZ											
+736	11-5-36-3	冬眠舱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS004.prefab	201		[8,4]		[2,10,30]							NCI_KE		239	1425				736	99														
+737	11-5-37-3	自循环水族箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS005.prefab	104		[7,2]		[2,10,30]							NCI_KE		223	1325				737	99														
+738	11-5-38-3	智能多用桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS006.prefab	201		[5,7]		[2,10,30]							NCI_KE		242	1450				738	99														
+739	11-5-39-3	穿梭机长椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS007.prefab	201		[3,8]		[2,10,30]							NCI_KE		232	1400				739	99	event_1|event_2|event_1_1|event_2_1		SitSS											
+740	11-5-40-3	重力实验桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_SS008.prefab	201		[9,4]		[2,10,30]							NCI_KE		243	1450				740	99	event_1		WorkYJ											
+757	11-5-57-3	夏日游戏机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS001.prefab	201		[6,4]		[2,10,30]							NCI_XR		232	1400				757	99	event_1|event_2		GameMachine											
+758	11-5-58-3	夏日烧烤				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS002.prefab	201		[7,3]		[2,10,30]							NCI_XR		229	1375				758	99	event_1|event_1_1		SummerBBQ											
+759	11-5-59-3	夏日饮料机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS003.prefab	104		[4,3]		[2,10,30]							NCI_XR		221	1325				759	99														
+760	11-5-60-3	夏日电视机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS004.prefab	104		[2,7]		[2,10,30]							NCI_XR		223	1325				760	99														
+761	11-5-61-3	夏日吊椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS005.prefab	104		[4,3]		[2,10,30]							NCI_XR		221	1325				761	99														
+762	11-5-62-3	夏日沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS006.prefab	104		[5,3]		[2,10,30]							NCI_XR		224	1350				762	99														
+763	11-5-63-3	夏日躺椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS007.prefab	201		[3,7]		[2,10,30]							NCI_XR		229	1375				763	99														
+764	11-5-64-3	夏日冰盒				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiari/CF_G_WJ_SS008.prefab	104		[3,2]		[2,10,30]							NCI_XR		216	1300				764	99														
+766	11-2-49-3	小电视扫地机器人				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS001.prefab	104		[5,3]		[2,10,30]							NCI_BILI		10					766	99														
+767	11-2-50-3	小电视趴趴团				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS002.prefab	104		[5,3]		[2,10,30]							NCI_BILI		10					767	99	event_1		patuan											
+768	11-2-51-3	招财猫小电视				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS003.prefab	201		[5,5]		[2,10,30]							NCI_BILI		10					768	99	event_1|event_2		toubi											
+769	11-2-52-3	22娘摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS004_02.prefab	104		[5,3]		[2,10,30]							NCI_BILI		10					769	99														
+770	11-2-53-3	33娘摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS004_01.prefab	201		[4,4]		[2,10,30]							NCI_BILI		10					770	99														
+771	11-2-72-1	万圣南瓜沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_ZS001.prefab	201		[14,9]		[2,10,30]							NCI_FES		300					771	99	event_1|event_1_1|event_2|event_2_1|event_3|event_3_1|event_4|event_4_1		SitSS											
+772	11-2-73-1	万圣爱丽丝				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_ZS002.prefab	201		[6,7]		[2,10,30]							NCI_FES		246					772	99														
+773	11-2-74-1	万圣南瓜灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_ZS003.prefab	201		[6,5]		[2,10,30]							NCI_FES		236					773	99														
+774	11-2-75-1	万圣衣帽架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Halloween/CF_M_WJ_ZS004.prefab	104		[3,2]		[2,10,30]							NCI_FES		216					774	99														
+775	11-2-76-1	大面体重秤				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS009.prefab	201		[3,3]		[2,10,30]							NCI_FES		219					775	99	event_1|event_1_1		Weight											
+776	11-2-77-1	纪念碑摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_bili/CF_I_WJ_ZS008.prefab	104		[3,2]		[2,10,30]							NCI_FES		216					776	99														
+777	11-2-78-1	冰雪爱丽丝				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS015.prefab	201		[5,5]		[2,10,30]							NCI_FES		300					777	99	event_1		SantaAlice											
+551	11-2-56-1	海洋料理台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS004.prefab	104		[7,3]		[2,10,30]							NCI_DR		229	1375				551	99	event_1|event_1_1		fishcut											
+552	11-2-57-1	防风篝火				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS010.prefab	104		[5,5]		[2,10,30]							NCI_DR		233	1400				552	99	event_1|event_1_1		fishfire											
+783	11-2-91-1	勇者大会				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS001.prefab	104		[1,9]		[2,10,30]							NCI_DR		219	1300				783	99														
+784	11-2-92-1	小松树盆景				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS002.prefab	201		[7,3]		[2,10,30]							NCI_DR		229	1375				784	99														
+785	11-2-93-1	鲜鱼礼盒				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS003.prefab	201		[6,4]		[2,10,30]							NCI_DR		232	1400				785	99														
+787	11-2-94-1	维京海盗船				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS005.prefab	201		[12,4]		[2,10,30]							NCI_DR		255	1525				787	99														
+791	11-2-95-1	冰面钓洞				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS006.prefab	201		[8,6]		[2,10,30]							NCI_DR		255	1525				791	99														
+792	11-2-96-1	竞技鱼竿				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS007.prefab	104		[3,2]		[2,10,30]							NCI_DR		216	1300				792	99														
+793	11-2-97-1	保温帐篷				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS008.prefab	201		[7,7]		[2,10,30]							NCI_DR		255	1525				793	99														
+794	11-2-98-1	手提煤油灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS009.prefab	104		[1,1]		[2,10,30]							NCI_DR		214	1275				794	99														
+796	11-2-99-1	下班的熊				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS011.prefab	201		[13,9]		[2,10,30]							NCI_DR		300	1800				796	99														
+797	11-2-100-1	冰雪温泉				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS012.prefab	201		[9,8]		[2,10,30]							NCI_DR		280	1675				797	99														
+798	11-2-101-1	鲑鱼抱枕				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS013.prefab	104		[5,3]		[2,10,30]							NCI_DR		224	1350				798	99														
+799	11-2-102-1	极夜火炉				Assets/_Game/AssetBundle/Prefabs/DIY/CF_winter/CF_H_WJ_ZS014.prefab	201		[5,5]		[2,10,30]							NCI_DR		233	1400				799	99														
+807	11-2-104-1	新年看板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN002.prefab	104		[6,1]		[2,10,30]							NCI_FES		216					807	99														
+808	11-2-105-1	聚会时钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN003.prefab	104		[5,2]		[2,10,30]							NCI_FES		219					808	99														
+809	11-2-106-1	圣诞大床				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN004.prefab	201		[8,6]		[2,10,30]							NCI_FES		255					809	99	event_1|event_2|event_1_1|event_2_1		SleepBed											
+810	11-2-107-1	圣诞四人桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN005.prefab	201		[12,7]		[2,10,30]							NCI_FES		300					810	99	event_1|event_1_1|event_2|event_2_1|event_3|event_3_1|event_4|event_4_1		SitSS											
+812	11-2-109-1	圣诞树				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN007.prefab	201		[8,8]		[2,10,30]							NCI_FES		264					812	99														
+816	11-2-103-1	烟花售卖处				Assets/_Game/AssetBundle/Prefabs/DIY/CF_newyear/CF_H_WJ_XN001.prefab	104		[3,4]		[2,10,30]							NCI_FES		221					816	99														
+822	11-2-115-1	皮影屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_ZS001.prefab	201		[9,3]		[2,10,30]							NCI_CJ		236					822	99														
+823	11-2-116-1	新春大灯笼				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_ZS002.prefab	104		[4,3]		[2,10,30]							NCI_CJ		221					823	99														
+824	11-2-117-1	红包金鼠				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_ZS003.prefab	201		[5,4]		[2,10,30]							NCI_CJ		228					824	99	event_1		Mouse											
+825	11-2-118-1	财神爱丽丝				Assets/_Game/AssetBundle/Prefabs/DIY/CF_SpringFes/CF_Q_WJ_ZS004.prefab	104		[3,4]		[2,10,30]							NCI_CJ		221					825	99														
+828	11-2-121-1	置物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS001.prefab	104		[4,2]		[2,10,30]							NCI_XX		218	1300				828	99														
+829	11-2-122-1	战术纸箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS002.prefab	104		[3,2]		[2,10,30]							NCI_XX		216	1300				829	99														
+830	11-2-123-1	小型置物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS003.prefab	104		[5,3]		[2,10,30]							NCI_XX		224	1350				830	99														
+831	11-2-124-1	午餐课桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS004.prefab	201		[7,7]		[2,10,30]							NCI_XX		255	1525				831	99														
+832	11-2-125-1	铁皮书柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS005.prefab	104		[5,2]		[2,10,30]							NCI_XX		219	1300				832	99														
+833	11-2-126-1	钢制笔筒				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS006.prefab	104		[1,2]		[2,10,30]							NCI_XX		213	1275				833	99														
+834	11-2-127-1	教师办公桌1式				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS007.prefab	201		[6,5]		[2,10,30]							NCI_XX		239	1425				834	99														
+835	11-2-128-1	教师办公桌2式				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS008.prefab	201		[6,5]		[2,10,30]							NCI_XX		239	1425				835	99														
+836	11-2-129-1	办公室公用桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS009.prefab	201		[6,4]		[2,10,30]							NCI_XX		232	1400				836	99														
+837	11-2-130-1	复印机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xuexiao/CF_J_WJ_ZS010.prefab	104		[3,3]		[2,10,30]							NCI_XX		219	1300				837	99														
+814	11-2-79-1	动感单车				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS008.prefab	201		[4,6]		[2,10,30]							NCI_GYM		232	1400				814	99	event_1		Treadmill											
+815	11-2-80-1	诚实者型跑步机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS005.prefab	201		[4,5]		[2,10,30]							NCI_GYM		228	1375				815	99	event_1|event_1_1		Bike											
+853	11-2-146-1	多功能重塑装置				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS001.prefab	201		[6,7]		[2,10,30]							NCI_GYM		246	1475				853	99	event_1		qixie											
+854	11-2-147-1	阿姆斯壮屈伸器				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS002.prefab	201		[6,4]		[2,10,30]							NCI_GYM		232	1400				854	99														
+855	11-2-148-1	古典卧推架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS003.prefab	201		[6,6]		[2,10,30]							NCI_GYM		243	1450				855	99														
+856	11-2-149-1	独裁者型划船机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS004.prefab	104		[7,2]		[2,10,30]							NCI_GYM		223	1325				856	99														
+857	11-2-150-1	健身主题垃圾桶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS006.prefab	104		[1,1]		[2,10,30]							NCI_GYM		214	1275				857	99														
+858	11-2-151-1	双层健身置物架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS007.prefab	104		[5,2]		[2,10,30]							NCI_GYM		219	1300				858	99														
+859	11-2-152-1	健身主题置物桶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS009.prefab	104		[2,2]		[2,10,30]							NCI_GYM		214	1275				859	99														
+860	11-2-153-1	健身房主题音响				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS010.prefab	104		[3,1]		[2,10,30]							NCI_GYM		213	1275				860	99														
+861	11-2-154-1	瑜伽球				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS011.prefab	104		[3,3]		[2,10,30]							NCI_GYM		219	1300				861	99	event_1|event_1_1		yogaball											
+862	11-2-155-1	健身主题储物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS012.prefab	104		[6,2]		[2,10,30]							NCI_GYM		221	1325				862	99														
+863	11-2-156-1	健身主题长凳				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_ZS013.prefab	104		[6,2]		[2,10,30]							NCI_GYM		221	1325				863	99														
+866	11-2-159-1	挂轴-奔跑者				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_QS003.prefab	104		[3,1]		[2,10,30]							NCI_GYM		213	1275				866	99														
+867	11-2-160-1	三层健身置物架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_SS001.prefab	104		[2,6]		[2,10,30]							NCI_GYM		221	1325				867	99														
+868	11-2-161-1	健身主题杂物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_SS002.prefab	201		[12,6]		[2,10,30]							NCI_GYM		280	1675				868	99														
+869	11-2-162-1	哑铃架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_SS003.prefab	201		[8,4]		[2,10,30]							NCI_GYM		239	1425				869	99														
+870	11-2-163-1	健身主题落地灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_SS004.prefab	104		[2,2]		[2,10,30]							NCI_GYM		214	1275				870	99														
+871	11-2-164-1	杠铃架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Gym/CF_L_WJ_SS005.prefab	201		[4,5]		[2,10,30]							NCI_GYM		228	1375				871	99	event_1|event_1_1		barbell											
+873	11-2-166-1	光翅虫后全息虫蛋				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_wj_ch001.prefab	104		[3,3]		[2,10,30]							NCI_FES		300					873	99	event_1		chonghou											
+874	11-2-167-1	儿童节-模型制作				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS002.prefab	201		[5,4]		[2,10,30]							NCI_FES		200					874	99														
+875	11-2-168-1	儿童节-扭蛋机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS003.prefab	104		[3,2]		[2,10,30]							NCI_FES		200					875	99														
+876	11-2-169-1	儿童节-投篮机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS001.prefab	201		[4,7]		[2,10,30]							NCI_FES		200					876	99	event_1		BasketballGame											
+877	11-2-170-1	儿童节-射击游戏				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS004.prefab	201		[10,9]		[2,10,30]							NCI_FES		200					877	99	event_1|event_2		ShootingGame		2									
+890	11-2-183-1	般若面具掛象				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_QS001.prefab	103		[4,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_SKR		230	1200				890	99														
+891	11-2-184-1	貓咪晴信招牌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_QS002.prefab	103		[6,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_SKR		230	1200				891	99														
+887	11-2-180-1	熊本機器人				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS001.prefab	201		[9,7]		[2,10,30]							NCI_SKR		300	1600				887	99														
+888	11-2-181-1	見習巫女培子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS002.prefab	201		[6,5]		[2,10,30]							NCI_SKR		300					888	99	event_1		peizi											
+889	11-2-182-1	晴信喵				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS003.prefab	201		[5,5]		[2,10,30]							NCI_SKR		300					889	99	event_1		qingxin											
+892	11-2-185-1	稻荷喵亞默玩具				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS004.prefab	201		[7,6]		[2,10,30]							NCI_SKR		270	1500				892	99														
+884	11-2-177-1	阿茶與他的茶杯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS005.prefab	201		[4,6]		[2,10,30]							NCI_SKR		270	1500				884	99														
+894	11-2-187-1	櫻花村燈籠				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS006.prefab	104		[2,2]		[2,10,30]							NCI_SKR		180	1100				894	99														
+895	11-2-188-1	喵鈴的招財鈴噹				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS007.prefab	201		[6,6]		[2,10,30]							NCI_SKR		230	1300				895	99														
+896	11-2-189-1	茶屋神秘茶壺				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC2/CF_W_WJ_ZS008.prefab	201		[8,6]		[2,10,30]							NCI_SKR		230	1300				896	99														
+897	11-2-190-1	艾旗蒲剑				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS008.prefab	103		[1,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		200					897	99														
+898	11-2-191-1	古酿雄黄				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS006.prefab	201		[4,4]		[2,10,30]							NCI_FES		200					898	99														
+878	11-2-171-1	拳拳粽心				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS007.prefab	201		[7,8]		[2,10,30]							NCI_FES		200					878	99	event_1|event_1_1		baozongzi											
+879	11-2-172-1	面善钟馗				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS009.prefab	103		[3,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		200					879	99	event_1		zhongkui										1	
+911	11-2-192-1	纵情当下回收桶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS001.prefab	104		[1,1]		[2,10,30]							NCI_MUSIC		213	1275				911	99														
+912	11-2-193-1	此刻享乐混音台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS002.prefab	201		[11,6]		[2,10,30]							NCI_MUSIC		264	1575				912	99	event_1|event_1_1		DJ											
+913	11-2-194-1	迷雾避役落地灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS003.prefab	104		[1,1]		[2,10,30]							NCI_MUSIC		213	1275				913	99														
+914	11-2-195-1	夜乐金属集物箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS004.prefab	201		[7,3]		[2,10,30]							NCI_MUSIC		229	1375				914	99														
+915	11-2-196-1	干杯一刻冰箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS005.prefab	201		[3,5]		[2,10,30]							NCI_MUSIC		246	1475				915	99														
+916	11-2-197-1	喧闹酒台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS006.prefab	201		[8,8]		[2,10,30]							NCI_MUSIC		264	1575				916	99														
+917	11-2-198-1	音乐至上调酒台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS007.prefab	201		[11,4]		[2,10,30]							NCI_MUSIC		246	1475				917	99	event_1		Bartending											
+918	11-2-199-1	仿浮面玻璃茶几				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS008.prefab	201		[9,4]		[2,10,30]							NCI_MUSIC		280	1675				918	99														
+919	11-2-200-1	“可供玩乐”电吉他				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS009.prefab	104		[2,2]		[2,10,30]							NCI_MUSIC		214	1275				919	99														
+920	11-2-201-1	炫动韵律贩唱机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS010.prefab	201		[13,2]		[2,10,30]							NCI_MUSIC		233	1400				920	99	event_1		Singing											
+921	11-2-202-1	量产赛博植株盆				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS011.prefab	104		[3,3]		[2,10,30]							NCI_MUSIC		219	1300				921	99														
+922	11-2-203-1	迪斯科球型灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS012.prefab	201		[2,2]		[2,10,30]							NCI_MUSIC		214	1275				922	99														
+923	11-2-204-1	皮质双人沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS013.prefab	201		[9,3]		[2,10,30]							NCI_MUSIC		233	1400				923	99	event_1|event_2|event_1_1|event_1_2|event_2_1|event_2_2		SitSS											
+924	11-2-205-1	皮质单人沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS014.prefab	104		[4,2]		[2,10,30]							NCI_MUSIC		218	1300				924	99	event_1|event_1_1		SitSS											
+925	11-2-206-1	HoQu柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS015.prefab	104		[3,3]		[2,10,30]							NCI_MUSIC		219	1300				925	99														
+926	11-2-207-1	高歌一曲麦克风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Concert/CF_O_WJ_ZS016.prefab	201		[5,4]		[2,10,30]							NCI_MUSIC		228	1375				926	99														
+931	11-2-212-1	风情立式海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS001.prefab	104		[3,2]		[2,10,30]							NCI_DZH		216	1300				931	99														
+932	11-2-213-1	手工制陶土花瓶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS002.prefab	104		[3,3]		[2,10,30]							NCI_DZH		219	1300				932	99														
+933	11-2-214-1	氛围原木落地灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS003.prefab	104		[2,2]		[2,10,30]							NCI_DZH		214	1275				933	99														
+935	11-2-216-1	蓝漆原木储物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS005.prefab	201		[7,3]		[2,10,30]							NCI_DZH		233	1400				935	99														
+936	11-2-217-1	里拉琴体验台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS006.prefab	104		[2,2]		[2,10,30]							NCI_DZH		214	1275				936	99	event_1		Lyre											
+937	11-2-218-1	汞压式榨汁机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS007.prefab	201		[8,8]		[2,10,30]							NCI_DZH		264	1575				937	99	event_1|event_1_1		Lemon											
+938	11-2-219-1	浮岛灯塔观景台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS008.prefab	201		[8,8]		[2,10,30]							NCI_DZH		233	1400				938	99	event_1		Landscape											
+939	11-2-220-1	手工制陶体验处				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Sea/CF_N_WJ_ZS009.prefab	201		[8,8]		[2,10,30]							NCI_DZH		264	1575				939	99	event_1		Ceramics											
+953	11-2-226-1	七夕投壶1				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS013.prefab	104		[5,2]		[2,10,30]							NCI_FES		200					953	99														
+954	11-2-227-1	七夕乞巧桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS014.prefab	201		[9,5]		[2,10,30]							NCI_FES		200					954	99														
+955	11-2-228-1	七夕鹊桥				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS018.prefab	201		[9,10]		[2,10,30]							NCI_FES		200					955	99														
+956	11-2-229-1	节能立式空调				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS001.prefab	104		[3,2]		[2,10,30]							NCI_CAMPUS		216	1300				956	99														
+957	11-2-230-1	杂物储放柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS002.prefab	104		[4,3]		[2,10,30]							NCI_CAMPUS		221	1325				957	99														
+958	11-2-231-1	庆典太鼓台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS003.prefab	201		[10,10]		[2,10,30]							NCI_CAMPUS		300					958	99	event_1		tower											
+959	11-2-232-1	转珠摇奖处				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS004.prefab	201		[12,4]		[2,10,30]							NCI_CAMPUS		255					959	99	event_1|event_1_1		lottery											
+960	11-2-233-1	厨艺精进社				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS005.prefab	201		[10,5]		[2,10,30]							NCI_CAMPUS		255					960	99	event_1|event_1_1		cook											
+961	11-2-234-1	纸网捞金鱼摊				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS006.prefab	201		[8,4]		[2,10,30]							NCI_CAMPUS		239					961	99	event_1|event_1_1		goldfish											
+962	11-2-235-1	文学社招新摊位				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS007.prefab	201		[8,4]		[2,10,30]							NCI_CAMPUS		239	1425				962	99														
+963	11-2-236-1	杂物纸箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS008.prefab	104		[3,4]		[2,10,30]							NCI_CAMPUS		221	1325				963	99														
+964	11-2-237-1	无尘瓷盘摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS009.prefab	104		[2,2]		[2,10,30]							NCI_CAMPUS		219	1300				964	99														
+965	11-2-238-1	红木纸屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS010.prefab	201		[11,2]		[2,10,30]							NCI_CAMPUS		232	1400				965	99														
+966	11-2-239-1	滴水兰盆栽				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS011.prefab	104		[2,2]		[2,10,30]							NCI_CAMPUS		214	1275				966	99														
+967	11-2-240-1	橡木储物柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS012.prefab	104		[2,4]		[2,10,30]							NCI_CAMPUS		218	1300				967	99														
+968	11-2-241-1	小型四脚圆桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS013.prefab	104		[3,3]		[2,10,30]							NCI_CAMPUS		219	1300				968	99														
+969	11-2-242-1	黄花素心瓶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS014.prefab	201		[5,4]		[2,10,30]							NCI_CAMPUS		228	1375				969	99														
+970	11-2-243-1	煎茶煮水摊				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS015.prefab	201		[12,6]		[2,10,30]							NCI_CAMPUS		280	1675				970	99														
+971	11-2-244-1	习艺品茗处				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS016.prefab	201		[7,7]		[2,10,30]							NCI_CAMPUS		255					971	99	event_1|event_1_1		teaism											
+972	11-2-245-1	立式茜色纸伞				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS017.prefab	201		[6,6]		[2,10,30]							NCI_CAMPUS		243	1450				972	99														
+973	11-2-246-1	室内山樱盆景				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS018.prefab	201		[9,8]		[2,10,30]							NCI_CAMPUS		280	1675				973	99														
+974	11-2-247-1	无足木质座椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_ZS019.prefab	201		[4,4]		[2,10,30]							NCI_CAMPUS		225	1350				974	99														
+975	11-2-248-1	纸制红木长灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_QS001.prefab	103		[1,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_CAMPUS		214	1275				975	99														
+976	11-2-249-1	品茗书法挂画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_QS004.prefab	103		[2,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_CAMPUS		223	1325				976	99														
+977	11-2-250-1	旧式挂壁空调				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_QS005.prefab	103		[5,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_CAMPUS		219	1300				977	99														
+978	11-2-251-1	电子方形挂钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Campus/CF_S_WJ_QS006.prefab	103		[2,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_CAMPUS		216	1300				978	99														
+979	11-2-252-1	吴刚牌金桂				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS010.prefab	201		[13,11]		[2,10,30]							NCI_FES		200					979	99	event_1|event_1_1		guihua											
+980	11-2-253-1	玉兔摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS011.prefab	201		[6,5]		[2,10,30]							NCI_FES		200					980	99														
+981	11-2-254-1	菱花月饼挂件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS012.prefab	103		[2,7]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		200					981	99														
+982	11-2-255-1	韩国秋夕圆柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_ZS001.prefab	201		[9,2]		[2,10,30]							NCI_KR		227	1350				982	99														
+983	11-2-256-1	韩国秋夕器皿柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_ZS002.prefab	201		[6,4]		[2,10,30]							NCI_KR		232	1400				983	99														
+984	11-2-257-1	韩国秋夕传统柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_ZS003.prefab	201		[7,2]		[2,10,30]							NCI_KR		223	1325				984	99														
+985	11-2-258-1	韩国秋夕石塔灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_ZS004.prefab	104		[2,2]		[2,10,30]							NCI_KR		214	1275				985	99														
+986	11-2-259-1	韩国秋夕面具				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_QS001.prefab	103		[4,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_KR		232	1400				986	99														
+987	11-2-260-1	韩国秋夕扇子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_QS002.prefab	103		[2,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_KR		221	1325				987	99														
+988	11-2-261-1	韩国秋夕传统挂饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_QS003.prefab	103		[1,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_KR		215	1300				988	99														
+989	11-2-262-1	韩国秋夕地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_korea/CF_KR_WJ_carpet001.prefab	101		[7,7]		[2,10,30]							NCI_KR		251	1500				989	99														
+990	11-2-263-1	无忧版王座（正式名字：Κλει?）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_FansEvent_ZS001.prefab	201		[7,6]		[2,10,30]							NCI_FES		300					990	99	event_1		FansEvent1	[10]										
+991	11-2-264-1	无瑕版王座（正式名字：Κλει?）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_FansEvent_ZS002.prefab	201		[7,6]		[2,10,30]							NCI_FES		300					991	99	event_1		FansEvent2	[9]										
+992	11-2-265-1	小仙女面摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_Link_liaomian01.prefab	201		[7,4]		[2,10,30]							NCI_FES		200					992	99														
+993	11-2-266-1	小恶魔面摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_Link_liaomian02.prefab	201		[7,4]		[2,10,30]							NCI_FES		200					993	99														
+994	11-2-267-1	joker僵尸摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS015.prefab	103		[5,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_FES		200					994	99														
+995	11-2-268-1	joker僵尸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Fes/CF_Fes_WJ_ZS016.prefab	201		[4,4]		[2,10,30]							NCI_FES		200					995	99	event_1|event_1_1		jiangshi											
+5001	11-2-269-1	S神探娃娃机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS001.prefab	201		[7,5]		[2,10,30]							NCI_CINEMA		242	1450				5001	99	event_1		catcher											
+5002	11-2-270-1	S神探扭蛋机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS002.prefab	201		[5,5]		[2,10,30]							NCI_CINEMA		233	1400				5002	99														
+5003	11-2-271-1	S神探周边架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS003.prefab	104		[4,3]		[2,10,30]							NCI_CINEMA		221	1325				5003	99														
+5004	11-2-272-1	S神探光屏宣传仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS004.prefab	201		[3,10]		[2,10,30]							NCI_CINEMA		213	1275				5004	99														
+5005	11-2-273-1	S神探雕像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS005.prefab	201		[3,9]		[2,10,30]							NCI_CINEMA		233	1400				5005	99														
+5006	11-2-274-1	环球投影仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS006.prefab	104		[4,2]		[2,10,30]							NCI_CINEMA		218	1300				5006	99														
+5007	11-2-275-1	神探出场金属栏				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS007.prefab	104		[1,6]		[2,10,30]							NCI_CINEMA		216	1300				5007	99														
+5008	11-2-276-1	S神探道具桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS008.prefab	201		[4,4]		[2,10,30]							NCI_CINEMA		225	1350				5008	99														
+5009	11-2-277-1	墙面投影仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS009.prefab	103		[12,10]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		300	1800				5009	99														
+5010	11-2-278-1	植物装饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS010.prefab	201		[7,6]		[2,10,30]							NCI_CINEMA		246	1475				5010	99														
+5011	11-2-279-1	神探小食套餐桌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS011.prefab	104		[3,4]		[2,10,30]							NCI_CINEMA		221	1325				5011	99														
+5012	11-2-280-1	罗汉观赏海缸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS012.prefab	104		[3,3]		[2,10,30]							NCI_CINEMA		219	1300				5012	99														
+5013	11-2-281-1	神探立牌海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS013.prefab	104		[3,2]		[2,10,30]							NCI_CINEMA		216	1300				5013	99														
+5014	11-2-282-1	半圆观影沙发				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS014.prefab	201		[12,7]		[2,10,30]							NCI_CINEMA		280	1675				5014	99														
+5015	11-2-283-1	皮质按摩椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_ZS015.prefab	201		[6,6]		[2,10,30]							NCI_CINEMA		243	1450				5015	99														
+5016	11-2-284-1	圆形投影挂饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS001.prefab	103		[5,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		233	1400				5016	99														
+5017	11-2-285-1	格纹多肉挂饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS002.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		219	1300				5017	99														
+5018	11-2-286-1	金属三角壁灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS003.prefab	103		[3,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		216	1300				5018	99														
+5019	11-2-287-1	蓝光竖式壁灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS004.prefab	103		[2,6]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		221	1325				5019	99														
+5020	11-2-288-1	S神探方形海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS005.prefab	103		[4,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		225	1350				5020	99														
+5021	11-2-289-1	S神探海报				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_QS006.prefab	103		[4,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_CINEMA		225	1350				5021	99														
+5022	11-2-290-1	S神探圆形地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Cinema/CF_R_WJ_carpet001.prefab	101		[6,6]		[2,10,30]							NCI_CINEMA		243	1450				5022	99														
+5026	11-2-294-1	十万宝贝				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_wj_girl01.prefab	104		[4,2]		[2,10,30]							NCI_FES		300					5026	99														
+5030	11-2-298-1	迷路企鹅摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS001.prefab	201		[7,7]		[2,10,30]							NCI_CHRIST		280	1675				5030	99	event_1|event_1_1		qie											
+5031	11-2-299-1	纳尼亚入口				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS002.prefab	104		[4,2]		[2,10,30]							NCI_CHRIST		218	1300				5031	99														
+5032	11-2-300-1	雪橇摇椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS003.prefab	201		[6,6]		[2,10,30]							NCI_CHRIST		243	1450				5032	99														
+5033	11-2-301-1	时光邮筒				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS005.prefab	104		[2,2]		[2,10,30]							NCI_CHRIST		214	1275				5033	99	event_1		sendcards											
+5034	11-2-302-1	雪孩子				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS006.prefab	201		[7,4]		[2,10,30]							NCI_CHRIST		228	1375				5034	99														
+5035	11-2-303-1	半熟姜饼人				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_QS001.prefab	103		[3,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_CHRIST		221	1325				5035	99														
+5036	11-2-304-1	翻糖彩带				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_ZS004.prefab	103		[7,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_CHRIST		229	1375				5036	99														
+5037	11-2-305-1	黄油星星				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_QS002.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_CHRIST		219	1300				5037	99														
+5038	11-2-306-1	红丝绒方毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_Christmas/CF_Y_WJ_carpet001.prefab	101		[5,4]		[2,10,30]							NCI_CHRIST		228	1375				5038	99														
+5043	11-2-307-1	春节展示台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS001.prefab	201		[7,3]		[2,10,30]							NCI_TEA		229	1375				5043	99														
+5044	11-2-308-1	春节写作台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS003.prefab	201		[9,6]		[2,10,30]							NCI_TEA		300	1800				5044	99														
+5045	11-2-309-1	春节茶座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS005.prefab	201		[10,4]		[2,10,30]							NCI_TEA		300	1800				5045	99	event_1|event_2|event_1_1|event_1_2|event_2_1|event_2_2		SitSS											
+5046	11-2-310-1	春节屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS007.prefab	104		[5,1]		[2,10,30]							NCI_TEA		215	1300				5046	99														
+5047	11-2-311-1	春节植物				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS002.prefab	201		[4,4]		[2,10,30]							NCI_TEA		280	1675				5047	99														
+5048	11-2-312-1	春节灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS006.prefab	104		[2,2]		[2,10,30]							NCI_TEA		214	1275				5048	99														
+5049	11-2-313-1	春节牛				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_ZS004.prefab	201		[5,5]		[2,10,30]							NCI_TEA		300	1800				5049	99														
+5050	11-2-314-1	春节门垫				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_carpet001.prefab	101		[7,4]		[2,10,30]							NCI_TEA		236	1400				5050	99														
+5051	11-2-315-1	春节挂饰				Assets/_Game/AssetBundle/Prefabs/DIY/CF_cowchunjie/CF_Z_WJ_QS001.prefab	103		[3,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_TEA		224	1350				5051	99														
+5039	11-2-319-1	沐恩版王座（正式名字：Κλει?）				Assets/_Game/AssetBundle/Prefabs/DIY/CF_ty/CF_FansEvent_ZS003.prefab	201		[7,6]		[2,10,30]							NCI_FES		300					5039	99	event_1		FansEvent3	[4]										
+5052	11-2-320-1	自助小食区				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS001.prefab	201		[3,8]		[2,10,30]							NCI_ND		232	1400				5052	99														
+5053	11-2-321-1	铁板烤肉台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS002.prefab	201		[6,9]		[2,10,30]							NCI_ND		255	1525				5053	99														
+5054	11-2-322-1	烤肉招牌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS004.prefab	104		[3,2]		[2,10,30]							NCI_ND		216	1300				5054	99														
+5055	11-2-323-1	逢魔之时				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS005.prefab	104		[2,2]		[2,10,30]							NCI_ND		214	1275				5055	99														
+5056	11-2-324-1	弥洒托牌冰箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS007.prefab	201		[5,5]		[2,10,30]							NCI_ND		233	1400				5056	99														
+5057	11-2-325-1	泽间横木吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS010.prefab	201		[4,12]		[2,10,30]							NCI_ND		246	1475				5057	99														
+5058	11-2-326-1	泽间陶土瓶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS013.prefab	104		[3,3]		[2,10,30]							NCI_ND		219	1300				5058	99														
+5059	11-2-327-1	实木布艺屏风				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS003.prefab	104		[1,5]		[2,10,30]							NCI_ND		215	1300				5059	99														
+5060	11-2-328-1	布艺招牌				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS006.prefab	104		[3,2]		[2,10,30]							NCI_ND		216	1300				5060	99														
+5061	11-2-329-1	少女拉面摊				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS008.prefab	201		[16,8]		[2,10,30]							NCI_ND		300	1600				5061	99	event_1|event_1_1		BBQnoodles											
+5062	11-2-330-1	自助气泡饮机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS009.prefab	104		[3,3]		[2,10,30]							NCI_ND		219	1300				5062	99														
+5063	11-2-331-1	调料自取台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS011.prefab	201		[8,4]		[2,10,30]							NCI_ND		300	1425				5063	99	event_1|event_1_1		BBQfry											
+5064	11-2-332-1	零食冰柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS012.prefab	201		[8,6]		[2,10,30]							NCI_ND		300	1600				5064	99	event_1|event_1_1		BBQcutfish											
+5065	11-2-333-1	资料取阅处				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_ZS014.prefab	104		[3,1]		[2,10,30]							NCI_ND		213	1275				5065	99														
+5066	11-2-334-1	泽间经典挂柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_QS003.prefab	103		[4,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_ND		225	1350				5066	99														
+5067	11-2-335-1	泽间旧式挂钟				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_QS004.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_ND		214	1275				5067	99														
+5068	11-2-336-1	亚克力方灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_QS001.prefab	103		[2,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_ND		214	1275				5068	99														
+5069	11-2-337-1	枣红圆地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_BBQ/CF_P_WJ_carpet001.prefab	101		[6,6]		[2,10,30]							NCI_ND		243	1450				5069	99														
+5076	11-2-344-1	韦恩系列监控台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS001.prefab	201		[7,7]		[2,10,30]							NCI_PO		243	1450				5076	99	event_1|event_1_1		Pmonitor											
+5077	11-2-345-1	橘猫警长摆件				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS002.prefab	104		[4,3]		[2,10,30]							NCI_PO		221	1325				5077	99														
+5078	11-2-346-1	档案刻录机				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS003.prefab	104		[3,2]		[2,10,30]							NCI_PO		216	1300				5078	99														
+5079	11-2-347-1	焦虑的植物盆栽				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS004.prefab	201		[5,4]		[2,10,30]							NCI_PO		228	1375				5079	99														
+5080	11-2-348-1	平静的落地长灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS005.prefab	104		[1,3]		[2,10,30]							NCI_PO		213	1275				5080	99														
+5081	11-2-349-1	不可踢垃圾桶				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS006.prefab	104		[2,1]		[2,10,30]							NCI_PO		213	1275				5081	99														
+5082	11-2-350-1	观察取证台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS007.prefab	201		[10,4]		[2,10,30]							NCI_PO		246	1475				5082	99	event_1|event_1_1		Pobserve											
+5083	11-2-351-1	思路收集板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS008.prefab	104		[2,6]		[2,10,30]							NCI_PO		221	1325				5083	99														
+5084	11-2-352-1	步枪收置架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS009.prefab	104		[4,3]		[2,10,30]							NCI_PO		221	1325				5084	99														
+5085	11-2-353-1	徽章亚克力隔断				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS010.prefab	104		[1,4]		[2,10,30]							NCI_PO		214	1275				5085	99														
+5086	11-2-354-1	步枪拼装台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS011.prefab	201		[8,4]		[2,10,30]							NCI_PO		239	1425				5086	99														
+5087	11-2-355-1	实弹射击场				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS012.prefab	201		[3,15]		[2,10,30]							NCI_PO		213	1275				5087	99	event_1|event_1_1		Pfire											
+5088	11-2-356-1	黑色钢制长柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS013.prefab	104		[4,2]		[2,10,30]							NCI_PO		218	1300				5088	99														
+5089	11-2-357-1	黑色钢制矮柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS014.prefab	104		[4,2]		[2,10,30]							NCI_PO		218	1300				5089	99														
+5090	11-2-358-1	掉落装备箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS015.prefab	104		[3,2]		[2,10,30]							NCI_PO		216	1300				5090	99														
+5091	11-2-359-1	木质等候长椅				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS016.prefab	104		[6,2]		[2,10,30]							NCI_PO		221	1325				5091	99														
+5092	11-2-360-1	步枪展示壁挂				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_ZS017.prefab	103		[5,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_PO		228	1375				5092	99														
+5093	11-2-361-1	目标追踪挂板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_QS001.prefab	103		[8,5]		[4,6,11,12,13,14,31,32,33,34]							NCI_PO		246	1475				5093	99														
+5094	11-2-362-1	高清面部识别仪				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_QS002.prefab	103		[1,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_PO		213	1275				5094	99														
+5095	11-2-363-1	线索解析挂板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_QS003.prefab	103		[7,4]		[4,6,11,12,13,14,31,32,33,34]							NCI_PO		236	1400				5095	99														
+5096	11-2-364-1	长条审讯灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_QS004.prefab	103		[5,1]		[4,6,11,12,13,14,31,32,33,34]							NCI_PO		215	1300				5096	99														
+5097	11-2-365-1	赤红警徽门垫				Assets/_Game/AssetBundle/Prefabs/DIY/CF_police/CF_X_WJ_carpet001.prefab	101		[4,3]		[2,10,30]							NCI_PO		221	1325				5097	99														
+5098	11-2-366-1	镂空饮料柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS001.prefab	201		[5,5]		[2,10,30]							NCI_XCT		233	1400				5098	99														
+5099	11-2-367-1	神厨铜像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS002.prefab	104		[5,3]		[2,10,30]							NCI_XCT		224	1350				5099	99														
+5100	11-2-368-1	环球大奖杯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS003.prefab	104		[2,2]		[2,10,30]							NCI_XCT		214	1275				5100	99														
+5101	11-2-369-1	铜艺造型衣架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS004.prefab	104		[2,2]		[2,10,30]							NCI_XCT		214	1275				5101	99														
+5102	11-2-370-1	醇黑烤漆伞架				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS005.prefab	104		[1,1]		[2,10,30]							NCI_XCT		213	1275				5102	99														
+5103	11-2-371-1	红绳同质护栏				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS006.prefab	104		[7,1]		[2,10,30]							NCI_XCT		217	1300				5103	99														
+5104	11-2-372-1	新式合金碗柜				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS007.prefab	104		[5,3]		[2,10,30]							NCI_XCT		224	1350				5104	99														
+5105	11-2-373-1	半自动灶台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS008.prefab	201		[6,4]		[2,10,30]							NCI_XCT		232	1400				5105	99														
+5106	11-2-374-1	面食料理台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS009.prefab	201		[7,5]		[2,10,30]							NCI_XCT		242	1450				5106	99														
+5107	11-2-375-1	自助取餐台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS010.prefab	201		[7,3]		[2,10,30]							NCI_XCT		229	1375				5107	99														
+5108	11-2-376-1	合金沥水台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS011.prefab	104		[3,4]		[2,10,30]							NCI_XCT		221	1325				5108	99														
+5109	11-2-377-1	自助调料台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS012.prefab	104		[2,3]		[2,10,30]							NCI_XCT		216	1300				5109	99														
+5110	11-2-378-1	多功能烤箱				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS013.prefab	201		[6,3]		[2,10,30]							NCI_XCT		227	1350				5110	99														
+5111	11-2-379-1	主厨休息位				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_ZS014.prefab	104		[5,3]		[2,10,30]							NCI_XCT		224	1350				5111	99														
+5112	11-2-380-1	铜制玻璃罩挂灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_QS001.prefab	103		[3,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XCT		216	1300				5112	99														
+5113	11-2-381-1	竖式挂历油画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_QS002.prefab	103		[3,7]		[4,6,11,12,13,14,31,32,33,34]							NCI_XCT		229	1375				5113	99														
+5114	11-2-382-1	横幅木框油画				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_QS003.prefab	103		[5,2]		[4,6,11,12,13,14,31,32,33,34]							NCI_XCT		219	1300				5114	99														
+5115	11-2-383-1	金鸢尾织物地毯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_xicanting/CF_U_WJ_carpet001.prefab	101		[6,4]		[2,10,30]							NCI_XCT		232	1400				5115	99														
+																																								
+800	11-16-1-1	天堂阶梯	furniture801	furniture801.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_Pet001.prefab	300		[6,3]		[2,10,30]							NCI_XD		50					801	99	event_1					1								
+801	11-16-1-1	天堂阶梯	furniture801	furniture801.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_xiandai/CF_A_WJ_Pet001.prefab	300		[6,3]		[2,10,30]							NCI_XD		50					801	99	event_1					1								
+802	11-16-2-2	猫大名	furniture802	furniture802.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_hefeng/CF_B_WJ_Pet001.prefab	300		[4,4]		[2,10,30]							NCI_HF		50					802	99	event_1					1								
+803	11-16-3-3	喵厂长	furniture803	furniture803.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_gongye/CF_C_WJ_Pet001.prefab	300		[6,3]		[2,10,30]							NCI_GY		50					803	99	event_1					1								
+804	11-16-4-3	猫星飞船	furniture804	furniture804.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_keji/CF_D_WJ_Pet001.prefab	300		[4,4]		[2,10,30]							NCI_KE		50					804	99	event_1					1								
+805	11-16-5-3	地中海宠物	furniture805	furniture805.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_dizhonghai/CF_E_WJ_Pet001.prefab	300		[5,3]		[2,10,30]							NCI_KE		50					805	99	event_1					1								
+806	11-16-6-3	哥特宠物	furniture806	furniture806.desc		Assets/_Game/AssetBundle/Prefabs/DIY/CF_gete/CF_F_WJ_Pet001.prefab	300		[5,3]		[2,10,30]							NCI_GT		50					806	99	event_1					1								
+																																								
+900	11-17-1-3	黄昏时刻	furniture900	furniture900.desc		Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_002.prefab	73	23		0				73						300	10000				900	99											2			
+901	11-17-2-3	月光时刻	furniture901	furniture901.desc		Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_003.prefab	73	23		0				73						300	10000				901	99											3			
+902	11-17-3-3	清晨时刻	furniture902	furniture902.desc		Assets/_Game/AssetBundle/Prefabs/DIY/Light/light_004.prefab	73	23		0				73						300					902	99											4			
+																																								
+1000	11-19-1-1	夏日外景	outdoor02	outdoor02.desc	Poster/cafe_outpic_summer.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/cf_house_03.prefab	72	22		0				72	[1001,1002,1003,1004,1005,1006,1007]			NCI_XR							1000	99														
+1001		夏日外景特训-挤屁股				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_Train_Jipigu.prefab	66	16		5				66		1									1001	99	girl_1|girl_2|girl_3													
+1002		夏日外景特训-瑜伽				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_Train_Yoga.prefab	67	17		5				67		1									1002	99	girl_1|girl_2|girl_3													
+1003		夏日外景特训-钓鱼				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_Train_Fishing.prefab	68	18		5				68		1									1003	99	girl_1|girl_2|girl_3													
+1004		夏日外景特训-漫画				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_Train_Cartoon.prefab	69	19		5				69		1									1004	99	girl_1|girl_2|girl_3													
+1005		经营区夏日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_roof_wall005.prefab	57	7		1				57		1									1005	99														
+1006		休息区夏日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_roof_wall015.prefab	65	15		2				65		1									1006	99														
+1007		扩展区夏日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor02/Outdoor02_roof_wall025.prefab	85	35		6				85		1									1007	99														
+																																								
+1100	11-19-2-1	冬日外景	outdoor03	outdoor03.desc	Poster/cafe_outpic_winter.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/cf_house_04.prefab	72	22		0				72	[1101,1102,1103,1104,1105,1106,1107]			NCI_XYQ							1100	99														
+1101		冬日外景特训-溜冰				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Skating.prefab	67	16		5				67		1									1101	99	girl_1|girl_2|girl_3													
+1102		冬日外景特训-堆雪人				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Snowman.prefab	69	17		5				69		1									1102	99	girl_1|girl_2|girl_3													
+1103		冬日外景特训-砸雪球				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Snowball.prefab	66	18		5				66		1									1103	99	girl_1|girl_2|girl_3													
+1104		冬日外景特训-泡温泉				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Hotspring.prefab	68	19		5				68		1									1104	99	girl_1|girl_2|girl_3													
+1105		经营区冬日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall005.prefab	57	7		1				57		1									1105	99														
+1106		休息区冬日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall015.prefab	65	15		2				65		1									1106	99														
+1107		扩展区冬日外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall025.prefab	85	35		6				85		1									1107	99														
+																																								
+1200	11-19-3-1	圣诞外景	outdoor04	outdoor04.desc	Poster/cafe_outpic_christmas.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor04/cf_house_05.prefab	72	22		0				72	[1201,1202,1203,1204,1205,1206,1207]			NCI_XYQ							1200	99														
+1201		圣诞外景特训-溜冰				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Skating.prefab	67	16		5				67		1									1201	99	girl_1|girl_2|girl_3													
+1202		圣诞外景特训-堆雪人				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Snowman.prefab	69	17		5				69		1									1202	99	girl_1|girl_2|girl_3													
+1203		圣诞外景特训-砸雪球				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Snowball.prefab	66	18		5				66		1									1203	99	girl_1|girl_2|girl_3													
+1204		圣诞外景特训-泡温泉				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_Train_Hotspring.prefab	68	19		5				68		1									1204	99	girl_1|girl_2|girl_3													
+1205		经营区圣诞外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall005.prefab	57	7		1				57		1									1205	99														
+1206		休息区圣诞外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall015.prefab	65	15		2				65		1									1206	99														
+1207		扩展区圣诞外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor03/Outdoor03_roof_wall025.prefab	85	35		6				85		1									1207	99														
+																																								
+1300	11-19-4-1	神社外景	outdoor06	outdoor06.desc	Poster/cafe_outpic_shenshe.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/cf_house_07.prefab	72	22		0				72	[1301,1302,1303,1304,1305,1306,1307]			NCI_XR							1300	99														
+1301		神社外景特训-扫地				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_Train_saodi.prefab	66	16		5				66		1									1301	99	girl_1|girl_2|girl_3													
+1302		神社外景特训-射箭				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_Train_shejian.prefab	67	17		5				67		1									1302	99	girl_1|girl_2|girl_3													
+1303		神社外景特训-打坐喝茶				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_Train_dazuo.prefab	68	18		5				68		1									1303	99	girl_1|girl_2|girl_3													
+1304		神社外景特训-画绘马				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_Train_huima.prefab	69	19		5				69		1									1304	99	girl_1|girl_2|girl_3													
+1305		经营区神社外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_roof_wall005.prefab	57	7		1				57		1									1305	99														
+1306		休息区神社外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_roof_wall015.prefab	65	15		2				65		1									1306	99														
+1307		扩展区神社外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor06/Outdoor06_roof_wall025.prefab	85	35		6				85		1									1307	99														
+																																								
+1400	11-19-5-1	音乐节外景	outdoor05	outdoor05.desc	Poster/cafe_outpic_music.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/cf_house_06.prefab	72	22		0				72	[1401,1402,1403,1404,1405,1406,1407]			NCI_MUSIC							1400	99														
+1401		音乐节外景特训-跳舞				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_Train_dance.prefab	66	16		5				66		1									1401	99	girl_1|girl_2|girl_3													
+1402		音乐节外景特训-打call				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_Train_call.prefab	67	17		5				67		1									1402	99	girl_1|girl_2|girl_3													
+1403		音乐节外景特训-空气吉他				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_Train_guitar.prefab	68	18		5				68		1									1403	99	girl_1|girl_2|girl_3													
+1404		音乐节外景特训-上台演出				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_Train_show.prefab	69	19		5				69		1									1404	99	girl_1|girl_2|girl_3													
+1405		经营区音乐节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_roof_wall005.prefab	57	7		1				57		1									1405	99														
+1406		休息区音乐节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_roof_wall015.prefab	65	15		2				65		1									1406	99														
+1407		扩展区音乐节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor05/Outdoor05_roof_wall025.prefab	85	35		6				85		1									1407	99														
+																																								
+1500	11-19-6-1	学园祭外景	outdoor08	outdoor08.desc	Poster/cafe_outpic_campus.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/cf_house_08.prefab	72	22		0				72	[1501,1502,1503,1504,1505,1506,1507]			NCI_CAMPUS							1500	99														
+1501		学园祭外景特训-跳舞				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_Train_dance.prefab	66	16		5				66		1									1501	99	girl_1|girl_2|girl_3													
+1502		学园祭外景特训-冰水摊位				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_Train_ice.prefab	67	17		5				67		1									1502	99	girl_1|girl_2|girl_3													
+1503		学园祭外景特训-抽奖转盘				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_Train_wheel.prefab	68	18		5				68		1									1503	99	girl_1|girl_2|girl_3													
+1504		学园祭外景特训-喇叭招新				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_Train_horn.prefab	69	19		5				69		1									1504	99	girl_1|girl_2|girl_3													
+1505		经营区学园祭外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_roof_wall005.prefab	57	7		1				57		1									1505	99														
+1506		休息区学园祭外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_roof_wall015.prefab	65	15		2				65		1									1506	99														
+1507		扩展区学园祭外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor08/Outdoor08_roof_wall025.prefab	85	35		6				85		1									1507	99														
+																																								
+1600	11-19-7-1	游乐园外景	outdoor10	outdoor10.desc	Poster/cafe_outpic_park.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/cf_house_10.prefab	72	22		0				72	[1601,1602,1603,1604,1605,1606,1607]			NCI_CINEMA							1600	99														
+1601		摩天轮				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_Train_motianlun.prefab	66	16		5				66		1									1601	99	girl_1|girl_2|girl_3													
+1602		射箭				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_Train_shejian.prefab	67	17		5				67		1									1602	99	girl_1|girl_2|girl_3													
+1603		意念魔方				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_Train_mofang.prefab	68	18		5				68		1									1603	99	girl_1|girl_2|girl_3													
+1604		挡板照相				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_Train_photo.prefab	69	19		5				69		1									1604	99	girl_1|girl_2|girl_3													
+1605		经营区游乐园外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_roof_wall005.prefab	57	7		1				57		1									1605	99														
+1606		休息区游乐园外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_roof_wall015.prefab	65	15		2				65		1									1606	99														
+1607		扩展区游乐园外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor10/Outdoor10_roof_wall025.prefab	85	35		6				85		1									1607	99														
+																																								
+																																								
+1700	11-19-8-1	春节外景	outdoor09	outdoor09.desc	Poster/cafe_outpic_SpringFes.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/cf_house_09.prefab	72	22		0				72	[1701,1702,1703,1704,1705,1706,1707]			NCI_TEA							1700	99														
+1701		汇演书法				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_Train_chunlian.prefab	66	16		5				66		1									1701	99	girl_1|girl_2|girl_3													
+1702		品鉴年饭				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_Train_tuannian.prefab	67	17		5				67		1									1702	99	girl_1|girl_2|girl_3													
+1703		驱赶年兽				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_Train_fire.prefab	68	18		5				68		1									1703	99	girl_1|girl_2|girl_3													
+1704		练习舞狮				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_Train_lion.prefab	69	19		5				69		1									1704	99	girl_1|girl_2|girl_3													
+1705		经营区春节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_roof_wall005.prefab	57	7		1				57		1									1705	99														
+1706		休息区春节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_roof_wall015.prefab	65	15		2				65		1									1706	99														
+1707		扩展区春节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor09/Outdoor09_roof_wall025.prefab	85	35		6				85		1									1707	99														
+																																								
+1800	11-19-9-1	儿童节外景	outdoor11	outdoor11.desc	Poster/cafe_outpic_star.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/cf_house_11.prefab	72	22		0				72	[1801,1802,1803,1804,1805,1806,1807]			NCI_ND							1800	99														
+1801		升空远眺				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_Train_shengkong.prefab	66	16		5				66		1									1801	99	girl_1|girl_2|girl_3													
+1802		露营室外				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_Train_luying.prefab	67	17		5				67		1									1802	99	girl_1|girl_2|girl_3													
+1803		和声留影				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_Train_hesheng.prefab	68	18		5				68		1									1803	99	girl_1|girl_2|girl_3													
+1804		祈祷心意				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_Train_qidao.prefab	69	19		5				69		1									1804	99	girl_1|girl_2|girl_3													
+1805		经营区儿童节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_roof_wall005.prefab	57	7		1				57		1									1805	99														
+1806		休息区儿童节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_roof_wall015.prefab	65	15		2				65		1									1806	99														
+1807		扩展区儿童节外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor11/Outdoor11_roof_wall025.prefab	85	35		6				85		1									1807	99														
+																																								
+																																								
+1900	11-19-10-1	神曲外景	outdoor12	outdoor12.desc	Poster/cafe_outpic_sq.png	Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/cf_house_12.prefab	72	22		0				72	[1901,1902,1903,1904,1905,1906,1907]			NCI_PO							1900	99														
+1901		合奏练习				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_Train_hezou.prefab	66	16		5				66		1									1901	99	girl_1|girl_2|girl_3													
+1902		树下冥想				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_Train_shuxia.prefab	67	17		5				67		1									1902	99	girl_1|girl_2|girl_3													
+1903		描摹心想				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_Train_miaomo.prefab	68	18		5				68		1									1903	99	girl_1|girl_2|girl_3													
+1904		专注雕刻				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_Train_diaoke.prefab	69	19		5				69		1									1904	99	girl_1|girl_2|girl_3													
+1905		经营区神曲外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_roof_wall005.prefab	57	7		1				57		1									1905	99														
+1906		休息区神曲外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_roof_wall015.prefab	65	15		2				65		1									1906	99														
+1907		扩展区神曲外景天花板				Assets/_Game/AssetBundle/Prefabs/DIY/Outdoor12/Outdoor12_roof_wall025.prefab	85	35		6				85		1									1907	99														
+																																								
+																																								
+2011	11-6-13-3	咖啡-喵王国-地板				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_road01.prefab	50	2		1		[45,38]		50				NCI_MWG		300					2011	99														
+2012	11-7-13-3	咖啡-喵王国-窗户				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_window001.prefab	55	5		1				55				NCI_MWG		300					2012	99														1
+2013	11-8-13-3	咖啡-喵王国-门				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_door001.prefab	56	5		1				56				NCI_MWG		300					2013	99														1
+2014	11-9-13-3	咖啡-喵王国-吧台				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_bar001_2.prefab	58	8		1				58	2016			NCI_MWG		300					2014	99												40		1
+2015	11-10-13-3	咖啡-喵王国-墙纸				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_wall002.prefab	51	3		1				51				NCI_MWG		300					2015	99														1
+2016	11-9-13-3	咖啡-喵王国-吧台墙上部分				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_bar001_1.prefab	59	9		1				59		1		NCI_MWG		0					2016	99														
+																																								
+151	11-1-37-3	喵王国单人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_Table001.prefab	100		[6,3]	1	[2,10]							NCI_MWG	2	227	1350				151	99	guest_1_1|guest_1_2|girl_1|girl_2|biz_1|drop_1													
+152	11-1-38-3	喵王国双人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_Table002.prefab	100		[8,3]	1	[2,10]							NCI_MWG	2	246	1475				152	99	guest_1_1|guest_1_2|guest_2_1|guest_2_2|girl_1|girl_2|biz_1|biz_2|drop_1|drop_2													
+153	11-1-39-3	喵王国四人座				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_Table003.prefab	100		[9,7]	1	[2,10]							NCI_MWG	2	300	1800				153	99	guest_1_1|guest_2_1|guest_3_1|guest_4_1|girl_1|girl_2|biz_1|biz_2|biz_3|biz_4|drop_1|drop_2|drop_3|drop_4													
+																																								
+846	11-2-139-1	玫瑰小壁灯				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_QS001.prefab	103		[3,3]		[4,6,11,12,13,14,31,32,33,34]							NCI_MWG		219	1300				846	99														
+847	11-2-140-1	见习绘师半成品				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_ZS001.prefab	201		[7,6]		[2,10,30]							NCI_MWG		246	1475				847	99														
+848	11-2-141-1	幸福四叶花栏				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_ZS002.prefab	104		[4,2]		[2,10,30]							NCI_MWG		218	1300				848	99														
+849	11-2-142-1	英雄九藏雕像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_ZS004.prefab	201		[6,7]		[2,10,30]							NCI_MWG		246					849	99														
+850	11-2-143-1	女神雕像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_ZS005.prefab	201		[7,4]		[2,10,30]							NCI_MWG		236					850	99														
+851	11-2-144-1	遗留的创作之锤				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_ZS003.prefab	104		[3,3]		[2,10,30]							NCI_MWG		219	1300				851	99														
+852	11-2-145-1	湛蓝水晶雕像				Assets/_Game/AssetBundle/Prefabs/DIY/CF_CatTC/CF_T_WJ_QS002.prefab	201		[4,2]		[2,10,30]							NCI_MWG		218	1300				852	99														

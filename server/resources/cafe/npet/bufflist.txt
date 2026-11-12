@@ -1,0 +1,30 @@
+INT	INT	INT	INT	INT	STR	STR	STR	INTARR	INTARR	INTARR	INT	STR	INT
+BuffΨһId	Buff��Ӧϵͳ(����,1:���ȹ�&��Լ 3��ս�� 4 ��ͷʱ��)	Buff����(С��,һ��������ֻ����Чһ��buff)	��ЧȨ��	����(��ͬbuff���岻ͬ)	buff%s����	buffIcon	buffDesc	�ؿ�����(-1����ȫ�嵥����-2����ȫ����������С���ͼ���)	Ŀ���Ա���ԣ�����-0 ��е-1 ����-2 ����-3 ��ʴ-4��	Ŀ���Ա��λ(1������2ǿϮ��3������4������5ҽ��)	�Ƿ��������������������1��	��ע	�Ƿ��к����ʾ
+Id	System	BuffType	Weight	Param1	DescParam	buffIcon	buffDesc	LevelType	MemberAtt	MemberPro	IsCast	NUL	HasRedTip
+1	3	11	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc1	[-1,-2]	[3]	[1]		�������Ի�����ɫ�˺����1%	
+2	3	12	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc2	[-1,-2]	[4]	[1]		��ʴ���Ի�����ɫ�˺����1%	
+3	1	4	1	120	1.2	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc3					��Լ�������Աʱ������ӱ�1.2��	
+4	1	3	1	120	1.2	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc4					��Լ����������Ϣʱ������ӱ�1.2��	
+5	1	2	1	120	1.2	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc5					��Լ���񵱿�����ʱ������ӱ��׶�1.2��	
+6	1	2	2	140	1.4	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc5					��Լ���񵱿�����ʱ������ӱ��׶�1.4��	
+7	3	13	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc7	[-1,-2]	[0]	[1]		�������Ի�����ɫ�˺����1.5%	
+8	3	14	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc8	[-1,-2]	[1]	[1]		��е���Ի�����ɫ�˺����1.5%	
+9	3	15	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc9	[-1,-2]	[2]	[1]		�������Ի�����ɫ�˺����1.5%	
+10	1	5	1	20	20	UI/UI_PetMain/achieve_icon_cafe.png	ui.Pet.buffDesc10					��ͷ����ʱ������20����	
+11	3	16	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc1	[-1,-2]	[3]	[1]		�������Ի�����ɫ�˺����1%	
+12	3	17	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc2	[-1,-2]	[4]	[1]		��ʴ���Ի�����ɫ�˺����1%	
+13	3	18	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc7	[-1,-2]	[0]	[1]		�������Ի�����ɫ�˺����1.5%	
+14	3	19	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc8	[-1,-2]	[1]	[1]		��е���Ի�����ɫ�˺����1.5%	
+15	3	20	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc9	[-1,-2]	[2]	[1]		�������Ի�����ɫ�˺����1.5%	1
+16	1	6	1	20	20	UI/UI_PetMain/achieve_icon_cafe.png	ui.Pet.buffDesc10					��ͷ����ʱ������20����	
+17	3	21	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc7	[-1,-2]	[0]	[1]		�������Ի�����ɫ�˺����1.5%	
+18	3	22	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc8	[-1,-2]	[1]	[1]		��е���Ի�����ɫ�˺����1.5%	
+19	3	23	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc9	[-1,-2]	[2]	[1]		�������Ի�����ɫ�˺����1.5%	
+20	1	4	2	140	1.4	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc3					��Լ�������Աʱ������ӱ�1.4��	
+21	1	3	2	140	1.4	UI/UI_PetMain/achieve_icon_girl.png	ui.Pet.buffDesc4					��Լ����������Ϣʱ������ӱ�1.4��	2
+22	1	7	1	20	20	UI/UI_PetMain/achieve_icon_cafe.png	ui.Pet.buffDesc10					��ͷ����ʱ������20����	
+23	3	24	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc1	[-1,-2]	[3]	[1]		�������Ի�����ɫ�˺����1%	
+24	3	25	1	84000	1.00%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc2	[-1,-2]	[4]	[1]		��ʴ���Ի�����ɫ�˺����1%	
+25	3	26	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc7	[-1,-2]	[0]	[1]		�������Ի�����ɫ�˺����1.5%	
+26	3	27	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc8	[-1,-2]	[1]	[1]		��е���Ի�����ɫ�˺����1.5%	
+27	3	28	1	84001	1.50%	UI/UI_PetMain/achieve_icon_fight.png	ui.Pet.buffDesc9	[-1,-2]	[2]	[1]		�������Ի�����ɫ�˺����1.5%	3

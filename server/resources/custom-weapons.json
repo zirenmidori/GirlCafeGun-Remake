@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "requiredClientExtension": "astral-covenant-v1",
+  "weapons": [
+    {
+      "id": "astral-covenant",
+      "name": "Astral Covenant",
+      "gdpl": [2, 2, 28, 1],
+      "donor": [2, 2, 4, 1],
+      "kind": "weapon",
+      "weaponType": 2,
+      "rarity": 4,
+      "expType": 1,
+      "maxBreakLevel": 4,
+      "maxLevel": 80,
+      "passiveSkill1": 40992,
+      "passiveSkill2": 0
+    }
+  ]
+}
