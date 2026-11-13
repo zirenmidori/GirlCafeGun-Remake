@@ -67,10 +67,10 @@ Do not copy another player's app-private data or saves into the release.
 
 ## Install updates
 
-Update files can be installed, or you can **create
-updates yourself** using the included tools. An update is a `.gcgupdate` file
-containing changed resources and, when necessary, an app delta or server update.
-Use a package made for your currently installed base release.
+Update files can be found in the community Discord under `#update`, or you can
+**create updates yourself** using the included tools. An update is a `.gcgupdate`
+file containing changed resources and, when necessary, an app delta or server
+update. Use a package made for your currently installed base release.
 
 Open **Update** on the login screen. Choose one:
 
