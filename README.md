@@ -1,4 +1,4 @@
-# Girl Cafe Gun Offline
+# Girl Cafe Gun Re:make
 
 Release **0.1.0**. See [validation and compatibility](docs/release-status.md).
 
