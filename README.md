@@ -1,7 +1,6 @@
-# GCG Offline
+# Girl Cafe Gun Offline
 
-**Release candidate:** final on-device checks are still pending. See
-[release status](docs/release-status.md).
+Release **0.1.0**. See [validation and compatibility](docs/release-status.md).
 
 GCG Offline runs its game server on the Android device. A PC, USB connection and
 server-address configuration are not needed. The first login creates a fresh
@@ -19,8 +18,8 @@ future updates and temporary files. Installed game resources occupy roughly
 release APK, open Girl Cafe Gun, and approve the initial data download. The
 installer shows overall percentage and downloaded/total size. Keep it open until
 download and verification finish. Choosing **Not now** postpones the download;
-an interrupted download can be resumed. Once the initial
-data is installed, ordinary play does not require an Internet connection.
+an interrupted download can be resumed. Once the initial data is installed,
+ordinary play does not require an Internet connection.
 
 Each new player receives a one-time welcome mail containing Legendary Neptune
 and the Astral Covenant weapon. Claim it from the in-game mailbox when mail is
@@ -41,7 +40,9 @@ distributed separately and are not included here.
 3. `version.data`, `setting.u`, `lua.u`, `AutoAudio/`, `Raw/` and the other resource
    directories belong directly under `files/`. Do not add an extra enclosing
    `files`, pack-name or release-name directory.
-4. Reopen GCG Offline. It verifies the data before starting the local server.
+4. Reopen Girl Cafe Gun. It verifies the data before starting the local server.
+   Complete matching files are adopted without a download prompt. If files are
+   missing or incorrect, the app asks before downloading the needed packs.
 
 On recent Android versions, file managers and the system picker may be unable to
 browse `Android/data`. A USB connection to a computer is a practical alternative
@@ -55,7 +56,7 @@ updates yourself** using the included tools. An update is a `.gcgupdate` file
 containing changed resources and, when necessary, an app delta or server update.
 Use a package made for your currently installed base release.
 
-Open **Update** on the login screen. Choose either:
+Open **Update** on the login screen. Choose one:
 
 - **Check online** to check the publisher's signed update channel manually.
 - **Updates in game folder** after placing the `.gcgupdate` file in
