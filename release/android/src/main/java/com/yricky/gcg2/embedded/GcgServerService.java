@@ -45,6 +45,8 @@ public final class GcgServerService extends Service {
             File state = ServerPayload.regularFilePath(ServerPayload.directory(root, "data"), "state.json");
             File log = ServerPayload.regularFilePath(ServerPayload.directory(root, "logs"), "server.log");
             File payload = ServerPayload.install(this, root);
+            com.zirenmidori.gcg.release.ReleaseIO.atomic(new File(root, "process-id"),
+                Integer.toString(Process.myPid()).getBytes(java.nio.charset.StandardCharsets.US_ASCII));
             System.loadLibrary("node");
             System.loadLibrary("gcg_embedded");
             synchronized (this) {

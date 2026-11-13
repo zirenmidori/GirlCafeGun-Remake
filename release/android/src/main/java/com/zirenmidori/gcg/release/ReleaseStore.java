@@ -106,11 +106,13 @@ public final class ReleaseStore {
                 if(desired!=null){File incoming=ReleaseIO.child(stage,"new/"+name);if(!incoming.isFile()||incoming.length()!=ReleaseManifest.number(desired,"size")||!ReleaseIO.sha(incoming).equals(desired.getString("sha256")))throw new IOException("Staged resource differs: "+name);}
             }
             String id=stage.getName().substring(".gcg-release-".length());
-            JSONObject j=new JSONObject().put("schemaVersion",1).put("id",id).put("status","prepared").put("before",before).put("planned",new JSONArray()).put("oldState",current==null?JSONObject.NULL:current);
+            // All preimages are durable already. Persist the complete rollback plan
+            // once before any publication, rather than rewriting an ever-growing
+            // inventory for each of the tens of thousands of initial resources.
+            JSONObject j=new JSONObject().put("schemaVersion",1).put("id",id).put("status","prepared").put("before",before).put("planned",new JSONArray(names)).put("oldState",current==null?JSONObject.NULL:current);
             writeJson(journal,j);
             try{
                 for(String name:names){
-                    j.getJSONArray("planned").put(name);j.put("status","applying");writeJson(journal,j);
                     File target=ReleaseIO.child(destination,name);JSONObject desired=manifest.files.get(name);
                     if(desired==null){if(target.exists()&&!target.delete())throw new IOException("Cannot delete resource: "+name);}
                     else{ReleaseIO.dir(target.getParentFile());ReleaseIO.rename(ReleaseIO.child(stage,"new/"+name),target);}

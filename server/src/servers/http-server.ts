@@ -58,6 +58,7 @@ export function createHttpServer({
     } else if (url.pathname === "/health") {
       sendJson(response, 200, {
         ok: true,
+        pid: process.pid,
         startedAt,
         uptimeSeconds: Math.floor(process.uptime()),
       });

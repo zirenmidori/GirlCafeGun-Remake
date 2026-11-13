@@ -1,4 +1,5 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { readFile, rm } from "node:fs/promises";
+import { mkdtemp } from "./helpers/temp.js";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 

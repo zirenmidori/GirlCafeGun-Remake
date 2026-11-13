@@ -1,5 +1,6 @@
 import { once } from "node:events";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { readFile, rm } from "node:fs/promises";
+import { mkdtemp } from "./helpers/temp.js";
 import { createConnection, type Server, type Socket } from "node:net";
 import path from "node:path";
 import { expect, it, vi } from "vitest";
@@ -113,10 +114,7 @@ function expectAstralPassive(
 
 it("breaks a new non-gacha weapon over real TCP, sends authoritative item/money state before success and rejects replay atomically", async () => {
   const fixture = await readFile(
-    new URL(
-      "../../tools/custom-weapon/prismatic-attack/server/weapons.txt",
-      import.meta.url,
-    ),
+    new URL("../resources/weapon/weapons.txt", import.meta.url),
     "utf8",
   );
   const directory = await mkdtemp(path.resolve("../tools/custom-weapon/tcp-test-"));

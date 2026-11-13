@@ -5,9 +5,9 @@ release validation. Server behavior and host-side updater transactions have
 passed their checks. Final first-install, Android picker/installer and gameplay
 smoke checks remain before publication of the APK.
 
-Automatic initial downloads require verified public HTTPS pack URLs. The current
-temporary hosting probes have not yet established a reliable direct-download
-provider. No APK with placeholder or failed download URLs should be distributed.
+All 34 initial data packs are hosted on Cloudflare R2 through a read-only HTTPS
+download endpoint. Every complete hosted pack passed SHA-256 readback and exact
+HTTP Range checks. The signed bootstrap contains their actual direct URLs.
 The implementation also supports manually placed, matching initial data and
 offline `.gcgupdate` imports.
 

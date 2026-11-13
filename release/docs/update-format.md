@@ -131,7 +131,7 @@ Unity must be cold/stopped before publication. Updates run in the dedicated
 `:releaseupdater` process; the game process cooperatively closes and terminates
 before apply. Resources stage on the same external-files volume as their final
 paths. Every changed/deleted preimage is copied to a transaction backup and
-hashed. A durable private journal is written before each publication step;
+hashed. A complete durable private rollback plan is written before any publication;
 `version.data` publishes last. The committed release marker is written only after
 all actual destination hashes match. Server payload activation is part of that
 commit. On interruption, bootstrap recovers/rolls back before starting Unity.

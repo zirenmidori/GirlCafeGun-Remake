@@ -3,4 +3,5 @@ dist/
 logs/*.log
 data/
 .DS_Store
+test/.tmp/
 

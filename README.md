@@ -1,6 +1,6 @@
 # GCG Offline
 
-**Release candidate:** final hosting and on-device checks are still pending. See
+**Release candidate:** final on-device checks are still pending. See
 [release status](docs/release-status.md).
 
 GCG Offline runs its game server on the Android device. A PC, USB connection and
@@ -11,13 +11,15 @@ development profiles or personal saves, and no GM console.
 Android 7.0 or newer and an ARM32 or ARM64 device are required. The first data
 installation needs approximately **8 GB free space**; leave more room for Android,
 future updates and temporary files. Installed game resources occupy roughly
-6.1 GB. These estimates will be refined against the final pack inventory.
+6.1 GB, with approximately 5.5 GB downloaded for the first installation.
 
 ## Install
 
 **The APK's automatic data download is the easiest setup method.** Install the
-release APK, open GCG Offline, and keep it open until the initial download and
-verification finish. An interrupted download can be retried. Once the initial
+release APK, open Girl Cafe Gun, and approve the initial data download. The
+installer shows overall percentage and downloaded/total size. Keep it open until
+download and verification finish. Choosing **Not now** postpones the download;
+an interrupted download can be resumed. Once the initial
 data is installed, ordinary play does not require an Internet connection.
 
 Each new player receives a one-time welcome mail containing Legendary Neptune

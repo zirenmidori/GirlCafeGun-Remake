@@ -1,4 +1,5 @@
-import { mkdtemp, rm } from "node:fs/promises";
+import { rm } from "node:fs/promises";
+import { mkdtemp } from "./helpers/temp.js";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { Logger } from "../src/logger.js";

@@ -5,7 +5,8 @@ import hashlib,json,os,secrets,subprocess,shutil
 ROOT=Path(__file__).resolve().parents[2]
 RELEASE=Path(__file__).resolve().parents[1]
 _local_java=Path(r'C:\Program Files\Eclipse Adoptium\jdk-21.0.2.13-hotspot\bin\java.exe')
-JAVA=Path(os.environ.get('GCG_JAVA') or shutil.which('java') or str(_local_java))
+_home_java=Path(os.environ.get('JAVA_HOME',''))/'bin'/('java.exe' if os.name=='nt' else 'java')
+JAVA=Path(os.environ.get('GCG_JAVA') or (str(_local_java) if _local_java.is_file() else None) or (str(_home_java) if _home_java.is_file() else None) or shutil.which('java') or str(_local_java))
 PRIVATE=RELEASE/'private/signing'
 KEYSTORE=PRIVATE/'release.p12'
 PASSWORD=PRIVATE/'password.txt'

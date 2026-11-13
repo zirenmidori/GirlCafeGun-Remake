@@ -31,6 +31,16 @@ their UI, socket or command paths execute; developer Lua and UI content are
 removed. The launcher, embedded server, resource installer and updater are Java
 source under `release/android/`.
 
+The launcher is named **Girl Cafe Gun**. Its regular and round icons at all six
+densities come from the owned English 1.0.9 APK. Supply that donor with
+`--icon-apk inputs/global-1.0.9.apk` (or keep it at
+`translation/sources/global-1.0.9.apk`). The default donor SHA-256 is pinned in
+the builder; a different explicitly reviewed donor requires `--icon-sha256`.
+
+The data overlay must use indexes reconciled to the actual packaged resource
+sizes and CRCs, including translated and custom bundles. A client-only overlay
+without this reconciliation is not the final distribution overlay.
+
 Generate and host the complete data packs, set their actual HTTPS direct URLs in
 the full manifest, then sign its exact bytes with `release/tools/release_crypto.py`.
 Do not publish a bootstrap manifest with placeholder URLs. The build command is:

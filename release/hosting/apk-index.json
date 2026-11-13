@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "apks": {
+    "0.1.0/GCG-Offline-v0.1.0.apk": {
+      "size": 405362253,
+      "sha256": "3a6178e964e43f67913fabef8dec8858377a8d1e39dca33b5c55cf89a703ca80",
+      "parts": [
+        {
+          "key": "_apk/0.1.0/3a6178e964e43f67913fabef8dec8858377a8d1e39dca33b5c55cf89a703ca80/part-000.bin",
+          "size": 209715200,
+          "sha256": "621ae04d42ce7146e227999297462d4f277bbd9e8d2feb964ad0c8c069e27423"
+        },
+        {
+          "key": "_apk/0.1.0/3a6178e964e43f67913fabef8dec8858377a8d1e39dca33b5c55cf89a703ca80/part-001.bin",
+          "size": 195647053,
+          "sha256": "e7729cd2c8c0cb38388956e4510c8ee5d6a208aa63580484144f581a37313072"
+        }
+      ]
+    }
+  }
+}

@@ -27,7 +27,9 @@ public final class UpdateActivity extends Activity {
     @Override public void onCreate(Bundle saved){
         super.onCreate(saved);getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         LinearLayout layout=new LinearLayout(this);layout.setPadding(40,24,40,24);layout.setGravity(Gravity.CENTER);layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setBackgroundColor(android.graphics.Color.rgb(22,26,39));
         status=new TextView(this);status.setTextSize(18);status.setText("GCG Offline updates");layout.addView(status);actions=new LinearLayout(this);actions.setOrientation(LinearLayout.VERTICAL);layout.addView(actions);setContentView(layout);
+        status.setTextColor(android.graphics.Color.WHITE);status.setGravity(Gravity.CENTER);
         button("Check online",()->checkOnline());button("Updates in game folder",()->scan());button("Choose update file",()->pick());button("Return to game",()->returnToGame());
         int pid=getIntent().getIntExtra("gamePid",0);if(pid>0&&pid!=android.os.Process.myPid()){
             ActivityManager manager=(ActivityManager)getSystemService(ACTIVITY_SERVICE);List<ActivityManager.RunningAppProcessInfo> processes=manager.getRunningAppProcesses();

@@ -18,3 +18,10 @@ Verify a full pack download and byte-range response from the actual public
 endpoint before writing it into a signed bootstrap manifest. Published object
 keys are immutable: upload changed bytes under a new release ID, never replace
 an existing release in place. APK and game-data files remain outside GitHub.
+
+Wrangler and the dashboard limit individual uploads to 300 MB. The APK is larger,
+so `split_hosted_apk.py` creates two immutable private parts and an `apk-index.json`.
+Upload each part under its exact generated key before deploying the index. The
+Worker streams them through one ordinary APK URL, preserving Content-Length,
+ETag and byte-range resume with bounded memory. Private part paths return 404.
+Verify the entire public APK's SHA-256 and a range spanning a part boundary.

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -38,7 +38,10 @@ describe("recovered café catalog", () => {
       const bytes = readFileSync(path.join(resourceRoot, name));
       expect(bytes.length).toBe(expected.bytes);
       expect(createHash("sha256").update(bytes).digest("hex")).toBe(expected.sha256);
-      if (expected.projection === undefined)
+      if (
+        expected.projection === undefined &&
+        existsSync(path.resolve(process.cwd(), "..", expected.source))
+      )
         expect(bytes).toEqual(
           readFileSync(path.resolve(process.cwd(), "..", expected.source)),
         );

@@ -26,8 +26,9 @@ public final class ReleaseEngine {
         try(ReleaseStore.Lock ignored=ReleaseStore.lock(c)){bootstrapLocked(c,progress);}
     }
     private static void bootstrapLocked(Context c,ReleaseDownload.Progress progress)throws IOException{
-        ReleaseStore.recover(c);ReleaseManifest m=ReleaseManifest.bundled(c);
+        ReleaseStore.recover(c);
         if(ReleaseStore.ready(c))return;
+        ReleaseManifest m=ReleaseManifest.bundled(c);
         if(!m.kind.equals("full")||ApkDelta.installedVersion(c)<ReleaseManifest.number(m.json,"minApkVersionCode"))throw new IOException("Bundled data release is incompatible with this app");
         Set<String> adopted=new HashSet<>();
         for(Map.Entry<String,JSONObject> file:m.files.entrySet()){
@@ -44,11 +45,25 @@ public final class ReleaseEngine {
         }
         if(stage==null){stage=ReleaseStore.newStage(c);try{ReleaseStore.writeJson(pointer,new JSONObject().put("id",stage.getName().substring(13)).put("manifestSha256",m.hash));}catch(JSONException e){throw new IOException(e);}}
         File downloads=ReleaseIO.dir(ReleaseIO.child(ReleaseStore.external(c),".gcg-downloads/"+m.hash));
+        long totalDownload=0,expanded=0,complete=0;
+        for(JSONObject p:m.packs.values())totalDownload+=ReleaseManifest.number(p,"size");
+        for(JSONObject row:m.files.values())expanded+=ReleaseManifest.number(row,"size");
+        final long overallTotal=totalDownload;
+        boolean approved=false;
         for(Map.Entry<String,JSONObject> pack:m.packs.entrySet()){
+            JSONObject p=pack.getValue();long packBytes=ReleaseManifest.number(p,"size");
             boolean done=true;for(Map.Entry<String,JSONObject> file:m.files.entrySet())if(pack.getKey().equals(file.getValue().optString("pack"))&&!adopted.contains(file.getKey())&&!matches(ReleaseIO.child(stage,"new/"+file.getKey()),file.getValue())){done=false;break;}
-            if(done)continue;
-            JSONObject p=pack.getValue();File archive=ReleaseDownload.fetch(downloads,pack.getKey(),p.optString("url"),ReleaseManifest.number(p,"size"),p.optString("sha256"),progress);
+            if(done){complete+=packBytes;ReleaseDownload.bytes(progress,complete,overallTotal);continue;}
+            if(!approved){ReleaseDownload.confirm(progress,totalDownload,expanded);approved=true;}
+            final long verifiedBefore=complete;
+            ReleaseDownload.Progress packProgress=new ReleaseDownload.DetailedProgress(){
+                @Override public void show(String text){progress.show(text);}
+                @Override public void bytes(long received,long size){ReleaseDownload.bytes(progress,verifiedBefore+received,overallTotal);}
+                @Override public void confirmInitialDownload(long total,long expanded){}
+            };
+            File archive=ReleaseDownload.fetch(downloads,pack.getKey(),p.optString("url"),packBytes,p.optString("sha256"),packProgress);
             extractPack(archive,m,pack.getKey(),stage,adopted,progress);if(!archive.delete())throw new IOException("Cannot release verified pack storage");
+            complete+=packBytes;ReleaseDownload.bytes(progress,complete,overallTotal);
         }
         progress.show("Verifying and committing game data…");ReleaseStore.apply(c,m,stage,null);pointer.delete();
     }

@@ -1,10 +1,16 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { CafeCatalog } from "../src/game-data/cafe-catalog.js";
 import { CafePetCatalog } from "../src/game-data/cafe-pet-catalog.js";
+
+const forensicInputs = JSON.parse(
+  readFileSync("resources/cafe/provenance.json", "utf8"),
+);
+const hasForensicInput = (name: string) =>
+  existsSync(path.resolve("..", forensicInputs.files[name].source));
 
 describe("final CN café pet catalog", () => {
   const cafe = CafeCatalog.loadDefault();
@@ -126,90 +132,96 @@ describe("final CN café pet catalog", () => {
     expect(pets.petBuff(1)!.LevelType).toEqual([-1, -2]);
   });
 
-  it("verifies all six gift effects against the decoded final CN ItemList source", () => {
-    const root = path.resolve(process.cwd(), "resources/cafe");
-    const provenance = JSON.parse(
-      readFileSync(path.join(root, "provenance.json"), "utf8"),
-    );
-    const expected = provenance.files["npet/petgifts.txt"];
-    const source = readFileSync(path.resolve(process.cwd(), "..", expected.source));
-    expect(createHash("sha256").update(source).digest("hex")).toBe(
-      expected.projection.sourceSha256,
-    );
-    const original = (
-      JSON.parse(source.toString("utf8")).list as Record<string, unknown>[]
-    ).filter((row) => row.Genre === 22 && (row.Detail === 1 || row.Detail === 2));
-    expect(original).toHaveLength(6);
-    const projected = cafe.table("npet/petgifts");
-    expect(projected).toHaveLength(6);
-    for (const row of original) {
-      const gdpl = ["Genre", "Detail", "Particular", "Level"].map((key) =>
-        Number(row[key]),
+  it.skipIf(!hasForensicInput("npet/petgifts.txt"))(
+    "verifies all six gift effects against the decoded final CN ItemList source",
+    () => {
+      const root = path.resolve(process.cwd(), "resources/cafe");
+      const provenance = JSON.parse(
+        readFileSync(path.join(root, "provenance.json"), "utf8"),
       );
-      expect(pets.petGift(gdpl)).toEqual({
-        GDPL: gdpl,
-        Detail: row.Detail,
-        ExtParam1: Number(row.ExtParam1),
-      });
-      const copy = projected.find((r) =>
-        gdpl.every(
-          (n, i) => n === Number(r[["Genre", "Detail", "Particular", "Level"][i]!]),
-        ),
+      const expected = provenance.files["npet/petgifts.txt"];
+      const source = readFileSync(path.resolve(process.cwd(), "..", expected.source));
+      expect(createHash("sha256").update(source).digest("hex")).toBe(
+        expected.projection.sourceSha256,
       );
-      expect(copy).toBeDefined();
-      for (const [key, value] of Object.entries(row))
-        expect(copy![key]).toBe(
-          typeof value === "boolean" ? String(Number(value)) : String(value),
+      const original = (
+        JSON.parse(source.toString("utf8")).list as Record<string, unknown>[]
+      ).filter((row) => row.Genre === 22 && (row.Detail === 1 || row.Detail === 2));
+      expect(original).toHaveLength(6);
+      const projected = cafe.table("npet/petgifts");
+      expect(projected).toHaveLength(6);
+      for (const row of original) {
+        const gdpl = ["Genre", "Detail", "Particular", "Level"].map((key) =>
+          Number(row[key]),
         );
-    }
-    expect(pets.petGift([22, 1, 1, 1])!.ExtParam1).toBe(30);
-    expect(pets.petGift([22, 2, 3, 1])!.ExtParam1).toBe(80);
-    expect(pets.petGift([22, 3, 1, 1])).toBeNull();
-  });
+        expect(pets.petGift(gdpl)).toEqual({
+          GDPL: gdpl,
+          Detail: row.Detail,
+          ExtParam1: Number(row.ExtParam1),
+        });
+        const copy = projected.find((r) =>
+          gdpl.every(
+            (n, i) => n === Number(r[["Genre", "Detail", "Particular", "Level"][i]!]),
+          ),
+        );
+        expect(copy).toBeDefined();
+        for (const [key, value] of Object.entries(row))
+          expect(copy![key]).toBe(
+            typeof value === "boolean" ? String(Number(value)) : String(value),
+          );
+      }
+      expect(pets.petGift([22, 1, 1, 1])!.ExtParam1).toBe(30);
+      expect(pets.petGift([22, 2, 3, 1])!.ExtParam1).toBe(80);
+      expect(pets.petGift([22, 3, 1, 1])).toBeNull();
+    },
+  );
 
-  it("preserves the exact pet mission source rows, prerequisite chains and compound rewards", () => {
-    const root = path.resolve(process.cwd(), "resources/cafe");
-    const provenance = JSON.parse(
-      readFileSync(path.join(root, "provenance.json"), "utf8"),
-    );
-    const expected = provenance.files["npet/achievementother.txt"];
-    const source = readFileSync(path.resolve(process.cwd(), "..", expected.source));
-    expect(createHash("sha256").update(source).digest("hex")).toBe(
-      expected.projection.sourceSha256,
-    );
-    const lines = source.toString("utf8").split(/(?<=\n)/);
-    const ids = new Set<number>(expected.projection.filter.values);
-    const selected = lines
-      .slice(3)
-      .filter((line) => ids.has(Number(line.split("\t")[0])));
-    expect(selected).toHaveLength(75);
-    expect(readFileSync(path.join(root, "npet/achievementother.txt"), "utf8")).toBe(
-      [...lines.slice(0, 3), ...selected].join(""),
-    );
-    expect(pets.petMission(5001)).toMatchObject({
-      missionId: 5001,
-      achieveType: 241,
-      missionMax: [5],
-      assistparam: [1],
-      awardsList: [[15, 2, 1, 1, 50]],
-    });
-    expect(pets.petMission(5006)!.missionMax).toEqual([
-      5, 5001, 5002, 5003, 5004, 5005,
-    ]);
-    expect(pets.petMission(5204)).toMatchObject({
-      preMissionId: 5203,
-      missionMax: [500],
-      awardsList: [
-        [15, 2, 1, 1, 50],
-        [15, 1, 1, 1, 5000],
-      ],
-    });
-    for (const row of pets.petMissions()) {
-      if (row.preMissionId) expect(pets.petMission(row.preMissionId)).not.toBeNull();
-      expect(row.assistparam).toEqual([1]);
-      expect(Object.isFrozen(row.awardsList)).toBe(true);
-    }
-    expect(pets.petMissionsOfType(252)).toHaveLength(12);
-    expect(pets.petMission(5270)).toBeNull();
-  });
+  it.skipIf(!hasForensicInput("npet/achievementother.txt"))(
+    "preserves the exact pet mission source rows, prerequisite chains and compound rewards",
+    () => {
+      const root = path.resolve(process.cwd(), "resources/cafe");
+      const provenance = JSON.parse(
+        readFileSync(path.join(root, "provenance.json"), "utf8"),
+      );
+      const expected = provenance.files["npet/achievementother.txt"];
+      const source = readFileSync(path.resolve(process.cwd(), "..", expected.source));
+      expect(createHash("sha256").update(source).digest("hex")).toBe(
+        expected.projection.sourceSha256,
+      );
+      const lines = source.toString("utf8").split(/(?<=\n)/);
+      const ids = new Set<number>(expected.projection.filter.values);
+      const selected = lines
+        .slice(3)
+        .filter((line) => ids.has(Number(line.split("\t")[0])));
+      expect(selected).toHaveLength(75);
+      expect(readFileSync(path.join(root, "npet/achievementother.txt"), "utf8")).toBe(
+        [...lines.slice(0, 3), ...selected].join(""),
+      );
+      expect(pets.petMission(5001)).toMatchObject({
+        missionId: 5001,
+        achieveType: 241,
+        missionMax: [5],
+        assistparam: [1],
+        awardsList: [[15, 2, 1, 1, 50]],
+      });
+      expect(pets.petMission(5006)!.missionMax).toEqual([
+        5, 5001, 5002, 5003, 5004, 5005,
+      ]);
+      expect(pets.petMission(5204)).toMatchObject({
+        preMissionId: 5203,
+        missionMax: [500],
+        awardsList: [
+          [15, 2, 1, 1, 50],
+          [15, 1, 1, 1, 5000],
+        ],
+      });
+      for (const row of pets.petMissions()) {
+        if (row.preMissionId) expect(pets.petMission(row.preMissionId)).not.toBeNull();
+        expect(row.assistparam).toEqual([1]);
+        expect(Object.isFrozen(row.awardsList)).toBe(true);
+      }
+      expect(pets.petMissionsOfType(252)).toHaveLength(12);
+      expect(pets.petMission(5270)).toBeNull();
+    },
+  );
 });

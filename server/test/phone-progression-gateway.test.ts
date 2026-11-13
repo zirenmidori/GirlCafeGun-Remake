@@ -1,5 +1,6 @@
 import { once } from "node:events";
-import { mkdtemp, rm, rmdir } from "node:fs/promises";
+import { rm, rmdir } from "node:fs/promises";
+import { mkdtemp } from "./helpers/temp.js";
 import { createConnection, type Server, type Socket } from "node:net";
 import path from "node:path";
 

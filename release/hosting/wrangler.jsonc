@@ -1,7 +1,7 @@
 {
   "name": "gcg-release-downloads",
   "main": "worker.mjs",
-  "compatibility_date": "2026-11-13",
+  "compatibility_date": "2026-11-01",
   "workers_dev": true,
   "r2_buckets": [{"binding":"RELEASES","bucket_name":"gcg-offline-releases"}],
   "observability": {"enabled":false}

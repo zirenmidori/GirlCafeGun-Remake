@@ -6,6 +6,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 public final class ReleaseDownload {
     public interface Progress { void show(String text); }
+    public interface DetailedProgress extends Progress {
+        void bytes(long complete,long total);
+        void confirmInitialDownload(long totalDownloadBytes,long expandedBytes)throws IOException;
+    }
+    public static void bytes(Progress progress,long complete,long total){if(progress instanceof DetailedProgress)((DetailedProgress)progress).bytes(complete,total);}
+    public static void confirm(Progress progress,long total,long expanded)throws IOException{if(progress instanceof DetailedProgress)((DetailedProgress)progress).confirmInitialDownload(total,expanded);}
     private ReleaseDownload(){}
     public static File fetch(File dir,String id,String address,long size,String hash,Progress progress)throws IOException{
         File complete=ReleaseIO.child(dir,id+".zip"),part=ReleaseIO.child(dir,id+".part");
@@ -17,6 +23,7 @@ public final class ReleaseDownload {
             HttpsURLConnection con=null;
             try{
                 long offset=part.isFile()?part.length():0;
+                bytes(progress,offset,size);
                 if(offset==size){if(ReleaseIO.sha(part).equals(hash)){if(!part.renameTo(complete))throw new IOException("Cannot finish download");return complete;}part.delete();offset=0;}
                 URL url=new URL(address);if(!url.getProtocol().equals("https")||url.getUserInfo()!=null)throw new IOException("Only public HTTPS pack URLs are supported");
                 con=(HttpsURLConnection)url.openConnection(Proxy.NO_PROXY);con.setConnectTimeout(15000);con.setReadTimeout(30000);con.setInstanceFollowRedirects(false);con.setRequestProperty("Accept-Encoding","identity");
@@ -30,12 +37,12 @@ public final class ReleaseDownload {
                 long received=offset;
                 try(InputStream in=con.getInputStream();FileOutputStream out=new FileOutputStream(part,offset>0)){
                     byte[] buffer=new byte[131072];int n;long last=0;
-                    while((n=in.read(buffer))!=-1){received+=n;if(received>size)throw new IOException("Download exceeds signed size");out.write(buffer,0,n);if(System.currentTimeMillis()-last>500){progress.show("Downloading "+id+": "+received/1048576+" / "+size/1048576+" MiB");last=System.currentTimeMillis();}}
+                    while((n=in.read(buffer))!=-1){received+=n;if(received>size)throw new IOException("Download exceeds signed size");out.write(buffer,0,n);if(System.currentTimeMillis()-last>500){progress.show("Downloading "+id+": "+received/1048576+" / "+size/1048576+" MiB");bytes(progress,received,size);last=System.currentTimeMillis();}}
                     out.getFD().sync();
                 }
                 if(received!=size)throw new IOException("Download interrupted; progress was saved");
                 if(!ReleaseIO.sha(part).equals(hash)){part.delete();throw new IOException("Downloaded pack failed SHA-256 verification");}
-                if(!part.renameTo(complete))throw new IOException("Cannot publish verified download");return complete;
+                if(!part.renameTo(complete))throw new IOException("Cannot publish verified download");bytes(progress,size,size);return complete;
             }catch(IOException e){failure=e;}finally{if(con!=null)con.disconnect();}
         }
         throw failure==null?new IOException("Too many host redirects"):failure;

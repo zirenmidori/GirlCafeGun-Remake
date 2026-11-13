@@ -1,0 +1,201 @@
+{
+  "sourceSettingSha256": "89418a55f80c346b24673bfc2f0cabfa731a0b7c0b77913a1a19b0df6d540ef8",
+  "sourceSerializedSha256": "308da21bfea2a2fdf93d571583863a43b7972e47730ee79f4923010bbf654891",
+  "files": {
+    "ncafelevels.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/ncafelevels.txt",
+      "sha256": "b7fa318856e4532fc2f5e5aad63bbc3eba99a482ac57b5a19c18795ae25acc94",
+      "bytes": 5228
+    },
+    "coffeelist.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/coffeelist.txt",
+      "sha256": "099d2bb7834b9b89a574c39af6704a4161dc7d88256dc9ba9cc27b7cb579b03f",
+      "bytes": 2659
+    },
+    "coffeereset.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/coffeereset.txt",
+      "sha256": "8031e590a2e6e5a970fc1553b1f7304392e24c9c21271581e4264315b172c6ef",
+      "bytes": 64
+    },
+    "ncafeguests.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/ncafeguests.txt",
+      "sha256": "bc3097e81542bcce0403c18220092329bdfedd1d97ed83a97144005346845011",
+      "bytes": 3923
+    },
+    "comforteff.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/comforteff.txt",
+      "sha256": "4d15ffb1bcbeef5e7cf3f5a14417fbcdb2da04e574590f77867dc760f89c1b28",
+      "bytes": 404
+    },
+    "vigorattribute.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/vigorattribute.txt",
+      "sha256": "5eabf21521da11f72f8a3a8735c7cfee9f0a9f81f9dc90be7077e25632a4fe15",
+      "bytes": 1916
+    },
+    "ncafeitems.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/ncafeitems.txt",
+      "sha256": "48c685cac01e0f84a5096bd31ad7bcdc7cd3344f2f2f38a19e2dfc036460d029",
+      "bytes": 169714
+    },
+    "ncafethemes.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/ncafethemes.txt",
+      "sha256": "27028cbe5443129f17e20e2a05351628927425dbb9931e14666c161fd40d1be2",
+      "bytes": 21498
+    },
+    "ncafeshop.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/ncafeshop.txt",
+      "sha256": "816b2a48e568dd0796781d517ff7647877be3a156eb6ef9db9ad1c08da09905c",
+      "bytes": 1047
+    },
+    "visitmission.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/visitmission.txt",
+      "sha256": "a30c7d385ed761590dd8450dbbec15521877f69d59574ac3baac6342b1ce554b",
+      "bytes": 252
+    },
+    "visitaward.txt": {
+      "source": "tools/content-recovery/candidate/text/ncafe/visitaward.txt",
+      "sha256": "687c8bcf5e9a27fa8f4c60a8cfdd776cb1b6cbc7fde0032ea0b8cf8bdf28e156",
+      "bytes": 393
+    },
+    "npet/petfoodinfo.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/petfoodinfo.txt",
+      "sha256": "d08d855d43a47f9aefde4ebc3aa0a5e4bf418ab5e987825882380dc1b5f9036e",
+      "bytes": 1222
+    },
+    "npet/petinfo.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/petinfo.txt",
+      "sha256": "8aed1332492d46a2017f431dd38d3c75e3135d943483727f7da723d14f20e459",
+      "bytes": 5591
+    },
+    "npet/foodboxs.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/foodboxs.txt",
+      "sha256": "8205a8c67585b0d9c9ef7ec993771f30488f0dd6636fcde13aacd72bb3c03c51",
+      "bytes": 95
+    },
+    "npet/bufffood.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/bufffood.txt",
+      "sha256": "f6786f496ac8cb630c449708414082e603fc5834bb425a44da73b51e34e9abfd",
+      "bytes": 426
+    },
+    "npet/lovelevel.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/lovelevel.txt",
+      "sha256": "7836c8409121d2730a5a9f8cfe3609c373112528ccb6467a3100a9ddc6481f8c",
+      "bytes": 656
+    },
+    "npet/areaunlock.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/areaunlock.txt",
+      "sha256": "54f9e260cd6da75abb8876f8d1302a2a2c951a25d65dbc2200dd4822dd5ba511",
+      "bytes": 110
+    },
+    "npet/giveback.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/giveback.txt",
+      "sha256": "4952d58016f8cba85e4eb534af9704582d161abbcfd8834bfc8b863c612ee77d",
+      "bytes": 951
+    },
+    "npet/tourmission.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/tourmission.txt",
+      "sha256": "cd9b89bd2d8af65ff3f02134cb48c086b4d1cc4f4ae2c8f90cea98ef550468cf",
+      "bytes": 875
+    },
+    "npet/tourarea.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/tourarea.txt",
+      "sha256": "0fa28355ba399cf724d8bd119492f1dd44858ef45f06fc392947f7a5e5b6a973",
+      "bytes": 923
+    },
+    "npet/tourreward.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/tourreward.txt",
+      "sha256": "4fe79bea49a4cb8af8bf25c0bc935a11edf5b04721e04afca979c3f1cd64f589",
+      "bytes": 3444
+    },
+    "npet/petrikiaward.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/petrikiaward.txt",
+      "sha256": "7b9a9b5b99ac4ca323a82acebbdffc5503494a0e1562ab2c38e83d73dd601174",
+      "bytes": 1791
+    },
+    "npet/bufflist.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/bufflist.txt",
+      "sha256": "79d9f79904e9cbdc179b951a41ebd8f2e3d3a7ed2112256d8c668f41b66eaca1",
+      "bytes": 4965
+    },
+    "npet/petgacha.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/petgacha.txt",
+      "sha256": "378217fdd3d24038ddb12be04073891277640468eeaeba6fdf35eeecdd67ee0d",
+      "bytes": 663
+    },
+    "npet/petspeed.txt": {
+      "source": "tools/content-recovery/candidate/text/npet/petspeed.txt",
+      "sha256": "405e73c3a1c3aa619ee0232c48976350b333a2206d2da40342aedba64bb9f9c0",
+      "bytes": 82
+    },
+    "playerexp.txt": {
+      "source": "tools/content-recovery/candidate/text/player/playerexp.txt",
+      "sha256": "1f861d815ce27f12a6a9d148e292a90a3379d5070301fce16be4ccf10f0b0586",
+      "bytes": 6526
+    },
+    "riki.txt": {
+      "source": "tools/content-recovery/candidate/text/guide/riki.txt",
+      "sha256": "28454cbb0c1d287f2a0b7881ff31a5c76aaa0fef33f82eab39b2fb3bff0cdb86",
+      "bytes": 139676
+    },
+    "npet/petgifts.txt": {
+      "source": "tools/content-recovery/candidate/tables/ItemList.json",
+      "sha256": "a09c96caa29689b7e9c6860ee4b182e0934c9783e0631c32bacc81c22eec300d",
+      "bytes": 988,
+      "projection": {
+        "sourceFormat": "decoded-json",
+        "sourceSha256": "c3e273105b861f05de2849de405b37bb6f0e53cb6431854b7775d3f8dc90397f",
+        "array": "list",
+        "filter": {
+          "Genre": 22,
+          "Detail": [1, 2]
+        },
+        "rows": 6,
+        "columns": [
+          "Genre",
+          "Detail",
+          "Particular",
+          "Level",
+          "RarityColor",
+          "AutoUse",
+          "ClassName",
+          "DescriptionIndex",
+          "SellingPrice",
+          "IconId",
+          "awardIconId",
+          "ExtParam1",
+          "ExtParam2",
+          "ExtParam3",
+          "ShowType",
+          "TagIcon",
+          "DisableDropWay",
+          "LimitTime",
+          "ExpiredDelete"
+        ],
+        "booleanEncoding": "0/1"
+      }
+    },
+    "npet/achievementother.txt": {
+      "source": "tools/content-recovery/candidate/text/mission/achievementother.txt",
+      "sha256": "637469a6ef804ce28820de44fa0a332152252f5007e93a377e7277cf821cb7e3",
+      "bytes": 10658,
+      "projection": {
+        "sourceFormat": "text-row-selection",
+        "sourceSha256": "b9083515390e18b41a91f6384c41c4ee78648989f6763e3ecf7d5d9132cf3de2",
+        "headerRows": 3,
+        "filter": {
+          "column": "missionId",
+          "values": [
+            5001, 5002, 5003, 5004, 5005, 5006, 5201, 5202, 5203, 5204, 5205, 5206,
+            5207, 5208, 5209, 5210, 5211, 5212, 5213, 5214, 5215, 5216, 5217, 5218,
+            5219, 5220, 5221, 5222, 5223, 5224, 5225, 5226, 5227, 5228, 5229, 5230,
+            5231, 5232, 5233, 5234, 5235, 5236, 5237, 5238, 5239, 5240, 5241, 5242,
+            5243, 5244, 5245, 5246, 5247, 5248, 5249, 5250, 5251, 5252, 5253, 5254,
+            5255, 5256, 5257, 5258, 5259, 5260, 5261, 5262, 5263, 5264, 5265, 5266,
+            5267, 5268, 5269
+          ]
+        },
+        "rows": 75
+      }
+    }
+  }
+}

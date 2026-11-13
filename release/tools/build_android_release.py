@@ -14,6 +14,8 @@ BASE_SHA='d9da0751b540d05a535dd76704a355110b6d63bcf30d8b876d63f3cfdf7c9b78'
 APP_ID='com.zirenmidori.gcg.offline'
 OLD_ID='com.yricky.gcg2.offline'
 CERT='b831f43412655a31d4df6938f4ac7c922fd853b724d968678c5e5428f8a20093'
+ICON_APK=ROOT/'translation/sources/global-1.0.9.apk'
+ICON_SHA='dc96053cd8ea2f3ca7c3f48571f490a363d36a7298f98d1b39f91cdd033c183c'
 JAVA=Path(os.environ.get('GCG_JAVA',r'C:\Program Files\Eclipse Adoptium\jdk-21.0.2.13-hotspot\bin\java.exe'))
 SDK=Path(os.environ.get('GCG_ANDROID_SDK',r'C:\Program Files (x86)\Android\android-sdk'))
 BT=SDK/'build-tools/32.0.0'
@@ -65,6 +67,9 @@ def patch_manifest(data,version_code=10137,version_name='1.1.36'):
         return None
     def set_attrs(raw,changes):
         rows=attrs(raw);keys={name for name,_ in changes};out=[a for a in rows if pool.values[struct.unpack_from('<I',a,4)[0]] not in keys]+[v for _,v in changes]
+        # Android's resource lookup merges sorted attribute IDs with styleable
+        # IDs. aapt's textual dump alone does not detect out-of-order attributes.
+        out.sort(key=lambda a:pool.ids[struct.unpack_from('<I',a,4)[0]] if struct.unpack_from('<I',a,4)[0]<len(pool.ids) else 0)
         result=bytearray(raw[:36]+b''.join(out));struct.pack_into('<I',result,4,len(result));struct.pack_into('<H',result,28,len(out));return bytes(result)
     def element(name,rows):
         index=pool.index(name);start=struct.pack('<4I6H',0,NO_INDEX,NO_INDEX,index,20,20,len(rows),0,0,0);end=struct.pack('<4I',0,NO_INDEX,NO_INDEX,index)
@@ -86,7 +91,7 @@ def patch_manifest(data,version_code=10137,version_name='1.1.36'):
             elif name=='application':
                 if not install_permission:
                     permit=element('uses-permission',[string('name',0x01010003,'android.permission.REQUEST_INSTALL_PACKAGES')]);nodes.extend(permit)
-                raw=set_attrs(raw,[('label',string('label',0x01010001,'GCG Offline')),('debuggable',scalar('debuggable',0x0101000f,0x12,0)),('allowBackup',scalar('allowBackup',0x01010280,0x12,0))]);in_app=True
+                raw=set_attrs(raw,[('label',string('label',0x01010001,'Girl Cafe Gun')),('debuggable',scalar('debuggable',0x0101000f,0x12,0)),('allowBackup',scalar('allowBackup',0x01010280,0x12,0))]);in_app=True
             elif name=='activity':
                 component=attr_value(rows,'name')
                 if component==UNITY:raw=set_attrs(raw,[('exported',scalar('exported',0x01010010,0x12,0))]);found.add('unity')
@@ -97,7 +102,17 @@ def patch_manifest(data,version_code=10137,version_name='1.1.36'):
             receiver=element('receiver',[string('name',0x01010003,RECEIVER),scalar('exported',0x01010010,0x12,0),string('process',0x01010011,':releaseupdater')]);nodes.extend([*activity,*receiver]);in_app=False
         nodes.append(raw)
     need(found=={'unity','boot','service'} and not in_app,'Missing existing reviewed launcher/service')
-    result=ax.make_chunk(3,8,b''.join([*pool.chunks(),*nodes]));ax.split_chunks(result);return result
+    result=ax.make_chunk(3,8,b''.join([*pool.chunks(),*nodes]));verify_attribute_order(result);return result
+
+def verify_attribute_order(data):
+    chunks=ax.split_chunks(data);pool=ax.StringPool(chunks[0][1],chunks[1][1])
+    for kind,raw in chunks:
+        if kind!=ax.START:continue
+        count=struct.unpack_from('<H',raw,28)[0];ids=[]
+        for i in range(count):
+            key=struct.unpack_from('<I',raw,40+i*20)[0]
+            ids.append(pool.ids[key] if key<len(pool.ids) else 0)
+        need(ids==sorted(ids),'Android resource lookup requires sorted attribute IDs: '+pool.values[struct.unpack_from('<I',raw,20)[0]])
 
 def patch_resource_package(data):
     out=bytearray(data);kind,header,size=struct.unpack_from('<HHI',data);need(kind==2 and size==len(data),'Invalid Android resource table')
@@ -114,7 +129,9 @@ def patch_resource_package(data):
 def compile_dex(stage):
     sources=sorted((RELEASE/'android/src/main/java').rglob('*.java'));need(sources and ANDROID_JAR.is_file(),'Android Java inputs/SDK missing')
     classes=stage/'classes';classes.mkdir()
-    run([JAVA.with_name('javac.exe'),'-encoding','UTF-8','--release','8','-classpath',ANDROID_JAR,'-d',classes,*sources])
+    # JDK21 otherwise emits unnamed captured-constructor MethodParameters that
+    # older Android D8 cannot parse. Preserve real parameter names explicitly.
+    run([JAVA.with_name('javac.exe'),'-parameters','-encoding','UTF-8','--release','8','-classpath',ANDROID_JAR,'-d',classes,*sources])
     run([JAVA,'-cp',BT/'lib/d8.jar','com.android.tools.r8.D8','--min-api','24','--lib',ANDROID_JAR,'--output',stage,*sorted(classes.rglob('*.class'))])
     data=(stage/'classes.dex').read_bytes();need(data[:4]==b'dex\n','Compiler did not produce DEX')
     for cls in [BOOT,SERVICE,UPDATE,RECEIVER,'com.zirenmidori.gcg.release.ReleaseBridge']:need(('L'+cls.replace('.','/')+';').encode() in data,'DEX component missing: '+cls)
@@ -133,6 +150,7 @@ def raw_member(source,target,info):
     target.filelist.append(clone);target.NameToInfo[clone.filename]=clone;target.start_dir=target.fp.tell();target._didModify=True
 
 def validate_shell(apk,version_code):
+    with zipfile.ZipFile(apk) as z:verify_attribute_order(z.read('AndroidManifest.xml'))
     xml=run([BT/'aapt.exe','dump','xmltree',apk,'AndroidManifest.xml']);badging=run([BT/'aapt.exe','dump','badging',apk]);resources=run([BT/'aapt.exe','dump','resources',apk])
     need(f"package: name='{APP_ID}' versionCode='{version_code}'" in badging and "sdkVersion:'24'" in badging and "targetSdkVersion:'29'" in badging,'Release Android identity/API differs')
     need("launchable-activity: name='"+BOOT+"'" in badging,'Release bootstrap is not the launcher')
@@ -140,11 +158,13 @@ def validate_shell(apk,version_code):
     need('android.permission.REQUEST_INSTALL_PACKAGES' in xml and 'android.permission.WRITE_EXTERNAL_STORAGE' not in xml and 'android.permission.READ_EXTERNAL_STORAGE' not in xml,'Release permission scope differs')
     for key in ['debuggable','allowBackup']:need(re.search(r'android:'+key+r'[^\n]*0x0\b',xml),'Unsafe application attribute '+key)
     need(APP_ID in resources and OLD_ID not in resources,'Resource package name differs')
+    need("application-label:'Girl Cafe Gun'" in badging,'Launcher name differs')
     return {'package':APP_ID,'versionCode':version_code,'minApi':24,'targetApi':29,'abis':['arm64-v8a','armeabi-v7a'],'appDebuggable':False,'androidAutoBackup':False,'broadStoragePermission':False,'userApprovedApkUpdates':True,'resourcePackageId':127}
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',type=Path,default=BASE);p.add_argument('--input-sha256',default=BASE_SHA);p.add_argument('--client-overlay',type=Path,default=RELEASE/'work/client/apk-overlay.json');p.add_argument('--server-payload',type=Path);p.add_argument('--manifest',type=Path,default=RELEASE/'android/assets/gcg-release/manifest.json');p.add_argument('--manifest-signature',type=Path,default=RELEASE/'android/assets/gcg-release/manifest.sig');p.add_argument('--output',type=Path,default=RELEASE/'artifacts/GCG-Offline-v0.1.0.apk');p.add_argument('--version-code',type=int,default=10137);p.add_argument('--version-name',default='1.1.36');p.add_argument('--validate-shell',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',type=Path,default=BASE);p.add_argument('--input-sha256',default=BASE_SHA);p.add_argument('--icon-apk',type=Path,default=ICON_APK);p.add_argument('--icon-sha256',default=ICON_SHA);p.add_argument('--client-overlay',type=Path,default=RELEASE/'work/client/apk-overlay.json');p.add_argument('--server-payload',type=Path);p.add_argument('--manifest',type=Path,default=RELEASE/'android/assets/gcg-release/manifest.json');p.add_argument('--manifest-signature',type=Path,default=RELEASE/'android/assets/gcg-release/manifest.sig');p.add_argument('--output',type=Path,default=RELEASE/'artifacts/GCG-Offline-v0.1.0.apk');p.add_argument('--version-code',type=int,default=10137);p.add_argument('--version-name',default='1.1.36');p.add_argument('--validate-shell',action='store_true');args=p.parse_args()
     need(file_sha(args.input)==args.input_sha256,'Owned input APK SHA-256 differs')
+    need(args.icon_apk.is_file() and file_sha(args.icon_apk)==args.icon_sha256,'Hash-pinned official English icon donor is required; pass --icon-apk if stored elsewhere')
     input_badging=run([BT/'aapt.exe','dump','badging',args.input]);old_version=re.search(r"versionCode='(\d+)'",input_badging)
     need(old_version is not None and args.version_code>int(old_version[1]),'Release versionCode must increase over the owned input APK')
     work=RELEASE/'work';work.mkdir(exist_ok=True)
@@ -159,6 +179,10 @@ def main():
                 elif isinstance(selected[key],str) and selected[key].startswith(('http://','https://')):selected[key]='http://127.0.0.1:28080/'
             env['mapEnvir']={'bili':selected};env['cur']='bili'
             replacements={'AndroidManifest.xml':patch_manifest(original.read('AndroidManifest.xml'),args.version_code,args.version_name),'resources.arsc':patch_resource_package(original.read('resources.arsc')),'classes2.dex':dex,'assets/envir.json':json.dumps(env,separators=(',',':')).encode('utf8')}
+            with zipfile.ZipFile(args.icon_apk) as icon_source:
+                icon_names=[n for n in original.namelist() if n.startswith('res/mipmap-') and n.endswith(('/app_icon.png','/app_icon_round.png'))]
+                need(len(icon_names)==12,'Unexpected regular/round launcher density set')
+                for name in icon_names:replacements[name]=icon_source.read(name)
             if args.validate_shell:
                 test=stage/'shell.apk'
                 with zipfile.ZipFile(test,'w') as z:
@@ -174,7 +198,7 @@ def main():
                 need(not name.endswith('.dex') and (not name.startswith('lib/') or name in {'lib/arm64-v8a/libil2cpp.so','lib/armeabi-v7a/libil2cpp.so'}),'Unsupported executable replacement '+name)
                 file=Path(row['file']);file=file if file.is_absolute() else ROOT/file;data=file.read_bytes();need(sha(data)==row['sha256'],'Client replacement digest differs '+name);replacements[name]=data
             crypto=load_module(RELEASE/'tools/release_crypto.py','android_release_crypto');crypto.verify(args.manifest,args.manifest_signature)
-            manifest=json.loads(args.manifest.read_text());need(manifest['schemaVersion']==1 and manifest['kind']=='full' and manifest['packageName']==APP_ID and manifest['minApkVersionCode']==args.version_code,'Signed bootstrap identity differs')
+            manifest=json.loads(args.manifest.read_text());need(manifest['schemaVersion']==1 and manifest['kind']=='full' and manifest['packageName']==APP_ID and 0<manifest['minApkVersionCode']<=args.version_code,'Signed bootstrap identity differs')
             for name,path in {'assets/gcg-release/manifest.json':args.manifest,'assets/gcg-release/manifest.sig':args.manifest_signature,'assets/gcg-release/publickey.der':crypto.PUBLIC,'assets/gcg-server/payload.zip':args.server_payload}.items():replacements[name]=path.read_bytes()
             replacements['assets/gcg-server/payload.sha256']=(sha(replacements['assets/gcg-server/payload.zip'])+'\n').encode('ascii')
             unsigned,aligned,signed=(stage/n for n in ['unsigned.apk','aligned.apk','signed.apk'])
@@ -185,7 +209,7 @@ def main():
                     else:raw_member(original,target,info)
                 for name in sorted(set(replacements)-set(original.namelist())):target.writestr(name,replacements[name],compress_type=zipfile.ZIP_DEFLATED)
         run([BT/'zipalign.exe','-f','-p','4',unsigned,aligned]);run([JAVA,'-jar',BT/'lib/apksigner.jar','sign','--ks',crypto.KEYSTORE,'--ks-key-alias',crypto.ALIAS,'--ks-pass','file:'+str(crypto.PASSWORD),'--v1-signing-enabled','true','--v2-signing-enabled','true','--v3-signing-enabled','true','--v4-signing-enabled','false','--out',signed,aligned])
-        verification=run([JAVA,'-jar',BT/'lib/apksigner.jar','verify','--verbose','--print-certs',signed]);need(re.findall(r'Signer #\d+ certificate SHA-256 digest:\s*([0-9a-f]+)',verification)==[CERT],'Release signing certificate differs')
+        verification=run([JAVA,'-jar',BT/'lib/apksigner.jar','verify','--verbose','--print-certs','--min-sdk-version','23',signed]);(RELEASE/'reports/android-signer-validation.txt').write_text(verification,encoding='utf8');need(re.findall(r'Signer #\d+ certificate SHA-256 digest:\s*([0-9a-f]+)',verification)==[CERT],'Release signing certificate differs')
         for scheme in ['v1','v2','v3']:need(re.search('Verified using '+scheme+r' scheme[^\n]*:\s*true',verification),'APK signing scheme missing '+scheme)
         run([BT/'zipalign.exe','-c','-p','4',signed]);proof=validate_shell(signed,args.version_code)
         with zipfile.ZipFile(args.input) as before,zipfile.ZipFile(signed) as after:
