@@ -27,8 +27,7 @@ available. Both rewards start at their normal base level. Development inventorie
 are not included.
 
 This repository contains source code, build/update tools and documentation.
-The game APK, artwork, audio, video, native game binaries and data packs are
-distributed separately and are not included here.
+The game APK, artwork, audio, video, native game binaries and data packs are not included here.
 
 ## Manual data setup
 
@@ -51,7 +50,7 @@ Do not copy another player's app-private data or saves into the release.
 
 ## Install updates
 
-Update files can be found on Discord under **#update**, or you can **create
+Update files can be installed, or you can **create
 updates yourself** using the included tools. An update is a `.gcgupdate` file
 containing changed resources and, when necessary, an app delta or server update.
 Use a package made for your currently installed base release.
