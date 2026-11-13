@@ -1,4 +1,41 @@
-# Release 0.1.0 validation
+# Release validation
+
+## Release 0.1.1
+
+This update repairs the client's offline login gate. Unity's reported network
+availability previously blocked login before trying the on-phone server when
+Wi-Fi and mobile data were unavailable. The bypass is limited to the validated
+local gateway at `127.0.0.1:31400`; actual socket failures retain normal error
+handling. It does not change native libraries, ABI support or the Android API
+minimum.
+
+The release also changes artifact hosting to the `zirenmidori.workers.dev`
+subdomain and the manual update channel to the renamed `GirlCafeGun-Remake`
+source repository. The signed 0.1.0-to-0.1.1 package pairs the APK delta with
+changed resources while preserving profiles and unchanged data packs.
+
+Lua checks exercise the patched `Connect()` path with no reported network,
+actual connection failure, invalid/mixed/remote gateways, a disabled server and
+the original online remote behavior. The generated bundle changes only
+`UI_Login.lua`; its other 833 Unity objects remain byte-identical. The signed
+0.1.1 APK and paired resource update were installed on the ARM64 phone. The
+original error was reproduced with no active network; both login and login
+after a full app/server restart then reached the opening story without a
+network connection. Normal protocol checks before and after retained the same
+level-1 player, inventory and unclaimed welcome rewards. The game was left
+closed, and the separate private test app was untouched.
+
+All 31 native libraries and the server payload are byte-identical to 0.1.0.
+The signed delta reconstructed the exact 405,366,349-byte target APK locally;
+its paired resources were applied through the game's update-folder menu on the
+phone. Android API 24 and both ARM library sets remain supported. All 34 packs
+passed headers and exact byte-range checks on the new host. Both changed packs,
+the complete APK and the 8,217,867-byte signed update matched their local SHA-256
+hashes; APK ranges across the storage-part boundary also matched. Public
+metadata matched exactly, and private APK part URLs returned 404. Unchanged
+packs retain the complete SHA-256 verification recorded for 0.1.0.
+
+## Release 0.1.0
 
 The clean APK completed its full automatic data installation on the ARM64
 playtest phone. Download approval, postponement/retry, overall progress, partial

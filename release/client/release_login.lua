@@ -1,5 +1,19 @@
 -- Release login: one private Android account and one local endpoint.
 local RELEASE_ENDPOINT = 'http://127.0.0.1:28080'
+local function ReleaseLocalGateway(server)
+    if type(server) ~= 'table' or server.ip ~= '127.0.0.1'
+        or type(server.port) ~= 'table' or #server.port == 0 then return false end
+    for _, port in ipairs(server.port) do
+        if port ~= 31400 then return false end
+    end
+    return true
+end
+-- OS Internet availability does not describe connectivity to Android loopback.
+-- Connect still performs the real socket attempt and reports its failure.
+function tbClass:IsReleaseLocalGateway()
+    return ReleaseLocalGateway(self.pSelected)
+end
+
 local function ReleaseAccount()
     local bridge = U3D.AndroidJavaClass('com.zirenmidori.gcg.release.ReleaseBridge')
     bridge:CallStatic('prepareAccount')
@@ -84,11 +98,7 @@ function tbClass:ApplyServerList()
             local valid = type(servers) == 'table' and #servers > 0
             if valid then
                 for _, server in ipairs(servers) do
-                    if type(server) ~= 'table' or server.ip ~= '127.0.0.1'
-                        or type(server.port) ~= 'table' or #server.port == 0 then valid = false; break end
-                    for _, port in ipairs(server.port) do
-                        if port ~= 31400 then valid = false; break end
-                    end
+                    if not ReleaseLocalGateway(server) then valid = false; break end
                 end
             end
             if valid then self:ApplyServerListSuccess(); self.nFailTimesApplyServerList = 0; return end

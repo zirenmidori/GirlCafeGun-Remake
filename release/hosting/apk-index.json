@@ -16,6 +16,22 @@
           "sha256": "e7729cd2c8c0cb38388956e4510c8ee5d6a208aa63580484144f581a37313072"
         }
       ]
+    },
+    "0.1.1/GCG-Offline-v0.1.1.apk": {
+      "size": 405366349,
+      "sha256": "a7f4af3b720c5b538e65e8f44c2712942350b16e62f6fcd2817ab8de340f731e",
+      "parts": [
+        {
+          "key": "_apk/0.1.1/a7f4af3b720c5b538e65e8f44c2712942350b16e62f6fcd2817ab8de340f731e/part-000.bin",
+          "size": 209715200,
+          "sha256": "cb17ca8271f9604b162eea812f0e0996953881c6cad207c328f915d121969ba0"
+        },
+        {
+          "key": "_apk/0.1.1/a7f4af3b720c5b538e65e8f44c2712942350b16e62f6fcd2817ab8de340f731e/part-001.bin",
+          "size": 195651149,
+          "sha256": "e89c9d4ddb87aad626a5e803b5f444e88e10516e2bf3e6537f8bcc220212e0f0"
+        }
+      ]
     }
   }
 }

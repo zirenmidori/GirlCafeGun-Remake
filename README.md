@@ -21,6 +21,10 @@ download and verification finish. Choosing **Not now** postpones the download;
 an interrupted download can be resumed. Once the initial data is installed,
 ordinary play does not require an Internet connection.
 
+The local server also works with Wi-Fi and mobile data switched off. Internet
+access is needed for the initial automatic data download and manual online update
+checks, rather than for ordinary login or play.
+
 Each new player receives a one-time welcome mail containing Legendary Neptune
 and the Astral Covenant weapon. Claim it from the in-game mailbox when mail is
 available. Both rewards start at their normal base level. Development inventories
@@ -70,6 +74,19 @@ ask you to allow this app to request installation. Never uninstall the game to
 apply an update: uninstalling can remove the local profile. Updates preserve the
 profile, verify their publisher and content, and recover interrupted resource
 transactions before the game starts.
+
+### Updating from 0.1.0 to 0.1.1
+
+Import `GCG-Offline-0.1.0-to-0.1.1.gcgupdate` through the login **Update** screen.
+It contains the offline-login repair, the matching resource changes and an APK
+delta with the new download and update addresses. It reuses the installed data
+and preserves the local player; the complete initial download is not needed.
+
+If you install the full 0.1.1 APK over 0.1.0 manually, also import that paired
+update to bring the existing resources to 0.1.1. Installing the APK alone does
+not replace resources already stored in the game's `files/` directory. Keep the
+app installed throughout; do not clear its data. A fresh 0.1.1 installation uses
+the matching automatic download or the complete 0.1.1 manual data set instead.
 
 ## Create an update
 

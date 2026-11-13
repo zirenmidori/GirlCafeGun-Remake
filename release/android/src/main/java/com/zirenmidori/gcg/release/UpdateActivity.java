@@ -21,7 +21,7 @@ import org.json.*;
 /** User-initiated updater, isolated from the Unity and Node processes. */
 public final class UpdateActivity extends Activity {
     private static final int PICK=100,INSTALL_PERMISSION=101;
-    private static final String CHANNEL="https://raw.githubusercontent.com/zirenmidori/GirlCafeGun-Offline/main/channel.json";
+    private static final String CHANNEL="https://raw.githubusercontent.com/zirenmidori/GirlCafeGun-Remake/main/channel.json";
     private final ExecutorService worker=Executors.newSingleThreadExecutor();
     private TextView status;private LinearLayout actions;private boolean busy,closed;private File waitingApk;
     @Override public void onCreate(Bundle saved){

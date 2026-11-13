@@ -9,6 +9,7 @@ import argparse
 import hashlib
 from html import escape
 import json
+import posixpath
 import re
 from urllib.parse import urlsplit
 
@@ -32,9 +33,36 @@ def checked(path, size, sha256):
         raise ValueError("Artifact bytes differ: " + path.name)
 
 
+def pack_links(release_id, packs):
+    """Use immutable existing pack paths even when the APK release advances."""
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", release_id):
+        raise ValueError("Invalid release ID")
+    links = []
+    seen = set()
+    origin = None
+    for pack in packs:
+        identifier = pack["id"]
+        if not re.fullmatch(r"data-\d{3}", identifier) or identifier in seen:
+            raise ValueError("Invalid or duplicate pack ID")
+        seen.add(identifier)
+        url = urlsplit(pack["url"])
+        if (url.scheme != "https" or not url.hostname or url.username is not None
+                or url.password is not None or url.query or url.fragment
+                or not re.fullmatch(r"/[A-Za-z0-9][A-Za-z0-9._-]{0,79}/" + re.escape(identifier) + r"\.zip", url.path)):
+            raise ValueError("Unsafe pack URL or mismatched pack filename")
+        current_origin = (url.hostname.lower(), url.port or 443)
+        if origin is None:
+            origin = current_origin
+        elif current_origin != origin:
+            raise ValueError("Relative pack links require one HTTPS origin")
+        links.append(posixpath.relpath(url.path, "/" + release_id))
+    return links
+
+
 def render(release_id, apk_name, apk_size, packs, expanded):
     total = sum(p["size"] for p in packs)
-    rows = "\n".join(f'<tr><td><a href="{escape(p["id"])}.zip">{escape(p["id"])}.zip</a></td><td>{p["size"] / 1048576:.1f} MiB</td></tr>' for p in packs)
+    links = pack_links(release_id, packs)
+    rows = "\n".join(f'<tr><td><a href="{escape(href)}">{escape(p["id"])}.zip</a></td><td>{p["size"] / 1048576:.1f} MiB</td></tr>' for p, href in zip(packs, links))
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Girl Cafe Gun {escape(release_id)}</title>
@@ -55,7 +83,7 @@ table{{width:100%;border-collapse:collapse}}th,td{{padding:6px 10px;text-align:l
 </tbody></table>
 <h2>Verify the release</h2>
 <p><a href="checksums.txt">SHA-256 checksums</a> · <a href="manifest.json">Signed manifest</a> · <a href="manifest.sig">Manifest signature</a> · <a href="publickey.der">Publisher public key</a></p>
-<p><small>The APK and every data pack must belong to the same release. Keep your installed app when applying future updates so your local profile is preserved.</small></p>
+<p><small>Use all data packs listed for this release. An unchanged pack may be stored under an earlier release path. Keep your installed app when applying future updates so your local profile is preserved.</small></p>
 </main></body></html>
 '''
 
@@ -84,10 +112,9 @@ def main():
     packs = manifest["packs"]
     if not packs or len(packs) > 1024 or len({p["id"] for p in packs}) != len(packs):
         raise ValueError("Invalid pack inventory")
+    pack_links(release_id, packs)
     checksums = [(report["sha256"], args.apk.name)]
     for pack in packs:
-        if not re.fullmatch(r"data-\d{3}", pack["id"]) or urlsplit(pack["url"]).scheme != "https" or urlsplit(pack["url"]).path != f'/{release_id}/{pack["id"]}.zip':
-            raise ValueError("Pack URL and public release route differ")
         filename = pack["id"] + ".zip"
         checked(args.data_dir / filename, pack["size"], pack["sha256"])
         checksums.append((pack["sha256"], filename))

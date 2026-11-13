@@ -15,6 +15,12 @@ def patch_script(name, data):
         s=s.split('\0SPLIT')[0]
         s=re.sub(r'\tself\.btnSwitch\.onClick:AddListener\(function\(\).*?\n\tend\);', '\tself.btnSwitch.gameObject:SetActive(false);',s,count=1,flags=re.S)
         s=replace_one(s, '\tif Game.Utils.TryOpenGM() and not Game.GM.Get() then \n\t\tGM:LoadUI(); \n\t\tGM.view:Register() \n\tend', '')
+        # Unity reports no Internet interface when both radios are disabled,
+        # although Android loopback TCP remains usable. Bypass that advisory
+        # only for the release's validated on-phone gameplay gateway; retain
+        # the original TCP connection and failure callback below this guard.
+        s=replace_one(s, '\tif not Game.Login.IsNetworkReachability() then',
+            '\tif not self:IsReleaseLocalGateway() and not Game.Login.IsNetworkReachability() then')
         # Account verification never consults test PlayerPrefs identities.
         start=s.index('function tbClass:Verify()')
         end=s.index('\nfunction ',start+1)

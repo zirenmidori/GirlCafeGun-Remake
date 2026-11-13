@@ -1,8 +1,8 @@
-# Girl Cafe Gun Offline
+# Girl Cafe Gun Re:make
 
-Release **0.1.0**. See [validation and compatibility](docs/release-status.md).
+See [validation and compatibility](docs/release-status.md).
 
-GCG Offline runs its game server on the Android device. A PC, USB connection and
+GCG Re:make runs its game server on the Android device. A PC, USB connection and
 server-address configuration are not needed. The first login creates a fresh
 local player; later logins return to that same player. The release contains no
 development profiles or personal saves, and no GM console.
@@ -21,14 +21,17 @@ download and verification finish. Choosing **Not now** postpones the download;
 an interrupted download can be resumed. Once the initial data is installed,
 ordinary play does not require an Internet connection.
 
+The local server also works with Wi-Fi and mobile data switched off. Internet
+access is needed for the initial automatic data download and manual online update
+checks, rather than for ordinary login or play.
+
 Each new player receives a one-time welcome mail containing Legendary Neptune
 and the Astral Covenant weapon. Claim it from the in-game mailbox when mail is
 available. Both rewards start at their normal base level. Development inventories
 are not included.
 
 This repository contains source code, build/update tools and documentation.
-The game APK, artwork, audio, video, native game binaries and data packs are
-distributed separately and are not included here.
+The game APK, artwork, audio, video, native game binaries and data packs are not included here.
 
 ## Manual data setup
 
@@ -51,7 +54,7 @@ Do not copy another player's app-private data or saves into the release.
 
 ## Install updates
 
-Update files can be found on Discord under **#update**, or you can **create
+Update files can be installed, or you can **create
 updates yourself** using the included tools. An update is a `.gcgupdate` file
 containing changed resources and, when necessary, an app delta or server update.
 Use a package made for your currently installed base release.
@@ -71,6 +74,19 @@ ask you to allow this app to request installation. Never uninstall the game to
 apply an update: uninstalling can remove the local profile. Updates preserve the
 profile, verify their publisher and content, and recover interrupted resource
 transactions before the game starts.
+
+### Updating from 0.1.0 to 0.1.1
+
+Import `GCG-Offline-0.1.0-to-0.1.1.gcgupdate` through the login **Update** screen.
+It contains the offline-login repair, the matching resource changes and an APK
+delta with the new download and update addresses. It reuses the installed data
+and preserves the local player; the complete initial download is not needed.
+
+If you install the full 0.1.1 APK over 0.1.0 manually, also import that paired
+update to bring the existing resources to 0.1.1. Installing the APK alone does
+not replace resources already stored in the game's `files/` directory. Keep the
+app installed throughout; do not clear its data. A fresh 0.1.1 installation uses
+the matching automatic download or the complete 0.1.1 manual data set instead.
 
 ## Create an update
 

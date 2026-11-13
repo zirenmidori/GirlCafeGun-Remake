@@ -19,6 +19,20 @@ endpoint before writing it into a signed bootstrap manifest. Published object
 keys are immutable: upload changed bytes under a new release ID, never replace
 an existing release in place. APK and game-data files remain outside GitHub.
 
+A new full manifest can reuse unchanged packs from earlier release directories.
+For 0.1.1, only the packs containing the changed Lua bundle and resource index
+need new object keys. All file records and pack hashes must describe the actual
+bytes. `make_download_page.py` generates safe relative links to both current and
+earlier release directories. Players should obtain the complete pack list from
+the page for their APK's release, rather than selecting every object with the
+same directory prefix.
+
+Changing an account's `workers.dev` subdomain changes its public URLs. Rebuild
+and sign the full manifest with the new host, then publish a paired APK/resource
+delta and update the signed channel. The APK's manual online channel is hosted
+in the source repository, independently of the artifact host. Do not redirect
+old immutable pack keys to different bytes.
+
 Wrangler and the dashboard limit individual uploads to 300 MB. The APK is larger,
 so `split_hosted_apk.py` creates two immutable private parts and an `apk-index.json`.
 Upload each part under its exact generated key before deploying the index. The

@@ -117,7 +117,7 @@ payload path restrictions still apply. Unsigned ZIPs are never accepted.
 ## Online channel
 
 The login Update screen checks the fixed
-`https://raw.githubusercontent.com/zirenmidori/GirlCafeGun-Offline/main/channel.json`
+`https://raw.githubusercontent.com/zirenmidori/GirlCafeGun-Remake/main/channel.json`
 only when the user taps **Check online**. Its JSON envelope is
 `{"payload":"<base64 exact UTF-8 descriptor>","signature":"<base64 raw RSA signature>"}`.
 The descriptor contains `schemaVersion:1`, `packageName`, `releaseId`, `url`,
