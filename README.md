@@ -2,7 +2,7 @@
 
 Release **0.1.0**. See [validation and compatibility](docs/release-status.md).
 
-GCG Offline runs its game server on the Android device. A PC, USB connection and
+GCG Re:make runs its game server on the Android device. A PC, USB connection and
 server-address configuration are not needed. The first login creates a fresh
 local player; later logins return to that same player. The release contains no
 development profiles or personal saves, and no GM console.
