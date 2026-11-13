@@ -35,10 +35,17 @@ checks, six delta checks, four channel checks and four download-page checks
 passed. The updater now selects a compatible signed data-base route before
 downloading.
 
-Phone rendering and full in-game selector interaction in 0.1.2 remain pending a
-connected-device playtest. The 0.1.1 device results below remain historical
-evidence. Public-host verification and retirement of previous installers are
-being completed.
+Public-host verification passed on 2026-11-13: all 34 packs returned exact
+metadata and range bytes; the three changed pack bodies, full 405,366,349-byte
+APK, both signed deltas, manifests, checksums and download page matched their
+local SHA-256 values. The signed channel matched both the current repository
+and legacy channel. Previous installer links redirect to 0.1.2 with no-store;
+hosted old APK parts were still present at verification time.
+
+The prior 0.1.0 and 0.1.1 local APKs are removed to save space; exact private
+rollback archives remain and were verified restorable. Phone rendering and
+full in-game selector playtest remain pending until the user reconnects the device.
+The 0.1.1 device results below remain historical evidence.
 
 ## Release 0.1.1
 
