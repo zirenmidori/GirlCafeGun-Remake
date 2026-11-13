@@ -35,12 +35,14 @@ checks, six delta checks, four channel checks and four download-page checks
 passed. The updater now selects a compatible signed data-base route before
 downloading.
 
-Public-host verification passed on 2026-11-13: all 34 packs returned exact
-metadata and range bytes; the three changed pack bodies, full 405,366,349-byte
-APK, both signed deltas, manifests, checksums and download page matched their
-local SHA-256 values. The signed channel matched both the current repository
-and legacy channel. Previous installer links redirect to 0.1.2 with no-store;
-hosted old APK parts were still present at verification time.
+Public-host verification passed on 2026-11-13: the complete 0.1.2 base is
+self-contained, with all 34 packs hosted under its own prefix and the download
+page linking only to those packs. Each public pack route returned the exact
+signed size. The new 405,419,597-byte APK reports the matching SHA-256 through
+its ETag, and a byte-range read crossing the split-part boundary matched the
+local APK exactly. Both signed transition deltas remain available for existing
+0.1.0 and 0.1.1 installations. Previous installer links redirect to 0.1.2;
+the superseded APK chunks have been deleted from R2.
 
 The prior 0.1.0 and 0.1.1 local APKs are removed to save space; exact private
 rollback archives remain and were verified restorable. Phone rendering and

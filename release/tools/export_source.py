@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,re,shutil,ast
 ROOT=Path(__file__).resolve().parents[2];RELEASE=ROOT/'release'
 SERVER_FILES={'package.json','pnpm-lock.yaml','tsconfig.json','tsconfig.build.json','eslint.config.js','.prettierrc.json','.prettierignore','.gitignore','LICENSE','README.md'}
-TOOLS={'android_manifest.py','build_android_release.py','build-server-payload.py','payload_codec.py','release_crypto.py','make_update.py','make_data_packs.py','export_source.py','cloudflare.ps1','upload_r2.py','make_channel.py','split_hosted_apk.py','verify_hosted_packs.py','make_download_page.py'}
+TOOLS={'android_manifest.py','build_android_release.py','build-server-payload.py','payload_codec.py','release_crypto.py','make_update.py','make_data_packs.py','export_source.py','cloudflare.ps1','upload_r2.py','upload_r2_base_012.py','make_channel.py','split_hosted_apk.py','verify_hosted_packs.py','make_download_page.py'}
 BAD=re.compile(rb'(?:C:[/\\]Users[/\\][^/\\\r\n]+|R5[A-Z0-9]{9}|-----BEGIN (?:RSA |EC )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9]{24,})')
 def collect():
     result={}

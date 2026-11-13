@@ -16,16 +16,20 @@ pricing and usage. Do not enable a paid Workers plan just for this setup.
 
 Verify a full pack download and byte-range response from the actual public
 endpoint before writing it into a signed bootstrap manifest. Published object
-keys are immutable: upload changed bytes under a new release ID, never replace
-an existing release in place. APK and game-data files remain outside GitHub.
+keys should be immutable after a release is announced: give changed bytes a new
+release ID. The user-approved 0.1.2 migration consolidates the first-release
+staging objects into a complete base; future releases should use new IDs. APK
+and game-data files remain outside GitHub.
 
-A new full manifest can reuse unchanged packs from earlier release directories.
-For 0.1.1, only the packs containing the changed Lua bundle and resource index
-need new object keys. All file records and pack hashes must describe the actual
-bytes. `make_download_page.py` generates safe relative links to both current and
-earlier release directories. Players should obtain the complete pack list from
-the page for their APK's release, rather than selecting every object with the
-same directory prefix.
+Release 0.1.2 is the self-contained full base: its signed manifest lists all 34
+packs under `0.1.2/`, and its download page links only to that prefix. This keeps
+new installations independent of the retired 0.1.0 and 0.1.1 full-data folders.
+The two small signed update deltas from 0.1.0 and 0.1.1 remain under `0.1.2/` so
+existing installations can still migrate. `upload_r2_base_012.py` validates the
+manifest signature, pack hashes, APK and split-part hashes before uploading the
+base. For future releases, a full manifest may reuse unchanged packs from an
+earlier release directory; its page must link every pack at its actual object
+path.
 
 Changing an account's `workers.dev` subdomain changes its public URLs. Rebuild
 and sign the full manifest with the new host, then publish a paired APK/resource
