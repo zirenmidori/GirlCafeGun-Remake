@@ -6,6 +6,11 @@ import {
   type PromiseTaskData,
 } from "../game-data/girl-promise-data.js";
 import type { AppConfig } from "../config.js";
+import { isRotationSelectionTaskId } from "../game-data/recruitment-policy.js";
+import {
+  rotationSelectorCatalog,
+  RotationSelectorError,
+} from "../game-data/rotation-selector-data.js";
 import {
   consumeHeadpatCharge,
   HEADPAT_AFFECTION_EXPERIENCE,
@@ -761,6 +766,13 @@ export interface GachaCommitResult {
   updatedMoney: MoneyState[];
   updatedGirls: GirlState[];
   getItem: Gdpln | null;
+}
+
+export interface RotationSelectorOpenResult {
+  player: Player;
+  awards: (number | boolean)[][];
+  updatedItems: InventoryItemState[];
+  updatedGirls: GirlState[];
 }
 
 export interface DailySignUpResult {
@@ -3413,7 +3425,7 @@ export class PlayerRepository {
       reconcileHeadpatCharges(player.taskValues, now);
       state.players[safeAccount] = player;
       if (this.#welcomeGifts)
-        reconcileWelcomeMail((player.mail ??= makeMailbox()), now);
+        reconcileWelcomeMail((player.mail ??= makeMailbox()), now, true);
       this.#logger.info("player.created", { account: safeAccount, roleId });
     });
     if (!player) throw new Error(`Failed to create player: ${safeAccount}`);
@@ -4122,6 +4134,7 @@ export class PlayerRepository {
       for (const { id, value } of changes) {
         if (
           isDailyMissionTaskValueId(id) ||
+          isRotationSelectionTaskId(id) ||
           isHeadpatTaskId(id) ||
           isCafePetTaskId(id, CafePetCatalog.loadDefault()) ||
           (id >>> 16 === 60 && (id & 0xffff) >= 101 && (id & 0xffff) <= 104)
@@ -4911,6 +4924,58 @@ export class PlayerRepository {
     };
   }
 
+  async openRotationSelector(
+    account: string,
+    gdpln: unknown,
+    selection: unknown,
+  ): Promise<RotationSelectorOpenResult> {
+    const { definition, count, choice } = rotationSelectorCatalog().request(
+      gdpln,
+      selection,
+    );
+    const updated = new Set<number>();
+    let awards: (number | boolean)[][] = [];
+    const girlIds = new Set<number>();
+    const player = await this.#store.update((state) => {
+      const player = state.players[account];
+      if (!player || promiseItemCount(player, definition.itemGdpl) < count)
+        throw new RotationSelectorError("not_owned");
+      const existing = player.inventory.filter(
+        (item) => item.genre === choice[0] && item.count > 0,
+      );
+      const hasGirl = player.girls.some(({ girlId }) => girlId === choice[1]);
+      const hasSuit = existing.some(
+        (item) => item.detail === choice[1] && item.particular === choice[2],
+      );
+      const hasCard = existing.some(
+        (item) =>
+          item.detail === choice[1] &&
+          item.particular === choice[2] &&
+          item.templateLevel === choice[3],
+      );
+      promiseConsume(player, definition.itemGdpl, count, updated);
+      const award: Gdpln = [
+        choice[0],
+        choice[1],
+        choice[2],
+        choice[3],
+        choice[4] * count,
+      ];
+      addInventoryAward(player, award, updated);
+      const reconciled = reconcileGirlAppearanceState(player, updated);
+      for (const id of reconciled.updatedGirlIds) girlIds.add(id);
+      awards = [choice[0] === 1 ? [...award, hasGirl, hasSuit, hasCard] : [...award]];
+      return player;
+    });
+    const snapshot = structuredClone(player);
+    return {
+      player: snapshot,
+      awards,
+      updatedItems: snapshot.inventory.filter(({ guid }) => updated.has(guid)),
+      updatedGirls: snapshot.girls.filter(({ girlId }) => girlIds.has(girlId)),
+    };
+  }
+
   async performGacha(
     account: string,
     pool: GachaPool,
@@ -4955,6 +5020,26 @@ export class PlayerRepository {
 
       for (const award of roll.awards) {
         addInventoryAward(player, [...award.tbGDPL, 1], updatedItemGuids);
+      }
+
+      // Only new qualifying rotation draws advance these independent counters.
+      // Progress survives lineup changes and never consults historical totals.
+      if (pool.selectionMilestone) {
+        const milestone = pool.selectionMilestone;
+        const task = String(makeGachaTaskId(milestone.progressTask));
+        const before = player.taskValues[task] ?? 0;
+        const after = before + roll.awards.length;
+        if (!Number.isSafeInteger(before) || before < 0 || !Number.isSafeInteger(after))
+          throw new RotationSelectorError("invalid_request");
+        const count =
+          Math.floor(after / milestone.every) - Math.floor(before / milestone.every);
+        player.taskValues[task] = after;
+        if (count > 0)
+          addInventoryAward(
+            player,
+            [...milestone.item.slice(0, 4), milestone.item[4] * count] as Gdpln,
+            updatedItemGuids,
+          );
       }
 
       if (pool.getItem) {

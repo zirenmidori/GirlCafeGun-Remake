@@ -1,4 +1,5 @@
 UnityPy==1.25.2
+etcpak==0.9.15
 Pillow>=10,<13
 lz4>=4,<5
 lupa>=2,<3

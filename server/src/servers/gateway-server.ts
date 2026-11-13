@@ -37,6 +37,7 @@ import { parseWeaponEnhancementRequest } from "../game-data/weapon-enhancement-d
 import { RUNE_SLOT_COUNT } from "../game-data/rune-data.js";
 import { RuneOperationError } from "../game-data/rune-progression-data.js";
 import { cardRarityOf } from "../game-data/custom-card-data.js";
+import { RotationSelectorError } from "../game-data/rotation-selector-data.js";
 import {
   parseWeaponDecompositionRequest,
   WEAPON_LOGIC_COMMAND_DECOMPOSE,
@@ -1450,6 +1451,49 @@ export function createGatewayServer({
           ...(call ? { method: call.method, json: call.json } : {}),
         });
         send(COMMAND.C2S_CALL_RSP, packet.serial);
+        if (luaCommand === 76) {
+          const outer = call!.parameters as Record<string, unknown>;
+          const parameters =
+            outer.tbParam && typeof outer.tbParam === "object"
+              ? (outer.tbParam as Record<string, unknown>)
+              : {};
+          try {
+            const result = await players.openRotationSelector(
+              context.account,
+              parameters.gdpln,
+              parameters.select,
+            );
+            context.player = result.player;
+            send(
+              COMMAND.ITEM_UPDATE_NTF,
+              0,
+              makeItemUpdateNotification(result.updatedItems),
+            );
+            sendGirlUpdates(result.updatedGirls);
+            send(
+              COMMAND.TASK_VALUE_RSP,
+              0,
+              makeTaskValueSync(result.player.taskValues),
+            );
+            send(
+              COMMAND.NTF_S2C_CALL,
+              0,
+              makeServerLuaCall("LuaCall", { sCmd: 76, tbParam: result.awards }),
+            );
+          } catch (error) {
+            if (!(error instanceof RotationSelectorError)) throw error;
+            send(
+              COMMAND.NTF_S2C_CALL,
+              0,
+              makeServerLuaCall("LuaCall", { sCmd: 76, tbParam: { nError: 1 } }),
+            );
+            logger.warn("rotation.selector.rejected", {
+              account: context.account,
+              reason: error.reason,
+            });
+          }
+          return;
+        }
         if (call?.method === "LockItem") {
           const request = parseItemLockCall(call);
           if (!request) {

@@ -96,10 +96,10 @@ public final class UpdateActivity extends Activity {
         show("Checking for updates…");byte[] raw=getHttps(CHANNEL,2L*1024*1024);JSONObject envelope=new JSONObject(new String(raw,java.nio.charset.StandardCharsets.UTF_8));
         byte[] payload=Base64.decode(envelope.getString("payload"),Base64.DEFAULT),signature=Base64.decode(envelope.getString("signature"),Base64.DEFAULT);
         Signature check=Signature.getInstance("SHA256withRSA");check.initVerify(KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(ReleaseManifest.publicKey(this))));check.update(payload);if(!check.verify(signature))throw new IOException("Online channel signature is invalid");
-        JSONObject next=new JSONObject(new String(payload,java.nio.charset.StandardCharsets.UTF_8));if(ReleaseManifest.number(next,"schemaVersion")!=1||!getPackageName().equals(next.getString("packageName")))throw new IOException("Wrong online update channel");
-        String id=ReleaseManifest.identifier(next.getString("releaseId"));JSONObject current=ReleaseStore.state(this);if(current!=null&&id.equals(current.optString("releaseId"))){show("You have the latest published release.");return;}
-        long size=ReleaseManifest.number(next,"size");if(size>ReleaseEngine.MAX_IMPORT)throw new IOException("Online update exceeds supported size");String hash=ReleaseManifest.digest(next.getString("sha256"));
-        File dir=ReleaseIO.dir(new File(ReleaseStore.root(this),"online"));File update=ReleaseDownload.fetch(dir,"update-"+id,next.getString("url"),size,hash,this::show);
+        JSONObject next=new JSONObject(new String(payload,java.nio.charset.StandardCharsets.UTF_8));JSONObject current=ReleaseStore.state(this);
+        String base=current==null?null:current.optString("releaseId");ReleaseChannel.Selection selected=ReleaseChannel.select(next,getPackageName(),base);
+        if(selected==null){show("You have the latest published release.");return;}
+        File dir=ReleaseIO.dir(new File(ReleaseStore.root(this),"online"));File update=ReleaseDownload.fetch(dir,"update-"+selected.releaseId+"-from-"+base,selected.url,selected.size,selected.sha256,this::show);
         // No foreign key can be accepted by the online path, even with a valid channel envelope.
         byte[] publisher=ReleaseEngine.publisher(update);if(publisher!=null&&!Arrays.equals(publisher,ReleaseManifest.publicKey(this)))throw new IOException("Online updates must use the embedded publisher key");
         inspectForConsent(update);

@@ -25,10 +25,23 @@ The local server also works with Wi-Fi and mobile data switched off. Internet
 access is needed for the initial automatic data download and manual online update
 checks, rather than for ordinary login or play.
 
-Each new player receives a one-time welcome mail containing Legendary Neptune
-and the Astral Covenant weapon. Claim it from the in-game mailbox when mail is
-available. Both rewards start at their normal base level. Development inventories
-are not included.
+Each new player receives a one-time welcome mail containing Legendary Neptune,
+Astral Covenant, **200 character draws and 200 weapon draws**. Claim it from the
+in-game mailbox when mail is available. The card and weapon start at their normal
+base level. Existing profiles do not receive a second welcome grant.
+
+Tactical Rotation and Arsenal Rotation change every seven days and cover all
+eligible cards and weapons within a 182-day cycle. Oath and currently
+gameplay-obtainable cards stay outside the rotation. The permanent Railgun banner
+contains Mikoto, Kuroko, Misaki and Misaka Sister alongside its stock pool.
+
+Daily mail budgets **50 draws for each weekly rotation** and **10 for every other
+available banner**: currently 70 character draws and 60 weapon draws. Tickets
+remain shared within their category. Every **100 rotation draws** earns a
+Legendary selector for that category in **Warehouse**. Partial progress carries
+across rotations; an unopened selector always keeps its original choices.
+Normal random rates and pity remain unchanged. See
+[collection policy and odds](../server/docs/recruitment-policy.md).
 
 This repository contains source code, build/update tools and documentation.
 The game APK, artwork, audio, video, native game binaries and data packs are not included here.
@@ -74,6 +87,23 @@ ask you to allow this app to request installation. Never uninstall the game to
 apply an update: uninstalling can remove the local profile. Updates preserve the
 profile, verify their publisher and content, and recover interrupted resource
 transactions before the game starts.
+
+### Updating to 0.1.2
+
+Use the signed `.gcgupdate` package matching your installed data release. The
+0.1.1 login updater can discover its 0.1.1-to-0.1.2 package with **Check online**.
+The 0.1.2 updater also selects a direct package for 0.1.0 data automatically.
+
+If you still use the original 0.1.0 app, either import its existing 0.1.0-to-0.1.1
+bridge first, or install the full 0.1.2 APK over the app and then use **Update →
+Check online** to apply its matching data. Keep the app installed and preserve
+its data throughout. Installing an APK alone does not replace resources already
+cached in `files/`.
+
+Older full installers are retired to save hosting space. Previously shared APK
+and download-page addresses redirect to the current release; old data packs and
+signed update packages remain available because current installations still
+reuse them.
 
 ### Updating from 0.1.0 to 0.1.1
 

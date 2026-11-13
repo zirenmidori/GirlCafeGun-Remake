@@ -239,6 +239,10 @@ function unpackMailList(packet: GamePacket) {
 }
 
 it("serves stock inbox packets and pushes the new operational day to a connected client", async () => {
+  const activeAwards: BaseAward[] = [
+    [9, 13, 1, 1, 7],
+    [7, 10, 1, 4, 6],
+  ];
   const directory = await mkdtemp(path.join(os.tmpdir(), "gcg2-mail-gateway-"));
   const { config, players } = await fixture(directory);
   const server = createGatewayServer({
@@ -280,7 +284,7 @@ it("serves stock inbox packets and pushes the new operational day to a connected
         .map(({ value }) =>
           decodeFields(value as Buffer).map(({ value }) => Number(value)),
         ),
-    ).toEqual(awards);
+    ).toEqual(activeAwards);
 
     const ids = fieldVarint(1, id);
     const read = await request(
@@ -302,7 +306,7 @@ it("serves stock inbox packets and pushes the new operational day to a connected
       COMMAND.ITEM_UPDATE_NTF,
       COMMAND.GET_MAIL_ITEM_RSP,
     ]);
-    expect(ticketCounts(players.get("alpha"))).toEqual([2, 2]);
+    expect(ticketCounts(players.get("alpha"))).toEqual([7, 6]);
     const deleted = await request(
       socket,
       COMMAND.DEL_MAIL_REQ,
@@ -342,7 +346,7 @@ it("serves stock inbox packets and pushes the new operational day to a connected
       COMMAND.GET_MAIL_RSP,
     );
     expect(unpackMailList(dayTwo.at(-1)!)).toEqual([newMail]);
-    expect(ticketCounts(players.get("alpha"))).toEqual([2, 2]);
+    expect(ticketCounts(players.get("alpha"))).toEqual([7, 6]);
   } finally {
     clock.mockRestore();
     socket.destroy();

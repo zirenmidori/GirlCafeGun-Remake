@@ -140,3 +140,4 @@ ID	GDPLN	Nul	Rate	IsPreview	CardTexture	Story	UpFlag	Sort
 20114	[1-201-1-4]	超电磁炮·御坂美琴	2700	1	Card/All/girl201_card01.png	Gacha/Gacha_girl20101	1	1
 20314	[1-203-1-4]	心理掌握·食蜂操祈	2700	1	Card/All/girl203_card01.png	Gacha/Gacha_girl20301	1	1
 20413	[1-204-1-3]	缺陷电气·御坂妹妹	466	1	Card/All/girl204_card01.png	Gacha/Gacha_girl20401	1	1
+20213	[1-202-1-3]	Railgun - Kuroko Shirai	466	1	Card/All/girl202_card01.png		1	1

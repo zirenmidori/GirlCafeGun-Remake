@@ -31,6 +31,49 @@ describe("original client gacha tables", () => {
     );
   });
 
+  it("offers every Railgun card in normal and hedge pools without changing rarity odds", () => {
+    const pool = catalog.get(46)!;
+    expect(pool.costOne).toEqual(catalog.get(1)!.costOne);
+    expect(pool.costTen).toEqual(catalog.get(1)!.costTen);
+    expect(pool.protectNum).toBe(50);
+    expect(pool.protectUpNum).toBe(100);
+    expect(catalog.publishedStarWeights(46, 1)).toEqual([1_200, 7_000, 1_500, 300]);
+    for (const [girl, rarity] of [
+      [201, 4],
+      [202, 3],
+      [203, 4],
+      [204, 3],
+    ]) {
+      const card = pool.normalCards.get(rarity!)!.find(({ gdpl }) => gdpl[1] === girl)!;
+      expect(card).toMatchObject({
+        gdpl: [1, girl, 1, rarity],
+        isPreview: true,
+        upFlag: 1,
+      });
+      expect(
+        pool.hedgeCards.get(rarity!)!.find(({ gdpl }) => gdpl[1] === girl),
+      ).toMatchObject({ gdpl: card.gdpl, rate: card.rate });
+      const rows = pool.normalCards.get(rarity!)!;
+      const precedingWeight = rows
+        .slice(0, rows.indexOf(card))
+        .reduce((sum, row) => sum + row.rate, 0);
+      const random = [rarity === 4 ? 9_700 : 8_200, precedingWeight];
+      const roll = catalog.roll(
+        46,
+        false,
+        { pity: 0, upPity: 0, total: 0 },
+        new Set(),
+        [],
+        () => random.shift()!,
+      );
+      expect(roll.awards[0]!.tbGDPL).toEqual(card.gdpl);
+      expect(
+        catalog.publishedCardRates(46, 1).find(({ card: row }) => row.id === card.id)!
+          .probability,
+      ).toBeGreaterThan(0);
+    }
+  });
+
   it("uses the dedicated 3-star-or-higher hedge table for the tenth draw", () => {
     const result = catalog.roll(
       666,

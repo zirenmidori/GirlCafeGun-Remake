@@ -40,7 +40,8 @@ assert config['gateway']['port'] == 31400 and config['pvp']['fightPort'] == 3140
 assert config['persistence']['file'] == 'data/state.json'
 assert config['playerDefaults']['level'] == 1 and not config['playerDefaults']['firstLevelComplete']
 resources = b.collect(SERVER/'resources', 'resources', lambda p: p.suffix == '.txt' or
-    p.as_posix() in {'custom-cards.json', 'custom-weapons.json', 'rune/progression.json'})
+    p.as_posix() in {'custom-cards.json', 'custom-weapons.json', 'rune/progression.json',
+                    'gacha/recruitment-policy.json', 'gacha/rotation-selectors.json'})
 zod = (SERVER/'node_modules/zod').resolve(strict=True)
 assert zod.is_relative_to((SERVER/'node_modules').resolve())
 deps = b.collect(zod, 'node_modules/zod', lambda p: 'src' not in p.parts and

@@ -1,5 +1,45 @@
 # Release validation
 
+## Release 0.1.2
+
+New players receive 200 character draws and 200 weapon draws in the existing
+one-time welcome mail. Existing profiles receive no retroactive welcome tickets.
+Railgun is permanent with all four collaboration cards. The weekly rotation
+covers the independently audited 222 eligible characters and 134 weapons in
+182 days, including Legendary Neptune and excluding oath/gameplay cards.
+
+Daily mail budgets 50 draws per weekly banner and 10 per other banner: currently
+70 character and 60 weapon draws. Every 100 qualifying rotation draws earns a
+category-specific selector. Independent counters carry partial progress across
+weeks; boxes retain the original lineup permanently. Ordinary RNG and pity are
+unchanged. Railgun's existing 300-pull selector is also redeemable.
+
+The broader server suite passed 410 tests. Final affected checks passed 26 tests,
+including real TCP draws, selector redemption, failed-cost rollback, replay
+rejection, persistence and old boxes after weekly rollover. The clean extracted
+server ZIP independently passed fresh/existing-player mail checks and 100 actual
+draws and selector redemption in each category, without importing development
+server modules or including test saves.
+
+Neptune now uses a stock-size 203×268 thumbnail and separate original 1920×1080
+landscape artwork. Collection framing, the expanded view, codex and all three
+post-combat styles have explicit settings. Actual retained expanded-view Lua
+passed at three screen ratios. Native selector UI ordering, error handling and
+progress were exercised in Lua; 52 new items and 167 options preserve the
+server's exact order. All 117,441 existing translations remain unchanged.
+
+The signed APK retains API 24, both ARM variants, all 31 native libraries and all
+Live2D bundles byte-for-byte. Both base-specific updates reconstructed its exact
+bytes locally. Twenty-five production Java updater checks, thirteen hosting
+checks, six delta checks, four channel checks and four download-page checks
+passed. The updater now selects a compatible signed data-base route before
+downloading.
+
+Phone rendering and full in-game selector interaction in 0.1.2 remain pending a
+connected-device playtest. The 0.1.1 device results below remain historical
+evidence. Public-host verification and retirement of previous installers are
+being completed.
+
 ## Release 0.1.1
 
 This update repairs the client's offline login gate. Unity's reported network

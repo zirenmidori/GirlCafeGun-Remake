@@ -19,7 +19,7 @@ def collect():
             if p.is_file() and p.suffix in extensions:add(p,p.relative_to(ROOT).as_posix())
     for p in sorted((ROOT/'server/resources').rglob('*')):
         name=p.relative_to(ROOT/'server/resources').as_posix()
-        if p.is_file() and (p.suffix=='.txt' or name in {'custom-cards.json','custom-weapons.json','rune/progression.json','test-profile-catalog.json','cafe/provenance.json'}):add(p,p.relative_to(ROOT).as_posix())
+        if p.is_file() and (p.suffix=='.txt' or name in {'custom-cards.json','custom-weapons.json','rune/progression.json','test-profile-catalog.json','cafe/provenance.json','gacha/recruitment-policy.json','gacha/rotation-selectors.json'}):add(p,p.relative_to(ROOT).as_posix())
     for name in ('default.json','release.json'):add(ROOT/'server/config'/name,'server/config/'+name)
     for folder,extensions in [('android',{'.java','.der'}),('client',{'.py','.lua','.txt'}),('tests',{'.java','.py','.mjs'}),('hosting',{'.mjs','.md','.jsonc'})]:
         for p in sorted((RELEASE/folder).rglob('*')):
@@ -28,6 +28,7 @@ def collect():
         if p.is_file() and (p.parent==RELEASE/'tools' and p.name in TOOLS or p.parent==RELEASE/'tools/java' and p.suffix=='.java'):add(p,p.relative_to(ROOT).as_posix())
     for p in sorted((RELEASE/'docs').glob('*.md')):add(p,'docs/'+p.name);add(p,'release/docs/'+p.name)
     for name in ('README.md','THIRD_PARTY_NOTICES.md'):add(RELEASE/name,name);add(RELEASE/name,'release/'+name)
+    result['release/README.md']=result['release/README.md'].replace(b'](server/',b'](../server/')
     add(RELEASE/'LICENSE','release/LICENSE');add(RELEASE/'LICENSE','LICENSE')
     if (RELEASE/'channel.json').exists():add(RELEASE/'channel.json','channel.json')
     result['.gitignore']=b'**/node_modules/\n**/__pycache__/\nrelease/artifacts/\nrelease/private/\nrelease/work/\nrelease/reports/\nserver/data/\nserver/logs/\nserver/dist/\n*.apk\n*.gcgupdate\n*.zip\n*.p12\n*.jks\n*.keystore\n.env\n'

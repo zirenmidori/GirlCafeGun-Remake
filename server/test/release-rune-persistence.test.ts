@@ -112,8 +112,8 @@ describe("release welcome and custom ownership", () => {
       );
       expect(result.updatedGirls.map((g) => g.girlId)).toContain(27);
       expect(result.taskValuesChanged).toBe(true);
-      expect(result.updatedItems).toHaveLength(2);
-      for (const gift of result.updatedItems)
+      expect(result.updatedItems).toHaveLength(4);
+      for (const gift of result.updatedItems.filter((item) => item.genre <= 2))
         expect(gift).toMatchObject({
           count: 1,
           enhanceLevel: 1,

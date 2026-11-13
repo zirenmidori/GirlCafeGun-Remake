@@ -26,20 +26,38 @@ test('private paths missing objects and conditional requests',async()=>{
  const stale=await worker.fetch(request({Range:'bytes=4-','If-Range':'"old"'}),env);assert.equal(stale.status,200);assert.deepEqual(new Uint8Array(await stale.arrayBuffer()),data);
 });
 test('static release page is readable HTML with restrictive policy and no private routes',async()=>{
- const html=new TextEncoder().encode('<!doctype html><html lang="en"><title>Girl Cafe Gun</title><a href="GCG-Offline-v0.1.0.apk">Download APK</a></html>');
+ const html=new TextEncoder().encode('<!doctype html><html lang="en"><title>Girl Cafe Gun</title><a href="GCG-Offline-v0.1.2.apk">Download APK</a></html>');
  const reads=[];const htmlMeta={size:html.length,httpEtag:'"page"'};
- const e={RELEASES:{head:async key=>{reads.push(key);return key==='0.1.0/index.html'?htmlMeta:null;},get:async()=>({...htmlMeta,body:html})}};
- const r=await worker.fetch(request({},'GET','0.1.0/index.html'),e);assert.equal(r.status,200);assert.equal(r.headers.get('Content-Type'),'text/html; charset=utf-8');assert.equal(await r.text(),new TextDecoder().decode(html));assert.equal(r.headers.get('X-Content-Type-Options'),'nosniff');assert.equal(r.headers.get('Referrer-Policy'),'no-referrer');assert.equal(r.headers.get('Content-Security-Policy'),"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
- const h=await worker.fetch(request({},'HEAD','0.1.0/index.html'),e);assert.equal(h.status,200);assert.equal(h.headers.get('Content-Length'),String(html.length));assert.equal((await h.arrayBuffer()).byteLength,0);
+ const e={RELEASES:{head:async key=>{reads.push(key);return key==='0.1.2/index.html'?htmlMeta:null;},get:async()=>({...htmlMeta,body:html})}};
+ const r=await worker.fetch(request({},'GET','0.1.2/index.html'),e);assert.equal(r.status,200);assert.equal(r.headers.get('Content-Type'),'text/html; charset=utf-8');assert.equal(await r.text(),new TextDecoder().decode(html));assert.equal(r.headers.get('X-Content-Type-Options'),'nosniff');assert.equal(r.headers.get('Referrer-Policy'),'no-referrer');assert.equal(r.headers.get('Content-Security-Policy'),"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+ const h=await worker.fetch(request({},'HEAD','0.1.2/index.html'),e);assert.equal(h.status,200);assert.equal(h.headers.get('Content-Length'),String(html.length));assert.equal((await h.arrayBuffer()).byteLength,0);
  const before=reads.length;for(const path of ['0.1.0/private/release.p12','0.1.0/.env','0.1.0/data/state.json','release/private/signing/release.p12'])assert.equal((await worker.fetch(request({},'GET',path),e)).status,404);assert.equal(reads.length,before);
 });
 
-const apkPath='0.1.0/GCG-Offline-v0.1.0.apk';
+test('retired APK and page links redirect without storage reads or immutable caching',async()=>{
+ let reads=0;const e={RELEASES:{head:async()=>{reads++;throw new Error('Must not access retired storage');},get:async()=>{reads++;throw new Error('Must not access retired storage');}}};
+ for(const release of ['0.1.0','0.1.1'])for(const method of ['GET','HEAD'])for(const [old,target] of [[`${release}/GCG-Offline-v${release}.apk`,'0.1.2/GCG-Offline-v0.1.2.apk'],[`${release}/index.html`,'0.1.2/index.html']]){
+  const r=await worker.fetch(request({Range:'bytes=8-','If-Range':'"old"'},method,old),e);
+  assert.equal(r.status,302);assert.equal(r.headers.get('Location'),'https://release.example/'+target);assert.equal(r.headers.get('Cache-Control'),'no-store');assert.equal(r.headers.get('ETag'),null);assert.equal((await r.arrayBuffer()).byteLength,0);
+ }
+ assert.equal((await worker.fetch(request({},'POST','0.1.0/GCG-Offline-v0.1.0.apk'),e)).status,405);
+ for(const path of ['_apk/0.1.0/hash/part-000.bin','0.1.0/private/state.json','0.1.1/.env'])assert.equal((await worker.fetch(request({},'GET',path),e)).status,404);
+ assert.equal(reads,0);
+});
+
+test('retired release data signatures and bridge updates retain original object identities',async()=>{
+ const paths=['0.1.0/data-000.zip','0.1.0/manifest.json','0.1.0/manifest.sig','0.1.1/GCG-Offline-0.1.0-to-0.1.1.gcgupdate'];
+ const reads=[];const e={RELEASES:{head:async key=>{reads.push(key);return paths.includes(key)?meta:null;},get:async key=>({...meta,body:data})}};
+ for(const path of paths){const r=await worker.fetch(request({},'GET',path),e);assert.equal(r.status,200);assert.equal(r.headers.get('Location'),null);assert.deepEqual(new Uint8Array(await r.arrayBuffer()),data);}
+ assert.deepEqual(reads,paths);
+});
+
+const apkPath='0.1.2/GCG-Offline-v0.1.2.apk';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 function apkFixture({missing=-1,wrongSize=-1,getMissing=-1,getChanged=-1,truncate=-1,storageError=false}={}){
  const parts=[data.slice(0,8),data.slice(8)];
  const hash=sha(data);
- const spec={size:data.length,sha256:hash,parts:parts.map((bytes,i)=>({key:`_apk/0.1.0/${hash}/part-${String(i).padStart(3,'0')}.bin`,size:bytes.length,sha256:sha(bytes)}))};
+ const spec={size:data.length,sha256:hash,parts:parts.map((bytes,i)=>({key:`_apk/0.1.2/${hash}/part-${String(i).padStart(3,'0')}.bin`,size:bytes.length,sha256:sha(bytes)}))};
  const gets=[],heads=[];
  const locate=key=>spec.parts.findIndex(p=>p.key===key);
  const environment={RELEASES:{

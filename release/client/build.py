@@ -13,6 +13,10 @@ import asset_tools
 import manifest_paths
 from runtime_asset_guard import validate_assetfile
 import test_login
+import test_card_display
+import test_gacha
+import patch_selectors
+import test_selectors
 
 SOURCE_SHA='d9da0751b540d05a535dd76704a355110b6d63bcf30d8b876d63f3cfdf7c9b78'
 CACHE_SHA='a2012a54d479ef5eed6232374a543b9f31b038146202e27705a19199cacf3f5e'
@@ -39,9 +43,13 @@ def main():
         for n,b in old_external.items():
             if n!='version.data':assert apk.read('assets/'+n)==b
         changed['lua.u'],proofs['lua']=patch_lua.build(apk.read('assets/lua.u'))
+        proofs['gachaBehavior']=test_gacha.run_bundle(changed['lua.u'])
         proofs['loginBehavior']=test_login.run()
+        proofs['cardDisplayBehavior']=test_card_display.run()
+        proofs['selectorBehavior']=test_selectors.run()
         print('Verified release login and removed developer Lua',flush=True)
         changed['setting.u'],plain,proofs['settings']=patch_settings.build(apk.read('assets/setting.u'))
+        changed['lang.u'],proofs['selectorLanguage']=patch_selectors.build_language(apk.read('assets/lang.u'))
         replacements['assets/setting_decrypted.u']=write('assets/setting_decrypted.u',plain)
         print('Verified rarity, card layout, lobby schedule, native MagicTb loader',flush=True)
         changed['npc/neptune_roster.u'],proofs['card'],crop=patch_card.build(apk.read('assets/npc/neptune_roster.u'),args.art)
@@ -62,10 +70,11 @@ def main():
         bin_index,proofs['apkBinaryIndex']=indexes.append_binary(apk.read('assets/version.data'),paired)
         json_index,proofs['apkJsonIndex']=indexes.append_json(apk.read('assets/version.zip'),paired)
         external_index,proofs['externalBinaryIndex']=indexes.append_binary(old_external['version.data'],paired)
-        bin_index,proofs['apkCardRoute']=manifest_paths.binary(bin_index,'npc/neptune_roster.u',[patch_card.CARD])
-        json_index,proofs['apkCardJsonRoute']=manifest_paths.compressed(json_index,'npc/neptune_roster.u',[patch_card.CARD])
-        external_index,proofs['externalCardRoute']=manifest_paths.binary(external_index,'npc/neptune_roster.u',[patch_card.CARD])
-        assert all(len(proofs[k]['addedAssetMappings'])==1 for k in ('apkCardRoute','apkCardJsonRoute','externalCardRoute'))
+        card_paths=getattr(patch_card,'ASSET_PATHS',[patch_card.CARD])
+        bin_index,proofs['apkCardRoute']=manifest_paths.binary(bin_index,'npc/neptune_roster.u',card_paths)
+        json_index,proofs['apkCardJsonRoute']=manifest_paths.compressed(json_index,'npc/neptune_roster.u',card_paths)
+        external_index,proofs['externalCardRoute']=manifest_paths.binary(external_index,'npc/neptune_roster.u',card_paths)
+        assert all(len(proofs[k]['addedAssetMappings'])==len(card_paths) for k in ('apkCardRoute','apkCardJsonRoute','externalCardRoute'))
         replacements['assets/version.data']=write('assets/version.data',bin_index)
         replacements['assets/version.zip']=write('assets/version.zip',json_index)
         external_paths={**paired,'version.data':write('external/version.data',external_index)}

@@ -90,7 +90,7 @@ table{{width:100%;border-collapse:collapse}}th,td{{padding:6px 10px;text-align:l
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--apk", type=Path, default=RELEASE / "artifacts/GCG-Offline-v0.1.0.apk")
+    parser.add_argument("--apk", type=Path, default=RELEASE / "artifacts/GCG-Offline-v0.1.2.apk")
     parser.add_argument("--apk-report", type=Path)
     parser.add_argument("--manifest", type=Path, default=RELEASE / "android/assets/gcg-release/manifest.json")
     parser.add_argument("--signature", type=Path, default=RELEASE / "android/assets/gcg-release/manifest.sig")

@@ -1,6 +1,8 @@
 """Remove developer Lua and bind release login to the private Android bridge."""
 from pathlib import Path
 import hashlib, re, struct, sys
+import patch_gacha
+import patch_selectors
 ROOT = Path(__file__).resolve().parents[2]
 from asset_tools import load_reviewed_parsers, validate_ranges, container_paths,pack
 
@@ -47,9 +49,13 @@ def patch_script(name, data):
         s,n=re.subn(r'RegisterCMD\(LuaCall.DoLuaString, function\(sCmd, tbParam\).*?\nend\)', 'RegisterCMD(LuaCall.DoLuaString, function() end)',s,count=1,flags=re.S);assert n==1
     elif name=='UI_User.lua':
         s,n=re.subn(r'\tif Game.Localization.Lang == Game.LangType.zh_CN then\n\t\tself.BtnDevelopPanel.*?\n\tend','',s,count=1,flags=re.S);assert n==1
-    return s.encode('utf8')
+    result=s.encode('utf8')
+    if name in {'GachaCommon.lua','UI_GachaHistory.lua'}:result=patch_gacha.lua_script(name,result)
+    if name in patch_selectors.LUA_NAMES:result=patch_selectors.lua_script(name,result)
+    return result
 
-NAMES={'UI_Login.lua','GameManager.lua','Preload.lua','GM.lua','UI_GM.lua','LuaHotFixCSharp.lua','develop.lua','S2CCall.lua','LuaCall.lua','UI_User.lua','GMActivity.lua'}
+NAMES={'UI_Login.lua','GameManager.lua','Preload.lua','GM.lua','UI_GM.lua','LuaHotFixCSharp.lua','develop.lua','S2CCall.lua','LuaCall.lua','UI_User.lua','GMActivity.lua','GachaCommon.lua','UI_GachaHistory.lua'}
+NAMES |= patch_selectors.LUA_NAMES
 
 def build(source):
     cipher,unity,builder=load_reviewed_parsers()

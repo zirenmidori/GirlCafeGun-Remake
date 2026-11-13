@@ -5,6 +5,14 @@ import apkIndex from './apk-index.json' with { type: 'json' };
 const PUBLIC_KEY = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\/(?:data-\d{3}\.zip|GCG-Offline-[a-zA-Z0-9._-]+\.apk|[a-zA-Z0-9._-]+\.gcgupdate|manifest\.json|manifest\.sig|checksums\.txt|publickey\.der|index\.html)$/;
 const APK_KEY = /^([a-zA-Z0-9][a-zA-Z0-9._-]{0,79})\/GCG-Offline-[a-zA-Z0-9._-]+\.apk$/;
 const DIGEST = /^[0-9a-f]{64}$/;
+// Retired installers are no longer stored. Keep previously shared links useful
+// without changing any immutable pack, manifest or delta identity.
+const RETIRED_ROUTES = Object.freeze({
+  '0.1.0/GCG-Offline-v0.1.0.apk': '/0.1.2/GCG-Offline-v0.1.2.apk',
+  '0.1.1/GCG-Offline-v0.1.1.apk': '/0.1.2/GCG-Offline-v0.1.2.apk',
+  '0.1.0/index.html': '/0.1.2/index.html',
+  '0.1.1/index.html': '/0.1.2/index.html',
+});
 
 function validateIndex(index) {
   if (index.schemaVersion !== 1 || !index.apks || typeof index.apks !== 'object') throw new Error('Invalid APK index');
@@ -94,6 +102,10 @@ export function createWorker(index = apkIndex) {
       if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
       const key = new URL(request.url).pathname.slice(1);
       if (!PUBLIC_KEY.test(key)) return new Response('Not found', { status: 404 });
+      if (Object.hasOwn(RETIRED_ROUTES, key)) return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(RETIRED_ROUTES[key], request.url).href, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
+      });
       try {
         const apk = index.apks[key];
         const meta = apk ? { size: apk.size, httpEtag: `"sha256-${apk.sha256}"` } : await env.RELEASES.head(key);

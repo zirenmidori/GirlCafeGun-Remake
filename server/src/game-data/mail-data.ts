@@ -1,6 +1,10 @@
 import type { BaseAward } from "./chapter-config.js";
 import { dailySignUpOperationalDate } from "./daily-sign-up-data.js";
 import type { Gdpln } from "./gacha-data.js";
+import {
+  recruitmentPolicy,
+  RECRUITMENT_ROTATION_POOL_ID,
+} from "./recruitment-policy.js";
 
 export interface MailMessage {
   id: number;
@@ -25,9 +29,18 @@ export const WELCOME_AWARDS: readonly BaseAward[] = [
   [1, 27, 1, 1, 1],
   [2, 2, 28, 1, 1],
 ];
+// The regular recruitment pools consume one of these tickets per ten draws.
+export const WELCOME_RECRUITMENT_AWARDS: readonly BaseAward[] = [
+  [9, 13, 1, 1, 20],
+  [7, 10, 1, 4, 20],
+];
 
 /** Durable delivery marker survives claiming/deleting the message. */
-export function reconcileWelcomeMail(mailbox: MailboxState, now: number): void {
+export function reconcileWelcomeMail(
+  mailbox: MailboxState,
+  now: number,
+  includeRecruitmentBonus = false,
+): void {
   const campaigns = (mailbox.deliveredCampaigns ??= []);
   if (campaigns.includes(WELCOME_CAMPAIGN)) return;
   mailbox.messages.unshift({
@@ -38,8 +51,14 @@ export function reconcileWelcomeMail(mailbox: MailboxState, now: number): void {
     title: "Welcome to Girl Cafe Gun",
     sender: "Cafe Staff",
     content:
-      "Welcome, Manager! Neptune and Astral Covenant are ready to join your journey. Claim your gifts here.",
-    attachments: WELCOME_AWARDS.map((award) => [...award]),
+      "Welcome, Manager! Neptune and Astral Covenant are ready to join your journey. Claim your gifts here." +
+      (includeRecruitmentBonus
+        ? " Your new-manager gift also includes 200 character draws and 200 weapon draws, supplied as twenty ten-pull tickets for each category."
+        : ""),
+    attachments: [
+      ...WELCOME_AWARDS,
+      ...(includeRecruitmentBonus ? WELCOME_RECRUITMENT_AWARDS : []),
+    ].map((award) => [...award]),
   });
   campaigns.push(WELCOME_CAMPAIGN);
 }
@@ -67,7 +86,17 @@ export function dailyPullMailAwards(
   for (const { ids, cost } of categories) {
     if (ids.length === 0 || !cost) continue;
     const [genre, detail, particular, level, count] = cost;
-    awards.push([genre, detail, particular, level, count * new Set(ids).size]);
+    const policy = recruitmentPolicy();
+    const draws = [...new Set(ids)].reduce(
+      (sum, id) =>
+        sum +
+        (id === RECRUITMENT_ROTATION_POOL_ID
+          ? policy.rotationDailyDraws
+          : policy.otherBannerDailyDraws),
+      0,
+    );
+    if (draws > 0)
+      awards.push([genre, detail, particular, level, (count * draws) / 10]);
   }
   return awards;
 }
@@ -104,7 +133,7 @@ export function reconcileDailyPullMail(
   }
   deliver(
     "Daily Recruitment Tickets",
-    "Here is one ten-pull ticket for each available character and weapon banner. Tickets are shared between banners in the same category.",
+    `Your daily supply includes ${recruitmentPolicy().rotationDailyDraws} draws for each available rotation and ${recruitmentPolicy().otherBannerDailyDraws} for each other regular banner. Tickets are shared between banners in the same category.`,
     1,
   );
   mailbox.lastDailyDate = date;

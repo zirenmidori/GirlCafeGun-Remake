@@ -180,6 +180,22 @@ it("release has one persistent identity, rejects GM calls, claims real roster gi
     expect(commands).toContain(COMMAND.TASK_VALUE_RSP);
     expect(commands.indexOf(COMMAND.ITEM_UPDATE_NTF)).toBeLessThan(commands.length - 1);
     expect(commands.indexOf(COMMAND.GIRL_UPDATE_NTF)).toBeLessThan(commands.length - 1);
+    const mailedTickets = claim
+      .filter((packet) => packet.command === COMMAND.ITEM_UPDATE_NTF)
+      .flatMap((packet) =>
+        decodeFields(packet.payload).flatMap((field) => {
+          if (
+            field.fieldNumber !== 1 ||
+            field.wireType !== 2 ||
+            !Buffer.isBuffer(field.value)
+          )
+            return [];
+          const item = decodeFields(field.value);
+          return [[2, 3, 4, 5, 6].map((number) => firstNumber(item, number))];
+        }),
+      );
+    expect(mailedTickets).toContainEqual([9, 13, 1, 1, 20]);
+    expect(mailedTickets).toContainEqual([7, 10, 1, 4, 20]);
     p = players.get(account)!;
     expect(p.girls.some((girl) => girl.girlId === 27)).toBe(true);
     const neptune = p.inventory.find((item) => item.genre === 1 && item.detail === 27)!;

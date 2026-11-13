@@ -35,7 +35,7 @@ def main():
     for name,digest in DEPENDENCIES.items():
         if hashlib.sha256((deps/name).read_bytes()).hexdigest()!=digest:raise RuntimeError('AOSP host test dependency changed: '+name)
     prod=RELEASE/'android/src/main/java/com/zirenmidori/gcg/release'
-    names=['ReleaseIO','ReleaseManifest','ReleaseStore','ReleaseDownload','ReleaseEngine','ApkDeltaBytes']
+    names=['ReleaseIO','ReleaseManifest','ReleaseStore','ReleaseDownload','ReleaseEngine','ApkDeltaBytes','ReleaseChannel']
     sources=[*(prod/(n+'.java') for n in names),*sorted(deps.glob('*.java')),*sorted((RELEASE/'tests/java').rglob('*.java'))]
     with tempfile.TemporaryDirectory(prefix='android-updater-test-',dir=RELEASE/'work') as directory:
         work=Path(directory);classes=work/'classes';classes.mkdir()

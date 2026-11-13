@@ -105,6 +105,20 @@ uses the per-app unknown-source setting when needed. It never uninstalls, roots,
 silently installs, or applies an OS/APK downgrade. Android owns APK atomicity;
 APK+resource publication is coordinated by a resumable two-phase journal.
 
+## Choosing a compatible online update
+
+The signed channel can include `baseReleaseId` for its primary artifact and a
+`routes` array containing `{baseReleaseId, url, size, sha256}` entries. The 0.1.2
+updater selects the exact committed data release before downloading and validates
+every route. Old channel descriptors without routes remain supported. The
+primary URL remains available to earlier updaters, which do not understand the
+routes array. Publish a separate signed delta for each supported base.
+
+`make_channel.py --base-release-id 0.1.1 --update ... --url ... --route 0.1.0 ... ...`
+retains the primary artifact and adds the second base. The primary route is
+included automatically. An original 0.1.0 app needs its existing bridge update,
+or the latest full APK installed over it followed by the matching data update.
+
 ## Locally signed user-created data updates
 
 A manual ZIP may include `publisher.der` with its signer's RSA public key. When

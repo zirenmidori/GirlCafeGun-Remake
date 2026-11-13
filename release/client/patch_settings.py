@@ -3,6 +3,9 @@ from pathlib import Path
 import copy,hashlib,sys
 ROOT=Path(__file__).resolve().parents[2]
 import asset_tools as w
+import patch_gacha
+import patch_card_display
+import patch_selectors
 CARD='Npc/card_neptune_release.png'
 
 def build(source):
@@ -11,10 +14,18 @@ def build(source):
     card=tables['CharacterCard'];value=copy.deepcopy(card['value'])
     row,=[r for r in value['list'] if [r[k] for k in ('Genre','Detail','Particular','Level')]==[1,27,1,1]]
     old=copy.deepcopy(row)
-    row.update(Rarity=4,RarityColor=0,ImgCard=CARD,PicCard=CARD,CardRotationZ=0)
-    for name in ('ShowX','ShowY','FixShowX','FixShowY','ShowXAlbum','ShowYAlbum','ShowXShop','ShowYShop'):row[name]=0.
+    row.update(Rarity=4,RarityColor=0,**patch_card_display.FIELDS)
     replacements={card['object']['path_id']:w.replace_native(raw,card,value)}
     env=w.unity.UnityPy.load(plain)
+    gacha_replacements,gacha_proof=patch_gacha.settings_objects(env)
+    assert not set(gacha_replacements)&set(replacements)
+    replacements.update(gacha_replacements)
+    card_replacements,card_display_proof=patch_card_display.settings_objects(env)
+    assert not set(card_replacements)&set(replacements)
+    replacements.update(card_replacements)
+    selector_replacements,selector_proof=patch_selectors.settings_objects(env,raw)
+    assert not set(selector_replacements)&set(replacements)
+    replacements.update(selector_replacements)
     path='assets/_game/settinggen/live2d/sequence.txt';obj=env.container[path].deref();tree=obj.read_typetree()
     lines=tree['m_Script'].splitlines();header=lines[1].split('\t');schedule={}
     for i,line in enumerate(lines):
@@ -42,4 +53,4 @@ def build(source):
     before_inv=w.native.serialized_inventory(raw);after_inv=w.native.serialized_inventory(checked)
     before={o['path_id']:raw[o['start']:o['end']] for o in before_inv['objects']};after={o['path_id']:checked[o['start']:o['end']] for o in after_inv['objects']}
     assert before.keys()==after.keys() and {pid for pid in before if before[pid]!=after[pid]}==set(replacements)
-    return encoded,packed,{'characterGdpl':[1,27,1,1],'rarity':4,'rarityColor':0,'changedCardFields':{k:{'before':old[k],'after':v} for k,v in row.items() if old[k]!=v},'lobbySchedule':schedule,'standSeconds':2.,'maximumConsecutiveLobbyStandSeconds':2.,'nativeMagicTbForwardCursorAllRowsConsumed':True,'neptuneOperatorCounts':counts,'magicTbObjectByteExact':True,'onlyChangedObjectIds':list(replacements),'otherSettingsObjectsByteExact':True}
+    return encoded,packed,{'characterGdpl':[1,27,1,1],'rarity':4,'rarityColor':0,'changedCardFields':{k:{'before':old[k],'after':v} for k,v in row.items() if old[k]!=v},'cardDisplay':card_display_proof,'gacha':gacha_proof,'selectors':selector_proof,'lobbySchedule':schedule,'standSeconds':2.,'maximumConsecutiveLobbyStandSeconds':2.,'nativeMagicTbForwardCursorAllRowsConsumed':True,'neptuneOperatorCounts':counts,'magicTbObjectByteExact':True,'onlyChangedObjectIds':list(replacements),'otherSettingsObjectsByteExact':True}

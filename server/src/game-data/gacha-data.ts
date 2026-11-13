@@ -39,6 +39,7 @@ export interface GachaPool {
   rotateVersion: number;
   normalCards: ReadonlyMap<number, readonly GachaCard[]>;
   hedgeCards: ReadonlyMap<number, readonly GachaCard[]>;
+  selectionMilestone?: { every: number; progressTask: number; item: Gdpln };
 }
 
 export interface GachaAward {
