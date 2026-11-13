@@ -88,36 +88,6 @@ apply an update: uninstalling can remove the local profile. Updates preserve the
 profile, verify their publisher and content, and recover interrupted resource
 transactions before the game starts.
 
-### Updating to 0.1.2
-
-Use the signed `.gcgupdate` package matching your installed data release. The
-0.1.1 login updater can discover its 0.1.1-to-0.1.2 package with **Check online**.
-The 0.1.2 updater also selects a direct package for 0.1.0 data automatically.
-
-If you still use the original 0.1.0 app, either import its existing 0.1.0-to-0.1.1
-bridge first, or install the full 0.1.2 APK over the app and then use **Update →
-Check online** to apply its matching data. Keep the app installed and preserve
-its data throughout. Installing an APK alone does not replace resources already
-cached in `files/`.
-
-Older full installers are retired to save hosting space. Previously shared APK
-and download-page addresses redirect to the current release; old data packs and
-signed update packages remain available because current installations still
-reuse them.
-
-### Updating from 0.1.0 to 0.1.1
-
-Import `GCG-Offline-0.1.0-to-0.1.1.gcgupdate` through the login **Update** screen.
-It contains the offline-login repair, the matching resource changes and an APK
-delta with the new download and update addresses. It reuses the installed data
-and preserves the local player; the complete initial download is not needed.
-
-If you install the full 0.1.1 APK over 0.1.0 manually, also import that paired
-update to bring the existing resources to 0.1.1. Installing the APK alone does
-not replace resources already stored in the game's `files/` directory. Keep the
-app installed throughout; do not clear its data. A fresh 0.1.1 installation uses
-the matching automatic download or the complete 0.1.1 manual data set instead.
-
 ## Create an update
 
 See [the update format](docs/update-format.md) and
