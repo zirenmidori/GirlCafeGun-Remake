@@ -10,8 +10,9 @@ The release reuses the signed 0.1.2 resource set. All 34 public data-pack routes
 returned sizes matching the signed manifest. The 0.1.2 manifest and the 0.1.3
 manifest/channel signatures verified; the public 0.1.2-to-0.1.3 delta matched
 its signed SHA-256. Full APK headers and ranges at the split boundary matched
-the local APK. The 22 focused gacha, selector, welcome-mail and progression
-tests passed. Old APK chunks and superseded 0.1.2 deltas were removed from R2;
+the local APK. The full server suite passed all 410 tests, including the
+Railgun, selector, welcome-mail, MOD and weapon progression flows. Old APK
+chunks and superseded 0.1.2 deltas were removed from R2;
 the data packs needed by 0.1.3 remain under the 0.1.2 prefix. A complete phone
 playtest of applying this new update remains pending.
 
