@@ -1,6 +1,6 @@
 # Girl Cafe Gun Re:make
 
-Release **0.1.0**. See [validation and compatibility](docs/release-status.md).
+See [validation and compatibility](docs/release-status.md).
 
 GCG Re:make runs its game server on the Android device. A PC, USB connection and
 server-address configuration are not needed. The first login creates a fresh
