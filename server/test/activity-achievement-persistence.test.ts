@@ -283,6 +283,35 @@ describe("event page achievement claims", () => {
       await rejection(repository.claimActivityAchievementAward(account, 16, 67)),
     ).toBe("unsupported_award");
     expect(hasClaimedAchievement(otherTask(repository.get(account)!, 67))).toBe(false);
+
+    // Activity 27, achievement 197: [6-28-8-4-1] is a head frame, used on receipt.
+    const frame = catalog.achievement(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 197)!;
+    expect(frame.awards).toEqual([[6, 28, 8, 4, 1]]);
+    await storeProgress(
+      store,
+      ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+      197,
+      requiredAchievementCount(frame),
+    );
+    expect(
+      await rejection(repository.claimActivityAchievementAward(account, 27, 197)),
+    ).toBe("unsupported_award");
+
+    // Panel achievement 39 (clear stage 6-12) pays diamonds, gold and a head
+    // frame; a part payment would lose the frame, so the whole claim waits.
+    const before = repository.get(account)!;
+    await repository.completeLevel(account, 6, 12, 1, 0b111);
+    expect(await rejection(repository.claimAchievementAward(account, 39))).toBe(
+      "unsupported_award",
+    );
+    expect(money(repository.get(account)!, MONEY_DIAMOND)).toBe(
+      money(before, MONEY_DIAMOND),
+    );
+    // Panel achievement 12 pays a riki entry (16-3-5-1).
+    await storeProgress(store, ACHIEVEMENT_TASK_GROUP, 12, 60);
+    expect(await rejection(repository.claimAchievementAward(account, 12))).toBe(
+      "unsupported_award",
+    );
   });
 
   it("counts login days at login for every shown page that uses them", async () => {

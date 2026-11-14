@@ -76,9 +76,9 @@ one `JsonStore` transaction each:
    the `NormalActivity` tables. The activity's time window is not checked; the
    client does not offer a page that is closed.
 2. The achievement must exist and every award must be one that `grantAwards`
-   can place: no malformed tuple (`AchievementOther` 1686 has four numbers), no
-   genre 14, no genre 15 currency without a wallet in this server. Such a claim
-   is refused (`unsupported_award`) and nothing is marked.
+   can place: no malformed tuple (`AchievementOther` 1686 has four numbers) and
+   no auto-use item without a rule in this server (see Awards). Such a claim is
+   refused (`unsupported_award`) and nothing is marked.
 3. An achievement without awards is refused (`no_award`). The matrix board cells
    are such rows.
 4. The stored progress is raised to the derived progress, then compared with the
@@ -90,6 +90,31 @@ Every refusal answers `nError = 1`. The original error codes were not recovered.
 
 Activity 29 keeps its own handler in the gateway. Both paths read and write the
 same task values, so a reward claimed through one is refused by the other.
+
+## Awards
+
+`grantAwards` places an award in one of three ways: a wallet (genre 15, details
+1 gold, 2 diamonds, 4 stamina, 10 coffee coins, 11 and 20 decomposition tokens),
+a new instance (genres 1-4) or an inventory stack (everything else).
+
+`ItemList` of the client marks many items `AutoUse`: the original server used
+them up when they arrived. A stack of such an item does nothing. Checked against
+`ItemList` for every award of the two achievement tables:
+
+| Award                                | `AutoUse` | Here                                 |
+| ------------------------------------ | --------- | ------------------------------------ |
+| 15-1, 15-2, 15-4, 15-20              | yes       | wallet, paid                         |
+| genres 1, 2, 3                       | -         | instance, paid                       |
+| genres 5, 7, 9, 10, 12, 21, 22 and 8 | no        | stack, paid                          |
+| genre 11 `CafeItemAuto`              | yes       | stack, paid; the cafe uses up stacks |
+| genre 6 (frames, bubbles, cards)     | yes       | refused                              |
+| 8-17 `ItemBoxAuto`                   | yes       | refused                              |
+| genre 14 (purchase items)            | yes       | refused                              |
+| genre 15, every other detail         | yes       | refused                              |
+| genres 16, 17 `RikiItem`             | yes       | refused                              |
+
+No achievement of a shown page that has a progress source pays a refused
+award. Stamina (15-4) is paid, but no shown page lists it.
 
 ## Progress
 

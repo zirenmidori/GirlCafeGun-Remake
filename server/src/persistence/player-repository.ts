@@ -1654,13 +1654,20 @@ function awardMoneyId(genre: number, detail: number): number | null {
 }
 
 /**
- * Genre 14 (purchase items) and genre 15 (currencies) are used up when they
- * are received. grantAwards converts only the currencies above; any other row
- * of these genres would stay in the inventory as a stack that does nothing.
+ * ItemList marks some items AutoUse: the original server used them up on
+ * receipt (currencies, profile decorations, boxes, purchase items, riki
+ * entries). grantAwards converts only the currencies above; any other such row
+ * would stay in the inventory as a stack that does nothing.
+ *
+ * The rule covers every AutoUse award of Achievement.txt and
+ * AchievementOther.txt in the 0.1.3 client: genres 6, 14, 16 and 17, box 8-17
+ * and the other genre 15 currencies. Genre 11 (cafe furniture) is AutoUse too,
+ * but this server keeps furniture as inventory stacks.
  */
 function isGrantableAward([genre, detail]: BaseAward): boolean {
-  if (genre === 14) return false;
-  return genre !== 15 || awardMoneyId(genre, detail) !== null;
+  if (genre === 15) return awardMoneyId(genre, detail) !== null;
+  if (genre === 8) return detail !== 17;
+  return ![6, 14, 16, 17].includes(genre);
 }
 
 function grantAwards(
