@@ -26,9 +26,10 @@ Potentially useful references, rather than changes blindly copied into this rele
 - [d46a615](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/d46a615f90668393ad4c4e97d9112cee5f871b2d): activity achievements and login-day rewards.
 - [5a66d20](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/5a66d204db734bc78fabc7704c4d1abcd8d26883): offline purchases and shop arithmetic.
 
-The title-screen patch (`release/client/patch_title.py` and `test_title.py`)
-recreates an edit of that repository's phone build. The edit exists there only
-inside a patched `lua.u`; its description is section 3.2 of
+The title-screen patch (`release/client/title_screens.lua`, `patch_title.py`
+and `test_title.py`) recreates and extends an edit of that repository's phone
+build. The edit, with two titles, exists there only inside a patched `lua.u`;
+its description is section 3.2 of
 `docs/05-PHONE-PORT-2026-11-11.md` at
 [c5b9ed9](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/c5b9ed93e91028d7719e869da8e09ae07a34186c).
 The recipe and its test are new tooling, MIT, copyright 2026 GCG2-Offline
