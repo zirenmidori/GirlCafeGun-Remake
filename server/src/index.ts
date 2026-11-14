@@ -6,7 +6,11 @@ import type { Server } from "node:net";
 import { loadConfig } from "./config.js";
 import { createLogger } from "./logger.js";
 import { JsonStore } from "./persistence/json-store.js";
-import { makeInitialState, PlayerRepository } from "./persistence/player-repository.js";
+import {
+  assertLoadableState,
+  makeInitialState,
+  PlayerRepository,
+} from "./persistence/player-repository.js";
 import { createGatewayServer } from "./servers/gateway-server.js";
 import { createHttpServer } from "./servers/http-server.js";
 import { createPvpFightServers } from "./servers/pvp-fight-server.js";
@@ -26,6 +30,15 @@ const store = new JsonStore({
   filePath: config.persistence.file,
   initialState: makeInitialState(),
   logger,
+  ...(config.persistence.backupDirectory
+    ? {
+        backups: {
+          directory: config.persistence.backupDirectory,
+          keep: config.persistence.backupCount ?? 0,
+        },
+      }
+    : {}),
+  validate: assertLoadableState,
 });
 await store.initialize();
 

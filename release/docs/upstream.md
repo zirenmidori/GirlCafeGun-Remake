@@ -34,6 +34,19 @@ revision preserves active and proposed skills separately; discarding a revision
 really keeps the old skills; and breakthrough validates the submitted material
 GUIDs. The client already supports active type-2 and pending type-6 skill entries.
 
+Pull request #1 was later merged upstream at
+`bf9f9220cb7021bcf203c4bbe6cdbb79ca5ace95`. Notes that follow from that work:
+
+- The daily save backup follows the upstream phone launcher work, which copies
+  the save before the embedded server starts. No code was copied; the store
+  implementation here is new.
+- The gacha ticket fix in 88c397d (spend across several stacks) was checked
+  and is not needed here: every pool costs one ticket, and the spend already
+  skips empty stacks. Its draw snapshot is not needed either, because a draw is
+  one `JsonStore.update` transaction. The arithmetic guards of 88c397d and
+  5a66d20 are not needed: quantities are JavaScript numbers, `buyNum` is
+  limited to 99, and varints are encoded through `BigInt`.
+
 Welcome rewards use their own persistent campaign marker, independent of other
 mail and surviving message deletion. The fixed local account starts a fresh
 tutorial save; development profiles and trial-state copying are not shipped.

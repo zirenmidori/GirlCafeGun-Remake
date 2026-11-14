@@ -7,6 +7,9 @@ import {
   MAX_GACHA_ROTATION_DAYS,
 } from "./game-data/gacha-rotation-data.js";
 
+export const DEFAULT_SAVE_BACKUP_COUNT = 7;
+export const MAX_SAVE_BACKUP_COUNT = 365;
+
 const configSchema = z.object({
   release: z
     .object({
@@ -42,6 +45,8 @@ const configSchema = z.object({
   }),
   persistence: z.object({
     file: z.string().min(1),
+    backupDirectory: z.string().min(1).optional(),
+    backupCount: z.number().int().min(0).max(MAX_SAVE_BACKUP_COUNT).optional(),
   }),
   pvp: z.object({
     fightHost: z.string().min(1),
@@ -118,5 +123,19 @@ export async function loadConfig(projectRoot: string): Promise<AppConfig> {
     projectRoot,
     process.env.GCG_STATE_FILE || config.persistence.file,
   );
+  // Daily save copies live next to the save unless a directory is configured.
+  config.persistence.backupDirectory = path.resolve(
+    projectRoot,
+    process.env.GCG_STATE_BACKUP_DIR ||
+      config.persistence.backupDirectory ||
+      path.join(path.dirname(config.persistence.file), "backups"),
+  );
+  config.persistence.backupCount =
+    configSchema.shape.persistence.shape.backupCount.parse(
+      envInteger(
+        "GCG_STATE_BACKUP_COUNT",
+        config.persistence.backupCount ?? DEFAULT_SAVE_BACKUP_COUNT,
+      ),
+    );
   return config;
 }
