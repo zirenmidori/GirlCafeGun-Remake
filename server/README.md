@@ -71,6 +71,19 @@ HTTP 接口：
 状态写入采用同目录临时文件加原子重命名。任务变更请求 `1027` 会更新玩家的
 `taskValues`，后续登录再通过 `1026` 同步给客户端。
 
+Save safety:
+
+- At start, after the save loads, the server copies it to
+  `data/backups/state-YYYYMMDD.json` (UTC date), once per day, before any change
+  of the new run is written. The newest 7 copies are kept. Change the count with
+  `persistence.backupCount` or `GCG_STATE_BACKUP_COUNT` (0 turns backups off) and
+  the place with `persistence.backupDirectory` or `GCG_STATE_BACKUP_DIR`.
+- A save that is not valid JSON, or is not a `schemaVersion=1` document, is never
+  replaced by a new game. The server copies it to
+  `state.json.corrupt-<UTC time>`, logs `persistence.unreadable` with the path of
+  the latest daily backup, and stops. To recover, stop the server and copy a
+  backup over `state.json`.
+
 任务与活动的开发约定见
 [docs/activity-engine.md](docs/activity-engine.md)。
 
@@ -96,6 +109,10 @@ tail -f logs/server.log
 - `GCG_GAME_HOST`：渠道列表向客户端公布的网关地址；ADB 反向转发模式保持
   `127.0.0.1`
 - `GCG_LOG_LEVEL`：`debug`、`info`、`warn` 或 `error`
+- `GCG_STATE_BACKUP_DIR`: directory for the daily save copies (default: `backups`
+  next to the save)
+- `GCG_STATE_BACKUP_COUNT`: number of daily save copies to keep, 0 to 365
+  (default 7; 0 turns backups off)
 
 ## 检查
 

@@ -16,7 +16,6 @@ it("maps the guide reply to the protobuf reply id", () => {
   });
 });
 
-
 it("follows the authored legacy and new branches with exact packed positions", () => {
   const legacy = getPhoneLetterDefinition(8)!;
   expect(makePhoneReplyId(legacy, 1, [])).toBe(21);

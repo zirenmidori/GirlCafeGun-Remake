@@ -6528,6 +6528,42 @@ export class PlayerRepository {
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Load-time check for the save document. It rejects files that are not a v1
+ * save at all (wrong root, a newer schema, players that are not objects), so
+ * the store can keep the file and stop, instead of failing later in a handler.
+ * Field-level repair stays with the reconcile functions in `getOrCreate`.
+ */
+export function assertLoadableState(
+  document: unknown,
+): asserts document is PersistedState {
+  if (!isRecord(document)) throw new Error("save root is not an object");
+  if (
+    document.schemaVersion !== undefined &&
+    document.schemaVersion !== SAVE_SCHEMA_VERSION
+  ) {
+    throw new Error(
+      `unsupported schemaVersion ${String(document.schemaVersion)}, expected ${SAVE_SCHEMA_VERSION}`,
+    );
+  }
+  if (!isRecord(document.players)) throw new Error("players is not an object");
+  for (const [account, player] of Object.entries(document.players)) {
+    if (!isRecord(player)) throw new Error(`player ${account} is not an object`);
+    for (const field of ["money", "inventory", "girls", "formations", "levels"]) {
+      if (!Array.isArray(player[field])) {
+        throw new Error(`player ${account} has no ${field} list`);
+      }
+    }
+    if (!isRecord(player.taskValues)) {
+      throw new Error(`player ${account} has no taskValues`);
+    }
+  }
+}
+
 export function makeInitialState(): PersistedState {
   return {
     schemaVersion: SAVE_SCHEMA_VERSION,
