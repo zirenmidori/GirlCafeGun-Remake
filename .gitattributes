@@ -1,0 +1,4 @@
+# Source, docs and scripts use LF on every platform (Prettier checks it).
+* text=auto eol=lf
+# Game tables are byte-exact copies; provenance.json records their SHA-256.
+server/resources/** -text
