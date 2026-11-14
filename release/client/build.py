@@ -15,6 +15,7 @@ from runtime_asset_guard import validate_assetfile
 import test_login
 import test_card_display
 import test_gacha
+import test_gamepad
 import patch_selectors
 import test_selectors
 
@@ -47,7 +48,8 @@ def main():
         proofs['loginBehavior']=test_login.run()
         proofs['cardDisplayBehavior']=test_card_display.run()
         proofs['selectorBehavior']=test_selectors.run()
-        print('Verified release login and removed developer Lua',flush=True)
+        proofs['gamepadBehavior']=test_gamepad.run_bundle(changed['lua.u'])
+        print('Verified release login, controller layer and removed developer Lua',flush=True)
         changed['setting.u'],plain,proofs['settings']=patch_settings.build(apk.read('assets/setting.u'))
         changed['lang.u'],proofs['selectorLanguage']=patch_selectors.build_language(apk.read('assets/lang.u'))
         replacements['assets/setting_decrypted.u']=write('assets/setting_decrypted.u',plain)
