@@ -11,9 +11,7 @@
         "sourceRows": 2431,
         "filter": {
           "column": "AutoUse",
-          "values": [
-            1
-          ]
+          "values": [1]
         },
         "columns": [
           "Genre",
