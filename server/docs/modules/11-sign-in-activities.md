@@ -55,7 +55,7 @@
 ## 已知缺口
 
 - 只实现每日签到类型 1 和八日签到活动 29；other event pages that claim an
-  achievement are in `23-event-page-achievements.md`;
+  achievement are in `24-event-page-achievements.md`;
 - 没有补签、VIP 加成、跨时区或管理员校时；
 - 月卡补偿（`TID_MONTHSIGN_Energy_Got`=11006，`nSubType=10`）未实现；
 - 没有独立活动开放期，八日签到对所有账号永久存在；

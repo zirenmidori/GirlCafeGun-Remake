@@ -28,7 +28,7 @@ handler，普通日常任务使用同事务 Repository 进度投影和明确的�
 ## 当前接入
 
 生产注册表包含 `guide-mission` 和 `activity-achievements`
-（`23-event-page-achievements.md`）。关卡、武器和编队已经产生事件；角色卡强化、
+（`24-event-page-achievements.md`）。关卡、武器和编队已经产生事件；角色卡强化、
 武器强化和编队更新会按客户端公式刷新历史最大练度并产生
 `fight_power.changed`。
 

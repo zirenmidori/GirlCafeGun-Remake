@@ -39,7 +39,7 @@
 
 | [Headpats](22-headpats.md) | Implemented; phone playtest passed | Shared charges, refill, affection, daily and oath progress |
 
-| [Event page achievements](23-event-page-achievements.md) | Core implementation; automated tests only | Table-driven claims for event pages and the achievement panel, progress from saved state |
+| [Event page achievements](24-event-page-achievements.md) | Core implementation; automated tests only | Table-driven claims for event pages and the achievement panel, progress from saved state |
 
 ## 自动化验证现状
 
