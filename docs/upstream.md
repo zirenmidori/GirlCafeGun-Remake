@@ -26,6 +26,14 @@ Potentially useful references, rather than changes blindly copied into this rele
 - [d46a615](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/d46a615f90668393ad4c4e97d9112cee5f871b2d): activity achievements and login-day rewards.
 - [5a66d20](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/5a66d204db734bc78fabc7704c4d1abcd8d26883): offline purchases and shop arithmetic.
 
+The controller layer (`release/client/gamepad_fight.lua`, `patch_gamepad.py` and
+`test_gamepad.py`) is adapted from that repository's tooling at
+[45510eb](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/45510ebdcbf53ae18b52500d27546e4bd0501b64):
+`tools/lua/GamepadFight.lua`, `tools/patch_lua_gamepad.py` and
+`tools/lua/test_gamepad.py`, MIT, copyright 2026 GCG2-Offline contributors. Each
+adapted file names its source. The InputManager change of that commit is not
+part of this release; see [controller support](controller.md).
+
 The local extracted C# reference and upstream have identical normalized source
 for `RuneFeature.cs` (Git blob `aca74fc4cd2fc57bd9a6c6a788741d7c63f1a68d`) and
 `RuneTable.cs` (`ac703fd32ded6cff980bbd24a7f1282e220b6920`). We corrected several
