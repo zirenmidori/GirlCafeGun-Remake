@@ -28,7 +28,18 @@ P.cfg = {
 }
 local IMAGE, PARTICLES, SPINE = 'PnlBGEffect/Image3', 'PnlBGEffect/eftParent4', 'Spine'
 
-local function log(text) print('[title] ' .. text) end
+-- Login.lua of the release client lets only exceptions through to the Unity log before the login screen
+-- opens. The filter goes up for this one line and back.
+local function log(text)
+  local logger, filter
+  pcall(function()
+    logger = U3D.Debug.unityLogger
+    filter = logger.filterLogType
+    logger.filterLogType = 3
+  end)
+  print('[title] ' .. text)
+  if logger then pcall(function() logger.filterLogType = filter end) end
+end
 
 -- A number from 0 to 1. No stock script uses UnityEngine.Random, and math.random is not seeded
 -- before login, so the clock is the second source.
@@ -67,9 +78,20 @@ local function own(s, title)
     and s.texture.name == title.texture:match('([^/]+)%.%w+$')
 end
 
+-- The model object of the component. A client can refuse to read one of the two fields.
 local function shown(model)
-  if alive(model.spine) then return model.spine end
-  if alive(model.live2d) then return model.live2d end
+  for _, field in ipairs({ 'spine', 'live2d' }) do
+    local ok, object = pcall(function() return model[field] end)
+    if ok and alive(object) then return object end
+  end
+end
+
+-- Takes a model object away. Load() of some clients does nothing while a model stands.
+local function clear(model, old)
+  pcall(function() U3D.Object.DestroyImmediate(old.gameObject) end)
+  for _, field in ipairs({ 'spine', 'live2d' }) do
+    pcall(function() if model[field] == old then model[field] = nil end end)
+  end
 end
 
 -- Loads a suit of the animation. True only when a new model object stands there afterwards:
@@ -90,6 +112,13 @@ local function animate(s, title)
   s.spine:SetActive(true)
   s.model:Load()
   local after = shown(s.model)
+  if before and after == before then
+    -- The GirlCafeGun-Remake 0.1.3 client: Load() keeps the model of the suit before. Without it Load() works.
+    clear(s.model, before)
+    before = nil
+    s.model:Load()
+    after = shown(s.model)
+  end
   if not after or after == before then return false end
   if title.animation then pcall(s.model.Play, s.model, title.animation) end
   return true

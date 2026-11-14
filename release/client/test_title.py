@@ -82,6 +82,9 @@ CLIENTS = [
     ('no snow animation: old model destroyed', NO_SUIT_1 + ", missing = 'destroy'", FULL - {'snow'}),
     ('no snow animation: old model stays', NO_SUIT_1 + ", missing = 'keep'", FULL - {'snow'}),
     ('no snow animation: model field cleared', NO_SUIT_1 + ", missing = 'clear'", FULL - {'snow'}),
+    # The GirlCafeGun-Remake 0.1.3 client on a phone: Load() does nothing while a model stands.
+    ('all art, Load keeps a standing model', ALL + ", guard = true", FULL),
+    ('no snow animation, Load keeps a standing model', NO_SUIT_1 + ", guard = true", FULL - {'snow'}),
     ('no shards texture', "textures = { ['BG/bg_login03.png'] = true }, suits = { true, true, true }", FULL - {'shards'}),
     ('no extra art', "textures = {}, suits = { false, true, false }", {'hall', 'sky'}),
     ('texture loader raises', ALL + ", loader = 'raises'", {'hall', 'sky'}),
@@ -99,6 +102,7 @@ events, world, printed = {}, {}, {}
 print = function(...) printed[#printed + 1] = table.concat({ ... }, ' ') end
 local function unity(name)
   local o = { name = name, destroyed = false }
+  o.gameObject = o
   function o:Equals(other) return other == nil and self.destroyed end
   return o
 end
@@ -122,6 +126,7 @@ local Random = setmetatable({}, { __index = function(_, key)
   return table.remove(rolls, 1)
 end })
 U3D = { Vector2 = function(x, y) return { x = x, y = y } end,
+  Object = { DestroyImmediate = function(o) o.destroyed = true end },
   AndroidJavaClass = function() return { CallStatic = function(_, method)
     if method == 'prepareAccount' then events.prepared = events.prepared + 1 end end } end }
 os.time = function() return clock end
@@ -170,6 +175,7 @@ local function concert()
   local m = { GirlId = 1002, SuitId = 2, Scale = 133, AutoLoad = true }
   function m:Load()
     events.modelLoads = events.modelLoads + 1
+    if world.guard and self.spine and not self.spine.destroyed then return end
     if world.suits[self.SuitId] then
       if self.spine then self.spine.destroyed = true end
       self.spine = unity('girl1002_2da0' .. self.SuitId)

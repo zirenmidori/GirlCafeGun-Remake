@@ -59,6 +59,9 @@ until one can be shown:
 - Any other title: `Game.LuaUtils.LoadTexture2D` must return its picture, and
   `ShowConcertModel:Load()` must put a new model in place for its suit. If
   either fails, the prefab's suit is loaded again and the next title is tried.
+  `Load()` of this repository's client does nothing while a model stands, so
+  when the model of the suit before is still there after `Load()`, the module
+  takes that model away and calls `Load()` once more.
   If both work, the module makes the call that the stock `ModifyBackground`
   makes for the stock picture, with the new picture and its width to height
   ratio, sets the picture on the `RawImage`, calls the stock
@@ -76,7 +79,9 @@ when the read fails or does not return a number, the last two digits of
 `os.time()` choose.
 
 Every login screen writes its title to logcat, and each title it had to leave
-out with the reason:
+out with the reason. `Login.lua` of the release client lets only exceptions
+through to the Unity log before the login screen opens; the module lifts that
+filter for its own lines and puts it back:
 
 ```sh
 adb logcat -s Unity | grep "\[title\]"
@@ -102,10 +107,10 @@ so that client shows `hall`, `sky` and `shards`.
 
 ## Limits
 
-- The four titles were seen on one phone only: a Galaxy S24+ (2340 x 1080) with
-  the English 1.0.9 client and the GirlCafeGun-Offline data. The sizes and
-  places were set for that screen. A 16 to 9 screen and this repository's pinned
-  client were not seen.
+- The four titles were seen on one phone only: a Galaxy S24+ (2340 x 1080), with
+  the English 1.0.9 client and the GirlCafeGun-Offline data, and with the
+  0.1.3 release of this repository. The sizes and places were set for that
+  screen. A 16 to 9 screen was not seen.
 - The stock hall branch is unchanged and still needs its four objects.
 - The older city-plaza title (`bg_login02` with the scene `Login_Effect`) is not
   in the table: no live stock script loads that scene, so there is no call to
@@ -124,7 +129,8 @@ rejected sources and the Lua syntax. Then it opens 400 login screens in each of
 17 mocked clients with a seeded random source and compares every screen with a
 second implementation of the choice. The clients hold all, some or none of the
 extra art, fail in four different ways when a suit is absent and in three when
-a picture is absent, and load the prefab with `Spine` on, off or absent. A title without its art is never on the
+a picture is absent, load the prefab with `Spine` on, off or absent, and in two
+of them `Load()` keeps a model that stands, as this repository's client does. A title without its art is never on the
 screen, and a failed attempt leaves the prefab's own picture and suit behind.
 `release/client/build.py` repeats the screens on the module inside the built
 `lua.u`.
@@ -133,4 +139,14 @@ The same module, placed by the GirlCafeGun-Offline tool, ran on a Galaxy S24+
 with the English 1.0.9 client on 2026-11-14. Each title was opened alone and
 looked at. With all four in the table, six starts in a row logged `sky`, `hall`,
 `snow`, `sky`, `shards`, `sky`, so `U3D.Random.value` answers on that client.
-This repository's pinned client has not been tested on a device.
+
+The 0.1.3 release of this repository ran the module on the same phone on
+2026-11-14, placed in the released `lua.u` and installed as a locally signed
+data update. The first version of the module showed only `hall` and `sky`
+there: the log gave `snow left out: no animation suit 1` and `shards left out:
+no animation suit 3`, and after `Load()` the component still held
+`girl1002_2da02(Clone)`, also one second later. With the old model taken away
+first, `Load()` put `girl1002_2da01(Clone)` and `girl1002_2da03(Clone)` in
+place, and eight starts in a row logged `hall`, `snow`, `shards`, `hall`,
+`hall`, `hall`, `snow`, `shards`. The build of this repository with its pinned
+client input has not been run.
