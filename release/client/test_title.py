@@ -88,6 +88,7 @@ CLIENTS = [
     ('texture loader returns a destroyed object', ALL + ", loader = 'dead'", {'hall', 'sky'}),
     ('no texture loader', ALL + ", loader = 'absent'", {'hall', 'sky'}),
     ('prefab without Spine', ALL + ", spine = 'none'", {'hall', 'sky'}),
+    ('Spine without a RectTransform', ALL + ", rect = false", FULL),
     # Its picture cannot be read, so no title of the table is known to be its own: the scene joins as one more.
     ('prefab without a RawImage on Image3', ALL + ", image = false", {'hall', 'prefab'}),
     ('prefab with another picture, no sky texture', ALL + ", picture = 'bg_login02'", FULL - {'sky'} | {'prefab'}),
@@ -166,13 +167,13 @@ function tbClass:BackgroundAdapter() events.adapted = events.adapted + 1 end
 
 -- ShowConcertModel: Load puts a new model object in "spine" for the suit, when the client has that suit.
 local function concert()
-  local m = { GirlId = 1002, SuitId = 2, AutoLoad = true }
+  local m = { GirlId = 1002, SuitId = 2, Scale = 133, AutoLoad = true }
   function m:Load()
     events.modelLoads = events.modelLoads + 1
     if world.suits[self.SuitId] then
       if self.spine then self.spine.destroyed = true end
       self.spine = unity('girl1002_2da0' .. self.SuitId)
-      self.spine.suit = self.SuitId
+      self.spine.suit, self.spine.scale = self.SuitId, self.Scale
       self.playing = nil
     elseif world.missing == 'raise' then error('no model for suit ' .. self.SuitId)
     elseif world.missing == 'destroy' then if self.spine then self.spine.destroyed = true end
@@ -192,14 +193,18 @@ local function screen()
     { __index = tbClass })
   if world.spine ~= 'none' then
     local spine, model, awake = object(false), concert(), false
-    function spine:GetComponent(kind) return kind == 'ShowConcertModel' and model or nil end
+    local rect = { anchoredPosition = U3D.Vector2(-15.5, -106.76) }
+    function spine:GetComponent(kind)
+      if kind == 'ShowConcertModel' then return model end
+      if kind == 'RectTransform' and world.rect ~= false then return rect end
+    end
     function spine:SetActive(v)
       self.activeSelf = v
       -- Awake runs once, when the object is first active, and loads the suit that is set then.
       if v and not awake then awake = true; model:Load() end
     end
     if world.spine ~= 'off' then spine:SetActive(true) end
-    s.objects.Spine, s.model = spine, model
+    s.objects.Spine, s.model, s.rect = spine, model, rect
   end
   for i = 1, 3 do s['PnlBGEffectParent' .. i] = { gameObject = object(false) } end
   s.btnSwitch, s.btnMenu = button(), button()
@@ -207,13 +212,16 @@ local function screen()
   return s
 end
 
-local SCENES = { bg_login02 = { 'plaza', 2, nil, true }, bg_login04 = { 'sky', 2, nil, true }, bg_login03 = { 'snow', 1, 'idle', false, 4 / 3 },
-  bg_login05 = { 'shards', 3, 'Mgirl09_stand', false, 2 } }
+local HOME = { -15.5, -106.76 }
+local SCENES = { bg_login02 = { 'plaza', 2, nil, true, nil, 133, HOME }, bg_login04 = { 'sky', 2, nil, true, nil, 133, HOME },
+  bg_login03 = { 'snow', 1, 'idle', false, 4 / 3, 133, { -50.5, -42.5 }, { 300, 212 } },
+  bg_login05 = { 'shards', 3, 'Mgirl09_stand', false, 2, 83, { 0, 0 }, { 300, 212 } } }
 -- The title on the screen, or what is wrong with the screen.
 local function describe(s)
   local o, m = s.objects, s.model
   local image1, image2, image3 = o['PnlBGEffect/Image1'].activeSelf, o['PnlBGEffect/Image2'].activeSelf, o['PnlBGEffect/Image3'].activeSelf
-  local petals, logo, effects = o['PnlBGEffect/eftParent4'].activeSelf, s.ImgLogoRect.anchoredPosition ~= nil, 0
+  local petals, at, effects = o['PnlBGEffect/eftParent4'].activeSelf, s.ImgLogoRect.anchoredPosition, 0
+  local logo = at ~= nil and ((at.x == 1 and at.y == 2) or (at.x == -17.85 and at.y == -36))
   for i = 1, 3 do if s['PnlBGEffectParent' .. i].gameObject.activeSelf then effects = effects + 1 end end
   local spine = o.Spine == nil and 'absent' or o.Spine.activeSelf and 'on' or 'off'
   if image1 and image2 and not image3 and not petals and effects == 3 and logo then return 'hall', spine end
@@ -221,12 +229,19 @@ local function describe(s)
   local want = SCENES[s.raw.texture.name]
   if not want or s.raw.texture.destroyed then return 'unknown picture', spine end
   local title, suit, animation, particles, ratio = want[1], want[2], want[3], want[4], want[5]
+  local scale, place, mark = want[6], want[7], want[8]
+  if (at and at.x) ~= (mark and mark[1]) or (at and at.y) ~= (mark and mark[2]) then return title .. ' with the logo in a wrong place', spine end
   if petals ~= particles then return title .. ' with wrong particles', spine end
   if m then
     local stands = m.spine and not m.spine.destroyed
     if m.SuitId ~= suit then return title .. ' with suit ' .. m.SuitId, spine end
     if world.suits[suit] and not (stands and m.spine.suit == suit) then return title .. ' without its model', spine end
     if stands and animation and m.playing ~= animation then return title .. ' not playing ' .. animation, spine end
+    if m.Scale ~= scale or (stands and m.spine.scale ~= scale) then return title .. ' with scale ' .. tostring(m.Scale), spine end
+    -- Without a RectTransform to move, the animation stays where the prefab put it.
+    local now = s.rect.anchoredPosition
+    if world.rect == false then place = HOME end
+    if now.x ~= place[1] or now.y ~= place[2] then return title .. ' with the animation in a wrong place', spine end
   end
   if ratio then
     local b = events.background

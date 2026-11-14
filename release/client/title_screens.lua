@@ -13,14 +13,17 @@ P.cfg = {
   -- texture: path below Textures/, as for Game.LuaUtils.LoadTexture2D. ratio: width / height of it.
   -- suit: SuitId of ShowConcertModel (2D Animation/girl1002_2da<suit>). animation: name in that model.
   -- particles: the cherry petals of eftParent4 belong to the sky title only.
+  -- scale: Scale of ShowConcertModel. position: anchoredPosition of "Spine". logo: anchoredPosition of
+  -- PnlBG/ImgLogo. Each is optional; without it the value of the prefab stays. Set by eye on a 2340 x 1080
+  -- phone: at the prefab's scale suit 3 is far too large, and the stock logo place covers a face.
   titles = {
     { name = 'hall', weight = 1, hall = true },
     { name = 'sky', weight = 1, texture = 'BG/bg_login04.png', ratio = 4 / 3, suit = 2,
       animation = 'Mgirl01_stand', particles = true },
     { name = 'snow', weight = 1, texture = 'BG/bg_login03.png', ratio = 4 / 3, suit = 1,
-      animation = 'idle' },
+      animation = 'idle', position = { -50.5, -42.5 }, logo = { 300, 212 } },
     { name = 'shards', weight = 1, texture = 'BG/bg_login05.png', ratio = 2, suit = 3,
-      animation = 'Mgirl09_stand' },
+      animation = 'Mgirl09_stand', scale = 83, position = { 0, 0 }, logo = { 300, 212 } },
   },
 }
 local IMAGE, PARTICLES, SPINE = 'PnlBGEffect/Image3', 'PnlBGEffect/eftParent4', 'Spine'
@@ -52,6 +55,9 @@ local function parts(self)
   s.texture = s.image and s.image.texture
   s.suit = s.model and s.model.SuitId
   s.active = s.spine and s.spine.activeSelf
+  s.scale = s.model and s.model.Scale
+  s.rect = s.spine and s.spine:GetComponent('RectTransform')
+  s.position = s.rect and s.rect.anchoredPosition
   return s
 end
 
@@ -68,9 +74,19 @@ end
 
 -- Loads a suit of the animation. True only when a new model object stands there afterwards:
 -- a model left over from the suit before is not this suit.
+-- Size and place of the animation: those of a title, or without a title those of the prefab.
+local function place(s, title)
+  s.model.Scale = title and title.scale or s.scale
+  if s.rect and s.position then
+    local at = title and title.position
+    s.rect.anchoredPosition = at and U3D.Vector2(at[1], at[2]) or s.position
+  end
+end
+
 local function animate(s, title)
   local before = shown(s.model)
   s.model.SuitId = title.suit
+  place(s, title)
   s.spine:SetActive(true)
   s.model:Load()
   local after = shown(s.model)
@@ -81,6 +97,7 @@ end
 
 local function restore(s)
   s.model.SuitId = s.suit
+  place(s, nil)
   pcall(s.model.Load, s.model)
   s.spine:SetActive(s.active)
 end
@@ -104,6 +121,9 @@ local function scene(self, s, title)
   if s.image.texture ~= texture then s.image.texture = texture end
   pcall(self.BackgroundAdapter, self)
   if s.particles then s.particles:SetActive(title.particles == true) end
+  if title.logo and self.ImgLogoRect then
+    self.ImgLogoRect.anchoredPosition = U3D.Vector2(title.logo[1], title.logo[2])
+  end
   return true
 end
 
