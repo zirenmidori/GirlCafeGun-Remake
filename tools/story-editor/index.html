@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GCG Story Editor</title>
+<style>
+:root{
+  --bg:#14161b; --panel:#1b1e25; --panel2:#232733; --line:#2e3340; --text:#e6e8ee; --dim:#8b92a5;
+  --accent:#e1a422; --original:#5b8def; --machine:#e0a030; --human:#3fb77a; --untranslated:#e05555; --missing:#b06ad6;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:14px/1.45 "Segoe UI",system-ui,sans-serif;display:grid;
+  grid-template-rows:48px 1fr;grid-template-columns:340px 1fr;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:#4a5166}
+button:disabled{opacity:.45;cursor:default}
+button.primary{background:var(--accent);border-color:var(--accent);color:#1a1405;font-weight:600}
+header{grid-column:1/3;display:flex;align-items:center;gap:12px;padding:0 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:15px;margin:0;font-weight:600;white-space:nowrap}
+header .set{color:var(--dim);font-size:12px;white-space:nowrap}
+header .spacer{flex:1}
+#search{width:220px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;border:1px solid var(--line);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.t-original{background:var(--original)} .t-machine{background:var(--machine)} .t-human{background:var(--human)}
+.t-untranslated{background:var(--untranslated)} .t-missing{background:var(--missing)} .t-untagged{background:#7a8194}
+
+aside{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;border-radius:0;background:none;padding:9px 4px;color:var(--dim);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+.navtools{padding:8px 10px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;font-size:12px;color:var(--dim)}
+.navtools select{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;flex:1}
+#tree{overflow:auto;flex:1;padding:6px 0 30px}
+details{border-bottom:1px solid #20242d}
+summary{cursor:pointer;padding:7px 12px;font-weight:600;list-style:none;display:flex;gap:8px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"▸";color:var(--dim);font-size:11px}
+details[open]>summary:before{content:"▾"}
+summary small{color:var(--dim);font-weight:400;margin-left:auto;white-space:nowrap}
+.stage{padding:5px 12px 2px 26px;color:var(--dim);font-size:12px}
+.stage.inter{font-style:italic}
+.scene{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 38px;cursor:pointer;border-left:3px solid transparent}
+.scene:hover{background:#20242d}
+.scene.on{background:#262b38;border-left-color:var(--accent)}
+.scene .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scene .n{color:var(--dim);font-size:11px}
+.bar{display:flex;width:46px;height:6px;border-radius:3px;overflow:hidden;background:#333;flex:none}
+.bar i{display:block;height:100%}
+.hid{font-size:10px;color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-weight:400}
+
+main{display:grid;grid-template-columns:1fr 400px;min-height:0;min-width:0}
+#view{display:flex;flex-direction:column;min-height:0;min-width:0}
+#bar{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+#crumb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#crumb b{font-weight:600}
+#crumb span{color:var(--dim)}
+.seg{display:flex}
+.seg button{border-radius:0}
+.seg button:first-child{border-radius:6px 0 0 6px}
+.seg button:last-child{border-radius:0 6px 6px 0;border-left:0}
+.seg button.on{background:var(--accent);color:#1a1405;border-color:var(--accent);font-weight:600}
+#play,#script{flex:1;min-height:0;overflow:auto}
+#play{display:flex;flex-direction:column;align-items:center;padding:14px;gap:10px}
+#stage{position:relative;width:100%;max-width:1100px;aspect-ratio:16/9;background:#0b0c10;border-radius:8px;
+  overflow:hidden;border:1px solid var(--line);cursor:pointer;user-select:none;flex:none;container-type:size}
+#layers{position:absolute;inset:0;overflow:hidden;z-index:0;isolation:isolate}
+#layers img{position:absolute;left:50%;top:50%;max-width:none;pointer-events:none}
+#stage:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 45%,rgba(0,0,0,.6));pointer-events:none}
+#sttitle{position:absolute;left:0;top:18px;z-index:2;background:rgba(10,12,18,.72);border-left:4px solid var(--accent);padding:5px 16px 5px 12px;font-size:15px}
+#stnote{position:absolute;right:10px;top:10px;z-index:2;font-size:11px;color:#c9cfdd;background:rgba(10,12,18,.6);padding:2px 8px;border-radius:4px}
+#dlg{position:absolute;left:4%;right:4%;bottom:5%;z-index:3;background:rgba(14,17,26,.86);border:1px solid rgba(255,255,255,.18);
+  border-radius:10px;padding:26px 22px 16px;min-height:27%}
+#dlg.narr{background:rgba(8,9,14,.8)}
+#dlg.cg{text-align:center;min-height:0;padding:14px 22px;bottom:9%}
+#spname{position:absolute;left:18px;top:-15px;background:var(--accent);color:#1a1405;font-weight:700;padding:3px 16px;border-radius:6px;font-size:15px}
+#sptext{font-size:clamp(14px,1.55vw,19px);line-height:1.5;white-space:pre-wrap}
+#sptag{position:absolute;right:12px;top:8px}
+#choices{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,.35)}
+#choices button{min-width:46%;max-width:80%;padding:11px 22px;font-size:16px;background:rgba(20,24,36,.92);border-color:var(--accent)}
+#choices button:hover{background:var(--accent);color:#1a1405}
+#endcard{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,.6)}
+#ctl{display:flex;align-items:center;gap:10px;width:100%;max-width:1100px;color:var(--dim);font-size:12px;flex-wrap:wrap}
+#ctl .spacer{flex:1}
+#ctl label{display:flex;gap:5px;align-items:center;cursor:pointer}
+#script{padding:8px 14px 60px}
+.sec{color:var(--accent);font-weight:600;margin:16px 0 4px;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.row{display:grid;grid-template-columns:34px 130px 1fr 20px;gap:10px;padding:5px 8px;border-radius:6px;cursor:pointer;align-items:start}
+.row:hover{background:#1e222b}
+.row.on{background:#262b38;outline:1px solid var(--accent)}
+.row .i{color:var(--dim);font-size:11px;text-align:right;padding-top:2px}
+.row .who{color:#c7b27a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .tx{white-space:pre-wrap;min-width:0;overflow-wrap:anywhere}
+.row.note{cursor:default;color:var(--dim);font-size:12px;padding-top:1px;padding-bottom:1px}
+.row.note:hover{background:none}
+.row.opt .who{color:var(--accent)}
+.rawkey{color:var(--missing);font-family:Consolas,monospace;font-size:12px}
+
+#ed{border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:0;overflow:auto;padding:12px 14px;gap:10px}
+#ed h2{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin:0;font-weight:600}
+#edkey{font-family:Consolas,monospace;font-size:12px;color:var(--dim);overflow-wrap:anywhere;cursor:pointer}
+#edtext{width:100%;min-height:150px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:15px;line-height:1.5}
+#edtext:focus{outline:1px solid var(--accent)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tags button{display:flex;align-items:center;gap:6px;font-size:12px}
+.tags button.on{border-color:var(--text);background:#30364a}
+.edrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#edmsg{font-size:12px;color:var(--dim)}
+.ref{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg)}
+.ref .h{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.ref .h button{margin-left:auto;font-size:11px;padding:1px 8px;text-transform:none;letter-spacing:0}
+.ref .b{white-space:pre-wrap;overflow-wrap:anywhere}
+.help{font-size:12px;color:var(--dim);margin-top:auto;border-top:1px solid var(--line);padding-top:8px}
+kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 4px;font:11px Consolas,monospace}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#30364a;border:1px solid var(--line);padding:8px 14px;border-radius:8px;
+  display:none;z-index:20;max-width:80vw;overflow-wrap:anywhere}
+.empty{color:var(--dim);padding:30px;text-align:center}
+.res{padding:6px 12px;cursor:pointer;border-bottom:1px solid #20242d}
+.res:hover{background:#20242d}
+.res small{color:var(--dim);display:block;font-family:Consolas,monospace;font-size:11px}
+@media (max-width:1100px){main{grid-template-columns:1fr 320px} body{grid-template-columns:280px 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>GCG Story Editor</h1>
+  <span class="set" id="setinfo"></span>
+  <span id="totals" style="display:flex;gap:6px"></span>
+  <span class="spacer"></span>
+  <input id="search" placeholder="Search text or key, Enter" autocomplete="off">
+  <button id="export" title="Write work/export/lang.u with the edited text">Export lang.u</button>
+</header>
+
+<aside>
+  <div class="tabs">
+    <button data-tab="main" class="on">Main story</button>
+    <button data-tab="events">Event stories</button>
+    <button data-tab="unlisted" title="Scripts in the story folders that the stage map and the story archive do not list">Unlisted</button>
+  </div>
+  <div class="navtools">Show
+    <select id="filter">
+      <option value="">all scenes</option>
+      <option value="machine">with machine translated lines</option>
+      <option value="human">with human translated lines</option>
+      <option value="original">with original English lines</option>
+      <option value="untagged">with lines that have no tag</option>
+      <option value="problem">with untranslated or missing lines</option>
+    </select>
+  </div>
+  <div id="tree"></div>
+</aside>
+
+<main>
+  <section id="view">
+    <div id="bar">
+      <div id="crumb"><span>Pick a scene on the left.</span></div>
+      <button id="prevScene" title="Previous scene">◀ Scene</button>
+      <button id="nextScene" title="Next scene">Scene ▶</button>
+      <div class="seg"><button id="mPlay" class="on">Play</button><button id="mScript">Script</button></div>
+    </div>
+    <div id="play">
+      <div id="stage">
+        <div id="layers"></div>
+        <div id="sttitle" hidden></div>
+        <div id="stnote" hidden></div>
+        <div id="dlg" hidden><div id="spname"></div><div id="sptext"></div><span id="sptag"></span></div>
+        <div id="choices" hidden></div>
+        <div id="endcard" hidden></div>
+      </div>
+      <div id="ctl">
+        <button id="back">◀ Back</button><button id="next" class="primary">Next ▶</button><button id="restart">Restart</button>
+        <span id="pos"></span><span class="spacer"></span>
+        <label title="Full-screen scene backgrounds"><input type="checkbox" id="optBg" checked> backgrounds</label>
+        <label title="CG illustrations and other pictures the scene shows, with their zoom and position"><input type="checkbox" id="optCg" checked> CG and pictures</label>
+        <label title="Live2D characters in their default pose (no motion, no expression)"><input type="checkbox" id="optCh" checked> characters</label>
+        <label title="Character size">size <input type="range" id="chSize" min="40" max="200" value="100" style="width:80px"></label>
+        <label title="Character height on the screen">height <input type="range" id="chShift" min="-60" max="60" value="0" style="width:80px"></label>
+        <label><input type="checkbox" id="optType" checked> typewriter</label>
+      </div>
+    </div>
+    <div id="script" hidden></div>
+  </section>
+
+  <section id="ed">
+    <h2>Line</h2>
+    <div id="edempty" class="empty">No line selected.</div>
+    <div id="edbody" hidden style="display:flex;flex-direction:column;gap:10px">
+      <div id="edkey" title="Click to copy the key"></div>
+      <div class="tags" id="edtags"></div>
+      <textarea id="edtext" spellcheck="true"></textarea>
+      <div class="edrow">
+        <button id="save" class="primary">Save</button>
+        <button id="revert">Revert</button>
+        <span id="edmsg"></span>
+      </div>
+      <div id="refs" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="help">
+      <kbd>Space</kbd> / <kbd>→</kbd> next line · <kbd>←</kbd> back · <kbd>E</kbd> edit · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> save · <kbd>Esc</kbd> leave the text box.<br>
+      A saved text change is tagged human translated. Click a tag to set it by hand; click it again to return to the automatic tag.
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const TAG_LABEL = {original: "Original English", machine: "Machine translated", human: "Human translated",
+                   untagged: "No tag", untranslated: "Not translated", missing: "No text (raw key)"};
+const TAG_ORDER = ["original", "machine", "human", "untagged", "untranslated", "missing"];
+const S = {nav: null, tab: "main", flat: [], scene: null, sceneId: null, mode: "play", key: null,
+           p: null, typing: null};
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
+// Unity rich text -> HTML. Unknown tags stay visible as text.
+function rich(s) {
+  if (s == null) return "";
+  let h = esc(s).replace(/\\n/g, "\n");
+  h = h.replace(/&lt;color=(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)&gt;/g, '<span style="color:$1">').replace(/&lt;\/color&gt;/g, "</span>");
+  h = h.replace(/&lt;size=(\d+)&gt;/g, (m, n) => '<span style="font-size:' + Math.max(.6, Math.min(2.2, n / 24)).toFixed(2) + 'em">').replace(/&lt;\/size&gt;/g, "</span>");
+  h = h.replace(/&lt;(\/?)(b|i)&gt;/g, "<$1$2>");
+  return h;
+}
+function plain(s) { return (s || "").replace(/<\/?(color|size|b|i)[^>]*>/g, "").replace(/\\n/g, "\n"); }
+async function api(path, body) {
+  const r = await fetch(path, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {});
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+function toast(msg, ms = 2600) {
+  const t = $("#toast"); t.textContent = msg; t.style.display = "block";
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms);
+}
+function tagChip(tag, small) {
+  return '<span class="chip" title="' + esc(TAG_LABEL[tag] || tag) + '"><i class="dot t-' + tag + '"></i>' + (small ? "" : esc(TAG_LABEL[tag] || tag)) + "</span>";
+}
+function bar(counts, lines) {
+  if (!lines) return '<span class="bar"></span>';
+  return '<span class="bar" title="' + TAG_ORDER.filter(t => counts[t]).map(t => counts[t] + " " + TAG_LABEL[t]).join(", ") + '">' +
+    TAG_ORDER.filter(t => counts[t]).map(t => '<i class="t-' + t + '" style="width:' + (100 * counts[t] / lines) + '%"></i>').join("") + "</span>";
+}
+
+// ---------------------------------------------------------------- navigation
+function sceneMatches(sc) {
+  const f = $("#filter").value;
+  if (!f) return true;
+  if (f === "problem") return (sc.counts.untranslated || 0) + (sc.counts.missing || 0) > 0;
+  return (sc.counts[f] || 0) > 0;
+}
+function buildFlat() {
+  S.flat = [];
+  const n = S.nav;
+  n.main.forEach(c => c.stages.forEach(st => st.scenes.forEach(sc => S.flat.push({id: sc.id, tab: "main", path: [c.title, st.title, sc.label]}))));
+  n.events.forEach(e => e.scenes.forEach(sc => S.flat.push({id: sc.id, tab: "events", path: [e.title, sc.label]})));
+  n.unlisted.forEach(u => u.scenes.forEach(sc => S.flat.push({id: sc.id, tab: "unlisted", path: [u.title, sc.label]})));
+}
+function sceneRow(sc, idx) {
+  if (sc.missing) return '<div class="scene" style="cursor:default;opacity:.5"><span class="lbl">' + esc(sc.label) + ' (script not found)</span></div>';
+  return '<div class="scene' + (sc.id === S.sceneId && S.flat[idx] && S.flat[idx].tab === S.tab ? " on" : "") + '" data-i="' + idx + '"><span class="lbl" title="' + esc(sc.id) + '">' +
+    esc(sc.label) + '</span><span class="n">' + sc.lines + "</span>" + bar(sc.counts, sc.lines) + "</div>";
+}
+function renderTree() {
+  const openSet = new Set([...document.querySelectorAll("#tree details[open]")].map(d => d.dataset.k));
+  let h = "", i = 0;
+  const idxOf = {};
+  S.flat.forEach((f, j) => { idxOf[f.tab + "|" + f.path.join("|") + "|" + f.id] = j; });
+  const ix = (tab, path, id) => idxOf[tab + "|" + path.join("|") + "|" + id];
+  const group = (k, title, extra, body, count) => body ?
+    '<details data-k="' + esc(k) + '"' + (openSet.has(k) ? " open" : "") + "><summary>" + esc(title) + extra + "<small>" + count + "</small></summary>" + body + "</details>" : "";
+  if (S.tab === "main") {
+    S.nav.main.forEach(c => {
+      let b = "", n = 0;
+      c.stages.forEach(st => {
+        const rows = st.scenes.filter(sceneMatches).map(sc => sceneRow(sc, ix("main", [c.title, st.title, sc.label], sc.id))).join("");
+        if (rows) { b += '<div class="stage' + (st.interlude ? " inter" : "") + '">' + esc(st.title) + "</div>" + rows; n += st.scenes.length; }
+      });
+      h += group("m" + c.ch, c.title, "", b, n + " scenes");
+    });
+  } else {
+    const list = S.tab === "events" ? S.nav.events : S.nav.unlisted;
+    list.forEach((e, j) => {
+      const rows = e.scenes.filter(sceneMatches).map(sc => sceneRow(sc, ix(S.tab, [e.title, sc.label], sc.id))).join("");
+      h += group(S.tab + j, e.title, e.hidden ? ' <span class="hid" title="The English story archive hides this event">hidden in EN</span>' : "", rows, e.scenes.length + " scenes");
+    });
+  }
+  $("#tree").innerHTML = h || '<div class="empty">No scene matches the filter.</div>';
+  const on = $("#tree .scene.on");
+  if (on) { const d = on.closest("details"); if (d) d.open = true; }
+}
+function renderTotals() {
+  const t = S.nav.totals;
+  $("#totals").innerHTML = TAG_ORDER.filter(k => t[k]).map(k => '<span class="chip"><i class="dot t-' + k + '"></i>' + t[k].toLocaleString() + " " + esc(TAG_LABEL[k].toLowerCase()) + "</span>").join("");
+  $("#setinfo").textContent = "data: " + S.nav.set + " · " + S.nav.edits + " edited" + (S.nav.official ? "" : " · no official table (--official): lines have no tag");
+}
+async function loadNav() {
+  const old = S.nav && S.nav.rev;
+  S.nav = await api("/api/nav");
+  buildFlat(); renderTree(); renderTotals();
+  if (S.nav.warning) toast(S.nav.warning, 8000);
+  return !!old && old !== S.nav.rev;
+}
+// the server reads the bundles again when they change; pick that up when the page gets the focus back
+window.addEventListener("focus", async () => {
+  try {
+    if (!S.nav || !(await loadNav())) return;
+    const d = info(S.key), dirty = S.key && d && $("#edtext").value !== (d.text == null ? "" : d.text);
+    toast("The game data changed. " + (dirty ? "Save or drop your text, then open the scene again." : "The scene was loaded again."), 6000);
+    if (!dirty && S.sceneId) { const i = curIndex(); if (i >= 0) openScene(i, S.key); else { S.scene = null; S.sceneId = null; } }
+  } catch (e) {}
+});
+
+// ---------------------------------------------------------------- scene
+function curIndex() { return S.flat.findIndex(f => f.id === S.sceneId && f.tab === S.tab) >= 0 ? S.flat.findIndex(f => f.id === S.sceneId && f.tab === S.tab) : S.flat.findIndex(f => f.id === S.sceneId); }
+async function openScene(idx, key) {
+  const f = S.flat[idx];
+  if (!f) return;
+  S.scene = await api("/api/scene?id=" + encodeURIComponent(f.id));
+  S.sceneId = f.id;
+  if (S.tab !== f.tab) { S.tab = f.tab; document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === S.tab)); }
+  $("#crumb").innerHTML = f.path.map((p, i) => i === f.path.length - 1 ? "<b>" + esc(p) + "</b>" : "<span>" + esc(p) + " › </span>").join("") +
+    ' <span style="font-family:Consolas,monospace;font-size:11px">' + esc(f.id) + "</span>";
+  try { localStorage.setItem("gcg-story-last", f.tab + "|" + f.id); } catch (e) {}
+  renderTree();
+  const on = $("#tree .scene.on"); if (on) on.scrollIntoView({block: "nearest"});
+  renderScript();
+  startPlay(key);
+  if (key) { select(key); const r = $('#script .row[data-k="' + CSS.escape(key) + '"]'); if (r && S.mode === "script") r.scrollIntoView({block: "center"}); }
+}
+function info(k) { return S.scene && S.scene.texts[k]; }
+function shown(k) { const i = info(k); return i && i.text != null ? i.text : null; }
+
+// ---------------------------------------------------------------- script view
+function renderScript() {
+  let h = "", n = 0;
+  S.scene.sections.forEach((sec, si) => {
+    h += '<div class="sec">Section ' + esc(sec.name) + "</div>";
+    sec.steps.forEach((st, ti) => {
+      const at = ' data-s="' + si + '" data-t="' + ti + '"';
+      if (st.t === "line" || st.t === "cg" || st.t === "text") {
+        n++;
+        h += rowHtml(st.k, n, st.t === "cg" ? (st.name || "") + " (caption)" : st.t === "text" ? "(" + st.cmd + ")" : (st.name || "—"), at, "");
+      } else if (st.t === "choice") {
+        h += '<div class="row note"><span></span><span>choice</span><span>the player picks one:</span></div>';
+        st.opts.forEach(o => { h += rowHtml(o.k, "", "→ section " + o.to, at, " opt"); });
+      } else if (st.t === "title") {
+        h += rowHtml(st.k, "", "(scene title)", at, "");
+      } else if (st.t === "goto") {
+        h += '<div class="row note"><span></span><span>jump</span><span>go to section ' + esc(st.to) + "</span></div>";
+      } else if (st.t === "img" && st.op === "load" && st.l2d) {
+        h += '<div class="row note"><span></span><span>character</span><span>Live2D model ' + esc(st.l2d[0]) + ", outfit " + esc(st.l2d[1]) + " (" + esc(st.n) + ")</span></div>";
+      } else if (st.t === "img" && st.op === "load") {
+        h += '<div class="row note"><span></span><span>image</span><span>' + esc(st.p) + (st.full ? " (full screen)" : "") + "</span></div>";
+      } else if (st.t === "note") {
+        h += '<div class="row note"><span></span><span>cue</span><span>' + esc(st.x) + "</span></div>";
+      }
+    });
+  });
+  $("#script").innerHTML = h;
+}
+function rowHtml(k, n, who, at, cls) {
+  const i = info(k) || {tag: "missing", text: null};
+  const tx = i.text == null ? '<span class="rawkey">' + esc(k) + "</span>" : rich(i.text);
+  return '<div class="row' + cls + (k === S.key ? " on" : "") + '" data-k="' + esc(k) + '"' + at + '><span class="i">' + n + '</span><span class="who" title="' + esc(who) + '">' + esc(who) +
+    '</span><span class="tx">' + tx + '</span><span title="' + esc(TAG_LABEL[i.tag] || "") + '"><i class="dot t-' + i.tag + '"></i></span></div>';
+}
+
+// ---------------------------------------------------------------- play view
+function startPlay(key) {
+  S.p = {sec: 0, idx: -1, imgs: {}, seq: 0, title: null, trail: [], done: false, total: 0, shown: 0};
+  S.p.total = S.scene.sections.reduce((a, s) => a + s.steps.filter(t => t.t === "line" || t.t === "cg" || t.t === "text").length, 0);
+  $("#endcard").hidden = true; $("#choices").hidden = true; $("#dlg").hidden = true; $("#sttitle").hidden = true; $("#stnote").hidden = true;
+  renderLayers();
+  if (key) { if (!jumpTo(key)) advance(); } else advance();
+}
+function snapshot() { const p = S.p; return {sec: p.sec, idx: p.idx, imgs: JSON.parse(JSON.stringify(p.imgs)), seq: p.seq, title: p.title, shown: p.shown}; }
+function restore(sn) { Object.assign(S.p, {sec: sn.sec, idx: sn.idx, imgs: JSON.parse(JSON.stringify(sn.imgs)), seq: sn.seq, title: sn.title, shown: sn.shown, done: false}); }
+function applyImg(st) {
+  const p = S.p;
+  if (st.op === "load") {
+    p.imgs[st.n] = {p: st.p, l2d: st.l2d, full: !!st.full, vis: true, seq: ++p.seq, o: st.o, s: st.s, x: st.x, y: st.y, w: st.w, h: st.h};
+  } else if (p.imgs[st.n]) {
+    const im = p.imgs[st.n];
+    if (st.op === "attr") { ["o", "s", "x", "y", "w", "h"].forEach(k => { if (st[k] != null) im[k] = st[k]; }); im.d = st.d || 0; }
+    else { im.vis = st.op === "show"; if (im.vis) im.seq = ++p.seq; }
+  }
+}
+// Every picture the scene shows is a layer: order = stacking, position in half-screens from the centre,
+// size in pixels of a 1280x720 screen (how the scripts place a full-screen CG: scale 1.6 with position 0.6 0.6).
+const BAD_IMG = new Set();
+
+// ---------------------------------------------------------------- Live2D characters (default pose, drawn once per model)
+const L2D = {core: null, models: new Map(), queue: Promise.resolve()};
+function l2dModel(girl, clothes) {
+  const k = girl + "_" + clothes;
+  if (!L2D.models.has(k)) {
+    const job = L2D.queue.then(() => buildL2d(girl, clothes)).catch(e => { console.warn("Live2D model " + k + ": " + e.message); return null; });
+    L2D.queue = job;
+    L2D.models.set(k, job);
+  }
+  return L2D.models.get(k);
+}
+async function buildL2d(girl, clothes) {
+  if (L2D.off) return null;
+  const avoid = [];
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await fetch("/api/l2d?girl=" + encodeURIComponent(girl) + "&clothes=" + encodeURIComponent(clothes) + "&avoid=" + avoid.join(","));
+    if (!r.ok) return null;
+    const info = await r.json();
+    const file = f => "/api/l2d/file?key=" + info.key + "&f=" + f;
+    const moc = await (await fetch(file("model.moc3"))).arrayBuffer();
+    const data = await l2dMeshes(moc);
+    if (data === "nocore") {
+      L2D.off = true;
+      toast("Characters are off: the Live2D runtime file is not in work/vendor (see README).", 7000);
+      return null;
+    }
+    if (!data.ok) { console.warn("Live2D model " + info.key + ": " + data.error); avoid.push(info.outfit); continue; }
+    const imgs = [];
+    for (let i = 0; i < info.textures; i++) imgs.push(await new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => no(new Error("texture")); im.src = file("tex" + i + ".png"); }));
+    const out = await drawL2d(data, imgs);
+    if (out) { out.standin = info.standin; out.outfit = info.outfit; }
+    return out;
+  }
+  return null;
+}
+// the runtime works in a worker: a model file it cannot take ends there, not in the page
+function l2dMeshes(moc) {
+  return new Promise(done => {
+    let w;
+    try { w = new Worker("/l2d-worker.js"); } catch (e) { done({ok: false, error: e.message}); return; }
+    const timer = setTimeout(() => { w.terminate(); done({ok: false, error: "the runtime did not answer in 12 s"}); }, 12000);
+    w.onmessage = e => { clearTimeout(timer); w.terminate(); done(e.data); };
+    w.onerror = e => {
+      clearTimeout(timer); w.terminate();
+      done(/importScripts|NetworkError|Failed to load/i.test(e.message || "") ? "nocore" : {ok: false, error: e.message || "worker error"});
+    };
+    w.postMessage({moc: moc}, [moc]);
+  });
+}
+function l2dProgram(gl) {
+  const vs = "attribute vec2 p;attribute vec2 t;uniform vec4 xf;uniform float flip;varying vec2 uv;varying vec2 sp;" +
+    "void main(){vec2 c=p*xf.xy+xf.zw;gl_Position=vec4(c,0.,1.);uv=vec2(t.x,mix(t.y,1.-t.y,flip));sp=c*.5+.5;}";
+  const fs = "precision mediump float;uniform sampler2D tex;uniform sampler2D mask;uniform float op;uniform float useMask;uniform float inv;varying vec2 uv;varying vec2 sp;" +
+    "void main(){vec4 c=texture2D(tex,uv)*op;if(useMask>.5){float m=texture2D(mask,sp).a;c*=inv>.5?1.-m:m;}gl_FragColor=c;}";
+  const mk = (type, src) => { const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh)); return sh; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, mk(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, mk(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+  return pr;
+}
+async function drawL2d(dr, imgs) {
+  const n = dr.count, ci = dr.canvas, ppu = ci.ppu;
+  const H = Math.min(1600, Math.round(ci.h)), W = Math.max(1, Math.round(H * ci.w / ci.h));
+  const fw = ci.w / ppu, fh = ci.h / ppu, fx0 = -ci.ox / ppu, fy0 = -(ci.h - ci.oy) / ppu;
+  const usable = i => dr.indices[i] && dr.indices[i].length > 0;
+  const visible = i => (dr.dynamicFlags[i] & 1) && dr.opacities[i] > 0.001 && usable(i);
+  // are the texture rows stored top-down or bottom-up? test which reading puts the mesh centres on opaque texels
+  let flip = 1;
+  {
+    const c2 = document.createElement("canvas"); c2.width = c2.height = 256;
+    const g2 = c2.getContext("2d", {willReadFrequently: true}); g2.drawImage(imgs[0], 0, 0, 256, 256);
+    const px = g2.getImageData(0, 0, 256, 256).data;
+    let a = 0, b = 0;
+    for (let i = 0; i < n; i++) {
+      if (!visible(i) || dr.textureIndices[i] !== 0) continue;
+      const uv = dr.uvs[i]; let u = 0, v = 0;
+      for (let j = 0; j < uv.length; j += 2) { u += uv[j]; v += uv[j + 1]; }
+      u /= uv.length / 2; v /= uv.length / 2;
+      const x = Math.min(255, Math.max(0, Math.floor(u * 256)));
+      const ya = Math.min(255, Math.max(0, Math.floor((1 - v) * 256))), yb = Math.min(255, Math.max(0, Math.floor(v * 256)));
+      if (px[(ya * 256 + x) * 4 + 3] > 10) a++;
+      if (px[(yb * 256 + x) * 4 + 3] > 10) b++;
+    }
+    flip = a >= b ? 1 : 0;
+  }
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const gl = cv.getContext("webgl", {premultipliedAlpha: true, alpha: true, antialias: true, preserveDrawingBuffer: true});
+  if (!gl) throw new Error("no WebGL");
+  try {
+    const pr = l2dProgram(gl); gl.useProgram(pr);
+    const loc = k => gl.getUniformLocation(pr, k);
+    gl.uniform4f(loc("xf"), 2 / fw, 2 / fh, -fx0 * 2 / fw - 1, -fy0 * 2 / fh - 1);
+    gl.uniform1f(loc("flip"), flip); gl.uniform1i(loc("tex"), 0); gl.uniform1i(loc("mask"), 1);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    const tex = imgs.map(im => {
+      const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return t;
+    });
+    const maskTex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, maskTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const fbo = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, maskTex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const vb = gl.createBuffer(), tb = gl.createBuffer(), ib = gl.createBuffer();
+    const ap = gl.getAttribLocation(pr, "p"), at = gl.getAttribLocation(pr, "t");
+    gl.enableVertexAttribArray(ap); gl.enableVertexAttribArray(at);
+    gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); gl.enable(gl.BLEND); gl.viewport(0, 0, W, H);
+    const mesh = (i, op) => {
+      gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(gl.ARRAY_BUFFER, dr.positions[i], gl.DYNAMIC_DRAW); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, tb); gl.bufferData(gl.ARRAY_BUFFER, dr.uvs[i], gl.DYNAMIC_DRAW); gl.vertexAttribPointer(at, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, dr.indices[i], gl.DYNAMIC_DRAW);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex[dr.textureIndices[i]] || tex[0]);
+      gl.uniform1f(loc("op"), op);
+      gl.drawElements(gl.TRIANGLES, dr.indices[i].length, gl.UNSIGNED_SHORT, 0);
+    };
+    const normal = () => gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    const order = [...Array(n).keys()].filter(visible).sort((a, b) => dr.renderOrders[a] - dr.renderOrders[b]);
+    let maskKey = null;
+    for (const i of order) {
+      const flags = dr.constantFlags[i], mc = dr.maskCounts[i];
+      if (mc > 0) {
+        const key = dr.masks[i].join(",");
+        if (key !== maskKey) {
+          maskKey = key;
+          // the mask texture must not sit on a sampler while it is drawn to (WebGL refuses the draw call)
+          gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, null);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, fbo); gl.clear(gl.COLOR_BUFFER_BIT); normal(); gl.uniform1f(loc("useMask"), 0);
+          for (const m of dr.masks[i]) if (m >= 0 && usable(m)) mesh(m, 1);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+        gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, maskTex);
+      }
+      gl.uniform1f(loc("useMask"), mc > 0 ? 1 : 0); gl.uniform1f(loc("inv"), flags & 8 ? 1 : 0);
+      if (flags & 1) gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ZERO, gl.ONE);
+      else if (flags & 2) gl.blendFuncSeparate(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+      else normal();
+      mesh(i, dr.opacities[i]);
+    }
+    // crop to the drawn pixels
+    const px = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px);
+    let x0 = W, x1 = -1, y0 = H, y1 = -1;
+    for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (px[(y * W + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) return null;
+    x1 = Math.min(W, x1 + 2); y1 = Math.min(H, y1 + 2);                 // y runs bottom-up here
+    const cw = x1 - x0, chh = y1 - y0;
+    const out = document.createElement("canvas"); out.width = cw; out.height = chh;
+    out.getContext("2d").drawImage(cv, x0, H - y1, cw, chh, 0, 0, cw, chh);
+    const blob = await new Promise(ok => out.toBlob(ok, "image/png"));
+    return {url: URL.createObjectURL(blob), px: [cw, chh], drawn: order.length, flip: flip,
+            cx: fx0 + (x0 + x1) / 2 / W * fw, cy: fy0 + (y0 + y1) / 2 / H * fh, bw: cw / W * fw, bh: chh / H * fh};
+  } finally { const lose = gl.getExtension("WEBGL_lose_context"); if (lose) lose.loseContext(); }
+}
+function isBackdrop(im) { return im.full && /^BG\/(?!CG\/)/i.test(im.p); }
+function renderLayers() {
+  const box = $("#layers"), p = S.p;
+  const want = new Map();
+  if (p) Object.keys(p.imgs).forEach(name => {
+    const im = p.imgs[name];
+    if (!im.vis) return;
+    if (im.l2d) { if ($("#optCh").checked && !BAD_IMG.has("l2d:" + im.l2d.join(":"))) want.set(name + "|l2d:" + im.l2d.join(":"), im); return; }
+    if (!im.p || BAD_IMG.has(im.p)) return;
+    if (isBackdrop(im) ? !$("#optBg").checked : !$("#optCg").checked) return;
+    want.set(name + "|" + im.p, im);
+  });
+  [...box.children].forEach(el => { if (!want.has(el.dataset.k)) el.remove(); });
+  want.forEach((im, k) => {
+    let el = [...box.children].find(e => e.dataset.k === k);
+    if (!el) {
+      el = document.createElement("img");
+      el.dataset.k = k; el.alt = ""; el.draggable = false;
+      el.onload = () => placeLayer(el);
+      if (im.l2d) {
+        el.style.visibility = "hidden";
+        l2dModel(im.l2d[0], im.l2d[1]).then(m => {
+          if (!m) { BAD_IMG.add("l2d:" + im.l2d.join(":")); el.remove(); return; }
+          el._l2d = m; el.src = m.url; el.title = m.standin ? "outfit " + im.l2d[1] + " is not in the bundles; outfit " + m.outfit + " stands in" : "";
+        });
+      } else {
+        el.onerror = () => { BAD_IMG.add(im.p); el.remove(); };
+        el.src = "/api/img?path=" + encodeURIComponent(im.p);
+      }
+      box.appendChild(el);
+    }
+    el._im = im; placeLayer(el);
+  });
+}
+function placeLayer(el) {
+  const im = el._im; if (!im) return;
+  const sc = im.s == null ? 1 : im.s, x = im.x || 0, y = im.y || 0;
+  if (im.l2d) {
+    // one model unit = scale/10 of the screen height (the game camera shows 10 units) - a guess; the two sliders correct it
+    const m = el._l2d; if (!m || !el.naturalWidth) return;
+    const u = sc * 10 * (+$("#chSize").value / 100), shift = -(+$("#chShift").value);
+    el.style.visibility = "visible"; el.style.height = (m.bh * u) + "cqh"; el.style.width = "auto";
+    el.style.zIndex = Math.round(im.o || 0) * 1000 + (im.seq % 1000);
+    el.style.transition = "none";
+    el.style.transform = "translate(-50%,-50%) translate(calc(" + (x * 50) + "cqw + " + (m.cx * u) + "cqh)," + (-y * 50 - m.cy * u + shift) + "cqh)";
+    return;
+  }
+  if (im.full) { el.style.width = "100%"; el.style.height = "100%"; el.style.objectFit = "cover"; }
+  else if (im.w && im.h) { el.style.width = (im.w / 12.8) + "cqw"; el.style.height = (im.h / 7.2) + "cqh"; el.style.objectFit = "fill"; }
+  else if (el.naturalWidth) { el.style.width = (el.naturalWidth / 12.8) + "cqw"; el.style.height = "auto"; }
+  el.style.zIndex = Math.round(im.o || 0) * 1000 + (im.seq % 1000);
+  el.style.transition = im.d && el.complete ? "transform " + Math.min(im.d, 6) + "s ease-out" : "none";   // pans and zooms run as in the script
+  im.d = 0;
+  el.style.transform = "translate(-50%,-50%) translate(" + (x * 50) + "cqw," + (-y * 50) + "cqh) scale(" + sc + ")";
+}
+// run steps until one waits for the player; returns false at the end of the scene
+function advance() {
+  const p = S.p, secs = S.scene.sections;
+  if (p.done) return false;
+  for (let guard = 0; guard < 20000; guard++) {
+    p.idx++;
+    while (p.sec < secs.length && p.idx >= secs[p.sec].steps.length) { p.sec++; p.idx = 0; }
+    if (p.sec >= secs.length) { p.done = true; showEnd(); return false; }
+    const st = secs[p.sec].steps[p.idx];
+    if (st.t === "img") applyImg(st);
+    else if (st.t === "title") p.title = st.k;
+    else if (st.t === "note") p.note = st.x;
+    else if (st.t === "goto") { if (!gotoSection(st.to)) { p.done = true; showEnd(); return false; } }
+    else if (st.t === "choice") { if (st.opts.length) { p.trail.push(snapshot()); showStep(st); return true; } }
+    else { p.shown++; p.trail.push(snapshot()); showStep(st); return true; }
+  }
+  return false;
+}
+function gotoSection(name) {
+  const i = S.scene.sections.findIndex(s => s.name === String(name));
+  if (i < 0) return false;
+  S.p.sec = i; S.p.idx = -1; return true;
+}
+function jumpTo(key) {
+  // play silently from the start (first option at each choice) until the line with this key shows
+  const want = String(key);
+  S.p = Object.assign(S.p, {sec: 0, idx: -1, imgs: {}, seq: 0, title: null, trail: [], done: false, shown: 0});
+  const secs = S.scene.sections;
+  const seen = new Set();
+  for (let guard = 0; guard < 5000; guard++) {
+    const p = S.p;
+    p.idx++;
+    while (p.sec < secs.length && p.idx >= secs[p.sec].steps.length) { p.sec++; p.idx = 0; }
+    if (p.sec >= secs.length) break;
+    const st = secs[p.sec].steps[p.idx];
+    if (st.t === "img") applyImg(st);
+    else if (st.t === "title") { p.title = st.k; if (st.k === want) { p.trail.push(snapshot()); showStep(st, true); return true; } }
+    else if (st.t === "goto") { if (!gotoSection(st.to)) break; }
+    else if (st.t === "choice") {
+      const o = st.opts.find(x => x.k === want);
+      p.trail.push(snapshot());
+      if (o) { showStep(st); return true; }
+      const pick = st.opts.find(x => !seen.has(p.sec + ":" + x.to)) || st.opts[0];
+      if (!pick) continue;
+      seen.add(p.sec + ":" + pick.to);
+      if (!gotoSection(pick.to)) break;
+    } else if (st.k) {
+      p.shown++; p.trail.push(snapshot());
+      if (st.k === want) { showStep(st); return true; }
+    }
+  }
+  // the line sits on a branch the walk did not take: show its section from the top
+  for (let si = 0; si < secs.length; si++) {
+    const ti = secs[si].steps.findIndex(st => st.k === want || (st.opts || []).some(o => o.k === want));
+    if (ti >= 0) { Object.assign(S.p, {sec: si, idx: ti, done: false}); S.p.trail.push(snapshot()); showStep(secs[si].steps[ti]); return true; }
+  }
+  return false;
+}
+function showStep(st, titleOnly) {
+  const p = S.p;
+  $("#endcard").hidden = true;
+  renderLayers();
+  const tk = p.title;
+  $("#sttitle").hidden = !tk; if (tk) $("#sttitle").innerHTML = rich(shown(tk) != null ? shown(tk) : tk);
+  $("#stnote").hidden = !p.note; if (p.note) $("#stnote").textContent = p.note;
+  $("#pos").textContent = "line " + p.shown + " of " + p.total + " · section " + S.scene.sections[p.sec].name;
+  const ch = $("#choices"), dlg = $("#dlg");
+  if (st.t === "choice") {
+    dlg.hidden = true; ch.hidden = false;
+    ch.innerHTML = st.opts.map((o, i) => '<button data-o="' + i + '">' + (shown(o.k) != null ? rich(shown(o.k)) : '<span class="rawkey">' + esc(o.k) + "</span>") + "</button>").join("");
+    select(st.opts[0].k, true);
+    return;
+  }
+  ch.hidden = true;
+  if (titleOnly) { dlg.hidden = true; select(st.k, true); return; }
+  dlg.hidden = false;
+  dlg.className = st.t === "cg" ? "cg" : (st.name ? "" : "narr");
+  $("#spname").hidden = !st.name || st.t === "cg"; $("#spname").textContent = st.name || "";
+  const i = info(st.k) || {tag: "missing"};
+  $("#sptag").innerHTML = tagChip(i.tag, true);
+  typeText(shown(st.k), st.k);
+  select(st.k, true);
+}
+function typeText(text, key) {
+  const el = $("#sptext");
+  clearInterval(S.typing); S.typing = null;
+  if (text == null) { el.innerHTML = '<span class="rawkey">' + esc(key) + "</span>"; return; }
+  const full = rich(text);
+  if (!$("#optType").checked) { el.innerHTML = full; return; }
+  const chars = plain(text); let n = 0;
+  el.textContent = "";
+  S.typing = setInterval(() => {
+    n += 2;
+    if (n >= chars.length) { clearInterval(S.typing); S.typing = null; el.innerHTML = full; }
+    else el.textContent = chars.slice(0, n);
+  }, 16);
+  S.typingDone = () => { clearInterval(S.typing); S.typing = null; el.innerHTML = full; };
+}
+function next() {
+  if (!S.scene) return;
+  if (S.typing) { S.typingDone(); return; }
+  if (!$("#choices").hidden) return;      // a choice waits for a click
+  advance();
+}
+function back() {
+  const p = S.p;
+  if (!S.scene || p.trail.length < 2) return;
+  p.trail.pop();
+  const sn = p.trail[p.trail.length - 1];
+  restore(sn);
+  showStep(S.scene.sections[sn.sec].steps[sn.idx]);
+}
+function showEnd() {
+  const e = $("#endcard"), i = curIndex();
+  $("#dlg").hidden = true; $("#choices").hidden = true;
+  e.hidden = false;
+  e.innerHTML = "<div>End of the scene</div>" + (S.flat[i + 1] ? '<button class="primary" id="endNext">Next scene: ' + esc(S.flat[i + 1].path.slice(-2).join(" · ")) + "</button>" : "") + '<button id="endAgain">Play again</button>';
+}
+
+// ---------------------------------------------------------------- editor
+function select(key, fromPlay) {
+  S.key = key;
+  document.querySelectorAll("#script .row.on").forEach(r => r.classList.remove("on"));
+  const r = $('#script .row[data-k="' + CSS.escape(key) + '"]'); if (r) r.classList.add("on");
+  renderEditor();
+}
+function renderEditor() {
+  const i = info(S.key);
+  $("#edempty").hidden = !!S.key; $("#edbody").hidden = !S.key;
+  if (!S.key) return;
+  const d = i || {key: S.key, text: null, tag: "missing", auto: "missing"};
+  $("#edkey").textContent = S.key;
+  const ta = $("#edtext");
+  if (ta.dataset.key !== S.key || ta.dataset.base !== String(d.text)) { ta.value = d.text == null ? "" : d.text; ta.dataset.key = S.key; ta.dataset.base = String(d.text); }
+  $("#edtags").innerHTML = ["original", "machine", "human"].map(t => '<button data-tag="' + t + '" class="' + (d.tag === t ? "on" : "") + '"><i class="dot t-' + t + '"></i>' + TAG_LABEL[t] +
+    (d.tag === t && !d.tagSet ? " (auto)" : "") + "</button>").join("") +
+    (d.tag === "untranslated" || d.tag === "missing" || d.tag === "untagged" ? '<span class="chip"><i class="dot t-' + d.tag + '"></i>' + TAG_LABEL[d.tag] + "</span>" : "");
+  $("#revert").disabled = !(d.edited || d.tagSet);
+  $("#edmsg").textContent = d.edited ? "edited " + (d.updated || "").replace("T", " ") : (d.tagSet ? "tag set by hand" : "");
+  const refs = [];
+  if (d.edited && d.base != null) refs.push(["Before your edit", d.base]);
+  (d.refs || []).forEach(r => refs.push([r.label, r.text, r.source]));
+  $("#refs").innerHTML = refs.map((r, n) => '<div class="ref"><div class="h">' + esc(r[0]) + (r[2] ? "" : '<button data-use="' + n + '">Use this</button>') + '</div><div class="b">' + esc(r[1]) + "</div></div>").join("");
+  $("#refs").dataset.refs = JSON.stringify(refs.map(r => r[1]));
+}
+function afterChange(i) {
+  S.scene.texts[i.key] = i;
+  renderScript(); renderEditor();
+  // refresh the line on the stage if it is the one in view
+  const p = S.p, st = S.scene.sections[p.sec] && S.scene.sections[p.sec].steps[p.idx];
+  if (st && !p.done) { const was = $("#optType").checked; $("#optType").checked = false; showStep(st, st.t === "title"); $("#optType").checked = was; }
+  loadNav();
+}
+async function save() {
+  if (!S.key) return;
+  try {
+    const i = await api("/api/save", {key: S.key, text: $("#edtext").value});
+    afterChange(i); toast("Saved: " + TAG_LABEL[i.tag].toLowerCase());
+  } catch (e) { toast("Save failed: " + e.message, 6000); }
+}
+async function setTag(tag) {
+  const d = info(S.key); if (!S.key) return;
+  try {
+    const clear = d && d.tagSet && d.tag === tag;
+    const body = {key: S.key, tag: clear ? "" : tag};
+    if ($("#edtext").value !== (d && d.text != null ? d.text : "")) body.text = $("#edtext").value;
+    afterChange(await api("/api/save", body));
+  } catch (e) { toast("Tag change failed: " + e.message, 6000); }
+}
+async function revert() {
+  if (!S.key) return;
+  try { const i = await api("/api/revert", {key: S.key}); $("#edtext").dataset.base = ""; afterChange(i); toast("Reverted"); }
+  catch (e) { toast("Revert failed: " + e.message, 6000); }
+}
+
+// ---------------------------------------------------------------- wiring
+function setMode(m) {
+  S.mode = m;
+  $("#play").hidden = m !== "play"; $("#play").style.display = m === "play" ? "flex" : "none";
+  $("#script").hidden = m !== "script";
+  $("#mPlay").classList.toggle("on", m === "play"); $("#mScript").classList.toggle("on", m === "script");
+  if (m === "script" && S.key) { const r = $('#script .row[data-k="' + CSS.escape(S.key) + '"]'); if (r) r.scrollIntoView({block: "center"}); }
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  S.tab = b.dataset.tab; document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b)); $("#tree").dataset.search = ""; renderTree();
+});
+$("#filter").onchange = renderTree;
+$("#tree").onclick = e => {
+  const r = e.target.closest(".res");
+  if (r) { const i = S.flat.findIndex(f => f.id === r.dataset.scene); if (i >= 0) openScene(i, r.dataset.key); return; }
+  const s = e.target.closest(".scene[data-i]"); if (s) openScene(+s.dataset.i);
+};
+$("#mPlay").onclick = () => { setMode("play"); if (S.scene && S.key) jumpTo(S.key); };
+$("#mScript").onclick = () => setMode("script");
+$("#prevScene").onclick = () => openScene(curIndex() - 1);
+$("#nextScene").onclick = () => openScene(curIndex() + 1);
+$("#stage").onclick = e => {
+  const o = e.target.closest("#choices button");
+  if (o) {
+    const st = S.scene.sections[S.p.sec].steps[S.p.idx];
+    if (gotoSection(st.opts[+o.dataset.o].to)) { $("#choices").hidden = true; advance(); }
+    return;
+  }
+  if (e.target.id === "endNext") return openScene(curIndex() + 1);
+  if (e.target.id === "endAgain") return startPlay();
+  next();
+};
+$("#choices").onmouseover = e => { const o = e.target.closest("button"); if (o) { const st = S.scene.sections[S.p.sec].steps[S.p.idx]; select(st.opts[+o.dataset.o].k, true); } };
+$("#next").onclick = next; $("#back").onclick = back; $("#restart").onclick = () => S.scene && startPlay();
+$("#optBg").onchange = () => { renderLayers(); try { localStorage.setItem("gcg-story-bg", $("#optBg").checked ? "1" : "0"); } catch (e) {} };
+$("#optCg").onchange = () => { renderLayers(); try { localStorage.setItem("gcg-story-cg", $("#optCg").checked ? "1" : "0"); } catch (e) {} };
+$("#optCh").onchange = () => { renderLayers(); try { localStorage.setItem("gcg-story-ch", $("#optCh").checked ? "1" : "0"); } catch (e) {} };
+["chSize", "chShift"].forEach(id => { $("#" + id).oninput = () => { document.querySelectorAll("#layers img").forEach(placeLayer); try { localStorage.setItem("gcg-story-" + id, $("#" + id).value); } catch (e) {} }; });
+$("#script").onclick = e => { const r = e.target.closest(".row[data-k]"); if (r) select(r.dataset.k); };
+$("#script").ondblclick = e => { const r = e.target.closest(".row[data-k]"); if (r) { setMode("play"); jumpTo(r.dataset.k); } };
+$("#save").onclick = save; $("#revert").onclick = revert;
+$("#edtags").onclick = e => { const b = e.target.closest("button[data-tag]"); if (b) setTag(b.dataset.tag); };
+$("#refs").onclick = e => { const b = e.target.closest("button[data-use]"); if (b) { $("#edtext").value = JSON.parse($("#refs").dataset.refs)[+b.dataset.use]; $("#edtext").focus(); } };
+$("#edkey").onclick = () => { navigator.clipboard && navigator.clipboard.writeText(S.key); toast("Key copied"); };
+$("#export").onclick = async () => {
+  $("#export").disabled = true;
+  try { const r = await api("/api/export", {}); toast("Exported " + r.changed + " changed and " + r.added + " new lines to " + r.lang, 9000); }
+  catch (e) { toast("Export failed: " + e.message, 8000); }
+  $("#export").disabled = false;
+};
+$("#search").onkeydown = async e => {
+  if (e.key !== "Enter") return;
+  const q = $("#search").value.trim();
+  if (q.length < 2) return renderTree();
+  const res = await api("/api/search?q=" + encodeURIComponent(q));
+  $("#tree").innerHTML = '<div class="navtools">' + res.length + (res.length >= 200 ? "+" : "") + ' matches · <a href="#" id="clearSearch" style="color:var(--accent)">back to the list</a></div>' +
+    res.map(r => '<div class="res" data-scene="' + esc(r.scene) + '" data-key="' + esc(r.key) + '"><i class="dot t-' + r.tag + '"></i> ' + esc(plain(r.text || "").slice(0, 110)) + "<small>" + esc(r.scene) + " · " + esc(r.key) + "</small></div>").join("");
+  $("#clearSearch").onclick = ev => { ev.preventDefault(); $("#search").value = ""; renderTree(); };
+};
+document.addEventListener("keydown", e => {
+  const inText = /^(TEXTAREA|INPUT|SELECT)$/.test(document.activeElement.tagName);
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); save(); return; }
+  if (e.key === "Escape" && inText) { document.activeElement.blur(); return; }
+  if (inText) return;
+  if (e.key === "e" || e.key === "E") { e.preventDefault(); $("#edtext").focus(); return; }
+  if (S.mode !== "play") return;
+  if (e.key === " " || e.key === "ArrowRight" || e.key === "Enter") { e.preventDefault(); next(); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); back(); }
+});
+window.addEventListener("beforeunload", e => {
+  const d = info(S.key);
+  if (S.key && d && $("#edtext").value !== (d.text == null ? "" : d.text)) { e.preventDefault(); e.returnValue = ""; }
+});
+
+(async function init() {
+  try {
+    const off = /[?&]nobg=1/.test(location.search);
+    if (off || localStorage.getItem("gcg-story-bg") === "0") $("#optBg").checked = false;
+    if (off || localStorage.getItem("gcg-story-cg") === "0") $("#optCg").checked = false;
+    if (off || localStorage.getItem("gcg-story-ch") === "0") $("#optCh").checked = false;
+    ["chSize", "chShift"].forEach(id => { const v = localStorage.getItem("gcg-story-" + id); if (v != null) $("#" + id).value = v; });
+  } catch (e) {}
+  try {
+    await loadNav();
+    let last = null; try { last = localStorage.getItem("gcg-story-last"); } catch (e) {}
+    let i = -1;
+    if (last) { const [tab, id] = last.split("|"); i = S.flat.findIndex(f => f.tab === tab && f.id === id); }
+    if (i >= 0) { S.tab = S.flat[i].tab; document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === S.tab)); await openScene(i); }
+    else { const d = $("#tree details"); if (d) d.open = true; }
+  } catch (e) { $("#tree").innerHTML = '<div class="empty">Cannot load the story data: ' + esc(e.message) + "</div>"; }
+})();
+</script>
+</body>
+</html>
