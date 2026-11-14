@@ -39,6 +39,8 @@
 
 | [Headpats](22-headpats.md) | Implemented; phone playtest passed | Shared charges, refill, affection, daily and oath progress |
 
+| [Event page achievements](23-event-page-achievements.md) | Core implementation; automated tests only | Table-driven claims for event pages and the achievement panel, progress from saved state |
+
 ## 自动化验证现状
 
 `pnpm check` 会运行格式检查、ESLint、TypeScript 严格类型检查、Vitest 和生产

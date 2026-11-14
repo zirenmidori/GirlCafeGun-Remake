@@ -172,6 +172,17 @@ import {
   type DailyMissionState,
 } from "../game-data/daily-mission-data.js";
 import {
+  ACHIEVEMENT_TASK_GROUP,
+  achievementProgress,
+  ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+  ActivityAchievementCatalog,
+  hasClaimedAchievement,
+  makeAchievementTaskId,
+  makeAchievementTaskValue,
+  projectAchievementProgress,
+  requiredAchievementCount,
+} from "../game-data/activity-achievement-data.js";
+import {
   EIGHT_DAY_SIGN_UP_REWARDS,
   eightDaySignUpProgress,
   eightDaySignUpReward,
@@ -794,6 +805,16 @@ export interface EightDaySignUpAwardResult {
   updatedGirls: GirlState[];
 }
 
+export interface AchievementAwardResult {
+  player: Player;
+  group: number;
+  achievementId: number;
+  awards: readonly BaseAward[];
+  updatedItems: InventoryItemState[];
+  updatedMoney: MoneyState[];
+  updatedGirls: GirlState[];
+}
+
 export interface GuideAwardResult {
   player: Player;
   id: number;
@@ -899,6 +920,21 @@ export class EightDaySignUpError extends Error {
   ) {
     super(`Eight-day sign-up error: ${reason}`);
     this.name = "EightDaySignUpError";
+  }
+}
+
+export class AchievementAwardError extends Error {
+  constructor(
+    readonly reason:
+      | "unknown_achievement"
+      | "not_in_activity"
+      | "unsupported_award"
+      | "no_award"
+      | "not_completed"
+      | "already_claimed",
+  ) {
+    super(`Achievement award error: ${reason}`);
+    this.name = "AchievementAwardError";
   }
 }
 
@@ -1601,6 +1637,32 @@ function addInventoryAward(
   updatedItemGuids.add(item.guid);
 }
 
+function awardMoneyId(genre: number, detail: number): number | null {
+  return genre === 15 && detail === 1
+    ? MONEY_GOLD
+    : genre === 15 && detail === 2
+      ? MONEY_DIAMOND
+      : genre === 15 && detail === 4
+        ? MONEY_VIGOUR
+        : genre === 15 && detail === 10
+          ? MONEY_COFFEE_COIN
+          : genre === 15 && detail === 11
+            ? MONEY_CARD_DECOMPOSITION_TOKEN
+            : genre === 15 && detail === 20
+              ? MONEY_WEAPON_DECOMPOSITION_TOKEN
+              : null;
+}
+
+/**
+ * Genre 14 (purchase items) and genre 15 (currencies) are used up when they
+ * are received. grantAwards converts only the currencies above; any other row
+ * of these genres would stay in the inventory as a stack that does nothing.
+ */
+function isGrantableAward([genre, detail]: BaseAward): boolean {
+  if (genre === 14) return false;
+  return genre !== 15 || awardMoneyId(genre, detail) !== null;
+}
+
 function grantAwards(
   player: Player,
   awards: readonly BaseAward[],
@@ -1611,20 +1673,7 @@ function grantAwards(
     const count = Math.max(0, rawCount);
     if (count === 0) continue;
 
-    const moneyId =
-      genre === 15 && detail === 1
-        ? MONEY_GOLD
-        : genre === 15 && detail === 2
-          ? MONEY_DIAMOND
-          : genre === 15 && detail === 4
-            ? MONEY_VIGOUR
-            : genre === 15 && detail === 10
-              ? MONEY_COFFEE_COIN
-              : genre === 15 && detail === 11
-                ? MONEY_CARD_DECOMPOSITION_TOKEN
-                : genre === 15 && detail === 20
-                  ? MONEY_WEAPON_DECOMPOSITION_TOKEN
-                  : null;
+    const moneyId = awardMoneyId(genre, detail);
     if (moneyId !== null) {
       let money = player.money.find(({ id }) => id === moneyId);
       if (!money) {
@@ -4470,6 +4519,96 @@ export class PlayerRepository {
       player: snapshot,
       achievementId,
       awards: reward.awards,
+      updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
+      updatedGirls: snapshot.girls.filter(({ girlId }) => updatedGirlIds.has(girlId)),
+    };
+  }
+
+  /**
+   * Claims an event page achievement (NormalActivityGetAward nType 1). The
+   * achievement must be listed by that activity in a NormalActivity table.
+   */
+  async claimActivityAchievementAward(
+    account: string,
+    activityId: number,
+    achievementId: number,
+  ): Promise<AchievementAwardResult> {
+    const catalog = ActivityAchievementCatalog.loadDefault();
+    if (!catalog.hasActivityAchievement(activityId, achievementId)) {
+      throw new AchievementAwardError("not_in_activity");
+    }
+    return this.#claimAchievementAward(
+      account,
+      ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+      achievementId,
+    );
+  }
+
+  /** Claims an achievement of the achievement panel (AchievementGetAward). */
+  async claimAchievementAward(
+    account: string,
+    achievementId: number,
+  ): Promise<AchievementAwardResult> {
+    return this.#claimAchievementAward(account, ACHIEVEMENT_TASK_GROUP, achievementId);
+  }
+
+  async #claimAchievementAward(
+    account: string,
+    group: number,
+    achievementId: number,
+  ): Promise<AchievementAwardResult> {
+    const config = ActivityAchievementCatalog.loadDefault().achievement(
+      group,
+      achievementId,
+    );
+    if (!config) throw new AchievementAwardError("unknown_achievement");
+    const awards = config.awards;
+    if (!awards || !awards.every(isGrantableAward)) {
+      throw new AchievementAwardError("unsupported_award");
+    }
+    if (awards.length === 0) throw new AchievementAwardError("no_award");
+
+    let player: Player | undefined;
+    const updatedItemGuids = new Set<number>();
+    const updatedMoneyIds = new Set<number>();
+    const updatedGirlIds = new Set<number>();
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      reconcileEightDaySignUp(player);
+
+      const taskValue = projectAchievementProgress(player, config);
+      if (hasClaimedAchievement(taskValue)) {
+        throw new AchievementAwardError("already_claimed");
+      }
+      if (achievementProgress(taskValue) < requiredAchievementCount(config)) {
+        throw new AchievementAwardError("not_completed");
+      }
+
+      player.taskValues[String(makeAchievementTaskId(group, achievementId))] =
+        makeAchievementTaskValue(achievementProgress(taskValue), true);
+      grantAwards(player, awards, updatedItemGuids, updatedMoneyIds);
+      const girlReconciliation = reconcileGirlAppearanceState(player, updatedItemGuids);
+      for (const girlId of girlReconciliation.updatedGirlIds) {
+        updatedGirlIds.add(girlId);
+      }
+    });
+    if (!player) {
+      throw new Error(`Failed to claim achievement award: ${account}`);
+    }
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.achievement.claimed", {
+      account,
+      group,
+      achievementId,
+      awards,
+    });
+    return {
+      player: snapshot,
+      group,
+      achievementId,
+      awards,
       updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
       updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedGirls: snapshot.girls.filter(({ girlId }) => updatedGirlIds.has(girlId)),
