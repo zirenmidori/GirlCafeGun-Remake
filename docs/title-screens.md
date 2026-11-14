@@ -126,7 +126,7 @@ so that client shows `hall`, `sky` and `shards`.
 `UI_Login.lua` through `patch_lua.patch_script`, so both patches run in the
 order of the build, and checks the placement, a second pass, a stale module, 20
 rejected sources and the Lua syntax. Then it opens 400 login screens in each of
-17 mocked clients with a seeded random source and compares every screen with a
+19 mocked clients with a seeded random source and compares every screen with a
 second implementation of the choice. The clients hold all, some or none of the
 extra art, fail in four different ways when a suit is absent and in three when
 a picture is absent, load the prefab with `Spine` on, off or absent, and in two
