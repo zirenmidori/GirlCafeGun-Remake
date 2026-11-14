@@ -29,7 +29,19 @@ never switches `Spine`.
 `sky` is the scene of the current prefab. `snow` and `shards` put another
 picture on `Image3` and load another suit on `Spine`. The pairs of picture and
 suit follow the numbers of the assets and what the art shows; the client has no
-table that names them.
+table that names them. On a phone the pairs fit: winter clothes on the snow
+picture, falling girls on the broken sky.
+
+A title can also give the animation its own size and place and move the logo.
+The values were set by eye on a phone:
+
+| Title | `scale` | `position` of `Spine` | `logo` |
+| --- | --- | --- | --- |
+| `sky` | prefab (133) | prefab (-15.5, -106.76) | prefab (top left) |
+| `snow` | prefab | (-50.5, -42.5), the place an older prefab has for suit 1 | (300, 212), top right |
+| `shards` | 83; at 133 the model is far too large | (0, 0) | (300, 212), top right |
+
+With the logo in its stock place it covers a face in `snow` and `shards`.
 
 ## The patch
 
@@ -50,7 +62,9 @@ until one can be shown:
   If both work, the module makes the call that the stock `ModifyBackground`
   makes for the stock picture, with the new picture and its width to height
   ratio, sets the picture on the `RawImage`, calls the stock
-  `BackgroundAdapter` and turns the petals off.
+  `BackgroundAdapter`, turns the petals off and moves the logo. The size and
+  place of the animation are set before `Load()` and go back to those of the
+  prefab when the title fails.
 
 When no title of the table names the picture of the prefab, the scene of the
 prefab takes part as one more title. An error inside the module gives the stock
@@ -88,10 +102,10 @@ so that client shows `hall`, `sky` and `shards`.
 
 ## Limits
 
-- **Nobody has seen `snow` and `shards` on a device.** The mock proves the
-  choice and the calls, not the picture on the screen. The position and size of
-  the animation are those of `sky`; suit 3 is a wider model. `bg_login05` is 2 to
-  1, the other pictures are 4 to 3.
+- The four titles were seen on one phone only: a Galaxy S24+ (2340 x 1080) with
+  the English 1.0.9 client and the GirlCafeGun-Offline data. The sizes and
+  places were set for that screen. A 16 to 9 screen and this repository's pinned
+  client were not seen.
 - The stock hall branch is unchanged and still needs its four objects.
 - The older city-plaza title (`bg_login02` with the scene `Login_Effect`) is not
   in the table: no live stock script loads that scene, so there is no call to
@@ -107,7 +121,7 @@ so that client shows `hall`, `sky` and `shards`.
 `UI_Login.lua` through `patch_lua.patch_script`, so both patches run in the
 order of the build, and checks the placement, a second pass, a stale module, 20
 rejected sources and the Lua syntax. Then it opens 400 login screens in each of
-16 mocked clients with a seeded random source and compares every screen with a
+17 mocked clients with a seeded random source and compares every screen with a
 second implementation of the choice. The clients hold all, some or none of the
 extra art, fail in four different ways when a suit is absent and in three when
 a picture is absent, and load the prefab with `Spine` on, off or absent. A title without its art is never on the
@@ -115,6 +129,8 @@ screen, and a failed attempt leaves the prefab's own picture and suit behind.
 `release/client/build.py` repeats the screens on the module inside the built
 `lua.u`.
 
-A two-title version of this edit is in the `lua.u` of the GirlCafeGun-Offline
-phone build for the English 1.0.9 client. This repository's pinned client has
-not been tested on a device.
+The same module, placed by the GirlCafeGun-Offline tool, ran on a Galaxy S24+
+with the English 1.0.9 client on 2026-11-14. Each title was opened alone and
+looked at. With all four in the table, six starts in a row logged `sky`, `hall`,
+`snow`, `sky`, `shards`, `sky`, so `U3D.Random.value` answers on that client.
+This repository's pinned client has not been tested on a device.
