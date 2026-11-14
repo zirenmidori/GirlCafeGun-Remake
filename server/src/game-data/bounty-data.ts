@@ -43,7 +43,14 @@ interface ActivityDefinition {
   openDays: readonly number[];
 }
 
-const DIFFICULTY_NAMES = ["Easy", "Normal", "Hard", "Nightmare", "Hell", "Purgatory"] as const;
+const DIFFICULTY_NAMES = [
+  "Easy",
+  "Normal",
+  "Hard",
+  "Nightmare",
+  "Hell",
+  "Purgatory",
+] as const;
 const ENERGY_COSTS = [10, 15, 20, 25, 30, 30] as const;
 const COMMON_POWER = [3_980, 4_940, 8_710, 11_860, 14_850, 17_600] as const;
 const BREAK_POWER = [6_690, 8_950, 10_900, 13_670, 17_410, 19_000] as const;
@@ -69,19 +76,54 @@ const ACTIVITIES: Readonly<Record<number, ActivityDefinition>> = {
     attribute: null,
     openDays: [1, 2, 3, 4, 5, 6, 7],
   },
-  2: { eventType: 2, label: "Biological Soldier Training", attribute: 1, openDays: [1, 6, 7] },
-  3: { eventType: 2, label: "Mechanical Soldier Training", attribute: 3, openDays: [3, 6, 7] },
-  4: { eventType: 2, label: "Psionic Soldier Training", attribute: 2, openDays: [2, 6, 7] },
-  5: { eventType: 2, label: "Immune Soldier Training", attribute: 5, openDays: [4, 6, 7] },
-  6: { eventType: 2, label: "Erosive Soldier Training", attribute: 6, openDays: [5, 6, 7] },
+  2: {
+    eventType: 2,
+    label: "Biological Soldier Training",
+    attribute: 1,
+    openDays: [1, 6, 7],
+  },
+  3: {
+    eventType: 2,
+    label: "Mechanical Soldier Training",
+    attribute: 3,
+    openDays: [3, 6, 7],
+  },
+  4: {
+    eventType: 2,
+    label: "Psionic Soldier Training",
+    attribute: 2,
+    openDays: [2, 6, 7],
+  },
+  5: {
+    eventType: 2,
+    label: "Immune Soldier Training",
+    attribute: 5,
+    openDays: [4, 6, 7],
+  },
+  6: {
+    eventType: 2,
+    label: "Erosive Soldier Training",
+    attribute: 6,
+    openDays: [5, 6, 7],
+  },
   7: {
     eventType: 4,
     label: "Part Collection",
     attribute: null,
     openDays: [1, 2, 3, 4, 5, 6, 7],
   },
-  8: { eventType: 5, label: "Biological Limit Break", attribute: 1, openDays: [1, 6, 7] },
-  9: { eventType: 5, label: "Mechanical Limit Break", attribute: 3, openDays: [3, 6, 7] },
+  8: {
+    eventType: 5,
+    label: "Biological Limit Break",
+    attribute: 1,
+    openDays: [1, 6, 7],
+  },
+  9: {
+    eventType: 5,
+    label: "Mechanical Limit Break",
+    attribute: 3,
+    openDays: [3, 6, 7],
+  },
   10: { eventType: 5, label: "Psionic Limit Break", attribute: 2, openDays: [2, 6, 7] },
   11: { eventType: 5, label: "Immune Limit Break", attribute: 5, openDays: [4, 6, 7] },
   12: { eventType: 5, label: "Erosive Limit Break", attribute: 6, openDays: [5, 6, 7] },

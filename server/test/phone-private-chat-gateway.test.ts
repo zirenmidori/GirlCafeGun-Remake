@@ -9,11 +9,24 @@ import { expect, it } from "vitest";
 import { loadConfig } from "../src/config.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
-import { makeInitialState, PlayerRepository } from "../src/persistence/player-repository.js";
+import {
+  makeInitialState,
+  PlayerRepository,
+} from "../src/persistence/player-repository.js";
 import { COMMAND } from "../src/protocol/commands.js";
 import { makeServerLuaCall } from "../src/protocol/messages.js";
-import { HEADER_SIZE, makePacket, readPacket, type GamePacket } from "../src/protocol/packet.js";
-import { decodeFields, fieldBytes, firstNumber, firstString } from "../src/protocol/protobuf.js";
+import {
+  HEADER_SIZE,
+  makePacket,
+  readPacket,
+  type GamePacket,
+} from "../src/protocol/packet.js";
+import {
+  decodeFields,
+  fieldBytes,
+  firstNumber,
+  firstString,
+} from "../src/protocol/protobuf.js";
 import { createGatewayServer } from "../src/servers/gateway-server.js";
 
 function phoneReply(packet: GamePacket): Record<string, unknown> | null {
@@ -33,7 +46,10 @@ function request(
   return new Promise((resolve, reject) => {
     let bytes = Buffer.alloc(0);
     const packets: GamePacket[] = [];
-    const timeout = setTimeout(() => finish(new Error(`No response to ${command}/${serial}`)), 4000);
+    const timeout = setTimeout(
+      () => finish(new Error(`No response to ${command}/${serial}`)),
+      4000,
+    );
     function finish(error?: Error) {
       clearTimeout(timeout);
       socket.off("data", onData);
@@ -66,7 +82,11 @@ function request(
 }
 
 const logger: Logger = {
-  debug() {}, info() {}, warn() {}, error() {}, async close() {},
+  debug() {},
+  info() {},
+  warn() {},
+  error() {},
+  async close() {},
 };
 
 it("persists story chat, packed replies, title and one affection claim over TCP", async () => {
@@ -82,7 +102,11 @@ it("persists story chat, packed replies, title and one affection claim over TCP"
   async function boot() {
     const store = new JsonStore({ filePath, initialState: makeInitialState(), logger });
     await store.initialize();
-    const players = new PlayerRepository({ store, defaults: config.playerDefaults, logger });
+    const players = new PlayerRepository({
+      store,
+      defaults: config.playerDefaults,
+      logger,
+    });
     const server = createGatewayServer({ config, logger, players });
     server.listen(0, "127.0.0.1");
     await once(server, "listening");
@@ -101,20 +125,32 @@ it("persists story chat, packed replies, title and one affection claim over TCP"
 
   async function connect() {
     const address = runtime!.server.address();
-    if (!address || typeof address === "string") throw new Error("Missing gateway port");
+    if (!address || typeof address === "string")
+      throw new Error("Missing gateway port");
     const client = createConnection({ host: "127.0.0.1", port: address.port });
     socket = client;
     await once(client, "connect");
-    await request(client, COMMAND.VERIFY_REQ, 1,
+    await request(
+      client,
+      COMMAND.VERIFY_REQ,
+      1,
       Buffer.concat([fieldBytes(1, "selftest"), fieldBytes(2, account)]),
-      (packet) => packet.command === COMMAND.VERIFY_RSP && packet.serial === 1);
-    const login = await request(client, COMMAND.LOGIN_REQ, 2, fieldBytes(1, account),
-      (packet) => packet.command === COMMAND.LOGIN_RSP && packet.serial === 2);
+      (packet) => packet.command === COMMAND.VERIFY_RSP && packet.serial === 1,
+    );
+    const login = await request(
+      client,
+      COMMAND.LOGIN_REQ,
+      2,
+      fieldBytes(1, account),
+      (packet) => packet.command === COMMAND.LOGIN_RSP && packet.serial === 2,
+    );
     return login.find((packet) => packet.command === COMMAND.PHONE_MSG_NTF)!;
   }
 
   function wireTopic(snapshot: GamePacket) {
-    for (const entry of decodeFields(snapshot.payload).filter((field) => field.fieldNumber === 1)) {
+    for (const entry of decodeFields(snapshot.payload).filter(
+      (field) => field.fieldNumber === 1,
+    )) {
       const group = decodeFields(entry.value as Buffer);
       if (firstNumber(group, 1) !== 9) continue;
       const topic = group
@@ -127,35 +163,69 @@ it("persists story chat, packed replies, title and one affection claim over TCP"
   }
 
   let serial = 2;
-  const call = (nCmd: number, parameters: Record<string, unknown>, callbackCommand = nCmd) =>
-    request(socket!, COMMAND.C2S_CALL_REQ, ++serial, makeServerLuaCall("PhoneMsg", { nCmd, ...parameters }),
-      (packet) => phoneReply(packet)?.nCmd === callbackCommand);
+  const call = (
+    nCmd: number,
+    parameters: Record<string, unknown>,
+    callbackCommand = nCmd,
+  ) =>
+    request(
+      socket!,
+      COMMAND.C2S_CALL_REQ,
+      ++serial,
+      makeServerLuaCall("PhoneMsg", { nCmd, ...parameters }),
+      (packet) => phoneReply(packet)?.nCmd === callbackCommand,
+    );
 
   try {
     runtime = await boot();
     expect(wireTopic(await connect())).toBeNull();
     const started = await call(12, { nMsgId: story });
     expect(started.map(phoneReply)).toContainEqual({
-      nError: 0, nCmd: 3, nNpcId: 9, nMsgId: topicId, nSelectId: 0,
+      nError: 0,
+      nCmd: 3,
+      nNpcId: 9,
+      nMsgId: topicId,
+      nSelectId: 0,
     });
     const repeatedStory = await call(12, { nMsgId: story });
-    expect(repeatedStory.map(phoneReply)).not.toContainEqual(expect.objectContaining({ nCmd: 3, nMsgId: topicId }));
+    expect(repeatedStory.map(phoneReply)).not.toContainEqual(
+      expect.objectContaining({ nCmd: 3, nMsgId: topicId }),
+    );
 
     const invalid = await call(3, { nMsgId: topicId, nSelectId: 2 });
     expect(phoneReply(invalid.at(-1)!)).toEqual({ nError: 20040, nCmd: 3 });
     const reply = await call(3, { nMsgId: topicId, nSelectId: 1 });
     expect(phoneReply(reply.at(-1)!)).toEqual({
-      nError: 0, nCmd: 3, nNpcId: 9, nMsgId: topicId, nSelectId: 21,
+      nError: 0,
+      nCmd: 3,
+      nNpcId: 9,
+      nMsgId: topicId,
+      nSelectId: 21,
     });
     const award = await call(7, { nMsgId: topicId });
     expect(phoneReply(award.at(-1)!)).toMatchObject({
-      nError: 0, nCmd: 7, nNpcId: 9, nMsgId: topicId, tbExp: [6, 0, 6, 1, 1],
+      nError: 0,
+      nCmd: 7,
+      nNpcId: 9,
+      nMsgId: topicId,
+      tbExp: [6, 0, 6, 1, 1],
     });
     const repeatAward = await call(7, { nMsgId: topicId });
-    expect(phoneReply(repeatAward.at(-1)!)).toEqual({ nError: 0, nCmd: 7, nNpcId: 9, nMsgId: topicId });
-    expect(runtime.players.get(account)?.girls.find(({ girlId }) => girlId === 9)?.exp).toBe(6);
+    expect(phoneReply(repeatAward.at(-1)!)).toEqual({
+      nError: 0,
+      nCmd: 7,
+      nNpcId: 9,
+      nMsgId: topicId,
+    });
+    expect(
+      runtime.players.get(account)?.girls.find(({ girlId }) => girlId === 9)?.exp,
+    ).toBe(6);
     const title = await call(4, { nNpcId: 9, strTitle: "Wuxia" });
-    expect(phoneReply(title.at(-1)!)).toMatchObject({ nError: 0, nCmd: 4, strTitle: "Wuxia" });
+    expect(phoneReply(title.at(-1)!)).toMatchObject({
+      nError: 0,
+      nCmd: 4,
+      strTitle: "Wuxia",
+    });
 
     await stop();
     runtime = await boot();
@@ -166,12 +236,22 @@ it("persists story chat, packed replies, title and one affection claim over TCP"
 
     await call(10, { nMsgId: topicId });
     await call(12, { nMsgId: story });
-    expect(runtime.players.get(account)?.phone.letters.some((letter) => letter.topicId === topicId)).toBe(false);
-    expect(runtime.players.get(account)?.phone.completedDeletedLetterTopicIds).toContain(topicId);
+    expect(
+      runtime.players
+        .get(account)
+        ?.phone.letters.some((letter) => letter.topicId === topicId),
+    ).toBe(false);
+    expect(
+      runtime.players.get(account)?.phone.completedDeletedLetterTopicIds,
+    ).toContain(topicId);
 
     const guide = await call(11, { nMsgId: 1 }, 3);
     expect(phoneReply(guide.at(-1)!)).toEqual({
-      nError: 0, nCmd: 3, nNpcId: 111, nMsgId: 1, nSelectId: 0,
+      nError: 0,
+      nCmd: 3,
+      nNpcId: 111,
+      nMsgId: 1,
+      nSelectId: 0,
     });
   } finally {
     await stop();

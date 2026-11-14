@@ -33,7 +33,11 @@ function loadDefinitions(): Map<number, PhoneLetterDefinition> {
     if (!line || line.startsWith("#")) continue;
     const [topicId, initiator, awardPosition, affectionByChoice, transcript] =
       JSON.parse(line) as TranscriptRecord;
-    if (parsed.has(topicId) || transcript.length === 0 || !Number.isSafeInteger(initiator))
+    if (
+      parsed.has(topicId) ||
+      transcript.length === 0 ||
+      !Number.isSafeInteger(initiator)
+    )
       throw new Error(`Invalid phone transcript ${topicId}`);
     parsed.set(topicId, {
       topicId,
@@ -50,7 +54,9 @@ function loadDefinitions(): Map<number, PhoneLetterDefinition> {
   return parsed;
 }
 
-export function getPhoneLetterDefinition(topicId: number): PhoneLetterDefinition | null {
+export function getPhoneLetterDefinition(
+  topicId: number,
+): PhoneLetterDefinition | null {
   return loadDefinitions().get(topicId) ?? null;
 }
 
@@ -74,10 +80,11 @@ function nextReplyPosition(
     let next = position + 1;
     for (; next < transcript.length; next++) {
       const [nextType, nextFlags, , nextBranches] = transcript[next]!;
-      if ((nextFlags & 2) && (!nextBranches.length || nextBranches[0] === choice))
+      if (nextFlags & 2 && (!nextBranches.length || nextBranches[0] === choice))
         return null;
       if (nextType === 2 || nextBranches.length === 0) break;
-      const branch = branches.length === 1 ? branches[0] : type === 2 ? choice : undefined;
+      const branch =
+        branches.length === 1 ? branches[0] : type === 2 ? choice : undefined;
       if (branch === nextBranches[0]) break;
     }
     position = next;
@@ -91,7 +98,10 @@ export function makePhoneReplyId(
   completedReplyIds: readonly number[],
 ): number | null {
   const position = nextReplyPosition(definition, completedReplyIds);
-  if (position === null || !definition.transcript[position - 1]![2].includes(selectionId))
+  if (
+    position === null ||
+    !definition.transcript[position - 1]![2].includes(selectionId)
+  )
     return null;
   return position * 10 + selectionId;
 }
@@ -106,7 +116,7 @@ export function phoneLetterAffection(
   replies: readonly number[],
 ): number {
   const chosen = replies.find((id) => Math.floor(id / 10) === definition.awardPosition);
-  return definition.affectionByChoice[(chosen ?? 0) % 10 - 1] ?? 0;
+  return definition.affectionByChoice[((chosen ?? 0) % 10) - 1] ?? 0;
 }
 
 export function reconcilePhoneLetters(
@@ -114,7 +124,10 @@ export function reconcilePhoneLetters(
   eligibleIds: readonly number[],
   now: number,
 ): PhoneLetterState[] {
-  const present = new Set([...phone.letters.map((letter) => letter.topicId), ...(phone.deletedLetterTopicIds ?? [])]);
+  const present = new Set([
+    ...phone.letters.map((letter) => letter.topicId),
+    ...(phone.deletedLetterTopicIds ?? []),
+  ]);
   const added: PhoneLetterState[] = [];
   for (const topicId of eligibleIds) {
     const definition = getPhoneLetterDefinition(topicId);
