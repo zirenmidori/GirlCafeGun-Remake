@@ -1,0 +1,20 @@
+INT	STR	FLOATARR	FLOATARR	FLOATARR	INTARR	INTARR	STR	INT	NUL
+活动ID	背景图	签到按键位置(不填默认)	时间位置1	时间位置2	列表1成就ID	Live2D	Live2D位置	蛋池ID	备注
+Id	Bg	BtnPos	TimePos	Time2Pos	Achievements	Live2D	OffsetType	GachaID	
+54	Poster/event_actbig07_Mul.png	[146,-30]			[1017,1018,1019,1020,1021]	[102,2]	UI_WeaponMCGacha	2	UP武器抽奖活动模版
+130	Poster/event_actbig09_Mul.png	[146,-30]			[1080,1081,1082,1083,1084]			503	春节100UP武器抽奖活动
+69	Poster/event_actbig12_Mul.png	[146,-30]			[1350,1351,1352,1353,1354]			504	【范围剿灭】100UP武器
+75	Poster/event_actbig17_Mul.png	[146,-30]			[1400,1401,1402,1403,1404]			700	【钢铁指名】100UP武器
+88	Poster/event_actbig19_Mul.png	[146,-30]			[1545,1546,1547,1548,1549]			505	3期100UP武器自选活动
+113	Poster/event_actbig26_Mul.png	[146,-30]			[1545,1546,1547,1548,1549]			506	音乐会版本武器自选活动
+124	Poster/event_actbig31_Mul.png	[146,-30]			[1350,1351,1352,1353,1354]			507	科学箴言 武器100抽
+142	Poster/event_actbig36_Mul.png	[146,-30]			[1350,1351,1352,1353,1354]			508	不铄真金 武器100抽
+153	Poster/event_actbig38_Mul.png	[146,-30]			[1545,1546,1547,1548,1549]			509	周年庆版本武器300抽自选活动
+169	Poster/event_actbig44_Mul.png	[146,-30]			[1350,1351,1352,1353,1354]			510	2021春节武器100抽-武器首发6期
+200	Poster/event_actbig53_Mul.png	[146,-30]			[1350,1351,1352,1353,1354]			511	迷醉刺玫 武器100抽
+218	Poster/event_actbig58_Mul.png	[146,-30]			[1355,1356,1357,1358,1359]			515	星辰大战 武器100抽 首发补给武器8期
+231	Poster/event_actbig26_Mul.png	[146,-30]			[1631,1632,1633,1634,1635]			517	音乐会版本武器自选活动
+232	Poster/event_actbig63_Mul.png	[146,-30]			[1636,1637,1638,1639,1640]			516	首发补给9期_新概念军械 100抽
+243	Poster/event_actbig65_Mul.png	[146,-30]			[1641,1642,1643,1644,1645]	[102,2]	UI_WeaponMCGacha	518	限定1期UP武器蛋池复刻
+253	Poster/event_actbig66_Mul.png	[146,-30]			[1651,1652,1653,1654,1655]			519	限定4期UP武器蛋池
+272	Poster/event_actbig74_Mul.png	[146,-30]			[1661,1662,1663,1664,1665]			520	首发补给10期_联动版本 100抽
