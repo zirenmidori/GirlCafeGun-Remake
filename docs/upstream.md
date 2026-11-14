@@ -13,6 +13,18 @@ and in the embedded payload. Upstream tooling and documentation have a separate
 MIT notice, copyright 2026 GCG2-Offline contributors. These licenses do not
 license the game's art, audio, binaries, trademarks or other game assets.
 
+The local pages for the web windows (`server/src/servers/web-pages.ts`,
+`server/resources/web/`, `release/client/offline_web.lua`, `patch_offline_web.py`
+and `test_offline_web.py`) are ported from that repository at
+[189eec1](https://github.com/BlackrUSter4/GirlCafeGun-Offline/commit/189eec1fe2f04648d62a43be2a8885e014329e2f):
+`WebAssets.cs` and the notice routes of `BootstrapHttpServer.cs` in
+`server/src/SssjServer.Core`, its pages `Web/notice/index.html` and
+`Web/maintenance/index.html`, and `tools/patch_lua_offline_web.py`. Each ported
+file names its source. That client loads its pages from the publisher's hosts and
+the port maps two of those addresses; this release names the local server for
+every web window, so the recipe here gives each window its page. See
+[local web pages](../server/docs/modules/23-offline-web-pages.md).
+
 The complete pull request inventory at review time contained one open request,
 zero closed requests, and no review or conversation comments:
 [PR #1](https://github.com/BlackrUSter4/GirlCafeGun-Offline/pull/1), 53 files and

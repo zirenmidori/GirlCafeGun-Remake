@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib, re, struct, sys
 import patch_gacha
+import patch_offline_web
 import patch_selectors
 ROOT = Path(__file__).resolve().parents[2]
 from asset_tools import load_reviewed_parsers, validate_ranges, container_paths,pack
@@ -52,10 +53,12 @@ def patch_script(name, data):
     result=s.encode('utf8')
     if name in {'GachaCommon.lua','UI_GachaHistory.lua'}:result=patch_gacha.lua_script(name,result)
     if name in patch_selectors.LUA_NAMES:result=patch_selectors.lua_script(name,result)
+    if name in patch_offline_web.LUA_NAMES:result=patch_offline_web.lua_script(name,result)
     return result
 
 NAMES={'UI_Login.lua','GameManager.lua','Preload.lua','GM.lua','UI_GM.lua','LuaHotFixCSharp.lua','develop.lua','S2CCall.lua','LuaCall.lua','UI_User.lua','GMActivity.lua','GachaCommon.lua','UI_GachaHistory.lua'}
 NAMES |= patch_selectors.LUA_NAMES
+NAMES |= patch_offline_web.LUA_NAMES
 
 def build(source):
     cipher,unity,builder=load_reviewed_parsers()
