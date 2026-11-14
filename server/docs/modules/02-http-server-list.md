@@ -6,14 +6,17 @@
 
 ## 已实现接口
 
-| 路径                    | 行为                                   |
-| ----------------------- | -------------------------------------- |
-| `GET /serverlist`       | 返回单个静态区服及网关地址、端口、状态 |
-| `GET /serverstate/<id>` | 返回配置中的静态服务器状态             |
-| `GET /health`           | 返回启动时间和进程 uptime              |
-| 其他路径                | `404` JSON                             |
+| 路径                    | 行为                                             |
+| ----------------------- | ------------------------------------------------ |
+| `GET /serverlist`       | 返回单个静态区服及网关地址、端口、状态           |
+| `GET /serverstate/<id>` | 返回配置中的静态服务器状态                       |
+| `GET /health`           | 返回启动时间和进程 uptime                        |
+| `GET /notice.html`      | 本地公告网页（见 [23](23-offline-web-pages.md)） |
+| `GET /web/<path>`       | `resources/web/` 下的静态网页                    |
+| `GET /notice.txt`       | 公告列表 JSON                                    |
+| 其他路径                | `404` JSON                                       |
 
-所有响应使用 UTF-8 JSON、`no-store` 和 `Connection: close`。每次请求记录方法、
+除网页外，所有响应使用 UTF-8 JSON；全部响应使用`no-store` 和 `Connection: close`。每次请求记录方法、
 路径和来源地址。ADB reverse 模式下渠道列表发布 `127.0.0.1:30400`。
 
 ## 状态来源
@@ -23,7 +26,8 @@
 
 ## 验证
 
-目前没有 HTTP 端到端测试；该模块主要通过客户端渠道页和 `/health` 实际访问验证。
+`test/http-server.test.ts` 通过真实监听端口请求 `/health`、网页和公告路由；
+渠道列表主要通过客户端渠道页实际访问验证。
 
 ## 已知缺口
 

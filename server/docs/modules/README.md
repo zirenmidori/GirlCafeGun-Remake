@@ -39,6 +39,8 @@
 
 | [Headpats](22-headpats.md) | Implemented; phone playtest passed | Shared charges, refill, affection, daily and oath progress |
 
+| [Local web pages](23-offline-web-pages.md) | Implemented; not seen on a device | Notice page, notice lists and server-error page for the web windows |
+
 ## 自动化验证现状
 
 `pnpm check` 会运行格式检查、ESLint、TypeScript 严格类型检查、Vitest 和生产

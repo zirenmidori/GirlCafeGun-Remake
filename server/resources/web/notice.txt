@@ -1,0 +1,19 @@
+{
+  "bannerLoopTime": 5,
+  "banners": [],
+  "notices": [
+    {
+      "ID": 1,
+      "forceShow": 0,
+      "priority": 1,
+      "date": "2026-11-14",
+      "title": "Offline build",
+      "content": "This game runs without the publisher's servers. The game server is inside the app on this device.\n\nYour save data stays on this device. If you uninstall the app, the save data is deleted.\n\nThe publisher's notice pages are gone. This window shows the notices that the local server holds.",
+      "startTime": "2000-01-01T00:00:00",
+      "endTime": "2099-01-01T00:00:00"
+    }
+  ],
+  "activity": [],
+  "news": [],
+  "LoginNotice": []
+}
