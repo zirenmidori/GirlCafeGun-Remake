@@ -54,6 +54,7 @@ import {
   LUA_COMMAND_WRITE_GUIDE_LOG,
   makeGuideLogAcknowledgement,
 } from "../game-data/guide-data.js";
+import { NORMAL_ACTIVITY_ACHIEVEMENT_AWARD_TYPE } from "../game-data/activity-achievement-data.js";
 import { EIGHT_DAY_SIGN_UP_ACTIVITY_ID } from "../game-data/eight-day-sign-up-data.js";
 import {
   GachaCatalog,
@@ -94,6 +95,7 @@ import {
 } from "../game-data/house-data.js";
 import type { Logger } from "../logger.js";
 import {
+  AchievementAwardError,
   BountySettlementError,
   CafeOperationError,
   InsufficientGoldError,
@@ -905,6 +907,68 @@ export function createGatewayServer({
       send(COMMAND.GIRL_UPDATE_NTF, 0, makeGirlUpdateNotification(girls));
     }
 
+    async function claimAchievementAward(
+      activityId: number | null,
+      achievementId: number,
+    ): Promise<void> {
+      try {
+        const result =
+          activityId === null
+            ? await players.claimAchievementAward(context.account, achievementId)
+            : await players.claimActivityAchievementAward(
+                context.account,
+                activityId,
+                achievementId,
+              );
+        context.player = result.player;
+        // The client callback takes no data and redraws from the task values,
+        // so they go out before MissionMgrMsg.
+        send(COMMAND.TASK_VALUE_RSP, 0, makeTaskValueSync(result.player.taskValues));
+        if (result.updatedItems.length > 0) {
+          send(
+            COMMAND.ITEM_UPDATE_NTF,
+            0,
+            makeItemUpdateNotification(result.updatedItems),
+          );
+        }
+        sendGirlUpdates(result.updatedGirls);
+        for (const money of result.updatedMoney) {
+          send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+        }
+        send(
+          COMMAND.NTF_S2C_CALL,
+          0,
+          makeServerLuaCall("MissionMgrMsg", { nError: 0, nMission: 0 }),
+        );
+        logger.info("lua.callback", {
+          peer,
+          account: context.account,
+          method: "MissionMgrMsg",
+          feature:
+            activityId === null ? "achievement.award" : "activity_achievement.award",
+          activityId,
+          achievementId,
+          awards: result.awards,
+        });
+      } catch (error) {
+        if (!(error instanceof AchievementAwardError)) throw error;
+        // MissionManager:Dispatcher compares nError with 0, and the page waits
+        // behind a blocking mask, so a refusal answers too.
+        send(
+          COMMAND.NTF_S2C_CALL,
+          0,
+          makeServerLuaCall("MissionMgrMsg", { nError: 1, nMission: 0 }),
+        );
+        logger.warn("achievement.claim_rejected", {
+          peer,
+          account: context.account,
+          activityId,
+          achievementId,
+          reason: error.reason,
+        });
+      }
+    }
+
     function sendPromiseUpdates(
       result: PromiseOperationResult,
       syncTaskValues = false,
@@ -1656,6 +1720,18 @@ export function createGatewayServer({
             }
             return;
           }
+          if (Number(parameters.nType) === NORMAL_ACTIVITY_ACHIEVEMENT_AWARD_TYPE) {
+            await claimAchievementAward(activityId, achievementId);
+            return;
+          }
+        }
+        if (call?.method === "AchievementGetAward") {
+          const parameters =
+            call.parameters && typeof call.parameters === "object"
+              ? (call.parameters as Record<string, unknown>)
+              : {};
+          await claimAchievementAward(null, Number(parameters.nId));
+          return;
         }
         if (
           call?.method === "MissionGetAward" ||

@@ -1,0 +1,5 @@
+INT	STR	STR	FLOATARR	STR	STR	FLOATARR	STR	FLOATARR	INTARR	FLOATARR	INTARR	FLOATARR	INTARR	INTARR	STR	NUL
+活动ID	背景图	背景图	签到按键位置(不填默认)	签到按键名称	已签到按键名称	日期位置+s缩放	日期图 前缀	奖励列表1位置 间隔	列表1成就ID	奖励列表2位置 间隔	列表2成就ID	奖励列表3(大图标)位置 间隔	列表3成就ID 只能填一个	Live2D	Live2D位置	备注
+Id	Bg	ItemBg	BtnPos	BtnName	BtnGotName	DayPos	DayImg	RewardList1Pos	RewardList1Achievements	RewardList2Pos	RewardList2Achievements	RewardList3Pos	RewardList3Achievements	L2D	OffsetType	
+29	Poster/event_eightsign_Mul.png	CommonBig/activity_item_bg.png		ButtonGet	Button2	[-273,-14,1]	Num/sign_		[23,24,25,26,27,28,29]				[30]	[9,3009]	UI_EightDaysSignUp	累计八日登录
+56	Poster/event_eightsign2_Mul.png	CommonBig/activity_item_bg2.png		ButtonGetred	ButtonGot	[-192,-10,0.7]	Num/sign3_		[1050,1051,1052,1053,1054,1055,1056]				[1057]			春节预热签到

@@ -82,6 +82,11 @@ it("persists player and task changes atomically", async () => {
           DAILY_MISSION_ACTIVE_AWARD_TASK_ID,
         ].map((id) => [String(makeDailyMissionTaskId(id)), 0]),
       ),
+      // Event page achievements a new player already has progress 1 on:
+      // card level (10-12), girl affection (45-48) and commander level (100).
+      ...Object.fromEntries(
+        [10, 11, 12, 45, 46, 47, 48, 100].map((id) => [String((18 << 16) | id), 2]),
+      ),
     });
     expect(
       player.inventory

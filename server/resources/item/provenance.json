@@ -1,0 +1,32 @@
+{
+  "sourceSettingSha256": "f0c6351ce9be11296c75c3b7cef1c3775080798219e0fb2b06c722647afe4ab2",
+  "sourceSetting": "assets/setting.u of the GCG Offline 0.1.3 release APK",
+  "files": {
+    "autouse.txt": {
+      "source": "setting.u: MonoBehaviour ItemList (ItemBaseInfo rows)",
+      "sha256": "4f36ccb66a02d2a182d13e66a49f5ead3fdf208166246ffef12373cc50c230ef",
+      "bytes": 55600,
+      "projection": {
+        "sourceFormat": "binary-row-selection",
+        "sourceRows": 2431,
+        "filter": {
+          "column": "AutoUse",
+          "values": [
+            1
+          ]
+        },
+        "columns": [
+          "Genre",
+          "Detail",
+          "Particular",
+          "Level",
+          "ClassName",
+          "ExtParam1",
+          "ExtParam2"
+        ],
+        "headerRows": 3,
+        "lineEndings": "LF"
+      }
+    }
+  }
+}

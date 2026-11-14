@@ -1,0 +1,56 @@
+{
+  "sourceSettingSha256": "f0c6351ce9be11296c75c3b7cef1c3775080798219e0fb2b06c722647afe4ab2",
+  "sourceSetting": "assets/setting.u of the GCG Offline 0.1.3 release APK",
+  "files": {
+    "achievement.txt": {
+      "source": "setting.u:assets/_game/settinggen/mission/achievement.txt",
+      "sha256": "8bcdb9c62e9d6b84fe4265503244a5044ffe07b45b63478ba824b7fe9a83015f",
+      "bytes": 452470
+    },
+    "achievementother.txt": {
+      "source": "setting.u:assets/_game/settinggen/mission/achievementother.txt",
+      "sha256": "b9083515390e18b41a91f6384c41c4ee78648989f6763e3ecf7d5d9132cf3de2",
+      "bytes": 295369
+    },
+    "activitylist.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/activitylist.txt",
+      "sha256": "081bb628ae41fe0bbb58fd205c127ef8e56fc71e7eb44b87d1720a9be56d7946",
+      "bytes": 36164
+    },
+    "activitytemplate2.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/activitytemplate2.txt",
+      "sha256": "16c2bcf0634046a5d1bf53a157b4ed6afbc82585083909797e532e4b1b1f041d",
+      "bytes": 1172
+    },
+    "activitytemplate4.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/activitytemplate4.txt",
+      "sha256": "b996856031a27a846d6afbed9e845459f434360ee737db14e0bccc06b6d7e25e",
+      "bytes": 634
+    },
+    "activitytemplate5.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/activitytemplate5.txt",
+      "sha256": "bf94938623e18079619e2882ab220dd3c2749c14e2bdb580b85dcd1554845eb7",
+      "bytes": 11155
+    },
+    "eightdayssignup.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/eightdayssignup.txt",
+      "sha256": "a560d46050a2cca9805fcdf92b557987dc8f03296cdba860c5740d1d9e5e6164",
+      "bytes": 992
+    },
+    "eightdayssignup2.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/eightdayssignup2.txt",
+      "sha256": "67346a909be107bdae7534ac54035bfd9b5e176160cc913d84afcdcd8914fa6f",
+      "bytes": 14869
+    },
+    "sodukuactivity.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/sodukuactivity.txt",
+      "sha256": "697333ea39b167d11ca531ce5cd647d92e3a911184188be35f64bb7a3409b9e3",
+      "bytes": 19687
+    },
+    "weaponmcgacha.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/weaponmcgacha.txt",
+      "sha256": "8c2de9213734ef590c9612bcbe4b98082218b4c55125dc5a5bab9e8262585ac7",
+      "bytes": 2220
+    }
+  }
+}
