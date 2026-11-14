@@ -45,7 +45,7 @@ show at any date:
 | 8        | `activity.power`            | 4, `EnergyActivity`    | no (`NormalActivityGetAward` without `nType`)                |
 | 14       | `activity.battle`           | 2, `ActivityTemplate2` | claims; no progress source (types 22, 42, 59, 104, 105)      |
 | 15       | `activity.girl`             | 2, `ActivityTemplate2` | claims; progress for 10 of 16 (types 37, 85; not 18, 29)     |
-| 16       | `activity.coffee`           | 2, `ActivityTemplate2` | no: every award list holds item `14-1-4-1`, see Known gaps   |
+| 16       | `activity.coffee`           | 2, `ActivityTemplate2` | claims; no progress source (types 75, 76, 137)               |
 | 20       | `activity.suduku`           | 6, `SodukuActivity`    | cell progress for 4 of 9 cells; line rewards are not handled |
 | 29       | `activity.eightsign`        | 12, `EightDaysSignUp`  | module 11 (unchanged); the same table rows work here         |
 | 83       | `activity.HalfYearFestival` | 21                     | no                                                           |
@@ -93,28 +93,37 @@ same task values, so a reward claimed through one is refused by the other.
 
 ## Awards
 
-`grantAwards` places an award in one of three ways: a wallet (genre 15, details
+`grantAwards` places an award in one of four ways: a wallet (genre 15, details
 1 gold, 2 diamonds, 4 stamina, 10 coffee coins, 11 and 20 decomposition tokens),
-a new instance (genres 1-4) or an inventory stack (everything else).
+a new instance (genres 1-4), the rule of an auto-use item, or an inventory stack.
 
-`ItemList` of the client marks many items `AutoUse`: the original server used
-them up when they arrived. A stack of such an item does nothing. Checked against
-`ItemList` for every award of the two achievement tables:
+`ItemList` of the client marks 1937 of its 2431 items `AutoUse`: the original
+server used them up when they arrived. A stack of such an item does nothing.
+`resources/item/autouse.txt` is that selection of `ItemList` (class and first two
+parameters per item); `src/game-data/auto-use-item-data.ts` holds the rules. The
+rules apply to every reward path, because they sit in `grantAwards`.
 
-| Award                                | `AutoUse` | Here                                 |
-| ------------------------------------ | --------- | ------------------------------------ |
-| 15-1, 15-2, 15-4, 15-20              | yes       | wallet, paid                         |
-| genres 1, 2, 3                       | -         | instance, paid                       |
-| genres 5, 7, 9, 10, 12, 21, 22 and 8 | no        | stack, paid                          |
-| genre 11 `CafeItemAuto`              | yes       | stack, paid; the cafe uses up stacks |
-| genre 6 (frames, bubbles, cards)     | yes       | refused                              |
-| 8-17 `ItemBoxAuto`                   | yes       | refused                              |
-| genre 14 (purchase items)            | yes       | refused                              |
-| genre 15, every other detail         | yes       | refused                              |
-| genres 16, 17 `RikiItem`             | yes       | refused                              |
+| Item class                                                             | Rule                                                 | Client code that reads it        |
+| ---------------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------- |
+| `ItemNormalCoinAuto`, `ItemMixTowerCoinAuto`, `ItemBattlePassCoinAuto` | wallet `ExtParam2`                                   | `ItemLogic.lua`, `UI_Player.lua` |
+| `ItemHeadFrameAuto` (6-28)                                             | task 11/`ExtParam1` = time of receipt                | `CardCommon:CheckHaveHeadFrame`  |
+| `ItemVisitingCardAuto` (6-21)                                          | task 76/`ExtParam1` = time of receipt                | `UI_SkinSelected:IsUnlock`       |
+| `ItemPlayerListSkinAuto` (6-22)                                        | task 77/`ExtParam1` = time of receipt                | `UI_SkinSelected:IsUnlock`       |
+| `ItemChatBubbleAuto` (6-23)                                            | task 78/`ExtParam1` = time of receipt                | `UI_SkinSelected:IsUnlock`       |
+| `RikiItem` (genres 16, 17)                                             | task 53/`Id` = 1 for each `Riki.txt` row of the GDPL | `Riki.lua`                       |
+| `ItemGiftCoffeeCoinAuto` (14-1-4-1)                                    | coffee coins, `ExtParam1` each                       | inferred, see below              |
+| `CafeItemAuto` (genre 11)                                              | stack; the cafe uses it up when it places furniture  | `cafe-furniture-commerce.ts`     |
 
-No achievement of a shown page that has a progress source pays a refused
-award. Stamina (15-4) is paid, but no shown page lists it.
+`ItemGiftCoffeeCoinAuto` is the one inferred rule: no client code reads it. It
+has the description and icon of `ItemCoffeeCoinAuto`. The other 14-1 items are
+diamond items, and module 15 pays `14-1-2-1` as `ExtParam1` diamonds each.
+
+Every other `AutoUse` class has no rule. In a claim such an award is refused.
+Of the awards in the two achievement tables, nine items stay refused: box
+`8-17-1-2` (`ItemBoxAuto`, random content from `ItemBoxInfo.txt`) and the event
+scores `15-30`, `15-35`, `15-37`, `15-40`, `15-41`, `15-45`, `15-52` and `15-96`.
+No shown page pays them. `test/auto-use-item-data.test.ts` pins this list. Every
+award of `Achievement.txt` can be paid.
 
 ## Progress
 
@@ -160,8 +169,14 @@ Login days are the existing eight-day counter: one per operational day
   109, 137, 171, 193, 195-199 and 230 of the shown pages have no progress source.
 - Girl affection and card level change without a domain event, so their
   progress reaches the client at the next login.
-- Page 16 pays `14-1-4-1` (`ItemGiftCoffeeCoinAuto`), an auto-use item that this
-  server has no rule for. Its claims are refused until that rule exists.
+- Page 16 has no progress source yet. Its awards (`14-1-4-1`) are paid as coffee
+  coins by an inferred rule, see Awards.
+- Stacks of auto-use items that an older build put into a save are not
+  converted.
+- A reward path that does not send the task values after `grantAwards` shows a
+  new head frame, skin or gallery entry at the next login. Claims send them.
+- Whether a refreshed time of receipt is right for a decoration that the player
+  already owns was not recovered. A permanent one stays owned either way.
 - The matrix board (activity 20) pays by line with
   `NormalActivityGetAward {nActivityId, nIndex}` and `NormalActivityMsg nType 6`.
   Not handled.

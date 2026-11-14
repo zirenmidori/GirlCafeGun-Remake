@@ -270,6 +270,10 @@ export class ActivityAchievementCatalog {
     return this.#achievements.get(group)?.get(id) ?? null;
   }
 
+  achievements(group: number): readonly AchievementConfig[] {
+    return [...(this.#achievements.get(group)?.values() ?? [])];
+  }
+
   activity(activityId: number): ActivityListEntry | null {
     return this.#activities.get(activityId) ?? null;
   }

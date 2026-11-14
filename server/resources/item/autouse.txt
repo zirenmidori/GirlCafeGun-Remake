@@ -1,0 +1,1940 @@
+INT	INT	INT	INT	STR	STR	STR
+genre	detail	particular	level	item class	first parameter	second parameter
+Genre	Detail	Particular	Level	ClassName	ExtParam1	ExtParam2
+6	7	1	1	TaskBanStudio	1	
+6	7	2	1	TaskBanStudio	0	
+6	8	1	1	ItemBattlePassAuto	1	
+6	8	1	2	ItemBattlePassAuto	2	
+6	8	1	3	ItemBattlePassAuto	3	
+6	9	1	1	BuyFundAuto		
+6	10	1	1	BuyRecruitAuto		101
+6	10	1	2	BuyRecruitAuto		149
+6	10	1	3	BuyRecruitAuto		233
+6	10	1	4	BuyRecruitAuto		244
+6	10	1	5	BuyRecruitAuto		268
+6	10	2	1	ItemWeaponCardAuto		
+6	10	3	1	IBCycleGiftAuto		
+6	10	3	2	IBCycleGiftAllAuto		
+6	21	1	4	ItemVisitingCardAuto	1	
+6	21	3	4	ItemVisitingCardAuto	3	
+6	21	4	4	ItemVisitingCardAuto	4	
+6	21	5	4	ItemVisitingCardAuto	5	
+6	21	6	4	ItemVisitingCardAuto	6	
+6	21	7	4	ItemVisitingCardAuto	7	
+6	21	8	4	ItemVisitingCardAuto	8	
+6	21	9	4	ItemVisitingCardAuto	9	
+6	21	10	4	ItemVisitingCardAuto	10	
+6	21	11	4	ItemVisitingCardAuto	11	
+6	21	12	4	ItemVisitingCardAuto	12	
+6	21	13	4	ItemVisitingCardAuto	13	
+6	21	14	4	ItemVisitingCardAuto	14	
+6	21	15	4	ItemVisitingCardAuto	15	
+6	21	16	4	ItemVisitingCardAuto	16	
+6	21	17	4	ItemVisitingCardAuto	17	
+6	21	18	4	ItemVisitingCardAuto	18	
+6	21	19	4	ItemVisitingCardAuto	19	
+6	21	20	4	ItemVisitingCardAuto	20	
+6	21	102	4	ItemVisitingCardAuto	102	
+6	21	103	4	ItemVisitingCardAuto	103	
+6	21	104	4	ItemVisitingCardAuto	104	
+6	22	1	4	ItemPlayerListSkinAuto	1	
+6	22	3	4	ItemPlayerListSkinAuto	3	
+6	22	4	4	ItemPlayerListSkinAuto	4	
+6	22	5	4	ItemPlayerListSkinAuto	5	
+6	22	6	4	ItemPlayerListSkinAuto	6	
+6	22	7	4	ItemPlayerListSkinAuto	7	
+6	22	8	4	ItemPlayerListSkinAuto	8	
+6	22	9	4	ItemPlayerListSkinAuto	9	
+6	22	10	4	ItemPlayerListSkinAuto	10	
+6	22	11	4	ItemPlayerListSkinAuto	11	
+6	22	12	4	ItemPlayerListSkinAuto	12	
+6	22	13	4	ItemPlayerListSkinAuto	13	
+6	22	14	4	ItemPlayerListSkinAuto	14	
+6	22	15	4	ItemPlayerListSkinAuto	15	
+6	22	16	4	ItemPlayerListSkinAuto	16	
+6	22	17	4	ItemPlayerListSkinAuto	17	
+6	22	18	4	ItemPlayerListSkinAuto	18	
+6	22	19	4	ItemPlayerListSkinAuto	19	
+6	22	20	4	ItemPlayerListSkinAuto	20	
+6	22	102	4	ItemPlayerListSkinAuto	102	
+6	22	103	4	ItemPlayerListSkinAuto	103	
+6	23	1	4	ItemChatBubbleAuto	1	
+6	23	3	4	ItemChatBubbleAuto	3	
+6	23	4	4	ItemChatBubbleAuto	4	
+6	23	5	4	ItemChatBubbleAuto	5	
+6	23	6	4	ItemChatBubbleAuto	6	
+6	23	7	4	ItemChatBubbleAuto	7	
+6	23	8	4	ItemChatBubbleAuto	8	
+6	23	9	4	ItemChatBubbleAuto	9	
+6	23	10	4	ItemChatBubbleAuto	10	
+6	23	11	4	ItemChatBubbleAuto	11	
+6	23	12	4	ItemChatBubbleAuto	12	
+6	23	13	4	ItemChatBubbleAuto	13	
+6	23	14	4	ItemChatBubbleAuto	14	
+6	23	15	4	ItemChatBubbleAuto	15	
+6	23	16	4	ItemChatBubbleAuto	16	
+6	23	17	4	ItemChatBubbleAuto	17	
+6	23	18	4	ItemChatBubbleAuto	18	
+6	23	19	4	ItemChatBubbleAuto	19	
+6	23	20	4	ItemChatBubbleAuto	20	
+6	23	101	4	ItemChatBubbleAuto	101	
+6	23	102	4	ItemChatBubbleAuto	102	
+6	23	103	4	ItemChatBubbleAuto	103	
+6	23	104	4	ItemChatBubbleAuto	104	
+6	23	105	4	ItemChatBubbleAuto	105	
+6	23	106	4	ItemChatBubbleAuto	106	
+6	23	107	4	ItemChatBubbleAuto	107	
+6	23	108	4	ItemChatBubbleAuto	108	
+6	23	109	4	ItemChatBubbleAuto	109	
+6	23	110	4	ItemChatBubbleAuto	110	
+6	23	111	4	ItemChatBubbleAuto	111	
+6	23	112	4	ItemChatBubbleAuto	112	
+6	24	6	3	ItemDecorateAuto	6	
+6	24	7	3	ItemDecorateAuto	7	
+6	24	8	3	ItemDecorateAuto	8	
+6	24	9	3	ItemDecorateAuto	9	
+6	24	10	3	ItemDecorateAuto	10	
+6	24	11	3	ItemDecorateAuto	11	
+6	25	2	3	ItemBackGroundAuto	2	
+6	25	3	3	ItemBackGroundAuto	3	
+6	25	4	3	ItemBackGroundAuto	4	
+6	25	5	3	ItemBackGroundAuto	5	
+6	25	6	3	ItemBackGroundAuto	6	
+6	25	7	3	ItemBackGroundAuto	7	
+6	25	8	3	ItemBackGroundAuto	8	
+6	25	9	3	ItemBackGroundAuto	9	
+6	25	10	3	ItemBackGroundAuto	10	
+6	25	11	3	ItemBackGroundAuto	11	
+6	25	12	3	ItemBackGroundAuto	12	
+6	25	13	3	ItemBackGroundAuto	13	
+6	25	14	3	ItemBackGroundAuto	14	
+6	25	15	3	ItemBackGroundAuto	15	
+6	25	16	3	ItemBackGroundAuto	16	
+6	25	17	3	ItemBackGroundAuto	17	
+6	25	18	3	ItemBackGroundAuto	18	
+6	25	19	3	ItemBackGroundAuto	19	
+6	25	20	3	ItemBackGroundAuto	20	
+6	25	21	3	ItemBackGroundAuto	21	
+6	25	22	3	ItemBackGroundAuto	22	
+6	25	23	3	ItemBackGroundAuto	23	
+6	25	24	3	ItemBackGroundAuto	24	
+6	25	25	3	ItemBackGroundAuto	25	
+6	25	26	3	ItemBackGroundAuto	26	
+6	28	1	4	ItemHeadFrameAuto	2	
+6	28	2	4	ItemHeadFrameAuto	3	
+6	28	3	4	ItemHeadFrameAuto	4	
+6	28	4	4	ItemHeadFrameAuto	5	
+6	28	5	4	ItemHeadFrameAuto	6	
+6	28	6	4	ItemHeadFrameAuto	7	
+6	28	7	4	ItemHeadFrameAuto	8	
+6	28	8	4	ItemHeadFrameAuto	9	
+6	28	11	4	ItemHeadFrameAuto	10	
+6	28	12	4	ItemHeadFrameAuto	11	
+6	28	13	4	ItemHeadFrameAuto	12	
+6	28	14	4	ItemHeadFrameAuto	13	
+6	28	15	4	ItemHeadFrameAuto	14	
+6	28	16	4	ItemHeadFrameAuto	15	
+6	28	20	4	ItemHeadFrameAuto	20	
+6	28	21	4	ItemHeadFrameAuto	21	
+6	28	22	4	ItemHeadFrameAuto	22	
+6	28	23	4	ItemHeadFrameAuto	23	
+6	28	24	4	ItemHeadFrameAuto	24	
+6	28	25	4	ItemHeadFrameAuto	25	
+6	28	27	4	ItemHeadFrameAuto	36	
+6	28	30	4	ItemHeadFrameAuto	30	
+6	28	31	4	ItemHeadFrameAuto	31	
+6	28	32	4	ItemHeadFrameAuto	32	
+6	28	33	4	ItemHeadFrameAuto	33	
+6	28	34	4	ItemHeadFrameAuto	34	
+6	28	35	4	ItemHeadFrameAuto	35	
+6	28	37	4	ItemHeadFrameAuto	37	
+6	28	38	4	ItemHeadFrameAuto	38	
+6	28	39	4	ItemHeadFrameAuto	39	
+6	28	40	4	ItemHeadFrameAuto	40	
+6	28	41	4	ItemHeadFrameAuto	41	
+6	28	42	4	ItemHeadFrameAuto	42	
+6	28	43	4	ItemHeadFrameAuto	43	
+6	28	44	4	ItemHeadFrameAuto	44	
+6	28	45	4	ItemHeadFrameAuto	45	
+6	28	46	4	ItemHeadFrameAuto	46	
+6	28	47	4	ItemHeadFrameAuto	47	
+6	28	48	4	ItemHeadFrameAuto	48	
+6	28	49	4	ItemHeadFrameAuto	49	
+6	28	50	4	ItemHeadFrameAuto	50	
+6	28	51	4	ItemHeadFrameAuto	51	
+6	28	52	4	ItemHeadFrameAuto	52	
+6	28	53	4	ItemHeadFrameAuto	53	
+6	28	54	4	ItemHeadFrameAuto	54	
+6	28	55	4	ItemHeadFrameAuto	55	
+6	28	56	4	ItemHeadFrameAuto	56	
+6	28	57	4	ItemHeadFrameAuto	57	
+6	28	58	4	ItemHeadFrameAuto	58	
+6	28	59	4	ItemHeadFrameAuto	59	
+6	28	60	4	ItemHeadFrameAuto	60	
+6	28	61	4	ItemHeadFrameAuto	61	
+6	28	62	4	ItemHeadFrameAuto	62	
+6	28	63	4	ItemHeadFrameAuto	63	
+6	28	64	4	ItemHeadFrameAuto	64	
+6	28	65	4	ItemHeadFrameAuto	65	
+6	28	66	4	ItemHeadFrameAuto	66	
+6	28	67	4	ItemHeadFrameAuto	67	
+6	28	68	4	ItemHeadFrameAuto	68	
+6	28	69	4	ItemHeadFrameAuto	69	
+6	28	70	4	ItemHeadFrameAuto	70	
+6	28	71	4	ItemHeadFrameAuto	71	
+6	28	72	4	ItemHeadFrameAuto	72	
+6	28	73	4	ItemHeadFrameAuto	73	
+6	28	74	4	ItemHeadFrameAuto	74	
+6	28	75	4	ItemHeadFrameAuto	75	
+6	28	76	4	ItemHeadFrameAuto	76	
+6	28	77	4	ItemHeadFrameAuto	77	
+6	28	78	4	ItemHeadFrameAuto	78	
+6	28	79	4	ItemHeadFrameAuto	79	
+6	28	80	4	ItemHeadFrameAuto	80	
+6	28	101	4	ItemHeadFrameAuto	101	
+6	28	102	4	ItemHeadFrameAuto	102	
+6	28	103	4	ItemHeadFrameAuto	103	
+6	28	104	4	ItemHeadFrameAuto	104	
+6	28	105	4	ItemHeadFrameAuto	105	
+6	28	106	4	ItemHeadFrameAuto	106	
+6	28	107	4	ItemHeadFrameAuto	107	
+6	28	108	4	ItemHeadFrameAuto	108	
+6	28	109	4	ItemHeadFrameAuto	109	
+6	28	110	4	ItemHeadFrameAuto	110	
+6	28	111	4	ItemHeadFrameAuto	111	
+6	28	112	4	ItemHeadFrameAuto	112	
+6	28	113	4	ItemHeadFrameAuto	113	
+6	28	114	4	ItemHeadFrameAuto	114	
+6	28	115	4	ItemHeadFrameAuto	115	
+6	28	116	4	ItemHeadFrameAuto	116	
+6	28	117	4	ItemHeadFrameAuto	117	
+6	28	118	4	ItemHeadFrameAuto	118	
+6	28	119	4	ItemHeadFrameAuto	119	
+6	28	120	4	ItemHeadFrameAuto	120	
+6	28	121	4	ItemHeadFrameAuto	121	
+6	28	122	4	ItemHeadFrameAuto	122	
+6	28	123	4	ItemHeadFrameAuto	123	
+6	28	124	4	ItemHeadFrameAuto	124	
+6	28	125	4	ItemHeadFrameAuto	125	
+6	28	126	4	ItemHeadFrameAuto	126	
+6	28	127	4	ItemHeadFrameAuto	127	
+6	28	128	4	ItemHeadFrameAuto	128	
+6	28	129	4	ItemHeadFrameAuto	129	
+6	28	130	4	ItemHeadFrameAuto	130	
+6	28	131	4	ItemHeadFrameAuto	131	
+6	28	132	4	ItemHeadFrameAuto	132	
+6	28	133	4	ItemHeadFrameAuto	133	
+6	28	134	4	ItemHeadFrameAuto	134	
+6	28	135	4	ItemHeadFrameAuto	135	
+6	28	136	4	ItemHeadFrameAuto	136	
+6	28	137	4	ItemHeadFrameAuto	137	
+6	28	138	4	ItemHeadFrameAuto	138	
+6	28	139	4	ItemHeadFrameAuto	139	
+6	28	140	4	ItemHeadFrameAuto	140	
+6	28	141	4	ItemHeadFrameAuto	141	
+6	28	142	4	ItemHeadFrameAuto	142	
+6	28	143	4	ItemHeadFrameAuto	143	
+6	28	144	4	ItemHeadFrameAuto	144	
+6	28	145	4	ItemHeadFrameAuto	145	
+6	28	146	4	ItemHeadFrameAuto	146	
+6	28	147	4	ItemHeadFrameAuto	147	
+6	28	148	4	ItemHeadFrameAuto	148	
+6	28	149	4	ItemHeadFrameAuto	149	
+6	28	150	4	ItemHeadFrameAuto	150	
+6	29	1	4	DoubleAffixPartAuto	1	4
+6	30	1	4	DoubleAffixPartAuto	2	4
+6	31	1	4	DoubleAffixPartAuto	3	4
+6	32	1	4	DoubleAffixPartAuto	4	4
+8	4	1	2	ItemBoxAuto	9	
+8	4	2	3	ItemBoxAuto	10	
+8	4	3	3	ItemBoxAuto	11	
+8	6	1	15	ItemBoxAuto	30002	
+8	6	1	28	ItemGoldAuto	666	
+8	6	1	29	ItemGoldAuto	888	
+8	6	1	30	ItemGoldAuto	6666	
+8	6	1	31	ItemGoldAuto	8888	
+8	7	3	3	ItemBoxAuto	611	
+8	7	4	3	ItemBoxAuto	612	
+8	7	5	3	ItemBoxAuto	613	
+8	7	6	3	ItemBoxAuto	614	
+8	7	7	3	ItemBoxAuto	615	
+8	7	8	3	ItemBoxAuto	616	
+8	7	13	3	ItemBoxAuto	622	
+8	14	1	12	ItemBoxAuto	305	
+8	14	1	13	ItemBoxAuto	306	
+8	14	2	1	ItemBoxAuto	307	
+8	14	2	2	ItemBoxAuto	308	
+8	14	3	1	ItemBoxAuto	309	
+8	14	3	2	ItemBoxAuto	310	
+8	14	4	1	ItemBoxAuto	311	
+8	14	4	2	ItemBoxAuto	312	
+8	14	5	1	ItemBoxAuto	313	
+8	14	5	2	ItemBoxAuto	314	
+8	14	6	1	ItemBoxAuto	321	
+8	14	6	2	ItemBoxAuto	322	
+8	14	61	1	ItemBoxAuto	323	
+8	14	61	2	ItemBoxAuto	324	
+8	14	7	1	ItemBoxAuto	325	
+8	14	7	2	ItemBoxAuto	326	
+8	14	8	1	ItemBoxAuto	327	
+8	14	8	2	ItemBoxAuto	328	
+8	14	9	1	ItemBoxAuto	330	
+8	14	9	2	ItemBoxAuto	331	
+8	14	10	1	ItemBoxAuto	332	
+8	14	10	2	ItemBoxAuto	333	
+8	14	11	1	ItemBoxAuto	334	
+8	14	11	2	ItemBoxAuto	335	
+8	14	12	1	ItemBoxAuto	336	
+8	14	12	2	ItemBoxAuto	337	
+8	14	13	1	ItemBoxAuto	338	
+8	14	13	2	ItemBoxAuto	339	
+8	17	1	2	ItemBoxAuto	329	
+11	1	1	1	CafeItemAuto	101	
+11	1	2	1	CafeItemAuto	102	
+11	1	3	1	CafeItemAuto	103	
+11	1	4	2	CafeItemAuto	104	
+11	1	5	2	CafeItemAuto	105	
+11	1	6	2	CafeItemAuto	106	
+11	1	7	3	CafeItemAuto	107	
+11	1	8	3	CafeItemAuto	108	
+11	1	9	3	CafeItemAuto	109	
+11	1	10	3	CafeItemAuto	110	
+11	1	11	3	CafeItemAuto	111	
+11	1	12	3	CafeItemAuto	112	
+11	1	19	3	CafeItemAuto	119	
+11	1	20	3	CafeItemAuto	120	
+11	1	21	3	CafeItemAuto	121	
+11	1	22	3	CafeItemAuto	122	
+11	1	23	3	CafeItemAuto	123	
+11	1	24	3	CafeItemAuto	124	
+11	1	25	3	CafeItemAuto	125	
+11	1	26	3	CafeItemAuto	126	
+11	1	27	3	CafeItemAuto	127	
+11	1	28	3	CafeItemAuto	128	
+11	1	29	3	CafeItemAuto	129	
+11	1	30	3	CafeItemAuto	130	
+11	1	31	3	CafeItemAuto	131	
+11	1	32	3	CafeItemAuto	132	
+11	1	33	3	CafeItemAuto	133	
+11	1	34	3	CafeItemAuto	141	
+11	1	35	3	CafeItemAuto	142	
+11	1	36	3	CafeItemAuto	143	
+11	1	37	3	CafeItemAuto	151	
+11	1	38	3	CafeItemAuto	152	
+11	1	39	3	CafeItemAuto	153	
+11	1	40	3	CafeItemAuto	161	
+11	1	41	3	CafeItemAuto	162	
+11	1	42	3	CafeItemAuto	163	
+11	1	43	3	CafeItemAuto	171	
+11	1	44	3	CafeItemAuto	172	
+11	1	45	3	CafeItemAuto	173	
+11	1	46	3	CafeItemAuto	181	
+11	1	47	3	CafeItemAuto	182	
+11	1	48	3	CafeItemAuto	183	
+11	2	49	1	CafeItemAuto	191	
+11	2	50	1	CafeItemAuto	192	
+11	2	51	1	CafeItemAuto	193	
+11	2	291	1	CafeItemAuto	5023	
+11	2	292	1	CafeItemAuto	5024	
+11	2	293	1	CafeItemAuto	5025	
+11	2	295	1	CafeItemAuto	5027	
+11	2	296	1	CafeItemAuto	5028	
+11	2	297	1	CafeItemAuto	5029	
+11	2	316	1	CafeItemAuto	5040	
+11	2	317	1	CafeItemAuto	5041	
+11	2	318	1	CafeItemAuto	5042	
+11	2	1	1	CafeItemAuto	501	
+11	2	2	1	CafeItemAuto	502	
+11	2	3	1	CafeItemAuto	503	
+11	2	4	1	CafeItemAuto	504	
+11	2	5	1	CafeItemAuto	505	
+11	2	6	1	CafeItemAuto	506	
+11	2	7	1	CafeItemAuto	507	
+11	2	8	1	CafeItemAuto	508	
+11	2	9	1	CafeItemAuto	509	
+11	2	10	2	CafeItemAuto	510	
+11	2	11	2	CafeItemAuto	511	
+11	2	12	2	CafeItemAuto	512	
+11	2	13	2	CafeItemAuto	513	
+11	2	14	2	CafeItemAuto	514	
+11	2	15	2	CafeItemAuto	515	
+11	2	16	2	CafeItemAuto	516	
+11	2	17	3	CafeItemAuto	517	
+11	2	18	3	CafeItemAuto	518	
+11	2	19	3	CafeItemAuto	519	
+11	2	20	3	CafeItemAuto	520	
+11	2	21	3	CafeItemAuto	521	
+11	2	22	3	CafeItemAuto	522	
+11	2	23	3	CafeItemAuto	523	
+11	2	24	3	CafeItemAuto	524	
+11	2	25	3	CafeItemAuto	525	
+11	2	26	3	CafeItemAuto	526	
+11	2	27	3	CafeItemAuto	527	
+11	2	28	3	CafeItemAuto	528	
+11	2	29	3	CafeItemAuto	529	
+11	2	30	3	CafeItemAuto	530	
+11	2	41	3	CafeItemAuto	541	
+11	2	42	3	CafeItemAuto	542	
+11	2	43	3	CafeItemAuto	543	
+11	2	44	3	CafeItemAuto	544	
+11	2	45	3	CafeItemAuto	545	
+11	2	46	3	CafeItemAuto	546	
+11	2	47	3	CafeItemAuto	547	
+11	2	48	3	CafeItemAuto	548	
+11	2	49	3	CafeItemAuto	766	
+11	2	50	3	CafeItemAuto	767	
+11	2	51	3	CafeItemAuto	768	
+11	2	52	3	CafeItemAuto	769	
+11	2	53	3	CafeItemAuto	770	
+11	2	54	1	CafeItemAuto	549	
+11	2	55	1	CafeItemAuto	550	
+11	2	56	1	CafeItemAuto	551	
+11	2	57	1	CafeItemAuto	552	
+11	2	58	1	CafeItemAuto	553	
+11	2	59	1	CafeItemAuto	554	
+11	2	60	1	CafeItemAuto	555	
+11	2	61	1	CafeItemAuto	556	
+11	2	62	1	CafeItemAuto	557	
+11	2	63	1	CafeItemAuto	558	
+11	2	64	1	CafeItemAuto	559	
+11	2	65	1	CafeItemAuto	560	
+11	2	66	1	CafeItemAuto	561	
+11	2	67	1	CafeItemAuto	562	
+11	2	68	1	CafeItemAuto	563	
+11	2	69	1	CafeItemAuto	564	
+11	2	70	1	CafeItemAuto	565	
+11	2	71	1	CafeItemAuto	566	
+11	2	72	1	CafeItemAuto	771	
+11	2	73	1	CafeItemAuto	772	
+11	2	74	1	CafeItemAuto	773	
+11	2	75	1	CafeItemAuto	774	
+11	2	76	1	CafeItemAuto	775	
+11	2	77	1	CafeItemAuto	776	
+11	2	78	1	CafeItemAuto	777	
+11	2	79	1	CafeItemAuto	814	
+11	2	80	1	CafeItemAuto	815	
+11	2	81	1	CafeItemAuto	778	
+11	2	82	1	CafeItemAuto	779	
+11	2	83	1	CafeItemAuto	780	
+11	2	84	1	CafeItemAuto	781	
+11	2	85	1	CafeItemAuto	782	
+11	2	86	1	CafeItemAuto	788	
+11	2	87	1	CafeItemAuto	789	
+11	2	88	1	CafeItemAuto	790	
+11	2	89	1	CafeItemAuto	551	
+11	2	90	1	CafeItemAuto	552	
+11	2	91	1	CafeItemAuto	783	
+11	2	92	1	CafeItemAuto	784	
+11	2	93	1	CafeItemAuto	785	
+11	2	94	1	CafeItemAuto	787	
+11	2	95	1	CafeItemAuto	791	
+11	2	96	1	CafeItemAuto	792	
+11	2	97	1	CafeItemAuto	793	
+11	2	98	1	CafeItemAuto	794	
+11	2	99	1	CafeItemAuto	796	
+11	2	100	1	CafeItemAuto	797	
+11	2	101	1	CafeItemAuto	798	
+11	2	102	1	CafeItemAuto	799	
+11	2	103	1	CafeItemAuto	816	
+11	2	104	1	CafeItemAuto	807	
+11	2	105	1	CafeItemAuto	808	
+11	2	106	1	CafeItemAuto	809	
+11	2	107	1	CafeItemAuto	810	
+11	2	108	1	CafeItemAuto	811	
+11	2	109	1	CafeItemAuto	812	
+11	2	115	1	CafeItemAuto	822	
+11	2	116	1	CafeItemAuto	823	
+11	2	117	1	CafeItemAuto	824	
+11	2	118	1	CafeItemAuto	825	
+11	2	119	1	CafeItemAuto	826	
+11	2	120	1	CafeItemAuto	827	
+11	2	121	1	CafeItemAuto	828	
+11	2	122	1	CafeItemAuto	829	
+11	2	123	1	CafeItemAuto	830	
+11	2	124	1	CafeItemAuto	831	
+11	2	125	1	CafeItemAuto	832	
+11	2	126	1	CafeItemAuto	833	
+11	2	127	1	CafeItemAuto	834	
+11	2	128	1	CafeItemAuto	835	
+11	2	129	1	CafeItemAuto	836	
+11	2	130	1	CafeItemAuto	837	
+11	2	131	1	CafeItemAuto	838	
+11	2	132	1	CafeItemAuto	839	
+11	2	133	1	CafeItemAuto	840	
+11	2	134	1	CafeItemAuto	841	
+11	2	135	1	CafeItemAuto	842	
+11	2	136	1	CafeItemAuto	843	
+11	2	137	1	CafeItemAuto	844	
+11	2	138	1	CafeItemAuto	845	
+11	2	139	1	CafeItemAuto	846	
+11	2	140	1	CafeItemAuto	847	
+11	2	141	1	CafeItemAuto	848	
+11	2	142	1	CafeItemAuto	849	
+11	2	143	1	CafeItemAuto	850	
+11	2	144	1	CafeItemAuto	851	
+11	2	145	1	CafeItemAuto	852	
+11	2	146	1	CafeItemAuto	853	
+11	2	147	1	CafeItemAuto	854	
+11	2	148	1	CafeItemAuto	855	
+11	2	149	1	CafeItemAuto	856	
+11	2	150	1	CafeItemAuto	857	
+11	2	151	1	CafeItemAuto	858	
+11	2	152	1	CafeItemAuto	859	
+11	2	153	1	CafeItemAuto	860	
+11	2	154	1	CafeItemAuto	861	
+11	2	155	1	CafeItemAuto	862	
+11	2	156	1	CafeItemAuto	863	
+11	2	157	1	CafeItemAuto	864	
+11	2	158	1	CafeItemAuto	865	
+11	2	159	1	CafeItemAuto	866	
+11	2	160	1	CafeItemAuto	867	
+11	2	161	1	CafeItemAuto	868	
+11	2	162	1	CafeItemAuto	869	
+11	2	163	1	CafeItemAuto	870	
+11	2	164	1	CafeItemAuto	871	
+11	2	165	1	CafeItemAuto	872	
+11	2	166	1	CafeItemAuto	873	
+11	2	167	1	CafeItemAuto	874	
+11	2	168	1	CafeItemAuto	875	
+11	2	169	1	CafeItemAuto	876	
+11	2	170	1	CafeItemAuto	877	
+11	2	183	1	CafeItemAuto	890	
+11	2	184	1	CafeItemAuto	891	
+11	2	180	1	CafeItemAuto	887	
+11	2	181	1	CafeItemAuto	888	
+11	2	182	1	CafeItemAuto	889	
+11	2	185	1	CafeItemAuto	892	
+11	2	177	1	CafeItemAuto	884	
+11	2	187	1	CafeItemAuto	894	
+11	2	188	1	CafeItemAuto	895	
+11	2	189	1	CafeItemAuto	896	
+11	2	190	1	CafeItemAuto	897	
+11	2	191	1	CafeItemAuto	898	
+11	2	171	1	CafeItemAuto	878	
+11	2	172	1	CafeItemAuto	879	
+11	2	192	1	CafeItemAuto	911	
+11	2	193	1	CafeItemAuto	912	
+11	2	194	1	CafeItemAuto	913	
+11	2	195	1	CafeItemAuto	914	
+11	2	196	1	CafeItemAuto	915	
+11	2	197	1	CafeItemAuto	916	
+11	2	198	1	CafeItemAuto	917	
+11	2	199	1	CafeItemAuto	918	
+11	2	200	1	CafeItemAuto	919	
+11	2	201	1	CafeItemAuto	920	
+11	2	202	1	CafeItemAuto	921	
+11	2	203	1	CafeItemAuto	922	
+11	2	204	1	CafeItemAuto	923	
+11	2	205	1	CafeItemAuto	924	
+11	2	206	1	CafeItemAuto	925	
+11	2	207	1	CafeItemAuto	926	
+11	2	208	1	CafeItemAuto	927	
+11	2	209	1	CafeItemAuto	928	
+11	2	210	1	CafeItemAuto	929	
+11	2	211	1	CafeItemAuto	930	
+11	2	212	1	CafeItemAuto	931	
+11	2	213	1	CafeItemAuto	932	
+11	2	214	1	CafeItemAuto	933	
+11	2	215	1	CafeItemAuto	934	
+11	2	216	1	CafeItemAuto	935	
+11	2	217	1	CafeItemAuto	936	
+11	2	218	1	CafeItemAuto	937	
+11	2	219	1	CafeItemAuto	938	
+11	2	220	1	CafeItemAuto	939	
+11	2	221	1	CafeItemAuto	940	
+11	2	222	1	CafeItemAuto	941	
+11	2	223	1	CafeItemAuto	942	
+11	2	224	1	CafeItemAuto	943	
+11	2	225	1	CafeItemAuto	944	
+11	2	226	1	CafeItemAuto	953	
+11	2	227	1	CafeItemAuto	954	
+11	2	228	1	CafeItemAuto	955	
+11	2	229	1	CafeItemAuto	956	
+11	2	230	1	CafeItemAuto	957	
+11	2	231	1	CafeItemAuto	958	
+11	2	232	1	CafeItemAuto	959	
+11	2	233	1	CafeItemAuto	960	
+11	2	234	1	CafeItemAuto	961	
+11	2	235	1	CafeItemAuto	962	
+11	2	236	1	CafeItemAuto	963	
+11	2	237	1	CafeItemAuto	964	
+11	2	238	1	CafeItemAuto	965	
+11	2	239	1	CafeItemAuto	966	
+11	2	240	1	CafeItemAuto	967	
+11	2	241	1	CafeItemAuto	968	
+11	2	242	1	CafeItemAuto	969	
+11	2	243	1	CafeItemAuto	970	
+11	2	244	1	CafeItemAuto	971	
+11	2	245	1	CafeItemAuto	972	
+11	2	246	1	CafeItemAuto	973	
+11	2	247	1	CafeItemAuto	974	
+11	2	248	1	CafeItemAuto	975	
+11	2	249	1	CafeItemAuto	976	
+11	2	250	1	CafeItemAuto	977	
+11	2	251	1	CafeItemAuto	978	
+11	2	252	1	CafeItemAuto	979	
+11	2	253	1	CafeItemAuto	980	
+11	2	254	1	CafeItemAuto	981	
+11	2	255	1	CafeItemAuto	982	
+11	2	256	1	CafeItemAuto	983	
+11	2	257	1	CafeItemAuto	984	
+11	2	258	1	CafeItemAuto	985	
+11	2	259	1	CafeItemAuto	986	
+11	2	260	1	CafeItemAuto	987	
+11	2	261	1	CafeItemAuto	988	
+11	2	262	1	CafeItemAuto	989	
+11	2	263	1	CafeItemAuto	990	
+11	2	264	1	CafeItemAuto	991	
+11	2	265	1	CafeItemAuto	992	
+11	2	266	1	CafeItemAuto	993	
+11	2	267	1	CafeItemAuto	994	
+11	2	268	1	CafeItemAuto	995	
+11	2	269	1	CafeItemAuto	5001	
+11	2	270	1	CafeItemAuto	5002	
+11	2	271	1	CafeItemAuto	5003	
+11	2	272	1	CafeItemAuto	5004	
+11	2	273	1	CafeItemAuto	5005	
+11	2	274	1	CafeItemAuto	5006	
+11	2	275	1	CafeItemAuto	5007	
+11	2	276	1	CafeItemAuto	5008	
+11	2	277	1	CafeItemAuto	5009	
+11	2	278	1	CafeItemAuto	5010	
+11	2	279	1	CafeItemAuto	5011	
+11	2	280	1	CafeItemAuto	5012	
+11	2	281	1	CafeItemAuto	5013	
+11	2	282	1	CafeItemAuto	5014	
+11	2	283	1	CafeItemAuto	5015	
+11	2	284	1	CafeItemAuto	5016	
+11	2	285	1	CafeItemAuto	5017	
+11	2	286	1	CafeItemAuto	5018	
+11	2	287	1	CafeItemAuto	5019	
+11	2	288	1	CafeItemAuto	5020	
+11	2	289	1	CafeItemAuto	5021	
+11	2	290	1	CafeItemAuto	5022	
+11	2	294	1	CafeItemAuto	5026	
+11	2	298	1	CafeItemAuto	5030	
+11	2	299	1	CafeItemAuto	5031	
+11	2	300	1	CafeItemAuto	5032	
+11	2	301	1	CafeItemAuto	5033	
+11	2	302	1	CafeItemAuto	5034	
+11	2	303	1	CafeItemAuto	5035	
+11	2	304	1	CafeItemAuto	5036	
+11	2	305	1	CafeItemAuto	5037	
+11	2	306	1	CafeItemAuto	5038	
+11	2	307	1	CafeItemAuto	5043	
+11	2	308	1	CafeItemAuto	5044	
+11	2	309	1	CafeItemAuto	5045	
+11	2	310	1	CafeItemAuto	5046	
+11	2	311	1	CafeItemAuto	5047	
+11	2	312	1	CafeItemAuto	5048	
+11	2	313	1	CafeItemAuto	5049	
+11	2	314	1	CafeItemAuto	5050	
+11	2	315	1	CafeItemAuto	5051	
+11	2	319	1	CafeItemAuto	5039	
+11	2	320	1	CafeItemAuto	5052	
+11	2	321	1	CafeItemAuto	5053	
+11	2	322	1	CafeItemAuto	5054	
+11	2	323	1	CafeItemAuto	5055	
+11	2	324	1	CafeItemAuto	5056	
+11	2	325	1	CafeItemAuto	5057	
+11	2	326	1	CafeItemAuto	5058	
+11	2	327	1	CafeItemAuto	5059	
+11	2	328	1	CafeItemAuto	5060	
+11	2	329	1	CafeItemAuto	5061	
+11	2	330	1	CafeItemAuto	5062	
+11	2	331	1	CafeItemAuto	5063	
+11	2	332	1	CafeItemAuto	5064	
+11	2	333	1	CafeItemAuto	5065	
+11	2	334	1	CafeItemAuto	5066	
+11	2	335	1	CafeItemAuto	5067	
+11	2	336	1	CafeItemAuto	5068	
+11	2	337	1	CafeItemAuto	5069	
+11	2	338	1	CafeItemAuto	5070	
+11	2	339	1	CafeItemAuto	5071	
+11	2	340	1	CafeItemAuto	5072	
+11	2	341	1	CafeItemAuto	5073	
+11	2	342	1	CafeItemAuto	5074	
+11	2	343	1	CafeItemAuto	5075	
+11	2	344	1	CafeItemAuto	5076	
+11	2	345	1	CafeItemAuto	5077	
+11	2	346	1	CafeItemAuto	5078	
+11	2	347	1	CafeItemAuto	5079	
+11	2	348	1	CafeItemAuto	5080	
+11	2	349	1	CafeItemAuto	5081	
+11	2	350	1	CafeItemAuto	5082	
+11	2	351	1	CafeItemAuto	5083	
+11	2	352	1	CafeItemAuto	5084	
+11	2	353	1	CafeItemAuto	5085	
+11	2	354	1	CafeItemAuto	5086	
+11	2	355	1	CafeItemAuto	5087	
+11	2	356	1	CafeItemAuto	5088	
+11	2	357	1	CafeItemAuto	5089	
+11	2	358	1	CafeItemAuto	5090	
+11	2	359	1	CafeItemAuto	5091	
+11	2	360	1	CafeItemAuto	5092	
+11	2	361	1	CafeItemAuto	5093	
+11	2	362	1	CafeItemAuto	5094	
+11	2	363	1	CafeItemAuto	5095	
+11	2	364	1	CafeItemAuto	5096	
+11	2	365	1	CafeItemAuto	5097	
+11	2	366	1	CafeItemAuto	5098	
+11	2	367	1	CafeItemAuto	5099	
+11	2	368	1	CafeItemAuto	5100	
+11	2	369	1	CafeItemAuto	5101	
+11	2	370	1	CafeItemAuto	5102	
+11	2	371	1	CafeItemAuto	5103	
+11	2	372	1	CafeItemAuto	5104	
+11	2	373	1	CafeItemAuto	5105	
+11	2	374	1	CafeItemAuto	5106	
+11	2	375	1	CafeItemAuto	5107	
+11	2	376	1	CafeItemAuto	5108	
+11	2	377	1	CafeItemAuto	5109	
+11	2	378	1	CafeItemAuto	5110	
+11	2	379	1	CafeItemAuto	5111	
+11	2	380	1	CafeItemAuto	5112	
+11	2	381	1	CafeItemAuto	5113	
+11	2	382	1	CafeItemAuto	5114	
+11	2	383	1	CafeItemAuto	5115	
+11	2	384	1	CafeItemAuto	5116	
+11	2	385	1	CafeItemAuto	5117	
+11	2	386	1	CafeItemAuto	5118	
+11	3	1	1	CafeItemAuto	401	
+11	3	2	1	CafeItemAuto	402	
+11	3	3	1	CafeItemAuto	403	
+11	3	4	1	CafeItemAuto	404	
+11	3	5	1	CafeItemAuto	405	
+11	3	6	2	CafeItemAuto	406	
+11	3	7	2	CafeItemAuto	407	
+11	3	8	2	CafeItemAuto	408	
+11	3	9	3	CafeItemAuto	409	
+11	3	10	3	CafeItemAuto	410	
+11	3	11	3	CafeItemAuto	411	
+11	3	12	3	CafeItemAuto	412	
+11	3	13	3	CafeItemAuto	413	
+11	3	14	3	CafeItemAuto	414	
+11	3	15	3	CafeItemAuto	415	
+11	3	16	3	CafeItemAuto	416	
+11	3	17	3	CafeItemAuto	417	
+11	3	27	3	CafeItemAuto	427	
+11	3	28	3	CafeItemAuto	428	
+11	3	29	3	CafeItemAuto	429	
+11	3	30	3	CafeItemAuto	430	
+11	3	31	3	CafeItemAuto	431	
+11	3	32	3	CafeItemAuto	432	
+11	3	33	3	CafeItemAuto	433	
+11	3	34	3	CafeItemAuto	434	
+11	4	1	1	CafeItemAuto	601	
+11	4	2	1	CafeItemAuto	602	
+11	4	3	1	CafeItemAuto	603	
+11	4	4	3	CafeItemAuto	604	
+11	4	7	3	CafeItemAuto	607	
+11	4	8	3	CafeItemAuto	608	
+11	4	9	3	CafeItemAuto	609	
+11	4	10	3	CafeItemAuto	610	
+11	4	11	3	CafeItemAuto	611	
+11	5	1	1	CafeItemAuto	701	
+11	5	2	1	CafeItemAuto	702	
+11	5	3	1	CafeItemAuto	703	
+11	5	4	1	CafeItemAuto	704	
+11	5	5	1	CafeItemAuto	705	
+11	5	6	1	CafeItemAuto	706	
+11	5	7	1	CafeItemAuto	707	
+11	5	8	1	CafeItemAuto	708	
+11	5	9	1	CafeItemAuto	709	
+11	5	10	1	CafeItemAuto	710	
+11	5	11	1	CafeItemAuto	711	
+11	5	12	1	CafeItemAuto	712	
+11	5	13	2	CafeItemAuto	713	
+11	5	14	2	CafeItemAuto	714	
+11	5	15	2	CafeItemAuto	715	
+11	5	16	2	CafeItemAuto	716	
+11	5	17	2	CafeItemAuto	717	
+11	5	18	2	CafeItemAuto	718	
+11	5	19	2	CafeItemAuto	719	
+11	5	20	2	CafeItemAuto	720	
+11	5	21	2	CafeItemAuto	721	
+11	5	22	2	CafeItemAuto	722	
+11	5	23	3	CafeItemAuto	723	
+11	5	24	3	CafeItemAuto	724	
+11	5	25	3	CafeItemAuto	725	
+11	5	26	3	CafeItemAuto	726	
+11	5	27	3	CafeItemAuto	727	
+11	5	28	3	CafeItemAuto	728	
+11	5	29	3	CafeItemAuto	729	
+11	5	30	3	CafeItemAuto	730	
+11	5	31	3	CafeItemAuto	731	
+11	5	32	3	CafeItemAuto	732	
+11	5	33	3	CafeItemAuto	733	
+11	5	34	3	CafeItemAuto	734	
+11	5	35	3	CafeItemAuto	735	
+11	5	36	3	CafeItemAuto	736	
+11	5	37	3	CafeItemAuto	737	
+11	5	38	3	CafeItemAuto	738	
+11	5	39	3	CafeItemAuto	739	
+11	5	40	3	CafeItemAuto	740	
+11	5	57	3	CafeItemAuto	757	
+11	5	58	3	CafeItemAuto	758	
+11	5	59	3	CafeItemAuto	759	
+11	5	60	3	CafeItemAuto	760	
+11	5	61	3	CafeItemAuto	761	
+11	5	62	3	CafeItemAuto	762	
+11	5	63	3	CafeItemAuto	763	
+11	5	64	3	CafeItemAuto	764	
+11	6	19	3	CafeItemAuto	2071	
+11	7	19	3	CafeItemAuto	2072	
+11	8	19	3	CafeItemAuto	2073	
+11	9	19	3	CafeItemAuto	2074	
+11	10	19	3	CafeItemAuto	2075	
+11	6	20	3	CafeItemAuto	2081	
+11	7	20	3	CafeItemAuto	2082	
+11	8	20	3	CafeItemAuto	2083	
+11	9	20	3	CafeItemAuto	2084	
+11	10	20	3	CafeItemAuto	2085	
+11	6	21	3	CafeItemAuto	2091	
+11	7	21	3	CafeItemAuto	2092	
+11	8	21	3	CafeItemAuto	2093	
+11	9	21	3	CafeItemAuto	2094	
+11	10	21	3	CafeItemAuto	2095	
+11	11	16	3	CafeItemAuto	3091	
+11	12	16	3	CafeItemAuto	3092	
+11	13	16	3	CafeItemAuto	3093	
+11	15	16	3	CafeItemAuto	3095	
+11	21	16	3	CafeItemAuto	4091	
+11	22	16	3	CafeItemAuto	4092	
+11	24	16	3	CafeItemAuto	4094	
+11	25	16	3	CafeItemAuto	4095	
+11	6	22	3	CafeItemAuto	2111	
+11	7	22	3	CafeItemAuto	2112	
+11	8	22	3	CafeItemAuto	2113	
+11	9	22	3	CafeItemAuto	2114	
+11	10	22	3	CafeItemAuto	2115	
+11	11	17	3	CafeItemAuto	3111	
+11	12	17	3	CafeItemAuto	3112	
+11	13	17	3	CafeItemAuto	3113	
+11	15	17	3	CafeItemAuto	3115	
+11	21	17	3	CafeItemAuto	4111	
+11	22	17	3	CafeItemAuto	4112	
+11	24	17	3	CafeItemAuto	4114	
+11	25	17	3	CafeItemAuto	4115	
+11	6	23	3	CafeItemAuto	2121	
+11	7	23	3	CafeItemAuto	2122	
+11	8	23	3	CafeItemAuto	2123	
+11	9	23	3	CafeItemAuto	2124	
+11	10	23	3	CafeItemAuto	2125	
+11	11	18	3	CafeItemAuto	3121	
+11	12	18	3	CafeItemAuto	3122	
+11	13	18	3	CafeItemAuto	3123	
+11	15	18	3	CafeItemAuto	3125	
+11	21	18	3	CafeItemAuto	4121	
+11	22	18	3	CafeItemAuto	4122	
+11	24	18	3	CafeItemAuto	4124	
+11	25	18	3	CafeItemAuto	4125	
+11	6	2	2	CafeItemAuto	201	
+11	6	3	3	CafeItemAuto	211	
+11	6	4	3	CafeItemAuto	221	
+11	6	7	3	CafeItemAuto	251	
+11	6	8	3	CafeItemAuto	261	
+11	6	9	3	CafeItemAuto	271	
+11	6	10	3	CafeItemAuto	281	
+11	6	11	3	CafeItemAuto	291	
+11	6	12	3	CafeItemAuto	2001	
+11	6	13	3	CafeItemAuto	2011	
+11	6	14	3	CafeItemAuto	2021	
+11	6	15	3	CafeItemAuto	2031	
+11	6	16	3	CafeItemAuto	2041	
+11	6	17	3	CafeItemAuto	2051	
+11	6	18	3	CafeItemAuto	2061	
+11	7	2	2	CafeItemAuto	202	
+11	7	3	3	CafeItemAuto	212	
+11	7	4	3	CafeItemAuto	222	
+11	7	7	3	CafeItemAuto	252	
+11	7	8	3	CafeItemAuto	262	
+11	7	9	3	CafeItemAuto	272	
+11	7	10	3	CafeItemAuto	282	
+11	7	11	3	CafeItemAuto	292	
+11	7	12	3	CafeItemAuto	2002	
+11	7	13	3	CafeItemAuto	2012	
+11	7	14	3	CafeItemAuto	2022	
+11	7	15	3	CafeItemAuto	2032	
+11	7	16	3	CafeItemAuto	2042	
+11	7	17	3	CafeItemAuto	2052	
+11	7	18	3	CafeItemAuto	2062	
+11	8	2	2	CafeItemAuto	203	
+11	8	3	3	CafeItemAuto	213	
+11	8	4	3	CafeItemAuto	223	
+11	8	7	3	CafeItemAuto	253	
+11	8	8	3	CafeItemAuto	263	
+11	8	9	3	CafeItemAuto	273	
+11	8	10	3	CafeItemAuto	283	
+11	8	11	3	CafeItemAuto	293	
+11	8	12	3	CafeItemAuto	2003	
+11	8	13	3	CafeItemAuto	2013	
+11	8	14	3	CafeItemAuto	2023	
+11	8	15	3	CafeItemAuto	2033	
+11	8	16	3	CafeItemAuto	2043	
+11	8	17	3	CafeItemAuto	2053	
+11	8	18	3	CafeItemAuto	2063	
+11	9	2	2	CafeItemAuto	204	
+11	9	3	3	CafeItemAuto	214	
+11	9	4	3	CafeItemAuto	224	
+11	9	7	3	CafeItemAuto	254	
+11	9	8	3	CafeItemAuto	264	
+11	9	9	3	CafeItemAuto	274	
+11	9	10	3	CafeItemAuto	284	
+11	9	11	3	CafeItemAuto	294	
+11	9	12	3	CafeItemAuto	2004	
+11	9	13	3	CafeItemAuto	2014	
+11	9	14	3	CafeItemAuto	2024	
+11	9	15	3	CafeItemAuto	2034	
+11	9	16	3	CafeItemAuto	2044	
+11	9	17	3	CafeItemAuto	2054	
+11	9	18	3	CafeItemAuto	2064	
+11	10	2	2	CafeItemAuto	205	
+11	10	3	3	CafeItemAuto	215	
+11	10	4	3	CafeItemAuto	225	
+11	10	7	3	CafeItemAuto	255	
+11	10	8	3	CafeItemAuto	265	
+11	10	9	3	CafeItemAuto	275	
+11	10	10	3	CafeItemAuto	285	
+11	10	11	3	CafeItemAuto	295	
+11	10	12	3	CafeItemAuto	2005	
+11	10	13	3	CafeItemAuto	2015	
+11	10	14	3	CafeItemAuto	2025	
+11	10	15	3	CafeItemAuto	2035	
+11	10	16	3	CafeItemAuto	2045	
+11	10	17	3	CafeItemAuto	2055	
+11	10	18	3	CafeItemAuto	2065	
+11	11	2	2	CafeItemAuto	301	
+11	11	3	3	CafeItemAuto	311	
+11	11	4	3	CafeItemAuto	321	
+11	11	7	3	CafeItemAuto	351	
+11	11	8	3	CafeItemAuto	361	
+11	11	9	3	CafeItemAuto	371	
+11	11	10	3	CafeItemAuto	381	
+11	11	11	3	CafeItemAuto	3001	
+11	11	12	3	CafeItemAuto	3021	
+11	11	13	3	CafeItemAuto	3031	
+11	11	14	3	CafeItemAuto	3041	
+11	11	15	3	CafeItemAuto	3061	
+11	12	2	2	CafeItemAuto	302	
+11	12	3	3	CafeItemAuto	312	
+11	12	4	3	CafeItemAuto	322	
+11	12	7	3	CafeItemAuto	352	
+11	12	8	3	CafeItemAuto	362	
+11	12	9	3	CafeItemAuto	372	
+11	12	10	3	CafeItemAuto	382	
+11	12	11	3	CafeItemAuto	3002	
+11	12	12	3	CafeItemAuto	3022	
+11	12	13	3	CafeItemAuto	3032	
+11	12	14	3	CafeItemAuto	3042	
+11	12	15	3	CafeItemAuto	3062	
+11	13	2	2	CafeItemAuto	303	
+11	13	3	3	CafeItemAuto	313	
+11	13	4	3	CafeItemAuto	323	
+11	13	7	3	CafeItemAuto	353	
+11	13	8	3	CafeItemAuto	363	
+11	13	9	3	CafeItemAuto	373	
+11	13	10	3	CafeItemAuto	383	
+11	13	11	3	CafeItemAuto	3003	
+11	13	12	3	CafeItemAuto	3023	
+11	13	13	3	CafeItemAuto	3033	
+11	13	14	3	CafeItemAuto	3043	
+11	13	15	3	CafeItemAuto	3063	
+11	14	2	2	CafeItemAuto	304	
+11	14	3	3	CafeItemAuto	314	
+11	14	4	3	CafeItemAuto	324	
+11	14	7	3	CafeItemAuto	354	
+11	14	8	3	CafeItemAuto	364	
+11	14	9	3	CafeItemAuto	374	
+11	15	2	2	CafeItemAuto	305	
+11	15	3	3	CafeItemAuto	315	
+11	15	4	3	CafeItemAuto	325	
+11	15	7	3	CafeItemAuto	355	
+11	15	8	3	CafeItemAuto	365	
+11	15	9	3	CafeItemAuto	375	
+11	15	10	3	CafeItemAuto	385	
+11	15	11	3	CafeItemAuto	3005	
+11	15	12	3	CafeItemAuto	3025	
+11	15	13	3	CafeItemAuto	3035	
+11	15	14	3	CafeItemAuto	3045	
+11	15	15	3	CafeItemAuto	3065	
+11	16	1	1	CafeItemAuto	801	
+11	16	2	2	CafeItemAuto	802	
+11	16	3	3	CafeItemAuto	803	
+11	16	4	3	CafeItemAuto	804	
+11	16	5	3	CafeItemAuto	805	
+11	16	6	3	CafeItemAuto	806	
+11	17	1	3	CafeItemAuto	900	
+11	17	2	3	CafeItemAuto	901	
+11	17	3	3	CafeItemAuto	902	
+11	19	1	1	CafeItemAuto	1000	
+11	19	2	1	CafeItemAuto	1100	
+11	19	3	1	CafeItemAuto	1200	
+11	19	4	1	CafeItemAuto	1300	
+11	19	5	1	CafeItemAuto	1400	
+11	19	6	1	CafeItemAuto	1500	
+11	19	7	1	CafeItemAuto	1600	
+11	19	8	1	CafeItemAuto	1700	
+11	19	9	1	CafeItemAuto	1800	
+11	19	10	1	CafeItemAuto	1900	
+11	21	2	2	CafeItemAuto	2301	
+11	21	3	3	CafeItemAuto	2311	
+11	21	4	3	CafeItemAuto	2321	
+11	21	7	3	CafeItemAuto	2351	
+11	21	8	3	CafeItemAuto	2361	
+11	21	9	3	CafeItemAuto	2371	
+11	21	10	3	CafeItemAuto	2381	
+11	21	11	3	CafeItemAuto	4001	
+11	21	12	3	CafeItemAuto	4021	
+11	21	13	3	CafeItemAuto	4031	
+11	21	14	3	CafeItemAuto	4041	
+11	21	15	3	CafeItemAuto	4061	
+11	22	2	2	CafeItemAuto	2302	
+11	22	3	3	CafeItemAuto	2312	
+11	22	4	3	CafeItemAuto	2322	
+11	22	7	3	CafeItemAuto	2352	
+11	22	8	3	CafeItemAuto	2362	
+11	22	9	3	CafeItemAuto	2372	
+11	22	10	3	CafeItemAuto	2382	
+11	22	11	3	CafeItemAuto	4002	
+11	22	12	3	CafeItemAuto	4022	
+11	22	13	3	CafeItemAuto	4032	
+11	22	14	3	CafeItemAuto	4042	
+11	22	15	3	CafeItemAuto	4062	
+11	23	2	2	CafeItemAuto	2303	
+11	23	3	3	CafeItemAuto	2313	
+11	23	4	3	CafeItemAuto	2323	
+11	23	7	3	CafeItemAuto	2353	
+11	23	8	3	CafeItemAuto	2363	
+11	23	9	3	CafeItemAuto	2373	
+11	24	2	2	CafeItemAuto	2304	
+11	24	3	3	CafeItemAuto	2314	
+11	24	4	3	CafeItemAuto	2324	
+11	24	7	3	CafeItemAuto	2354	
+11	24	8	3	CafeItemAuto	2364	
+11	24	9	3	CafeItemAuto	2374	
+11	24	10	3	CafeItemAuto	2384	
+11	24	11	3	CafeItemAuto	4004	
+11	24	12	3	CafeItemAuto	4024	
+11	24	13	3	CafeItemAuto	4034	
+11	24	14	3	CafeItemAuto	4044	
+11	24	15	3	CafeItemAuto	4064	
+11	25	2	2	CafeItemAuto	2305	
+11	25	3	3	CafeItemAuto	2315	
+11	25	4	3	CafeItemAuto	2325	
+11	25	7	3	CafeItemAuto	2355	
+11	25	8	3	CafeItemAuto	2365	
+11	25	9	3	CafeItemAuto	2375	
+11	25	10	3	CafeItemAuto	2385	
+11	25	11	3	CafeItemAuto	4005	
+11	25	12	3	CafeItemAuto	4025	
+11	25	13	3	CafeItemAuto	4035	
+11	25	14	3	CafeItemAuto	4045	
+11	25	15	3	CafeItemAuto	4065	
+13	1	1	6000	IBGiftAuto	6000	
+13	2	1	6001	IBGiftAuto	6001	
+13	2	1	6002	IBGiftAuto	6002	
+13	2	1	6003	IBGiftAuto	6003	
+13	1	1	6004	IBGiftAuto	6004	
+13	2	1	6005	IBGiftAuto	6005	
+13	1	1	6006	IBGiftAuto	6006	
+13	1	1	6007	IBGiftAuto	6007	
+13	2	1	6008	IBGiftAuto	6008	
+13	2	1	6009	IBGiftAuto	6009	
+13	2	1	6010	IBGiftAuto	6010	
+13	2	1	6011	IBGiftAuto	6011	
+13	2	1	6012	IBGiftAuto	6012	
+13	2	1	6013	IBGiftAuto	6013	
+13	2	1	6014	IBGiftAuto	6014	
+13	2	1	6015	IBGiftAuto	6015	
+13	2	1	6016	IBGiftAuto	6016	
+13	2	1	6017	IBGiftAuto	6017	
+13	2	1	6018	IBGiftAuto	6018	
+13	2	1	6019	IBGiftAuto	6019	
+13	2	1	6020	IBGiftAuto	6020	
+13	2	1	6021	IBGiftAuto	6021	
+13	2	1	6022	IBGiftAuto	6022	
+13	2	1	6023	IBGiftAuto	6023	
+13	2	1	6024	IBGiftAuto	6024	
+13	2	1	6025	IBGiftAuto	6025	
+13	2	1	6026	IBGiftAuto	6026	
+13	2	1	6027	IBGiftAuto	6027	
+13	2	1	6028	IBGiftAuto	6028	
+13	2	1	6029	IBGiftAuto	6029	
+13	2	1	6030	IBGiftAuto	6030	
+13	2	1	6031	IBGiftAuto	6031	
+13	2	1	6032	IBGiftAuto	6032	
+13	2	1	6033	IBGiftAuto	6033	
+13	2	1	6034	IBGiftAuto	6034	
+13	2	1	6035	SuitItem	6035	
+13	2	1	6036	SuitItem	6036	
+13	2	1	6037	SuitItem	6037	
+13	2	1	6038	SuitItem	6038	
+13	2	1	6039	SuitItem	6039	
+13	2	1	6040	SuitItem	6040	
+14	1	1	1	IBIosDiamondAuto	1	
+14	1	2	1	IBAndroidDiamondAuto	1	
+14	1	3	1	ItemPayDiamondAuto	1	
+14	1	4	1	ItemGiftCoffeeCoinAuto	1	
+14	2	1	1	IBMonthCardAuto	30	50
+14	2	1	2	IBMonthSubscribeAuto	30	50
+14	3	1	1	IBGiftAuto	1070	
+14	3	1	2	IBGiftAuto	1002	
+14	3	1	5002	IBGiftAuto	5002	
+14	3	1	8002	IBGiftAuto	8002	
+14	3	1	3	IBGiftAuto	1003	
+14	3	1	8003	IBGiftAuto	8003	
+14	3	1	4	IBGiftAuto	1004	
+14	3	1	5	IBGiftAuto	1005	
+14	3	1	6	IBGiftAuto	1006	
+14	3	100	6	IBGiftAuto	11006	
+14	3	101	6	IBGiftAuto	21006	
+14	3	102	6	IBGiftAuto	31006	
+14	3	1	1006	IBGiftAuto	1006	
+14	3	1	7	IBGiftAuto	1007	
+14	3	1	8007	IBGiftAuto	8007	
+14	3	1	8	IBGiftAuto	1008	
+14	3	1	9	IBGiftAuto	1009	
+14	3	1	10	IBGiftAuto	1010	
+14	3	1	11	IBGiftAuto	1011	
+14	3	1	12	IBGiftAuto	1012	
+14	3	1	13	IBGiftAuto	1013	
+14	3	1	14	IBGiftAuto	1014	
+14	3	1	15	IBGiftAuto	1015	
+14	3	500	15	IBGiftAuto	51015	
+14	3	501	15	IBGiftAuto	51015	
+14	3	1	16	IBGiftAuto	1016	
+14	3	100	16	IBGiftAuto	10016	
+14	3	1	17	IBGiftAuto	1017	
+14	3	1	1017	IBGiftAuto	10017	
+14	3	1	18	IBGiftAuto	1018	
+14	3	1	1018	IBGiftAuto	10018	
+14	3	1	1019	IBGiftAuto	10019	
+14	3	500	18	IBGiftAuto	51018	
+14	3	1	19	IBGiftAuto	1019	
+14	3	500	19	IBGiftAuto	51019	
+14	3	1	20	IBGiftAuto	1020	
+14	3	1	1020	IBGiftAuto	10020	
+14	3	1	21	IBGiftAuto	1021	
+14	3	1	22	IBGiftAuto	1022	
+14	3	1	23	IBGiftAuto	1023	
+14	3	1	24	IBGiftAuto	1024	
+14	3	1	25	IBGiftAuto	1025	
+14	3	1	1025	IBGiftAuto	10025	
+14	3	1	26	IBGiftAuto	1026	
+14	3	1	27	IBGiftAuto	1027	
+14	3	1	28	IBGiftAuto	1028	
+14	3	1	29	IBGiftAuto	1029	
+14	3	100	27	IBGiftAuto	11027	
+14	3	100	28	IBGiftAuto	11028	
+14	3	100	29	IBGiftAuto	11029	
+14	3	1	1027	IBGiftAuto	10027	
+14	3	1	1028	IBGiftAuto	10028	
+14	3	1	30	IBGiftAuto	1030	
+14	3	1	31	IBGiftAuto	1031	
+14	3	1	32	IBGiftAuto	1032	
+14	3	1	1032	IBGiftAuto	10032	
+14	3	1	33	IBGiftAuto	1033	
+14	3	1	1033	IBGiftAuto	10033	
+14	3	1	34	IBGiftAuto	1034	
+14	3	1	35	IBGiftAuto	1035	
+14	3	1	36	IBGiftAuto	1036	
+14	3	1	1036	IBGiftAuto	10036	
+14	3	1	37	IBGiftAuto	1037	
+14	3	1	38	IBGiftAuto	1027	
+14	3	1	1038	IBGiftAuto	10027	
+14	3	1	39	IBGiftAuto	1028	
+14	3	1	1039	IBGiftAuto	10028	
+14	3	1	40	IBGiftAuto	1038	
+14	3	300	40	IBGiftAuto	81038	
+14	3	301	40	IBGiftAuto	82038	
+14	3	1	41	IBGiftAuto	1039	
+14	3	1	42	IBGiftAuto	1040	
+14	3	100	42	IBGiftAuto	10040	
+14	3	1	43	IBGiftAuto	1033	
+14	3	100	43	IBGiftAuto	10033	
+14	3	1	44	IBGiftAuto	1028	
+14	3	100	44	IBGiftAuto	10020	
+14	3	1	45	IBGiftAuto	1021	
+14	3	100	45	IBGiftAuto	1021	
+14	3	1	46	IBGiftAuto	1041	
+14	3	1	47	IBGiftAuto	1042	
+14	3	1	48	IBGiftAuto	1027	
+14	3	100	48	IBGiftAuto	10027	
+14	3	1	49	IBGiftAuto	1028	
+14	3	100	49	IBGiftAuto	10028	
+14	3	1	50	IBGiftAuto	1043	
+14	3	1	51	IBGiftAuto	1044	
+14	3	1	52	ItemSignAuto	81	
+14	3	1	53	IBGiftAuto	1040	
+14	3	500	53	IBGiftAuto	51040	
+14	3	1	54	IBGiftAuto	1027	
+14	3	100	54	IBGiftAuto	10027	
+14	3	1	55	IBGiftAuto	1028	
+14	3	100	55	IBGiftAuto	10028	
+14	3	1	56	IBGiftAuto	1045	
+14	3	1	57	IBGiftAuto	1040	
+14	3	100	57	IBGiftAuto	10040	
+14	3	1	58	IBGiftAuto	1033	
+14	3	100	58	IBGiftAuto	10033	
+14	3	1	59	IBGiftAuto	1028	
+14	3	100	59	IBGiftAuto	10020	
+14	3	1	60	IBGiftAuto	1021	
+14	3	1	61	IBGiftAuto	1046	
+14	3	1	62	IBGiftAuto	1027	
+14	3	1	63	IBGiftAuto	1028	
+14	3	1	64	IBGiftAuto	1047	
+14	3	1	65	IBGiftAuto	1048	
+14	3	100	65	IBGiftAuto	10048	
+14	3	1	66	IBGiftAuto	1027	
+14	3	100	66	IBGiftAuto	10027	
+14	3	1	67	IBGiftAuto	1049	
+14	3	500	67	IBGiftAuto	11049	
+14	3	1	68	IBGiftAuto	1050	
+14	3	100	68	IBGiftAuto	10050	
+14	3	300	68	IBGiftAuto	8050	
+14	3	1	69	IBGiftAuto	1051	
+14	3	1	70	IBGiftAuto	1052	
+14	3	1	71	IBGiftAuto	1053	
+14	3	1	72	IBGiftAuto	1058	
+14	3	1	73	IBGiftAuto	1059	
+14	3	1	74	IBGiftAuto	1028	
+14	3	1	75	IBGiftAuto	1060	
+14	3	1	76	IBGiftAuto	1061	
+14	3	100	76	IBGiftAuto	10061	
+14	3	200	76	IBGiftAuto	20061	
+14	3	300	76	IBGiftAuto	8061	
+14	3	1	77	IBGiftAuto	1062	
+14	3	100	77	IBGiftAuto	10062	
+14	3	1	78	IBGiftAuto	1063	
+14	3	100	78	IBGiftAuto	10063	
+14	3	200	78	IBGiftAuto	20063	
+14	3	300	78	IBGiftAuto	8063	
+14	3	1	79	IBGiftAuto	1064	
+14	3	100	79	IBGiftAuto	10064	
+14	3	1	80	IBGiftAuto	1065	
+14	3	300	80	IBGiftAuto	8065	
+14	3	1	81	IBGiftAuto	1066	
+14	3	300	81	IBGiftAuto	10066	
+14	3	1	82	IBGiftAuto	1067	
+14	3	1	83	IBGiftAuto	1068	
+14	3	1	84	IBGiftAuto	1069	
+14	3	1	85	IBGiftAuto	1062	
+14	3	1	86	IBGiftAuto	1064	
+14	3	100	86	IBGiftAuto	10064	
+14	3	1	87	IBGiftAuto	1066	
+14	3	1	88	IBGiftAuto	1071	
+14	3	1	89	IBGiftAuto	10061	
+14	3	1	90	IBGiftAuto	1072	
+14	3	100	90	IBGiftAuto	10072	
+14	3	1	91	IBGiftAuto	1073	
+14	3	100	91	IBGiftAuto	10073	
+14	3	1	92	IBGiftAuto	1049	
+14	3	1	93	IBGiftAuto	1051	
+14	3	100	93	IBGiftAuto	10051	
+14	3	101	93	IBGiftAuto	80051	
+14	3	1	94	IBGiftAuto	1052	
+14	3	300	94	IBGiftAuto	8052	
+14	3	500	94	IBGiftAuto	51052	
+14	3	1	95	IBGiftAuto	1074	
+14	3	1	96	IBGiftAuto	1075	
+14	3	1	97	IBGiftAuto	1076	
+14	3	1	98	IBGiftAuto	1077	
+14	3	1	99	IBGiftAuto	1078	
+14	3	1	100	IBGiftAuto	1079	
+14	3	1	101	IBGiftAuto	1080	
+14	3	500	101	IBGiftAuto	51080	
+14	3	1	102	IBGiftAuto	1081	
+14	3	1	103	IBGiftAuto	1082	
+14	3	1	104	IBGiftAuto	1083	
+14	3	1	105	IBGiftAuto	1084	
+14	3	1	106	IBGiftAuto	1021	
+14	3	1	107	IBGiftAuto	1052	
+14	3	1	108	IBGiftAuto	1085	
+14	3	1	109	IBGiftAuto	1086	
+14	3	1	110	IBGiftAuto	1087	
+14	3	100	110	IBGiftAuto	1088	
+14	3	1	111	IBGiftAuto	1089	
+14	3	101	112	IBGiftAuto	11089	
+14	3	100	111	IBGiftAuto	10089	
+14	3	1	112	IBGiftAuto	1090	
+14	3	100	112	IBGiftAuto	10090	
+14	3	1	8112	IBGiftAuto	8090	
+14	3	1	113	IBGiftAuto	1049	
+14	3	500	113	IBGiftAuto	51049	
+14	3	1	114	IBGiftAuto	1091	
+14	3	1	115	IBGiftAuto	1092	
+14	3	100	115	IBGiftAuto	11092	
+14	3	1	116	IBGiftAuto	1093	
+14	3	1	117	IBGiftAuto	1094	
+14	3	500	117	IBGiftAuto	51094	
+14	3	1	118	IBGiftAuto	1095	
+14	3	1	119	IBGiftAuto	1096	
+14	3	1	120	IBGiftAuto	1098	
+14	3	1	121	IBGiftAuto	1099	
+14	3	1	122	IBGiftAuto	1049	
+14	3	1	123	IBGiftAuto	1100	
+14	3	100	123	IBGiftAuto	10100	
+14	3	1	124	IBGiftAuto	1092	
+14	3	1	125	IBGiftAuto	1101	
+14	3	1	126	IBGiftAuto	1102	
+14	3	100	126	IBGiftAuto	11102	
+14	3	200	126	IBGiftAuto	21102	
+14	3	1	127	IBGiftAuto	1103	
+14	3	100	127	IBGiftAuto	11103	
+14	3	1	128	IBGiftAuto	1049	
+14	3	1	129	IBGiftAuto	1021	
+14	3	1	130	IBGiftAuto	1104	
+14	3	100	130	IBGiftAuto	11104	
+14	3	1	131	IBGiftAuto	1052	
+14	3	1	132	IBGiftAuto	1105	
+14	3	1	133	IBGiftAuto	1106	
+14	3	1	134	IBGiftAuto	1108	
+14	3	100	134	IBGiftAuto	11108	
+14	3	1	135	IBGiftAuto	1109	
+14	3	100	135	IBGiftAuto	11109	
+14	3	1	136	IBGiftAuto	1110	
+14	3	1	137	IBGiftAuto	1111	
+14	3	1	138	IBGiftAuto	1104	
+14	3	100	138	IBGiftAuto	11104	
+14	3	1	139	IBGiftAuto	1052	
+14	3	1	140	IBGiftAuto	1112	
+14	3	1	141	IBGiftAuto	1113	
+14	3	300	141	IBGiftAuto	81113	
+14	3	100	141	IBGiftAuto	11102	
+14	3	1	142	IBGiftAuto	1114	
+14	3	100	142	IBGiftAuto	11103	
+14	3	1	143	IBGiftAuto	1115	
+14	3	1	144	IBGiftAuto	1116	
+14	3	1	145	IBGiftAuto	1100	
+14	3	100	145	IBGiftAuto	10100	
+14	3	1	146	IBGiftAuto	1052	
+14	3	1	147	IBGiftAuto	1117	
+14	3	1	148	IBGiftAuto	1118	
+14	3	1	149	IBGiftAuto	1119	
+14	3	1	150	IBGiftAuto	1120	
+14	3	100	150	IBGiftAuto	11120	
+14	3	1	151	IBGiftAuto	1121	
+14	3	100	151	IBGiftAuto	11121	
+14	3	1	152	IBGiftAuto	1122	
+14	3	100	148	IBGiftAuto	1123	
+14	3	100	149	IBGiftAuto	1124	
+14	3	1	153	IBGiftAuto	1125	
+14	3	1	154	IBGiftAuto	1126	
+14	3	1	155	IBGiftAuto	1127	
+14	3	1	156	IBGiftAuto	1128	
+14	3	1	157	IBGiftAuto	1129	
+14	3	1	158	IBGiftAuto	1130	
+14	3	100	158	IBGiftAuto	11130	
+14	3	1	159	IBGiftAuto	1131	
+14	3	100	153	IBGiftAuto	11125	
+14	3	100	154	IBGiftAuto	11126	
+14	3	100	155	IBGiftAuto	1132	
+14	3	1	160	IBGiftAuto	1133	
+14	3	1	161	IBGiftAuto	1134	
+14	3	1	162	IBGiftAuto	1135	
+14	3	1	163	IBGiftAuto	1136	
+14	3	1	164	IBGiftAuto	1137	
+14	3	1	165	IBGiftAuto	1138	
+14	3	500	165	IBGiftAuto	51138	
+14	3	1	166	IBGiftAuto	1139	
+14	3	500	166	IBGiftAuto	51139	
+14	3	501	166	IBGiftAuto	51139	
+14	3	1	167	IBGiftAuto	1140	
+14	3	100	160	IBGiftAuto	11133	
+14	3	100	161	IBGiftAuto	11134	
+14	3	300	160	IBGiftAuto	81133	
+14	3	1	168	IBGiftAuto	1142	
+14	3	1	169	IBGiftAuto	1143	
+14	3	1	170	IBGiftAuto	1135	
+14	3	1	171	IBGiftAuto	1144	
+14	3	1	172	IBGiftAuto	1145	
+14	3	1	173	IBGiftAuto	1128	
+14	3	1	174	IBGiftAuto	1146	
+14	3	1	175	IBGiftAuto	1147	
+14	3	1	176	IBGiftAuto	1148	
+14	3	100	168	IBGiftAuto	11142	
+14	3	100	176	IBGiftAuto	11148	
+14	3	1	177	IBGiftAuto	1149	
+14	3	1	178	IBGiftAuto	1150	
+14	3	100	177	IBGiftAuto	11149	
+14	3	100	178	IBGiftAuto	11150	
+14	3	1	179	IBGiftAuto	1151	
+14	3	1	180	IBGiftAuto	1152	
+14	3	1	181	IBGiftAuto	1153	
+14	3	1	182	IBGiftAuto	1154	
+14	3	1	183	IBGiftAuto	1155	
+14	3	1	184	IBGiftAuto	1156	
+14	3	100	182	IBGiftAuto	11154	
+14	3	100	183	IBGiftAuto	11155	
+14	3	100	184	IBGiftAuto	11156	
+14	3	101	183	IBGiftAuto	81155	
+14	3	101	184	IBGiftAuto	81156	
+14	3	1	185	IBGiftAuto	1157	
+14	3	1	186	IBGiftAuto	1158	
+14	3	1	187	IBGiftAuto	1159	
+14	3	100	186	IBGiftAuto	11158	
+14	3	100	187	IBGiftAuto	11159	
+14	3	1	188	IBGiftAuto	1160	
+14	3	1	189	IBGiftAuto	1161	
+14	3	1	190	IBGiftAuto	1162	
+14	3	100	191	IBGiftAuto	11163	
+14	3	1	192	IBGiftAuto	1158	
+14	3	1	193	IBGiftAuto	1159	
+14	3	100	192	IBGiftAuto	11158	
+14	3	100	193	IBGiftAuto	11159	
+14	3	1	194	IBGiftAuto	1160	
+14	3	1	195	IBGiftAuto	1161	
+14	3	1	196	IBGiftAuto	1165	
+14	3	200	197	IBGiftAuto	21163	
+14	3	1	197	IBGiftAuto	1163	
+14	3	1	198	IBGiftAuto	1164	
+14	3	1	199	IBGiftAuto	1158	
+14	3	1	200	IBGiftAuto	1159	
+14	3	100	199	IBGiftAuto	11158	
+14	3	100	200	IBGiftAuto	11159	
+14	3	1	201	IBGiftAuto	1160	
+14	3	1	202	IBGiftAuto	1161	
+14	3	1	203	IBGiftAuto	1166	
+14	3	1	204	IBGiftAuto	1167	
+14	3	1	205	IBGiftAuto	1168	
+14	3	1	206	IBGiftAuto	1169	
+14	3	1	207	IBGiftAuto	1170	
+14	3	1	208	IBGiftAuto	1171	
+14	3	1	209	IBGiftAuto	1172	
+14	3	1	210	IBGiftAuto	1173	
+14	3	1	211	IBGiftAuto	1174	
+14	3	1	212	IBGiftAuto	1175	
+14	3	100	211	IBGiftAuto	11174	
+14	3	100	212	IBGiftAuto	11175	
+14	3	1	213	IBGiftAuto	1176	
+14	3	1	214	IBGiftAuto	1177	
+14	3	1	215	IBGiftAuto	1178	
+14	3	1	216	IBGiftAuto	1179	
+14	3	300	216	IBGiftAuto	81179	
+14	3	1	217	IBGiftAuto	1174	
+14	3	1	218	IBGiftAuto	1175	
+14	3	1	219	IBGiftAuto	1176	
+14	3	1	220	IBGiftAuto	1177	
+14	3	1	221	IBGiftAuto	1180	
+14	3	1	222	IBGiftAuto	1181	
+14	3	1	223	IBGiftAuto	1167	
+14	3	1	224	IBGiftAuto	1168	
+14	3	1	225	IBGiftAuto	1169	
+14	3	1	226	IBGiftAuto	1170	
+14	3	1	227	IBGiftAuto	1171	
+14	3	1	228	IBGiftAuto	1182	
+14	3	1	229	IBGiftAuto	1183	
+14	3	1	230	IBGiftAuto	1184	
+14	3	300	229	IBGiftAuto	81183	
+14	3	300	230	IBGiftAuto	81184	
+14	3	1	231	IBGiftAuto	1176	
+14	3	301	231	IBGiftAuto	81176	
+14	3	1	232	IBGiftAuto	1177	
+14	3	300	232	IBGiftAuto	81177	
+14	3	1	233	IBGiftAuto	1185	
+14	3	1	2229	IBGiftAuto	21183	
+14	3	1	2230	IBGiftAuto	21184	
+14	3	1	2231	IBGiftAuto	21176	
+14	3	1	2232	IBGiftAuto	21177	
+14	3	1	2233	IBGiftAuto	21185	
+14	3	1	234	IBGiftAuto	1187	
+14	3	1	235	IBGiftAuto	1188	
+14	3	1	2235	IBGiftAuto	21188	
+14	3	1	236	IBGiftAuto	1189	
+14	3	1	237	IBGiftAuto	1190	
+14	3	1	238	IBGiftAuto	1176	
+14	3	1	239	IBGiftAuto	1177	
+14	3	1	240	IBGiftAuto	1191	
+14	3	1	241	IBGiftAuto	1167	
+14	3	1	242	IBGiftAuto	1192	
+14	3	1	243	IBGiftAuto	1176	
+14	3	1	244	IBGiftAuto	1177	
+14	3	1	245	IBGiftAuto	1193	
+14	3	1	246	IBGiftAuto	1194	
+14	3	1	2246	IBGiftAuto	21194	
+14	3	1	247	IBGiftAuto	8065	
+14	3	1	248	IBGiftAuto	1196	
+14	3	1	249	IBGiftAuto	1197	
+14	3	1	250	IBGiftAuto	1198	
+14	3	1	251	IBGiftAuto	1199	
+14	3	1	252	IBGiftAuto	1200	
+14	3	1	253	IBGiftAuto	1201	
+14	3	1	254	IBGiftAuto	1202	
+14	3	1	255	IBGiftAuto	1189	
+14	3	1	256	IBGiftAuto	1190	
+14	3	1	257	IBGiftAuto	1176	
+14	3	1	258	IBGiftAuto	1177	
+14	3	1	259	IBGiftAuto	1203	
+14	3	1	260	IBGiftAuto	1204	
+14	3	1	261	IBGiftAuto	1167	
+14	3	1	262	IBGiftAuto	1192	
+14	3	1	263	IBGiftAuto	1176	
+14	3	1	264	IBGiftAuto	8065	
+14	3	1	265	IBGiftAuto	1177	
+14	3	1	266	IBGiftAuto	1205	
+14	3	1	267	IBGiftAuto	1206	
+14	3	1	2267	IBGiftAuto	21206	
+14	3	1	268	IBGiftAuto	1207	
+14	3	1	269	IBGiftAuto	1208	
+14	3	1	270	IBGiftAuto	1210	
+14	3	2	270	IBGiftAuto	11210	
+14	3	1	271	IBGiftAuto	1211	
+14	3	1	272	IBGiftAuto	1212	
+14	3	1	273	IBGiftAuto	1213	
+14	3	1	274	IBGiftAuto	1167	
+14	3	1	275	IBGiftAuto	1192	
+14	3	1	276	IBGiftAuto	1176	
+14	3	1	277	IBGiftAuto	8065	
+14	3	1	278	IBGiftAuto	1177	
+14	3	1	279	IBGiftAuto	1205	
+14	3	1	280	IBGiftAuto	1215	
+14	3	1	281	IBGiftAuto	1216	
+14	3	1	282	IBGiftAuto	1217	
+14	3	1	283	IBGiftAuto	1167	
+14	3	1	284	IBGiftAuto	1192	
+14	3	1	285	IBGiftAuto	1176	
+14	3	1	286	IBGiftAuto	8065	
+14	3	1	287	IBGiftAuto	1177	
+14	3	1	288	IBGiftAuto	1218	
+14	3	1	289	IBGiftAuto	1189	
+14	3	1	290	IBGiftAuto	1190	
+14	3	1	291	IBGiftAuto	1176	
+14	3	1	292	IBGiftAuto	8065	
+14	3	1	293	IBGiftAuto	1177	
+14	3	1	294	IBGiftAuto	1219	
+14	3	1	295	IBGiftAuto	1220	
+14	3	1	2295	IBGiftAuto	21220	
+14	3	1	296	IBGiftAuto	1167	
+14	3	1	297	IBGiftAuto	1192	
+14	3	1	298	IBGiftAuto	1176	
+14	3	1	299	IBGiftAuto	8065	
+14	3	1	300	IBGiftAuto	1177	
+14	3	1	301	IBGiftAuto	1222	
+14	3	1	302	IBGiftAuto	1189	
+14	3	1	303	IBGiftAuto	1190	
+14	3	1	304	IBGiftAuto	1176	
+14	3	1	305	IBGiftAuto	8065	
+14	3	1	306	IBGiftAuto	1177	
+14	3	1	307	IBGiftAuto	1223	
+14	3	1	308	IBGiftAuto	1167	
+14	3	1	309	IBGiftAuto	1192	
+14	3	1	310	IBGiftAuto	1176	
+14	3	1	311	IBGiftAuto	8065	
+14	3	1	312	IBGiftAuto	1177	
+14	3	1	313	IBGiftAuto	1224	
+14	3	1	314	IBGiftAuto	1189	
+14	3	1	315	IBGiftAuto	1190	
+14	3	1	316	IBGiftAuto	1176	
+14	3	1	317	IBGiftAuto	8065	
+14	3	1	318	IBGiftAuto	1177	
+14	3	1	319	IBGiftAuto	1225	
+14	4	1	1	IBGiftAuto	1054	
+14	4	1	2	IBGiftAuto	1055	
+14	4	1	3	IBGiftAuto	1056	
+14	4	1	4	IBGiftAuto	1057	
+14	4	1	5	IBGiftAuto	80014	
+14	4	1	6	IBGiftAuto	80015	
+14	4	1	7	IBGiftAuto	80016	
+14	4	1	8	IBGiftAuto	80017	
+14	4	1	9	IBGiftAuto	80018	
+14	4	1	10	IBGiftAuto	11056	
+14	4	1	11	IBGiftAuto	21056	
+14	4	1	12	IBGiftAuto	80019	
+14	3	3	1	IBGiftAuto	3001	
+14	3	3	101	IBGiftAuto	30011	
+14	3	3	1001	IBGiftAuto	3101	
+14	3	3	8001	IBGiftAuto	80011	
+14	3	3	2	IBGiftAuto	3002	
+14	3	3	102	IBGiftAuto	30012	
+14	3	3	1002	IBGiftAuto	3102	
+14	3	3	8002	IBGiftAuto	80012	
+14	3	3	3	IBGiftAuto	3003	
+14	3	3	103	IBGiftAuto	30013	
+14	3	3	1003	IBGiftAuto	3103	
+14	3	3	8003	IBGiftAuto	80013	
+14	3	4	1	IBGiftAuto	4001	
+14	3	4	101	IBGiftAuto	40011	
+14	3	4	2	IBGiftAuto	4002	
+14	3	4	102	IBGiftAuto	40012	
+14	99	1	1	IBTaskAuto		
+14	99	1	2	IBTaskAuto		
+14	3	5	1	IBGiftAuto	5001	
+14	6	1	1	IBGiftAuto	1057	
+14	6	1	2	IBGiftAuto	1107	
+14	6	1	3	IBGiftAuto	1195	
+14	6	1	4	IBGiftAuto	1209	
+14	6	1	5	IBGiftAuto	1221	
+15	1	1	1	ItemGoldAuto	1	
+15	2	1	1	ItemFreeDiamondAuto	1	
+15	3	1	1	IBAndroidDiamondAuto	1	
+15	4	1	1	ItemEnergyAuto	1	
+15	5	1	1	ItemDatingAuto	1	
+15	6	1	1	ItemNormalCoinAuto	1	5
+15	7	1	1	ItemNormalCoinAuto	1	6
+15	8	1	1	ItemSmallTowerPeopleAuto	1	
+15	9	1	1	ActivePointAuto	1	
+15	10	1	1	ItemCoffeeCoinAuto	1	
+15	11	1	1	ItemCardCoinAuto	1	
+15	12	1	1	ClubActivePointAuto	1	
+15	13	1	1	ClubExpAuto	1	
+15	14	1	1	ClubCoinAuto	1	
+15	15	1	1	ItemNormalCoinAuto	1	14
+15	16	1	1	ItemNormalCoinAuto	1	15
+15	17	1	1	ItemSwimwearScoreAuto	1	
+15	18	1	1	ItemSwimwearGunExpAuto	1	
+15	19	1	1	ItemSwimwearClothesExpAuto	1	
+15	20	1	1	ItemEquipCoinAuto	1	
+15	21	1	1	ItemNodeTowerScoreAuto	1	3
+15	25	1	1	ItemAnimalizeTowerScoreAuto	1	
+15	26	1	1	IBIosDiamondAuto	1	
+15	27	1	1	ItemPayGoldAuto	1	
+15	28	1	1	ItemNormalCoinAuto	1	19
+15	29	1	1	ItemNormalCoinAuto	1	20
+15	30	1	1	ItemAbsorbPeakScoreAuto	1	
+15	31	1	1	ItemAbsorbPeakOneExpAuto	1	
+15	32	1	1	ItemAbsorbPeakTwoExpAuto	1	
+15	33	1	1	ItemNormalCoinAuto	1	21
+15	34	1	1	ItemNodeTowerScoreAuto	1	7
+15	35	1	1	ItemEighthTowerScoreAuto	1	
+15	36	1	1	ItemAddClubBossFightTimeAuto	1	
+15	37	1	1	ItemNewyearFuAuto	1	
+15	38	1	1	ItemStuffCoinAuto	1	
+15	39	1	1	ItemRankPointAuto	1	
+15	40	1	1	ItemEatChickenScoreAuto	1	
+15	41	1	1	ItemReturnMissionActivePointAuto	1	
+15	42	1	1	ItemNormalCoinAuto	1	25
+15	43	1	1	ItemNormalCoinAuto	1	26
+15	44	1	1	ItemMercenaryAuto	1	
+15	45	1	1	ItemCoopEventScoreAuto	1	
+15	46	1	1	ItemNormalCoinAuto	1	28
+15	47	1	1	ItemTenTalentExpAuto	1	1
+15	48	1	1	ItemTenTalentExpAuto	1	2
+15	49	1	1	ItemTenTalentExpAuto	1	3
+15	50	1	1	ItemTenTalentExpAuto	1	4
+15	51	1	1	ItemBattlePassExpAuto	1	
+15	52	1	1	ItemBattlePassExpAuto	1	1
+15	53	1	1	ItemBattlePassCoinAuto	1	31
+15	54	1	1	ItemMixTowerCoinAuto	1	29
+15	55	1	1	ItemMixTowerCoinAuto	1	30
+15	56	1	1	ItemMixTowerCoinAuto	1	32
+15	57	1	1	ItemMixTowerCoinAuto	1	33
+15	58	1	1	ItemMixTowerCoinAuto	1	34
+15	59	1	1	ItemNormalCoinAuto	1	35
+15	60	1	1	ItemNormalCoinAuto	1	36
+15	62	1	1	ItemNormalCoinAuto	1	37
+15	63	1	1	ItemNormalCoinAuto	1	38
+15	64	1	1	ItemNormalCoinAuto	1	39
+15	65	1	1	ItemNormalCoinAuto	1	40
+15	66	1	1	ItemNormalCoinAuto	1	41
+15	67	1	1	ItemNormalCoinAuto	1	42
+15	68	1	1	ItemAddFirstMusicInterestFightTimeAuto	1	
+15	69	1	1	ItemAddNextMusicInterestFightTimeAuto	1	
+15	70	1	1	ItemNormalCoinAuto	1	43
+15	71	1	1	ItemNormalCoinAuto	1	44
+15	72	1	1	ItemNodeTowerScoreAuto	1	11
+15	73	1	1	ItemNormalCoinAuto	1	45
+15	74	1	1	ItemNormalCoinAuto	1	46
+15	75	1	1	ItemNormalCoinAuto	1	47
+15	76	1	1	ItemNormalCoinAuto	1	48
+15	77	1	1	ItemNormalCoinAuto	1	49
+15	78	1	1	ItemNormalCoinAuto	1	50
+15	79	1	1	ItemNormalCoinAuto	1	51
+15	80	1	1	ItemNormalCoinAuto	1	52
+15	81	1	1	ItemNormalCoinAuto	1	53
+15	82	1	1	ItemNormalCoinAuto	1	54
+15	83	1	1	ItemNormalCoinAuto	1	55
+15	84	1	1	ItemNormalCoinAuto	1	56
+15	85	1	1	ItemNormalCoinAuto	1	57
+15	86	1	1	ItemAddAnniversaryDiscoveryPowerAuto	1	58
+15	87	1	1	ItemAddAnniversaryDiscoveryExpAuto	1	59
+15	90	1	1	ItemNormalCoinAuto	1	60
+15	91	1	1	RikiRATDIS	1	61
+15	92	1	1	ItemNormalCoinAuto	1	92
+15	93	1	1	ItemNormalCoinAuto	1	62
+15	94	1	1	ItemNormalCoinAuto	1	63
+15	95	1	1	ItemNormalCoinAuto	1	64
+15	96	1	1	ItemMonopolyPointAuto	1	
+15	97	1	1	ItemNormalCoinAuto	1	65
+15	98	1	1	ItemNormalCoinAuto	1	66
+15	99	1	1	ItemNormalCoinAuto	1	67
+15	100	1	1	ItemNormalCoinAuto	1	68
+15	101	1	1	ItemNormalCoinAuto	1	69
+15	102	1	1	ItemNormalCoinAuto	1	70
+15	103	1	1	ItemNormalCoinAuto	1	71
+15	104	1	1	ItemNormalCoinAuto	1	72
+15	105	1	1	ItemFifteenthTowerExpAuto	1	2
+15	106	1	1	ItemFifteenthTowerExpAuto	1	1
+15	107	1	1	ItemNormalCoinAuto	1	73
+15	108	1	1	ItemNormalCoinAuto	1	74
+15	109	1	1	ItemNormalCoinAuto	1	75
+15	110	1	1	ItemNormalCoinAuto	1	76
+15	111	1	1	ItemNormalCoinAuto	1	77
+15	112	1	1	ItemPayFreeHairpinAuto	1	63
+15	117	1	1	ItemNormalCoinAuto	1	79
+15	118	1	1	ItemNormalCoinAuto	1	80
+15	119	1	1	ItemNormalCoinAuto	1	81
+15	120	1	1	ItemNormalCoinAuto	1	82
+15	123	1	1	ItemNormalCoinAuto	1	83
+15	124	1	1	ItemNormalCoinAuto	1	84
+15	125	1	1	ItemNormalCoinAuto	1	85
+15	127	1	1	ItemNormalCoinAuto	1	87
+15	128	1	1	ItemNormalCoinAuto	1	88
+15	129	1	1	ItemNormalCoinAuto	1	89
+15	130	1	1	ItemNormalCoinAuto	1	90
+15	131	1	1	ItemNormalCoinAuto	1	93
+15	132	1	1	ItemNormalCoinAuto	1	94
+16	1	1	1	RikiItem		
+16	1	2	1	RikiItem		
+16	1	3	1	RikiItem		
+16	1	4	1	RikiItem		
+16	1	5	1	RikiItem		
+16	1	6	1	RikiItem		
+16	1	7	1	RikiItem		
+16	1	8	1	RikiItem		
+16	1	9	1	RikiItem		
+16	1	10	1	RikiItem		
+16	1	11	1	RikiItem		
+16	1	12	1	RikiItem		
+16	1	13	1	RikiItem		
+16	1	14	1	RikiItem		
+16	1	15	1	RikiItem		
+16	1	16	1	RikiItem		
+16	1	17	1	RikiItem		
+16	1	18	1	RikiItem		
+16	1	19	1	RikiItem		
+16	1	23	1	RikiItem		
+16	1	24	1	RikiItem		
+16	2	1	1	RikiItem		
+16	2	2	1	RikiItem		
+16	2	3	1	RikiItem		
+16	2	4	1	RikiItem		
+16	2	5	1	RikiItem		
+16	2	6	1	RikiItem		
+16	2	7	1	RikiItem		
+16	2	8	1	RikiItem		
+16	2	9	1	RikiItem		
+16	2	10	1	RikiItem		
+16	2	11	1	RikiItem		
+16	2	12	1	RikiItem		
+16	2	13	1	RikiItem		
+16	2	14	1	RikiItem		
+16	2	15	1	RikiItem		
+16	2	16	1	RikiItem		
+16	2	17	1	RikiItem		
+16	2	18	1	RikiItem		
+16	2	19	1	RikiItem		
+16	2	20	1	RikiItem		
+16	2	21	1	RikiItem		
+16	2	22	1	RikiItem		
+16	2	23	1	RikiItem		
+16	2	24	1	RikiItem		
+16	2	25	1	RikiItem		
+16	2	26	1	RikiItem		
+16	2	27	1	RikiItem		
+16	2	28	1	RikiItem		
+16	2	29	1	RikiItem		
+16	2	30	1	RikiItem		
+16	2	31	1	RikiItem		
+16	2	32	1	RikiItem		
+16	2	33	1	RikiItem		
+16	2	34	1	RikiItem		
+16	2	35	1	RikiItem		
+16	2	36	1	RikiItem		
+16	2	37	1	RikiItem		
+16	2	38	1	RikiItem		
+16	2	39	1	RikiItem		
+16	2	40	1	RikiItem		
+16	2	41	1	RikiItem		
+16	2	42	1	RikiItem		
+16	2	43	1	RikiItem		
+16	2	44	1	RikiItem		
+16	2	45	1	RikiItem		
+16	2	46	1	RikiItem		
+16	2	47	1	RikiItem		
+16	2	48	1	RikiItem		
+16	3	1	1	RikiItem		
+16	3	2	1	RikiItem		
+16	3	3	1	RikiItem		
+16	3	4	1	RikiItem		
+16	3	5	1	RikiItem		
+16	3	6	1	RikiItem		
+16	3	7	1	RikiItem		
+16	3	8	1	RikiItem		
+16	4	1	1	RikiItem		
+16	4	2	1	RikiItem		
+16	4	3	1	RikiItem		
+16	4	4	1	RikiItem		
+16	4	5	1	RikiItem		
+16	4	6	1	RikiItem		
+16	4	7	1	RikiItem		
+16	4	8	1	RikiItem		
+16	4	9	1	RikiItem		
+16	4	10	1	RikiItem		
+16	4	11	1	RikiItem		
+16	4	12	1	RikiItem		
+16	4	13	1	RikiItem		
+16	4	14	1	RikiItem		
+16	4	15	1	RikiItem		
+16	4	16	1	RikiItem		
+16	4	17	1	RikiItem		
+16	4	18	1	RikiItem		
+16	4	19	1	RikiItem		
+16	4	20	1	RikiItem		
+16	4	21	1	RikiItem		
+16	4	22	1	RikiItem		
+16	4	23	1	RikiItem		
+16	4	24	1	RikiItem		
+16	4	25	1	RikiItem		
+16	4	26	1	RikiItem		
+16	5	1	1	RikiItem		
+16	5	2	1	RikiItem		
+16	5	3	1	RikiItem		
+16	5	4	1	RikiItem		
+16	5	5	1	RikiItem		
+16	5	6	1	RikiItem		
+16	5	7	1	RikiItem		
+17	1	1	1	RikiItem		
+17	1	2	1	RikiItem		
+17	1	3	1	RikiItem		
+17	1	4	1	RikiItem		
+17	1	5	1	RikiItem		
+17	1	6	1	RikiItem		
+17	1	7	1	RikiItem		
+17	1	8	1	RikiItem		
+17	1	9	1	RikiItem		
+17	1	10	1	RikiItem		
+17	1	11	1	RikiItem		
+17	1	12	1	RikiItem		
+17	1	13	1	RikiItem		
+17	1	14	1	RikiItem		
+17	1	15	1	RikiItem		
+17	1	16	1	RikiItem		
+17	1	17	1	RikiItem		
+17	1	18	1	RikiItem		
+17	1	19	1	RikiItem		
+17	1	20	1	RikiItem		
+17	1	21	1	RikiItem		
+17	1	22	1	RikiItem		
+17	1	23	1	RikiItem		
+17	1	24	1	RikiItem		
+17	1	25	1	RikiItem		
+17	1	26	1	RikiItem		
+17	1	27	1	RikiItem		
+17	1	28	1	RikiItem		
+17	1	29	1	RikiItem		
+17	1	30	1	RikiItem		
+17	1	31	1	RikiItem		
+17	1	32	1	RikiItem		
+17	1	33	1	RikiItem		
+17	1	34	1	RikiItem		
+17	1	35	1	RikiItem		
+17	1	36	1	RikiItem		
+17	1	37	1	RikiItem		
+17	1	38	1	RikiItem		
+17	2	1	1	RikiItem		
+17	2	1	2	RikiItem		
+17	2	2	1	RikiItem		
+17	2	2	2	RikiItem		
+17	2	3	1	RikiItem		
+17	2	3	2	RikiItem		
+17	2	4	1	RikiItem		
+17	2	4	2	RikiItem		
+17	2	5	1	RikiItem		
+17	2	5	2	RikiItem		
+17	2	6	1	RikiItem		
+17	2	6	2	RikiItem		
+17	2	7	1	RikiItem		
+17	2	7	2	RikiItem		
+17	2	8	1	RikiItem		
+17	2	8	2	RikiItem		
+17	2	9	1	RikiItem		
+17	2	9	2	RikiItem		
+17	2	10	1	RikiItem		
+17	2	10	2	RikiItem		
+17	2	11	1	RikiItem		
+17	2	11	2	RikiItem		
+17	2	12	1	RikiItem		
+17	2	12	2	RikiItem		
+17	2	13	1	RikiItem		
+17	2	13	2	RikiItem		
+17	2	14	1	RikiItem		
+17	2	14	2	RikiItem		
+17	2	15	1	RikiItem		
+17	2	15	2	RikiItem		
+17	2	16	1	RikiItem		
+17	2	16	2	RikiItem		
+17	3	1	1	RikiItem		
+17	3	2	1	RikiItem		
+17	3	3	1	RikiItem		
+17	3	4	1	RikiItem		
+17	3	5	1	RikiItem		
+17	3	6	1	RikiItem		
+17	3	7	1	RikiItem		
+17	3	8	1	RikiItem		
+17	3	9	1	RikiItem		
+17	3	10	1	RikiItem		
+17	3	11	1	RikiItem		
+17	3	12	1	RikiItem		
+17	4	1	1	RikiItem		
+17	4	2	1	RikiItem		
+19	1	1	4	SuitItem	9	7001
+19	1	2	3	SuitItem	12	7001
+19	1	3	2	SuitItem	7	7002
+19	1	4	2	SuitItem	5	5001
+19	1	5	4	SuitItem	10	7001
+19	1	6	2	SuitItem	3	5001
+19	1	7	4	SuitItem	11	7001
+19	1	8	4	SuitItem	16	7001
+19	1	9	2	SuitItem	9	5001
+19	1	10	2	SuitItem	1	5001
+19	1	11	4	SuitItem	13	7001
+19	1	12	2	SuitItem	8	5001
+19	1	13	4	SuitItem	5	7001
+19	1	14	2	SuitItem	11	5001
+19	1	15	2	SuitItem	6	5001
+19	1	16	2	SuitItem	14	5001
+19	1	17	4	SuitItem	15	7001
+19	1	18	4	SuitItem	7	7001
+19	1	19	2	SuitItem	4	5001
+19	1	20	4	SuitItem	3	7001
+19	1	21	4	SuitItem	2	7001
+19	1	22	2	SuitItem	12	5001
+19	1	23	4	SuitItem	6	7001
+19	1	24	2	SuitItem	10	5001
+19	1	25	4	SuitItem	1	7001
+19	1	26	4	SuitItem	9	7002
+19	1	27	2	SuitItem	2	5001
+19	1	28	2	SuitItem	7	5001
+19	1	29	4	SuitItem	12	7002
+19	1	30	2	SuitItem	5	5002
+19	1	31	4	SuitItem	8	7001
+19	1	32	2	SuitItem	15	5001
+19	1	33	2	SuitItem	3	5002
+19	1	34	2	SuitItem	9	5002
+19	1	35	2	SuitItem	2	7017
+19	1	36	2	SuitItem	7	7017
+19	1	37	2	SuitItem	15	7017
+19	1	38	2	SuitItem	2	3017
+19	1	39	2	SuitItem	7	3017
+19	1	40	2	SuitItem	15	3017
+19	1	41	2	SuitItem	13	5001
+19	2	18	4	SuitItem	7	5018
+19	2	19	4	SuitItem	9	5018
+19	2	20	4	SuitItem	10	5018
+19	2	21	4	SuitItem	12	5018
+19	2	22	4	SuitItem	6	5018
+19	2	23	4	SuitItem	15	5018
+19	2	24	4	SuitItem	1	5018
+23	201	1	4	ItemEmojiAuto		
+23	202	1	4	ItemEmojiAuto		
+23	203	1	4	ItemEmojiAuto		
+23	204	1	4	ItemEmojiAuto		
+23	205	1	4	ItemEmojiAuto		
+23	206	1	4	ItemEmojiAuto		
+23	207	1	4	ItemEmojiAuto		
+23	208	1	4	ItemEmojiAuto		
+23	209	1	4	ItemEmojiAuto		
+23	210	1	4	ItemEmojiAuto		
+23	211	1	4	ItemEmojiAuto		
+23	212	1	4	ItemEmojiAuto		

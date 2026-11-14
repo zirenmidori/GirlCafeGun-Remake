@@ -58,6 +58,9 @@ genre `3` 的模块按客户端实例语义从等级 1 开始；这代表“未�
 - 没有背包容量、通用出售、符文/普通物品分解、过期和邮件附件；
 - 没有通用的公开 RewardService，奖励逻辑仍位于 Repository；
 - 只特殊识别金币、免费钻石和两种分解代币，其他货币依赖背包或专用路径；
+  `grantAwards` now also applies the auto-use rules of
+  `23-event-page-achievements.md` (coin wallets, profile decorations, gallery
+  entries);
 - 重复角色卡按独立实例保存，没有完整碎片/重复转换规则；
 - 装备、符文和材料的全部客户端语义尚未建模。
 - MOD enhancement (31), limit break (35), and two-step revision (33/34) now use

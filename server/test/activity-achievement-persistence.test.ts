@@ -15,12 +15,17 @@ import {
   makeAchievementTaskValue,
   requiredAchievementCount,
 } from "../src/game-data/activity-achievement-data.js";
+import {
+  HEAD_FRAME_TASK_GROUP,
+  RIKI_TASK_GROUP,
+} from "../src/game-data/auto-use-item-data.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
 import {
   AchievementAwardError,
   EightDaySignUpError,
   makeInitialState,
+  MONEY_COFFEE_COIN,
   MONEY_DIAMOND,
   MONEY_GOLD,
   PlayerRepository,
@@ -268,50 +273,94 @@ describe("event page achievement claims", () => {
     expect(hasClaimedAchievement(otherTask(repository.get(account)!, 93))).toBe(false);
   });
 
-  it("refuses awards that grantAwards cannot place", async () => {
+  it("pays auto-use awards by their rule and not as dead stacks", async () => {
     const { repository, store } = await createRepository();
-    // Activity 16, achievement 67: [14-1-4-1-300] is an auto-use purchase item.
-    const cafe = catalog.achievement(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 67)!;
-    expect(cafe.awards).toEqual([[14, 1, 4, 1, 300]]);
-    await storeProgress(
-      store,
-      ACTIVITY_ACHIEVEMENT_TASK_GROUP,
-      67,
-      requiredAchievementCount(cafe),
-    );
-    expect(
-      await rejection(repository.claimActivityAchievementAward(account, 16, 67)),
-    ).toBe("unsupported_award");
-    expect(hasClaimedAchievement(otherTask(repository.get(account)!, 67))).toBe(false);
+    const complete = async (group: number, achievementId: number): Promise<void> =>
+      storeProgress(
+        store,
+        group,
+        achievementId,
+        requiredAchievementCount(catalog.achievement(group, achievementId)!),
+      );
+    const task = (group: number, taskId: number): number =>
+      repository.get(account)!.taskValues[String((group << 16) | taskId)] ?? 0;
+    const startedAt = Math.floor(Date.now() / 1_000);
 
-    // Activity 27, achievement 197: [6-28-8-4-1] is a head frame, used on receipt.
-    const frame = catalog.achievement(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 197)!;
+    // Activity 16, achievement 67: 300 ItemGiftCoffeeCoinAuto -> coffee coins.
+    expect(catalog.achievement(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 67)!.awards).toEqual([
+      [14, 1, 4, 1, 300],
+    ]);
+    await complete(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 67);
+    const coffee = await repository.claimActivityAchievementAward(account, 16, 67);
+    expect(coffee.updatedMoney).toEqual([{ id: MONEY_COFFEE_COIN, count: 300 }]);
+    expect(coffee.updatedItems).toEqual([]);
+
+    // Activity 17, achievement 70: 20 of coin 15-6 (ExtParam2 = money 5) and gold.
+    await complete(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 70);
+    const coin = await repository.claimActivityAchievementAward(account, 17, 70);
+    expect(coin.awards).toEqual([
+      [15, 6, 1, 1, 20],
+      [15, 1, 1, 1, 2_500],
+    ]);
+    expect(coin.updatedMoney).toContainEqual({ id: 5, count: 20 });
+    expect(coin.updatedItems).toEqual([]);
+
+    // Activity 27, achievement 197: head frame 6-28-8-4 (ExtParam1 = frame 9).
+    expect(task(HEAD_FRAME_TASK_GROUP, 9)).toBe(0);
+    await complete(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 197);
+    const frame = await repository.claimActivityAchievementAward(account, 27, 197);
     expect(frame.awards).toEqual([[6, 28, 8, 4, 1]]);
-    await storeProgress(
-      store,
-      ACTIVITY_ACHIEVEMENT_TASK_GROUP,
-      197,
-      requiredAchievementCount(frame),
-    );
-    expect(
-      await rejection(repository.claimActivityAchievementAward(account, 27, 197)),
-    ).toBe("unsupported_award");
+    expect(frame.updatedItems).toEqual([]);
+    expect(task(HEAD_FRAME_TASK_GROUP, 9)).toBeGreaterThanOrEqual(startedAt);
 
-    // Panel achievement 39 (clear stage 6-12) pays diamonds, gold and a head
-    // frame; a part payment would lose the frame, so the whole claim waits.
+    // Panel achievement 39 (clear stage 6-12): diamonds, gold and head frame 6.
     const before = repository.get(account)!;
     await repository.completeLevel(account, 6, 12, 1, 0b111);
-    expect(await rejection(repository.claimAchievementAward(account, 39))).toBe(
-      "unsupported_award",
+    const panel = await repository.claimAchievementAward(account, 39);
+    expect(panel.awards).toEqual([
+      [15, 2, 1, 1, 20],
+      [15, 1, 1, 1, 2_000],
+      [6, 28, 5, 4, 1],
+    ]);
+    expect(money(panel.player, MONEY_DIAMOND) - money(before, MONEY_DIAMOND)).toBe(20);
+    expect(task(HEAD_FRAME_TASK_GROUP, 6)).toBeGreaterThanOrEqual(startedAt);
+
+    // Panel achievement 12: gallery entry 16-3-5-1 is Riki.txt row 3058.
+    await storeProgress(store, ACHIEVEMENT_TASK_GROUP, 12, 60);
+    const riki = await repository.claimAchievementAward(account, 12);
+    expect(riki.awards.at(-1)).toEqual([16, 3, 5, 1, 1]);
+    expect(task(RIKI_TASK_GROUP, 3_058)).toBe(1);
+    expect(
+      repository
+        .get(account)!
+        .inventory.filter(({ genre }) => genre === 6 || genre === 14 || genre === 16),
+    ).toEqual([]);
+  });
+
+  it("refuses an auto-use award that has no rule", async () => {
+    const { repository, store } = await createRepository();
+    // Activity 52, achievement 951: [15-40-1-1-1000] is an event score
+    // (ItemEatChickenScoreAuto) with no system behind it here.
+    const score = catalog.achievement(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 951)!;
+    expect(score.awards).toEqual([
+      [15, 2, 1, 1, 20],
+      [15, 40, 1, 1, 1_000],
+    ]);
+    await storeProgress(
+      store,
+      ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+      951,
+      requiredAchievementCount(score),
     );
+    const before = repository.get(account)!;
+    expect(
+      await rejection(repository.claimActivityAchievementAward(account, 52, 951)),
+    ).toBe("unsupported_award");
+    // Nothing is paid in part and the claim stays open.
     expect(money(repository.get(account)!, MONEY_DIAMOND)).toBe(
       money(before, MONEY_DIAMOND),
     );
-    // Panel achievement 12 pays a riki entry (16-3-5-1).
-    await storeProgress(store, ACHIEVEMENT_TASK_GROUP, 12, 60);
-    expect(await rejection(repository.claimAchievementAward(account, 12))).toBe(
-      "unsupported_award",
-    );
+    expect(hasClaimedAchievement(otherTask(repository.get(account)!, 951))).toBe(false);
   });
 
   it("counts login days at login for every shown page that uses them", async () => {

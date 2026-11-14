@@ -171,6 +171,7 @@ import {
   DAILY_MISSION_ACTIVE_POINT_TASK_ID,
   type DailyMissionState,
 } from "../game-data/daily-mission-data.js";
+import { AutoUseItemCatalog } from "../game-data/auto-use-item-data.js";
 import {
   ACHIEVEMENT_TASK_GROUP,
   achievementProgress,
@@ -1654,20 +1655,65 @@ function awardMoneyId(genre: number, detail: number): number | null {
 }
 
 /**
- * ItemList marks some items AutoUse: the original server used them up on
- * receipt (currencies, profile decorations, boxes, purchase items, riki
- * entries). grantAwards converts only the currencies above; any other such row
+ * A claim must not pay an AutoUse item that this server has no rule for: it
  * would stay in the inventory as a stack that does nothing.
- *
- * The rule covers every AutoUse award of Achievement.txt and
- * AchievementOther.txt in the 0.1.3 client: genres 6, 14, 16 and 17, box 8-17
- * and the other genre 15 currencies. Genre 11 (cafe furniture) is AutoUse too,
- * but this server keeps furniture as inventory stacks.
  */
-function isGrantableAward([genre, detail]: BaseAward): boolean {
-  if (genre === 15) return awardMoneyId(genre, detail) !== null;
-  if (genre === 8) return detail !== 17;
-  return ![6, 14, 16, 17].includes(genre);
+function isGrantableAward([genre, detail, particular, level]: BaseAward): boolean {
+  if (awardMoneyId(genre, detail) !== null) return true;
+  const effect = AutoUseItemCatalog.loadDefault().effect(
+    genre,
+    detail,
+    particular,
+    level,
+  );
+  return effect === null || effect.kind !== "none";
+}
+
+function addMoney(
+  player: Player,
+  moneyId: number,
+  count: number,
+  updatedMoneyIds: Set<number>,
+): void {
+  let money = player.money.find(({ id }) => id === moneyId);
+  if (!money) {
+    money = { id: moneyId, count: 0 };
+    player.money.push(money);
+  }
+  money.count += count;
+  updatedMoneyIds.add(moneyId);
+}
+
+/**
+ * Uses up an AutoUse item on receipt, as ItemList asks: a currency goes to
+ * its wallet, a profile decoration or gallery entry is unlocked through its
+ * task value. Returns false when the item belongs in the inventory.
+ */
+function applyAutoUseAward(
+  player: Player,
+  [genre, detail, particular, level, count]: BaseAward,
+  updatedMoneyIds: Set<number>,
+): boolean {
+  const effect = AutoUseItemCatalog.loadDefault().effect(
+    genre,
+    detail,
+    particular,
+    level,
+  );
+  switch (effect?.kind) {
+    case "money":
+      addMoney(player, effect.moneyId, count * effect.perItem, updatedMoneyIds);
+      return true;
+    case "unlock-time":
+      for (const taskId of effect.taskIds)
+        player.taskValues[String(taskId)] = unixTime();
+      return true;
+    case "unlock-flag":
+      for (const taskId of effect.taskIds) player.taskValues[String(taskId)] = 1;
+      return true;
+    default:
+      return false;
+  }
 }
 
 function grantAwards(
@@ -1682,13 +1728,16 @@ function grantAwards(
 
     const moneyId = awardMoneyId(genre, detail);
     if (moneyId !== null) {
-      let money = player.money.find(({ id }) => id === moneyId);
-      if (!money) {
-        money = { id: moneyId, count: 0 };
-        player.money.push(money);
-      }
-      money.count += count;
-      updatedMoneyIds.add(moneyId);
+      addMoney(player, moneyId, count, updatedMoneyIds);
+      continue;
+    }
+    if (
+      applyAutoUseAward(
+        player,
+        [genre, detail, particular, templateLevel, count],
+        updatedMoneyIds,
+      )
+    ) {
       continue;
     }
 
