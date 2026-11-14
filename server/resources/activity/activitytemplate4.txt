@@ -1,0 +1,5 @@
+INT	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR	STR
+活动ID对应哪个活动里显示	背景图	文本内容	奖励领取开始时间	奖励领取结束时间	对应成就ID列表	按钮 不填不显示	按钮1点击后跳转	按钮 不填不显示	按钮2点击后跳转	按钮 不填不显示	按钮3点击后跳转
+Id	Bg	Text	BeginTime	EndTime	AchievementList	BtnText1	Jump1	BtnText2	Jump2	BtnText3	Jump3
+24	Poster/event_act009_big_Mul.png		{201805012359}	{201810190000}	{102,103,104,105,106,107,108,109}						
+26	Poster/event_act009_big_Mul.png		{201805012359}	{201810190000}	{125,126,127,128,129,130,131}	activity.pay.go					

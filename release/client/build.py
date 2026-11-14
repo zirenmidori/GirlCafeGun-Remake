@@ -17,6 +17,7 @@ import test_card_display
 import test_gacha
 import patch_selectors
 import test_selectors
+import test_offline_web
 
 SOURCE_SHA='d9da0751b540d05a535dd76704a355110b6d63bcf30d8b876d63f3cfdf7c9b78'
 CACHE_SHA='a2012a54d479ef5eed6232374a543b9f31b038146202e27705a19199cacf3f5e'
@@ -47,6 +48,7 @@ def main():
         proofs['loginBehavior']=test_login.run()
         proofs['cardDisplayBehavior']=test_card_display.run()
         proofs['selectorBehavior']=test_selectors.run()
+        proofs['offlineWebBehavior']=test_offline_web.run_bundle(changed['lua.u'])
         print('Verified release login and removed developer Lua',flush=True)
         changed['setting.u'],plain,proofs['settings']=patch_settings.build(apk.read('assets/setting.u'))
         changed['lang.u'],proofs['selectorLanguage']=patch_selectors.build_language(apk.read('assets/lang.u'))
