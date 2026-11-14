@@ -281,11 +281,13 @@
                 content: it.content,
                 date: it.date,
                 pri: +it.priority || 0,
+                n: items.length,
               });
             }
           }
+          // The file order decides between equal priorities: an old WebView does not keep it.
           items.sort(function (x, y) {
-            return y.pri - x.pri;
+            return y.pri - x.pri || x.n - y.n;
           });
           render();
           if (items.length === 1) show(0);

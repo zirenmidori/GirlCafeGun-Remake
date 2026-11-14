@@ -7,20 +7,27 @@ local P = {}
 -- "http://127.0.0.1:28080/". The server has no page at that address.
 local LOCAL_HOSTS = { ['127.0.0.1'] = true, ['localhost'] = true, ['[::1]'] = true }
 
+-- The address with the page, when the address is one of the local server and names no page.
+local function withPage(url, page)
+	if type(url) ~= 'string' or type(page) ~= 'string' then return nil end
+	local scheme, authority, rest = string.match(url, '^(%a[%w+.-]*)://([^/?#]*)(.*)$')
+	if not scheme then return nil end
+	local kind = string.lower(scheme)
+	if kind ~= 'http' and kind ~= 'https' then return nil end
+	local host = string.lower((string.gsub(authority, ':%d*$', '')))
+	if not LOCAL_HOSTS[host] then return nil end
+	local tail = string.match(rest, '^/?([?#].*)$') or (string.match(rest, '^/?$') and '')
+	if not tail then return nil end
+	return string.sub(url, 1, string.len(scheme) + 3 + string.len(authority)) .. '/' .. page .. tail
+end
+
 -- An address of the local server that names no page gets the page of the window that asks.
 -- A query stays (the windows add the time to it). Every other address stays as it is.
 function P.Url(url, page)
-	if type(url) ~= 'string' or type(page) ~= 'string' then return url end
-	local scheme, authority, rest = string.match(url, '^(%a[%w+.-]*)://([^/?#]*)(.*)$')
-	if not scheme then return url end
-	local kind = string.lower(scheme)
-	if kind ~= 'http' and kind ~= 'https' then return url end
-	local host = string.lower((string.gsub(authority, ':%d*$', '')))
-	if not LOCAL_HOSTS[host] then return url end
-	local tail = string.match(rest, '^/?([?#].*)$') or (string.match(rest, '^/?$') and '')
-	if not tail then return url end
+	local mapped = withPage(url, page)
+	if not mapped then return url end
 	print('[web] local page: ' .. page)
-	return string.sub(url, 1, string.len(scheme) + 3 + string.len(authority)) .. '/' .. page .. tail
+	return mapped
 end
 
 -- The text of the server-error window. That window opens when the local server does not answer,
@@ -47,16 +54,22 @@ ol{margin:8px 0 0;padding-left:22px}
 </div></body></html>]==]
 end
 
--- Shows the text in the web view of the server-error window. A web view that cannot take a text
--- loads the address instead, as the stock window does; a local address gets the page with that text.
+-- The server-error window. An address of another host loads as in the stock window. For the
+-- address of the local server the web view shows the text above. A web view that cannot take a
+-- text loads the page of the local server with that text.
 function P.LoadError(view, url)
+	local page = withPage(url, 'web/maintenance/index.html')
+	if not page then
+		view:Load(url)
+		return
+	end
 	local ok, err = pcall(function() view:LoadHTMLString(P.ErrorHtml(), '', false) end)
 	if ok then
 		print('[web] server error: text shown')
 		return
 	end
 	print('[web] server error: text not shown, the page is loaded: ' .. tostring(err))
-	view:Load(P.Url(url, 'web/maintenance/index.html'))
+	view:Load(page)
 end
 
 OfflineWeb = P

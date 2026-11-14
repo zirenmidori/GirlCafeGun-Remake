@@ -314,11 +314,12 @@ def run(scripts=None, report=None):
     for text in ('raises', 'absent'):
         got = opened('UI_ServerError', 'WebNotice', view(text), None, LOCAL)
         assert got[:4] == (LOCAL + 'web/maintenance/index.html?time=%d' % NOW, 1, 0, 1), (text, got)
-        assert got[4].startswith('[web] server error: text not shown, the page is loaded: '), got
-        assert got[4].endswith('|[web] local page: web/maintenance/index.html'), got
+        assert got[4].startswith('[web] server error: text not shown, the page is loaded: ') and '|' not in got[4], got
+    # An address of another host loads as in the stock window, whatever the web view can do.
+    for text in ('works', 'raises', 'absent'):
         got = opened('UI_ServerError', 'WebNotice', view(text), None, 'https://example.org/maintenance/')
-        assert got[:4] == ('https://example.org/maintenance/?time=%d' % NOW, 1, 0, 1), (text, got)
-    if report: report('ok server-error window: text shown without a request; page loaded when the web view takes no text')
+        assert got == ('https://example.org/maintenance/?time=%d' % NOW, 1, 0, 1, ''), (text, got)
+    if report: report('ok server-error window: text shown without a request; page loaded when the web view takes no text; another host stays')
 
     # 5. The server holds the pages that the calls name, and its page says what the text in the script says.
     pages = ROOT / 'server/resources/web'

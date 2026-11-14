@@ -6,9 +6,9 @@ names the local server instead, with no page, and the server answers that addres
 gives each window a page of the local server (server/resources/web):
   UI_Notice       the Notice window of the main menu -> notice.html
   UI_User         Help and Glossary in the settings  -> web/offline/index.html
-  UI_ServerError  the window that opens when the server does not answer. It shows its text from inside the
-                  script, so it needs no server. A web view that cannot take a text loads
-                  web/maintenance/index.html, which holds the same text.
+  UI_ServerError  the window that opens when the server does not answer. For the local address it shows its
+                  text from inside the script, so it needs no server. A web view that cannot take a text
+                  loads web/maintenance/index.html, which holds the same text.
 Only an address of the local server that names no page changes. Every other address loads as before, so the
 other Load calls of UI_Notice (other regions, a page that a caller names) and the two windows that load an
 address from a table (UI_OtherTip, UI_RikiComic) stay stock. No prefab or other asset changes.
