@@ -95,6 +95,7 @@ import {
   type CafeRuntimeHooks,
 } from "../game-data/cafe-runtime.js";
 export { CafeOperationError } from "../game-data/cafe-runtime.js";
+import { costumePack } from "../game-data/costume-shop-data.js";
 import {
   FREE_GIFT_PACK_AWARD,
   FREE_GIFT_PACK_DAILY_LIMIT,
@@ -723,10 +724,21 @@ export interface IBItemFreeResult {
   diamonds: number;
 }
 
+export interface CostumePackResult {
+  player: Player;
+  updatedMoney: MoneyState[];
+  updatedItems: InventoryEntryState[];
+  updatedTaskIds: number[];
+}
+
 export class IBShopError extends Error {
   constructor(
-    readonly reason: "unknown_item" | "limit_reached",
-    readonly clientError: number = reason === "limit_reached" ? 20075 : 20074,
+    readonly reason: "unknown_item" | "limit_reached" | "insufficient_diamonds",
+    readonly clientError: number = reason === "limit_reached"
+      ? 20075
+      : reason === "insufficient_diamonds"
+        ? 20013
+        : 20074,
   ) {
     super(`IB shop error: ${reason}`);
     this.name = "IBShopError";
@@ -1699,6 +1711,41 @@ function isGrantableAward([genre, detail, particular, level]: BaseAward): boolea
   return effect === null || effect.kind !== "none";
 }
 
+export function suitTaskId(girlId: number, modelId: number): number {
+  return makeGirlTaskId(GIRL_SUIT_TASK_GROUP, girlId, fixGirlModelTaskOffset(modelId));
+}
+
+/**
+ * Older saves hold costume and background items as dead inventory stacks
+ * (they were AutoUse items without a rule). Applies the rule and drops the stack.
+ */
+function convertDeadAutoUseStacks(player: Player): void {
+  const catalog = AutoUseItemCatalog.loadDefault();
+  player.inventory = player.inventory.filter((item) => {
+    const effect = catalog.effect(
+      item.genre,
+      item.detail,
+      item.particular,
+      item.templateLevel,
+    );
+    if (effect?.kind !== "suit" && effect?.kind !== "unlock-flag") return true;
+    const isBackground = item.genre === 6 && item.detail === 25;
+    if (effect.kind === "unlock-flag" && !isBackground) return true;
+    applyAutoUseAward(
+      player,
+      [
+        item.genre,
+        item.detail,
+        item.particular,
+        item.templateLevel,
+        Math.max(1, item.count),
+      ],
+      new Set<number>(),
+    );
+    return false;
+  });
+}
+
 function addMoney(
   player: Player,
   moneyId: number,
@@ -1741,6 +1788,11 @@ function applyAutoUseAward(
     case "unlock-flag":
       for (const taskId of effect.taskIds) player.taskValues[String(taskId)] = 1;
       return true;
+    case "suit": {
+      const key = String(suitTaskId(effect.girlId, effect.modelId));
+      if ((player.taskValues[key] ?? 0) <= 0) player.taskValues[key] = 1;
+      return true;
+    }
     default:
       return false;
   }
@@ -3498,6 +3550,7 @@ export class PlayerRepository {
         reconcileCustomGirlOutfits(player);
         reconcileHeadpatCharges(player.taskValues, now);
         reconcileInventoryLockState(player);
+        convertDeadAutoUseStacks(player);
         reconcileRuneState(player);
         reconcileRuneSkills(player);
         reconcileDailyMissions(player);
@@ -3613,6 +3666,7 @@ export class PlayerRepository {
       reconcileCustomGirlOutfits(player);
       reconcileHeadpatCharges(player.taskValues, now);
       reconcileInventoryLockState(player);
+      convertDeadAutoUseStacks(player);
       reconcileRuneState(player);
       reconcileDailyMissions(player, now);
       reconcileDailySignUp(player, now);
@@ -4908,6 +4962,57 @@ export class PlayerRepository {
       itemGuid,
     });
     return { player: snapshot, item: claimedItem, purchaseCount };
+  }
+
+  async buyCostumePack(
+    account: string,
+    packId: number,
+    now = Date.now(),
+  ): Promise<CostumePackResult> {
+    void now;
+    const pack = costumePack(packId);
+    if (!pack) throw new IBShopError("unknown_item");
+    let player: Player | undefined;
+    const updatedMoneyIds = new Set<number>();
+    const updatedItemGuids = new Set<number>();
+    const updatedTaskIds = new Set<number>();
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      const ibTaskId = makeIBShopTaskId(pack.id);
+      const suitKey = suitTaskId(pack.girlId, pack.modelId);
+      if ((player.taskValues[String(ibTaskId)] ?? 0) >= 1) {
+        throw new IBShopError("limit_reached");
+      }
+      if ((player.taskValues[String(suitKey)] ?? 0) > 0) {
+        throw new IBShopError("limit_reached");
+      }
+      try {
+        deductShopMoney(player, MONEY_DIAMOND, pack.cost, updatedMoneyIds);
+      } catch (error) {
+        if (error instanceof ShopError) throw new IBShopError("insufficient_diamonds");
+        throw error;
+      }
+      const before = { ...player.taskValues };
+      player.taskValues[String(ibTaskId)] = 1;
+      grantAwards(player, pack.contents, updatedItemGuids, updatedMoneyIds);
+      for (const [key, value] of Object.entries(player.taskValues)) {
+        if (before[key] !== value) updatedTaskIds.add(Number(key));
+      }
+    });
+    if (!player) throw new Error(`Failed to buy costume pack: ${account}`);
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.ib_shop.costume_pack_bought", {
+      account,
+      packId: pack.id,
+      cost: pack.cost,
+    });
+    return {
+      player: snapshot,
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
+      updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedTaskIds: [...updatedTaskIds],
+    };
   }
 
   async claimIBItemFree(

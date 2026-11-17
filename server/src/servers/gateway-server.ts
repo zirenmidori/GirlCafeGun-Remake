@@ -81,6 +81,7 @@ import {
   LUA_COMMAND_PAY_RESULT_SUCCESS,
   MONTH_CARD_ITEM_ID,
 } from "../game-data/ib-shop-data.js";
+import { costumePack } from "../game-data/costume-shop-data.js";
 import { getPhoneLetterDefinition } from "../game-data/phone-message-data.js";
 import { PvpSessionManager, type PvpSession } from "../game-data/pvp-session.js";
 import { buildPvpEquipSolution } from "../game-data/pvp-solution.js";
@@ -4843,6 +4844,56 @@ export function createGatewayServer({
                   peer,
                   account: context.account,
                   itemId: MONTH_CARD_ITEM_ID,
+                  reason: error.reason,
+                  clientError: error.clientError,
+                });
+              }
+            } else if (
+              doRechargeCall.shopType === 1 &&
+              costumePack(doRechargeCall.id) !== undefined
+            ) {
+              const pack = costumePack(doRechargeCall.id)!;
+              try {
+                const result = await players.buyCostumePack(context.account, pack.id);
+                context.player = result.player;
+                for (const money of result.updatedMoney) {
+                  send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+                }
+                if (result.updatedItems.length > 0) {
+                  send(
+                    COMMAND.ITEM_UPDATE_NTF,
+                    0,
+                    makeItemUpdateNotification(result.updatedItems),
+                  );
+                }
+                send(
+                  COMMAND.TASK_VALUE_RSP,
+                  0,
+                  makeTaskValueSync(result.player.taskValues),
+                );
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: 0,
+                  tbItem: pack.contents,
+                });
+                logger.info("ib_shop.costume_pack.bought", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
+                  cost: pack.cost,
+                });
+              } catch (error) {
+                if (!(error instanceof IBShopError)) throw error;
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: error.clientError,
+                });
+                logger.warn("ib_shop.costume_pack.rejected", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
                   reason: error.reason,
                   clientError: error.clientError,
                 });

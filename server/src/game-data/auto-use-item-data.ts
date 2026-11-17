@@ -17,6 +17,12 @@
  * - ItemGiftCoffeeCoinAuto: coffee coins. Inferred: it shares description and
  *   icon with ItemCoffeeCoinAuto, and its genre 14 siblings are the diamond
  *   items that pay ExtParam1 diamonds each.
+ * - SuitItem (genre 19 only): a main-screen costume. ExtParam1 is the girl id,
+ *   ExtParam2 the model id; owned when girl task group 4 holds a value above 0
+ *   (GirlCommon.lua). The gift boxes 13-2-1-6035.. are SuitItem rows too but
+ *   have no model id, so they get no rule.
+ * - ItemBackGroundAuto: ExtParam1 is the background id N; owned when task 87/(2000 + N)
+ *   is above 0 (MainOrnament.lua).
  * - CafeItemAuto: furniture. This server keeps it as a stack that the cafe
  *   uses up when it places the furniture.
  *
@@ -31,6 +37,8 @@ export const VISITING_CARD_TASK_GROUP = 76;
 export const PLAYER_LIST_SKIN_TASK_GROUP = 77;
 export const CHAT_BUBBLE_TASK_GROUP = 78;
 export const RIKI_TASK_GROUP = 53;
+export const MAIN_BACKGROUND_TASK_GROUP = 87;
+const MAIN_BACKGROUND_TASK_OFFSET = 2000;
 /** MoneyDef.txt id 7. */
 const COFFEE_COIN_MONEY_ID = 7;
 
@@ -41,6 +49,8 @@ export type AutoUseEffect =
   | { kind: "unlock-time"; taskIds: readonly number[] }
   /** Sets each task to 1. */
   | { kind: "unlock-flag"; taskIds: readonly number[] }
+  /** Sets the girl's costume task (group 4) to 1 unless it is already above 0. */
+  | { kind: "suit"; girlId: number; modelId: number }
   /** Kept as an inventory stack on purpose. */
   | { kind: "stack" }
   /** AutoUse, but this server has no rule for it. */
@@ -136,6 +146,24 @@ export class AutoUseItemCatalog {
         effect = { kind: "unlock-time", taskIds: [makeTaskId(unlockTimeGroup, first)] };
       } else if (className === "RikiItem" && rikiTaskIds.has(key)) {
         effect = { kind: "unlock-flag", taskIds: rikiTaskIds.get(key)! };
+      } else if (
+        className === "SuitItem" &&
+        gdpl[0] === 19 &&
+        first !== null &&
+        second !== null
+      ) {
+        effect = { kind: "suit", girlId: first, modelId: second };
+      } else if (
+        className === "ItemBackGroundAuto" &&
+        first !== null &&
+        MAIN_BACKGROUND_TASK_OFFSET + first <= 0xffff
+      ) {
+        effect = {
+          kind: "unlock-flag",
+          taskIds: [
+            makeTaskId(MAIN_BACKGROUND_TASK_GROUP, MAIN_BACKGROUND_TASK_OFFSET + first),
+          ],
+        };
       } else if (className === "CafeItemAuto") {
         effect = { kind: "stack" };
       }
