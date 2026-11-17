@@ -8,15 +8,18 @@ repository.
 
 ## Start
 
-    python tools/story-editor/story_editor.py --data <game data folder> --open
+Windows: double-click `tools/story-editor/start.cmd`. Other systems: `python tools/story-editor/start.py`.
 
-The page is http://127.0.0.1:4310 (this computer only). `Ctrl+C` stops it.
+The first run does the setup by itself: it makes a private Python environment in `work/venv`, installs
+[UnityPy](https://pypi.org/project/UnityPy/) there, asks once for the game data folder (the one that holds
+`com.u`, `setting.u` and `lang.u`; it is the app's `files/` folder, or the place where you unpacked the data packs)
+and offers to download the Live2D runtime (see below). Later runs skip every step that is done and open the page
+at http://127.0.0.1:4310 (this computer only). `Ctrl+C` stops it. Python 3.10+ and a browser with WebGL are needed.
 
-- **Game data folder**: the folder that holds `com.u`, `setting.u`, `lang.u`, `bg/`, `l2d/` and the other
-  resource folders. That is the app's `files/` folder, or the place where you unpacked the data packs.
-  `GCG_DATA` can replace `--data`.
-- Needs Python 3.10+ with [UnityPy](https://pypi.org/project/UnityPy/) (`pip install UnityPy`) and a browser with
-  WebGL. The first start reads the bundles (a few seconds) and keeps the result in `work/cache`.
+Any option of the table below can be added: `start.cmd --official <lang.u> --rebuild`. The data folder is saved in
+`work/config.json`; `--data` or `GCG_DATA` overrides it. To run the server without the launcher:
+`python tools/story-editor/story_editor.py --data <game data folder> --open` (needs UnityPy installed).
+The first start reads the bundles (a few seconds) and keeps the result in `work/cache`.
 
 | Option | Meaning |
 |---|---|
@@ -65,7 +68,8 @@ Core. Live2D's licence does not allow that file in a public repository, so put i
     tools/story-editor/work/vendor/live2dcubismcore.min.js
     (from https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js)
 
-Without the file the tool works, and the characters checkbox does nothing.
+`start.py` offers to download it on the first run (your choice is remembered in `work/config.json`). Without the
+file the tool works, and the characters checkbox does nothing.
 
 - Characters are drawn once in their default pose, with the eyes open, at the script's position and size. The
   **size** and **height** sliders correct the placement (the screen mapping is a guess: one model unit = scale/10 of
