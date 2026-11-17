@@ -90,6 +90,17 @@ function params(value: unknown): Record<string, unknown> {
     ? (value as Record<string, unknown>)
     : {};
 }
+/**
+ * The client reads the café level from task value (group 1, id 32) as well as from
+ * the 112 download (`CafeLogic.LvGroup, CafeLogic.LvId = 1, 32`; `CafeLogic:GetCafeLevel`).
+ * The café panels show that value, so it must follow `player.cafe.level`.
+ */
+export const CAFE_LEVEL_TASK_KEY = String((1 << 16) | 32);
+export function syncCafeLevelTask(player: Player): void {
+  const level = player.cafe.level ?? 1;
+  if (player.taskValues[CAFE_LEVEL_TASK_KEY] !== level)
+    player.taskValues[CAFE_LEVEL_TASK_KEY] = level;
+}
 export function cafeRoomGirls(player: Player): [number[][], number[][], number[][]] {
   return [0, 1, 2].map((index) =>
     (player.cafe.roomGirlsList?.[index] ?? []).map((girl) => [
@@ -169,6 +180,7 @@ export class CafeRuntime {
       throw new CafeOperationError("invalid_clock", 112);
     this.now = Math.floor(nowMs / 1_000);
     player.cafe.level ??= 1;
+    syncCafeLevelTask(player);
     this.business = player.cafe.business ??= makeCafeBusinessState(this.now);
     this.business.moodCarry ??= {};
     this.business.seats = this.business.seats.filter((seat) =>
@@ -634,6 +646,7 @@ export class CafeRuntime {
         this.hooks.chargeMoney(2, next.NeedGold);
         this.business.hot -= next.NeedHot;
         this.player.cafe.level = next.Level;
+        syncCafeLevelTask(this.player);
         this.hooks.grant(next.LevelAwards);
         this.business.weightDay = -1;
         this.refreshWeights();

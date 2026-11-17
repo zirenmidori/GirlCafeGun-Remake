@@ -381,6 +381,21 @@ describe("atomic café business", () => {
     ).toBe(100);
   });
 
+  it("writes the café level into task value (1, 32) for saves that lack it", async () => {
+    const f = await fixture();
+    await f.call(112);
+    await f.store.update((state) => {
+      const player = state.players.tester!;
+      player.cafe.level = 2;
+      delete player.taskValues[String((1 << 16) | 32)];
+    });
+    const download = await f.call(112);
+    expect(download.player.taskValues[String((1 << 16) | 32)]).toBe(2);
+    expect(download.taskValuesChanged).toBe(true);
+    const again = await f.call(112);
+    expect(again.taskValuesChanged).toBe(false);
+  });
+
   it("grants café-level currency and physical furniture rewards once", async () => {
     const f = await fixture();
     await f.call(112);
@@ -391,12 +406,16 @@ describe("atomic café business", () => {
     });
     const upgraded = await f.call(111);
     expect(upgraded.player.cafe.level).toBe(2);
+    // The client's CafeLogic:GetCafeLevel reads task value (1, 32).
+    expect(upgraded.player.taskValues[String((1 << 16) | 32)]).toBe(2);
+    expect(upgraded.taskValuesChanged).toBe(true);
     expect(upgraded.player.money.find((money) => money.id === 7)?.count).toBe(600);
     await f.store.update((state) => {
       state.players.tester!.cafe.business!.hot = catalog.level(3)!.NeedHot;
     });
     const physical = await f.call(111);
     expect(physical.player.cafe.level).toBe(3);
+    expect(physical.player.taskValues[String((1 << 16) | 32)]).toBe(3);
     expect(physical.updatedFurniture).toHaveLength(1);
     expect(physical.updatedFurniture[0]).toMatchObject({
       templateId: 101,
