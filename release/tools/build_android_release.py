@@ -195,7 +195,7 @@ def main():
             overlay=json.loads(args.client_overlay.read_text(encoding='utf-8-sig'));need(overlay['sourceApkSha256']==args.input_sha256,'Client overlay baseline differs')
             for name,row in overlay['apkReplacements'].items():
                 need(name not in replacements and name in original.namelist(),'Unsupported/duplicate client replacement '+name)
-                need(not name.endswith('.dex') and (not name.startswith('lib/') or name in {'lib/arm64-v8a/libil2cpp.so','lib/armeabi-v7a/libil2cpp.so'}),'Unsupported executable replacement '+name)
+                need((not name.endswith('.dex') or name=='classes.dex') and (not name.startswith('lib/') or name in {'lib/arm64-v8a/libil2cpp.so','lib/armeabi-v7a/libil2cpp.so'}),'Unsupported executable replacement '+name)
                 file=Path(row['file']);file=file if file.is_absolute() else ROOT/file;data=file.read_bytes();need(sha(data)==row['sha256'],'Client replacement digest differs '+name);replacements[name]=data
             crypto=load_module(RELEASE/'tools/release_crypto.py','android_release_crypto');crypto.verify(args.manifest,args.manifest_signature)
             manifest=json.loads(args.manifest.read_text());need(manifest['schemaVersion']==1 and manifest['kind']=='full' and manifest['packageName']==APP_ID and 0<manifest['minApkVersionCode']<=args.version_code,'Signed bootstrap identity differs')

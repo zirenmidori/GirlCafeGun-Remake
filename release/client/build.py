@@ -12,6 +12,10 @@ import patch_index as indexes
 import asset_tools
 import manifest_paths
 from runtime_asset_guard import validate_assetfile
+import patch_tracking
+import test_tracking
+import patch_crasheye
+import test_crasheye
 import test_login
 import test_card_display
 import test_gacha
@@ -72,6 +76,13 @@ def main():
             name='lib/'+abi+'/libil2cpp.so';body,p=patch_native.build(apk.read(name),abi)
             replacements[name]=write(name,body);proofs[name]=p
             print('Verified native developer removal: '+abi,flush=True)
+        data,proofs['trackingData']=test_tracking.run_data(apk.read(patch_tracking.DATA))
+        replacements[patch_tracking.DATA]=write(patch_tracking.DATA,data)
+        print('Verified UAutoSDK listener and Unity analytics off',flush=True)
+        proofs['crasheyeBehavior']=test_crasheye.run()
+        body,proofs['crasheye']=patch_crasheye.build(apk.read(patch_crasheye.DEX))
+        replacements[patch_crasheye.DEX]=write(patch_crasheye.DEX,body)
+        print('Verified Crasheye init returns false',flush=True)
         vfx=apk.read('assets/p_skill/neptune_note.u');assert sha(vfx)=='292efa63f877ae354768a974a9191b3387e547855acbe198fc1eec93f1feef8f'
         _,vfx_asset=patch_model.stage.stock.model_objects(vfx)
         proofs['runtimeVfxGuard']=validate_assetfile(vfx_asset)
