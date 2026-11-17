@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib, re, struct, sys
 import patch_gacha
 import patch_gamepad
+import patch_offline_links
 import patch_offline_web
 import patch_selectors
 import patch_title
@@ -59,6 +60,7 @@ def patch_script(name, data):
     if name in patch_title.LUA_NAMES:result=patch_title.lua_script(name,result)
     if name in patch_gamepad.LUA_NAMES:result=patch_gamepad.lua_script(name,result)
     if name in patch_offline_web.LUA_NAMES:result=patch_offline_web.lua_script(name,result)
+    if name in patch_offline_links.LUA_NAMES:result=patch_offline_links.lua_script(name,result)
     return result
 
 NAMES={'UI_Login.lua','GameManager.lua','Preload.lua','GM.lua','UI_GM.lua','LuaHotFixCSharp.lua','develop.lua','S2CCall.lua','LuaCall.lua','UI_User.lua','GMActivity.lua','GachaCommon.lua','UI_GachaHistory.lua'}
@@ -66,6 +68,7 @@ NAMES |= patch_selectors.LUA_NAMES
 NAMES |= patch_title.LUA_NAMES
 NAMES |= patch_gamepad.LUA_NAMES
 NAMES |= patch_offline_web.LUA_NAMES
+NAMES |= patch_offline_links.LUA_NAMES
 
 def build(source):
     cipher,unity,builder=load_reviewed_parsers()

@@ -188,7 +188,16 @@ def rejected(name, text):
 
 
 def check_injection():
-    import patch_lua
+    import patch_lua, patch_offline_links
+    # The stand-ins hold only the anchors of this patch; the dead-link patch (test_offline_links.py) stays off.
+    links, patch_offline_links.LUA_NAMES = patch_offline_links.LUA_NAMES, set()
+    try:
+        return check_injection_web(patch_lua)
+    finally:
+        patch_offline_links.LUA_NAMES = links
+
+
+def check_injection_web(patch_lua):
     block, scripts = g.module_block(), {}
     assert set(SYNTHETIC) == g.LUA_NAMES == set(g.CALLS) | {'Lib.lua'} and g.LUA_NAMES <= patch_lua.NAMES
     for name, source in SYNTHETIC.items():
