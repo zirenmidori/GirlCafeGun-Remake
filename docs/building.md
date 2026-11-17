@@ -50,6 +50,9 @@ source resource ZIP and `--combat-donor-obb` for the owned EN 1.0.9 base OBB.
 The builder updates their sizes and CRCs in both APK and external resource
 indexes. English narrative punctuation is normalized after selector language
 entries are added, preserving the translation keys and control markup.
+`patch_text_fixes.py` then gives English text to the 37 values that the text
+table holds as spreadsheet errors (`#N/A`, `#VALUE!`): the emote guide and
+screen, the emote items, one cat-ears item and one anniversary tower line.
 
 Generate and host the complete data packs, set their actual HTTPS direct URLs in
 the full manifest, then sign its exact bytes with `release/tools/release_crypto.py`.

@@ -18,6 +18,7 @@ import test_gacha
 import test_gamepad
 import patch_selectors
 import patch_prose_punctuation
+import patch_text_fixes
 import patch_combat_labels
 import test_selectors
 import test_title
@@ -61,6 +62,8 @@ def main():
         changed['setting.u'],plain,proofs['settings']=patch_settings.build(apk.read('assets/setting.u'))
         changed['lang.u'],proofs['selectorLanguage']=patch_selectors.build_language(apk.read('assets/lang.u'))
         changed['lang.u'],proofs['prosePunctuation']=patch_prose_punctuation.build_language(changed['lang.u'])
+        changed['lang.u'],proofs['textFixes']=patch_text_fixes.build_language(changed['lang.u'])
+        assert proofs['textFixes']['errorLiteralValuesReplaced']==len(patch_text_fixes.FIXES)
         replacements['assets/setting_decrypted.u']=write('assets/setting_decrypted.u',plain)
         print('Verified rarity, card layout, lobby schedule, native MagicTb loader',flush=True)
         changed['npc/neptune_roster.u'],proofs['card'],crop=patch_card.build(apk.read('assets/npc/neptune_roster.u'),args.art)
