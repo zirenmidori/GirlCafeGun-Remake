@@ -184,6 +184,17 @@ import {
 } from "../game-data/daily-mission-data.js";
 import { AutoUseItemCatalog } from "../game-data/auto-use-item-data.js";
 import {
+  changeBackground,
+  changeDecorate,
+  reconcileMainThemes,
+  type OrnamentChange,
+} from "../game-data/main-ornament-data.js";
+import {
+  changeProfileLook,
+  type ProfileLookChange,
+  type ProfileLookState,
+} from "../game-data/look-data.js";
+import {
   ACHIEVEMENT_TASK_GROUP,
   achievementProgress,
   ACTIVITY_ACHIEVEMENT_TASK_GROUP,
@@ -492,6 +503,8 @@ export interface Player {
   ibShop?: IBShopState;
   shops?: Record<string, ShopState>;
   promise?: PromiseState;
+  /** Card skin, list mark and chat bubble (look-data.ts). */
+  profileLook?: ProfileLookState;
 }
 
 export interface PersistedState {
@@ -3519,6 +3532,7 @@ export class PlayerRepository {
         reconcileBounty(player);
         reconcileChapterStarTaskValues(player);
         reconcileMaximumFightPower(player);
+        reconcileMainThemes(player.taskValues, unixTime());
         this.#activities.reconcile(player);
         if (player.cafe.pets)
           new CafePetRuntime(
@@ -3573,6 +3587,7 @@ export class PlayerRepository {
       reconcileBounty(player);
       reconcileChapterStarTaskValues(player);
       reconcileMaximumFightPower(player);
+      reconcileMainThemes(player.taskValues, registerTime);
       this.#activities.reconcile(player);
       reconcileHeadpatCharges(player.taskValues, now);
       state.players[safeAccount] = player;
@@ -3636,6 +3651,7 @@ export class PlayerRepository {
       reconcileChapterStarTaskValues(player);
       reconcileMaximumFightPower(player);
       reconcileGirlFetterUnlocks(player);
+      reconcileMainThemes(player.taskValues, Math.floor(now / 1000));
       this.#activities.reconcile(player, now);
       reconcilePlayerPhoneEvents(player, now);
       player.lastLoginAt = new Date(now).toISOString();
@@ -4336,6 +4352,51 @@ export class PlayerRepository {
     this.#logger.info("player.tasks.updated", { account, changes });
     if (!player) throw new Error(`Failed to update player tasks: ${account}`);
     return structuredClone(player);
+  }
+
+  /** LuaCall.ChangeDecorate / ChangeBackground on the main-screen theme screen. */
+  async changeMainOrnament(
+    account: string,
+    kind: "decorate" | "background",
+    parameters: unknown,
+  ): Promise<{ player: Player; result: OrnamentChange }> {
+    let player: Player | undefined;
+    let result: OrnamentChange = { ok: false, reason: "unknown_player" };
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      result =
+        kind === "decorate"
+          ? changeDecorate(player.taskValues, parameters)
+          : changeBackground(player.taskValues, parameters);
+    });
+    if (!player) throw new Error(`Failed to change main ornament: ${account}`);
+    this.#logger.info("player.main_ornament", { account, kind, result });
+    return { player: structuredClone(player), result };
+  }
+
+  /** LuaCall 91/92/93: one part of the profile look. */
+  async changeProfileLook(
+    account: string,
+    command: Parameters<typeof changeProfileLook>[2],
+    parameters: unknown,
+  ): Promise<{ player: Player; result: ProfileLookChange }> {
+    let player: Player | undefined;
+    let result: ProfileLookChange = { ok: false, reason: "unknown_player" };
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      result = changeProfileLook(
+        player.profileLook,
+        player.taskValues,
+        command,
+        parameters,
+      );
+      if (result.ok) player.profileLook = result.look;
+    });
+    if (!player) throw new Error(`Failed to change profile look: ${account}`);
+    this.#logger.info("player.profile_look", { account, command, result });
+    return { player: structuredClone(player), result };
   }
 
   async recordDailyMissionProgress(

@@ -12,6 +12,8 @@
  * - ItemVisitingCardAuto, ItemPlayerListSkinAuto, ItemChatBubbleAuto: ExtParam1
  *   is the Skin.txt, Board.txt or Babble.txt id; owned when task 76, 77 or
  *   78/id holds the time it was received (UI_SkinSelected:IsUnlock).
+ * - ItemDecorateAuto: ExtParam1 is the main-screen theme id; owned when task
+ *   87/id holds the time it was received (MainOrnament:IsUseTheme).
  * - RikiItem: Guide/Riki.txt lists the item's GDPL; task 53/Id is 1 when the
  *   entry is unlocked (Riki.lua).
  * - ItemGiftCoffeeCoinAuto: coffee coins. Inferred: it shares description and
@@ -25,6 +27,7 @@
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { MAIN_ORNAMENT_TASK_GROUP } from "./main-ornament-data.js";
 
 export const HEAD_FRAME_TASK_GROUP = 11;
 export const VISITING_CARD_TASK_GROUP = 76;
@@ -56,6 +59,7 @@ const UNLOCK_TIME_GROUPS = new Map([
   ["ItemVisitingCardAuto", VISITING_CARD_TASK_GROUP],
   ["ItemPlayerListSkinAuto", PLAYER_LIST_SKIN_TASK_GROUP],
   ["ItemChatBubbleAuto", CHAT_BUBBLE_TASK_GROUP],
+  ["ItemDecorateAuto", MAIN_ORNAMENT_TASK_GROUP],
 ]);
 
 type Row = Record<string, string>;

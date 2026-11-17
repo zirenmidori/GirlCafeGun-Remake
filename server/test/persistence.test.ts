@@ -87,6 +87,10 @@ it("persists player and task changes atomically", async () => {
       ...Object.fromEntries(
         [10, 11, 12, 45, 46, 47, 48, 100].map((id) => [String((18 << 16) | id), 2]),
       ),
+      // Main-screen themes 1-5 have no unlock item; every player owns them.
+      ...Object.fromEntries(
+        [1, 2, 3, 4, 5].map((id) => [String((87 << 16) | id), player.registerTime]),
+      ),
     });
     expect(
       player.inventory
