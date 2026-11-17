@@ -2057,7 +2057,12 @@ export function createGatewayServer({
               0,
               makeServerLuaCall("Lottery", {
                 bTen: ten,
-                bGetCard: true,
+                // UI_Gacha.lua OnServerResponse skips the cafe door scene when
+                // bGetCard is true (a confirmed saved pull the player already
+                // watched). A plain draw from a stock pool must play the scene.
+                // The rotating pool can hold custom cards with no bath model,
+                // so it keeps the short path.
+                bGetCard: call.method === "GetFirstGacha" || rotation !== null,
                 tbAwards: result.awards,
                 ...(result.getItem ? { getItem: result.getItem } : {}),
               }),

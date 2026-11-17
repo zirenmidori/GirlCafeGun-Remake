@@ -607,7 +607,7 @@ it("commits permanent Railgun pulls over TCP with stock costs, independent pity 
       bGetCard: boolean;
       tbAwards: { tbGDPL: number[]; nUpTimes: number }[];
     };
-    expect(legendary.bGetCard).toBe(true);
+    expect(legendary.bGetCard).toBe(false);
     expect(legendary.tbAwards[0]).toMatchObject({
       tbGDPL: [1, 201, 1, 4],
       nUpTimes: 100,
@@ -618,7 +618,7 @@ it("commits permanent Railgun pulls over TCP with stock costs, independent pity 
     expect(kuroko.tbAwards[0]!.tbGDPL).toEqual([1, 202, 1, 3]);
     targetKuroko = false;
     const ten = callback((await pull(true)).at(-1)!)!.parameters as typeof legendary;
-    expect(ten.bGetCard).toBe(true);
+    expect(ten.bGetCard).toBe(false);
     expect(ten.tbAwards).toHaveLength(10);
     expect(ten.tbAwards[9]!.tbGDPL[3]).toBeGreaterThanOrEqual(3);
     const saved = players.get(account)!;
