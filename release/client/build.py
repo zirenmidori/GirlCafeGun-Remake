@@ -16,6 +16,7 @@ import test_login
 import test_card_display
 import test_gacha
 import test_gamepad
+import test_gamepad_menu
 import patch_selectors
 import patch_prose_punctuation
 import patch_combat_labels
@@ -56,8 +57,9 @@ def main():
         proofs['selectorBehavior']=test_selectors.run()
         proofs['titleBehavior']=test_title.run_bundle(changed['lua.u'])
         proofs['gamepadBehavior']=test_gamepad.run_bundle(changed['lua.u'])
+        proofs['gamepadMenuBehavior']=test_gamepad_menu.run_bundle(changed['lua.u'])
         proofs['offlineWebBehavior']=test_offline_web.run_bundle(changed['lua.u'])
-        print('Verified release login, title screens, controller layer, offline web and removed developer Lua',flush=True)
+        print('Verified release login, title screens, controller layers (fight, menus), offline web and removed developer Lua',flush=True)
         changed['setting.u'],plain,proofs['settings']=patch_settings.build(apk.read('assets/setting.u'))
         changed['lang.u'],proofs['selectorLanguage']=patch_selectors.build_language(apk.read('assets/lang.u'))
         changed['lang.u'],proofs['prosePunctuation']=patch_prose_punctuation.build_language(changed['lang.u'])
