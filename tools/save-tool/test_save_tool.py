@@ -147,7 +147,22 @@ def test_manifest():
     print('ok manifest: refused without the attribute, on another tag, with another type, on a cut file')
 
 
+def test_store_folder():
+    assert save_tool.default_store({}) == Path(save_tool.__file__).resolve().parent / 'saves'
+    assert save_tool.default_store({'GCG_SAVES': 'X:/s'}) == Path('X:/s')
+    with tempfile.TemporaryDirectory() as tmp:
+        old, new = Path(tmp) / 'old', Path(tmp) / 'new'
+        assert save_tool.old_store_note(new, old) == ''
+        (old / '20261115-010829').mkdir(parents=True)
+        assert str(old) in save_tool.old_store_note(new, old) and str(new) in save_tool.old_store_note(new, old)
+        assert save_tool.old_store_note(old, old) == ''
+        (new / '20261118-000000').mkdir(parents=True)
+        assert save_tool.old_store_note(new, old) == ''
+    print('ok store: saves/ next to the script by default, $GCG_SAVES wins, a note for saves in the old folder')
+
+
 if __name__ == '__main__':
+    test_store_folder()
     test_save_tool()
     test_manifest()
     print('all checks passed')

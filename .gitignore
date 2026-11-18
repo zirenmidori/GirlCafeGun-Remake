@@ -14,3 +14,4 @@ server/dist/
 *.jks
 *.keystore
 .env
+tools/save-tool/saves/

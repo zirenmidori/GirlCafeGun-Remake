@@ -14,8 +14,8 @@ Commands:
   wipe                  remove the save on the phone; the game makes a new one at its next start
 
 push and wipe stop the game first and always back the phone's save up before they change it.
-Saves are kept in --store (default: $GCG_SAVES, or gcg-offline-saves in your home folder), one folder each:
-<time>[-label]/state.json with an info.json. Keep that folder out of any repository.
+Saves are kept in --store (default: $GCG_SAVES, or saves/ next to this script), one folder each:
+<time>[-label]/state.json with an info.json. The repository ignores tools/save-tool/saves/.
 """
 from __future__ import annotations
 import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
@@ -29,8 +29,22 @@ TEMP = '/data/local/tmp/gcg-save-in.json'
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
 
-def default_store():
-    return Path(os.environ['GCG_SAVES']) if os.environ.get('GCG_SAVES') else Path.home() / 'gcg-offline-saves'
+HERE = Path(__file__).resolve().parent
+OLD_STORE = Path.home() / 'gcg-offline-saves'      # the default before the tool became portable
+
+
+def default_store(env=os.environ):
+    """$GCG_SAVES, or saves/ next to this script: the tool writes nothing outside its own folder."""
+    return Path(env['GCG_SAVES']) if env.get('GCG_SAVES') else HERE / 'saves'
+
+
+def old_store_note(store, old=OLD_STORE):
+    """A note when saves are still in the old default folder and the new one has none. Nothing is moved."""
+    has_saves = lambda d: d.is_dir() and any(x.is_dir() for x in d.iterdir())
+    if store != old and has_saves(old) and not has_saves(store):
+        return (f'note: saves from an older version of this tool are in {old}. '
+                f'Move them to {store}, or pass --store "{old}".')
+    return ''
 
 
 class Phone:
@@ -236,6 +250,9 @@ def parser():
 
 def main(argv=None, phone=None):
     a = parser().parse_args(argv)
+    note = old_store_note(a.store)
+    if note:
+        print(note, file=sys.stderr)
     a.run(a, phone or Phone(a.adb, a.package))
 
 

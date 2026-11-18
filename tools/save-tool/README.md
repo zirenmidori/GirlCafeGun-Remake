@@ -43,14 +43,17 @@ Options for every command: `--adb <program>` (default: `adb` on `PATH`), `--pack
 
 ## Where the saves are
 
-`--store`, or `$GCG_SAVES`, or `gcg-offline-saves` in your home folder. One folder per save:
+`--store`, or `$GCG_SAVES`, or `saves/` next to `save_tool.py`. The tool writes nothing outside its own
+folder, so deleting the folder removes everything. One folder per save:
 
     20261115-010829-chapter-3/
       state.json            the save
       info.json             time, label, phone model, size, sha256
       phone-daily-copies/   the server's daily copies at that time, if any
 
-A save holds your account. Keep the folder out of any repository.
+A save holds your account. The repository ignores `tools/save-tool/saves/`; a `--store` elsewhere must stay
+out of any repository too. Older versions of the tool kept the saves in `gcg-offline-saves` in your home
+folder: the tool prints a note while they are there and the new folder is empty. Move them, or pass `--store`.
 
 ## Playtest build
 
