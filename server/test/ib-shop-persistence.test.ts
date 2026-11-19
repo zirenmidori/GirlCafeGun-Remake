@@ -14,7 +14,6 @@ import {
   MONTH_CARD_DAYS,
   MONTH_CARD_DIAMONDS,
   MONTH_CARD_ITEM_ID,
-  MONTH_CARD_LIMIT_DAYS,
 } from "../src/game-data/ib-shop-data.js";
 import type { Logger } from "../src/logger.js";
 import {
@@ -166,31 +165,39 @@ describe("ib item month card persistence", () => {
     );
   });
 
-  it("extends from the current end time when the card is still active", async () => {
+  // Upstream expected a claim on an active card to stack (end time + 30 days,
+  // 300 more diamonds). The month card is free here, so it may not stack: a claim
+  // while days remain is refused with ui.Error.20021 and changes nothing.
+  it("refuses a claim while the card is active and changes nothing", async () => {
     const repository = await createRepository();
     const first = await repository.claimIBItemFree("tester", MONTH_CARD_ITEM_ID, NOW);
+    for (const at of [NOW + 3_600_000, NOW + (MONTH_CARD_DAYS * 86_400 - 1) * 1000]) {
+      const failure = await repository
+        .claimIBItemFree("tester", MONTH_CARD_ITEM_ID, at)
+        .catch((error: unknown) => error);
+      expect(failure).toBeInstanceOf(IBShopError);
+      expect((failure as IBShopError).reason).toBe("month_card_active");
+      expect((failure as IBShopError).clientError).toBe(20021);
+    }
+    expect(repository.get("tester")).toEqual(first.player);
+  });
+
+  it("allows the next claim once the card has run out", async () => {
+    const repository = await createRepository();
+    const first = await repository.claimIBItemFree("tester", MONTH_CARD_ITEM_ID, NOW);
+    const later = NOW + MONTH_CARD_DAYS * 86_400_000;
     const second = await repository.claimIBItemFree(
       "tester",
       MONTH_CARD_ITEM_ID,
-      NOW + 3_600_000,
+      later,
     );
+    expect(first.monthCardEndTime).toBe(Math.floor(later / 1000));
     expect(second.purchaseCount).toBe(2);
     expect(second.monthCardEndTime).toBe(
-      first.monthCardEndTime + MONTH_CARD_DAYS * 86_400,
+      Math.floor(later / 1000) + MONTH_CARD_DAYS * 86_400,
     );
     const diamond = second.player.money.find(({ id }) => id === 3);
     expect(diamond?.count).toBe(MONTH_CARD_DIAMONDS * 2);
-  });
-
-  it("caps the month card end time at the 330 day limit", async () => {
-    const repository = await createRepository();
-    const nowSeconds = Math.floor(NOW / 1000);
-    const nearCap = nowSeconds + (MONTH_CARD_LIMIT_DAYS - 5) * 86_400;
-    await repository.setTaskValues("tester", [
-      { id: makeMonthCardTaskId(), value: nearCap },
-    ]);
-    const result = await repository.claimIBItemFree("tester", MONTH_CARD_ITEM_ID, NOW);
-    expect(result.monthCardEndTime).toBe(nowSeconds + MONTH_CARD_LIMIT_DAYS * 86_400);
   });
 
   it("rejects unknown ib items", async () => {

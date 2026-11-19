@@ -11,6 +11,17 @@ import {
 export const GUIDE_MISSION_ACTIVITY_ID = "guide-mission";
 export const GUIDE_MISSION_TASK_GROUP = 5;
 export const GUIDE_PROGRESS_TASK_ID = 41_001;
+/**
+ * Server-only bit mask of the girl training types started so far (bit n-1 for
+ * type n). Mission 40014 counts its set bits; the client never reads this key.
+ */
+export const GUIDE_TRAINING_TYPES_TASK_ID = 41_002;
+export const GUIDE_TRAINING_MISSION_ID = 40_014;
+export const GUIDE_GIFT_MISSION_ID = 40_018;
+export const GUIDE_SUPPORT_MISSION_ID = 40_026;
+/** FormationCommon.lua CheckAssistTeamId: support (assist) teams are 2001-2006. */
+const SUPPORT_FORMATION_MIN_ID = 2_001;
+const SUPPORT_FORMATION_MAX_ID = 2_006;
 
 interface LevelCondition {
   chapter: number;
@@ -37,7 +48,8 @@ export interface GuideMissionPlayer {
   levels: readonly { id: number; star: number }[];
   inventory: readonly { genre: number; enhanceLevel: number }[];
   formations: readonly {
-    fightCards: readonly { weaponGuid: number }[];
+    id: number;
+    fightCards: readonly { mainCardGuid: number; weaponGuid: number }[];
   }[];
   fightPower: number;
 }
@@ -265,6 +277,57 @@ export function markGuideProgressAwardClaimed(
   player.taskValues[taskId] = (player.taskValues[taskId] ?? 0) | (1 << awardId);
 }
 
+function bitCount(value: number): number {
+  let count = 0;
+  for (let rest = value >>> 0; rest !== 0; rest >>>= 1) count += rest & 1;
+  return count;
+}
+
+/**
+ * Mission 40014 ("arrange 4 different special trainings"): UI_GirlTrain.lua
+ * starts training type n at position n*10+slot, and the table has 4 types.
+ */
+export function recordGuideTrainingTypes(
+  player: Pick<GuideMissionPlayer, "taskValues">,
+  trainingTypes: Iterable<number>,
+): void {
+  const maskKey = String(makeGuideTaskId(GUIDE_TRAINING_TYPES_TASK_ID));
+  let mask = player.taskValues[maskKey] ?? 0;
+  for (const type of trainingTypes) {
+    if (Number.isSafeInteger(type) && type >= 1 && type <= 31) mask |= 1 << (type - 1);
+  }
+  if (mask === 0) return;
+  player.taskValues[maskKey] = mask >>> 0;
+  setGuideMissionProgress(
+    player as GuideMissionPlayer,
+    GUIDE_TRAINING_MISSION_ID,
+    bitCount(mask),
+  );
+}
+
+/** Mission 40018 ("give any girl a gift once"). */
+export function recordGuideGift(player: Pick<GuideMissionPlayer, "taskValues">): void {
+  setGuideMissionProgress(player as GuideMissionPlayer, GUIDE_GIFT_MISSION_ID, 1);
+}
+
+function isSupportFormationId(formationId: number): boolean {
+  return (
+    formationId >= SUPPORT_FORMATION_MIN_ID && formationId <= SUPPORT_FORMATION_MAX_ID
+  );
+}
+
+function hasSupportFormation(
+  player: GuideMissionPlayer,
+  formationId?: number,
+): boolean {
+  return player.formations.some(
+    ({ id, fightCards }) =>
+      isSupportFormationId(id) &&
+      (formationId === undefined || id === formationId) &&
+      fightCards.some(({ mainCardGuid }) => mainCardGuid > 0),
+  );
+}
+
 function makeLevelId(chapter: number, index: number, difficulty: number): number {
   return (chapter << 16) | (index << 8) | difficulty;
 }
@@ -312,6 +375,9 @@ function reconcileGuideMissions(player: GuideMissionPlayer): void {
     setGuideMissionProgress(player, 40_027, 1);
   }
   setGuideMissionProgress(player, 40_022, player.fightPower);
+  if (hasSupportFormation(player)) {
+    setGuideMissionProgress(player, GUIDE_SUPPORT_MISSION_ID, 1);
+  }
 }
 
 function handleGuideEvent(player: GuideMissionPlayer, event: DomainEvent): void {
@@ -333,6 +399,11 @@ function handleGuideEvent(player: GuideMissionPlayer, event: DomainEvent): void 
     case "formation.updated":
       if (event.hasEquippedWeapon) {
         setGuideMissionProgress(player, 40_027, 1);
+      }
+      // Mission 40026: save a support team (UI_Formation.lua sends
+      // Formation_Update with Id 2001 from the Team screen's support tab).
+      if (hasSupportFormation(player, event.formationId)) {
+        setGuideMissionProgress(player, GUIDE_SUPPORT_MISSION_ID, 1);
       }
       break;
     case "fight_power.changed":

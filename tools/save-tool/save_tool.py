@@ -33,6 +33,30 @@ def default_store():
     return Path(os.environ['GCG_SAVES']) if os.environ.get('GCG_SAVES') else Path.home() / 'gcg-offline-saves'
 
 
+def has_save_answer(out):
+    """The answer of `test -f <SAVE> && echo yes || echo no`: True, False, or a stop with the raw output."""
+    text = out.strip()
+    if text == 'yes':
+        return True
+    if text == 'no':
+        return False
+    sys.exit('cannot tell whether the phone has a save (raw output: %r): stopped, nothing changed' % out)
+
+
+DAILY_NONE = '__none'
+
+
+def daily_names_answer(code, out):
+    """The answer of the daily-copy listing: the file names, [] when the folder is missing, or a stop.
+    A failed adb call must not look like "no daily copies": push and wipe delete that folder next."""
+    if code == 0 and out.strip() == DAILY_NONE:
+        return []
+    names = out.split()
+    if code != 0 or DAILY_NONE in names or any(not re.fullmatch(r'[A-Za-z0-9._-]+', n) for n in names):
+        sys.exit('cannot list the daily copies on the phone (raw output: %r): stopped, nothing changed' % out)
+    return names
+
+
 class Phone:
     """The phone, through adb. The tests replace this class with one that keeps the files in memory."""
 
@@ -44,7 +68,7 @@ class Phone:
         out = r.stdout if binary else r.stdout.decode('utf8', 'replace').replace('\r\n', '\n')
         return r.returncode, out, r.stderr.decode('utf8', 'replace')
 
-    def _app(self, command):
+    def app(self, command):
         """Run a shell command as the app, inside its private folder. Returns (exit code, output)."""
         code, out, err = self._adb('shell', 'run-as %s sh -c "%s"; echo __rc=$?' % (self.package, command))
         m = re.search(r'__rc=(\d+)\s*$', out)
@@ -62,7 +86,7 @@ class Phone:
             sys.exit('no phone on adb (%s)' % (out + err).strip())
         if 'package:' not in self._adb('shell', 'pm path ' + self.package)[1]:
             sys.exit(self.package + ' is not installed on the phone')
-        code, out = self._app('echo ok')
+        code, out = self.app('echo ok')
         if code or 'ok' not in out:
             sys.exit('the tool cannot reach the save: the installed APK is not debuggable.\n'
                      'Make a playtest build with tools/save-tool/playtest_apk.py (see the README there).')
@@ -75,14 +99,13 @@ class Phone:
         time.sleep(1)
 
     def has_save(self):
-        return self._app('test -f %s' % SAVE)[0] == 0
+        return has_save_answer(self.app('test -f %s && echo yes || echo no' % SAVE)[1])
 
     def read_save(self):
         return self._read(SAVE)
 
     def daily_names(self):
-        code, out = self._app('ls %s 2>/dev/null' % DAILY)
-        return [n for n in out.split() if re.fullmatch(r'[A-Za-z0-9._-]+', n)] if code == 0 else []
+        return daily_names_answer(*self.app('if [ -d %s ]; then ls %s; else echo %s; fi' % (DAILY, DAILY, DAILY_NONE)))
 
     def read_daily(self, name):
         return self._read(DAILY + '/' + name)
@@ -94,12 +117,12 @@ class Phone:
             return 'adb push failed: ' + out + err
         # Copy as the app, then rename: the game never sees a half-written file. The daily copies of
         # the other save go away (the backup holds them), so the server does not mix two saves.
-        code, out = self._app('mkdir -p %s && cp %s %s.pc && mv %s.pc %s && rm -rf %s' % (DATA, TEMP, SAVE, SAVE, SAVE, DAILY))
+        code, out = self.app('mkdir -p %s && cp %s %s.pc && mv %s.pc %s && rm -rf %s' % (DATA, TEMP, SAVE, SAVE, SAVE, DAILY))
         self._adb('shell', 'rm', '-f', TEMP)
         return out.strip() or 'copy failed' if code else ''
 
     def remove_save(self):
-        code, out = self._app('rm -f %s && rm -rf %s' % (SAVE, DAILY))
+        code, out = self.app('rm -f %s && rm -rf %s' % (SAVE, DAILY))
         return out.strip() or 'remove failed' if code else ''
 
 
@@ -127,35 +150,73 @@ def looks_like_a_save(body):
         return False
 
 
-def backup(phone, store, label, why='', now=None):
-    """Copy the phone's save to a new folder. Returns the folder, or None when the phone has no save."""
-    if not phone.has_save():
-        print('the phone has no save: nothing to back up')
-        return None
-    body = phone.read_save()
-    if not looks_like_a_save(body):
-        sys.exit('the save on the phone is not a JSON object (%d bytes): stopped, nothing changed' % len(body))
-    same = [r for r in saves(store) if r['sha256'] == sha(body)]
-    if same:
-        print('the phone\'s save is already stored as %s' % same[-1]['name'])
-        return same[-1]['path'].parent
+def new_folder(store, label, now=None):
     label = re.sub(r'[^A-Za-z0-9_-]+', '-', label or '').strip('-')
     stamp = time.strftime('%Y%m%d-%H%M%S', time.localtime(now))
     folder = store / (stamp + ('-' + label if label else ''))
     while folder.exists():  # two backups in one second
         folder = folder.with_name(folder.name + '-b')
     folder.mkdir(parents=True)
-    (folder / 'state.json').write_bytes(body)
-    copies = {}
+    return folder
+
+
+def add_daily_copies(phone, folder):
+    """Copy the phone's daily copies that are not stored in folder yet. Returns (how many were added, the stored copies)."""
+    info_path = folder / 'info.json'
+    info = json.loads(info_path.read_text(encoding='utf8')) if info_path.is_file() else {}
+    copies = dict(info.get('dailyCopies') or {})
+    added = 0
     for name in phone.daily_names():
         copy = phone.read_daily(name)
-        (folder / 'phone-daily-copies').mkdir(exist_ok=True)
-        (folder / 'phone-daily-copies' / name).write_bytes(copy)
-        copies[name] = sha(copy)
+        if not looks_like_a_save(copy):
+            sys.exit('the daily copy %s on the phone is not a JSON object: stopped, nothing changed' % name)
+        if sha(copy) in copies.values():
+            continue
+        stored = name
+        if stored in copies:  # the server rewrote the copy of that date: keep both
+            stem, dot, ext = name.rpartition('.')
+            stored = '%s-%s.%s' % (stem, sha(copy)[:8], ext) if dot else '%s-%s' % (name, sha(copy)[:8])
+        (folder / 'phone-daily-copies').mkdir(parents=True, exist_ok=True)
+        (folder / 'phone-daily-copies' / stored).write_bytes(copy)
+        copies[stored] = sha(copy)
+        added += 1
+    if added:
+        info['dailyCopies'] = copies
+        info_path.write_text(json.dumps(info, indent=2) + '\n', encoding='utf8')
+    return added, copies
+
+
+def backup(phone, store, label, why='', now=None):
+    """Copy the phone's save and its daily copies to a folder. Returns the folder, or None when the phone has neither."""
+    if not phone.has_save():
+        print('the phone has no save: nothing to back up')
+        if not phone.daily_names():
+            return None
+        folder = new_folder(store, label, now)
+        added, copies = add_daily_copies(phone, folder)
+        info = {'when': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)), 'label': label, 'reason': why,
+                'phone': phone.model(), 'package': phone.package, 'dailyCopies': copies}
+        (folder / 'info.json').write_text(json.dumps(info, indent=2) + '\n', encoding='utf8')
+        print('added %d daily copies to %s (the phone has no save)' % (added, folder))
+        return folder
+    body = phone.read_save()
+    if not looks_like_a_save(body):
+        sys.exit('the save on the phone is not a JSON object (%d bytes): stopped, nothing changed' % len(body))
+    same = [r for r in saves(store) if r['sha256'] == sha(body)]
+    if same:
+        print('the phone\'s save is already stored as %s' % same[-1]['name'])
+        folder = same[-1]['path'].parent
+        added, _ = add_daily_copies(phone, folder)
+        if added:
+            print('added %d daily copies to %s' % (added, folder))
+        return folder
+    folder = new_folder(store, label, now)
+    (folder / 'state.json').write_bytes(body)
+    added, copies = add_daily_copies(phone, folder)
     info = {'when': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)), 'label': label, 'reason': why,
             'phone': phone.model(), 'package': phone.package, 'bytes': len(body), 'sha256': sha(body), 'dailyCopies': copies}
     (folder / 'info.json').write_text(json.dumps(info, indent=2) + '\n', encoding='utf8')
-    print('backed up: %s (%d bytes, sha256 %s, %d daily copies)' % (folder, len(body), sha(body)[:12], len(copies)))
+    print('backed up: %s (%d bytes, sha256 %s, %d daily copies)' % (folder, len(body), sha(body)[:12], added))
     return folder
 
 

@@ -196,6 +196,12 @@
         },
         "rows": 75
       }
+    },
+    "ncafedefautitems.txt": {
+      "source": "GirlCafeGun-Offline server/setting/NCafeDefautItems.txt (EN client setting.u tables; the late and build5 table sets hold the same bytes)",
+      "sha256": "e5820f7df4f83a37fdaf42bed86ebfa7e73bfaae15d02bc58c40084c1d11756c",
+      "bytes": 442,
+      "note": "Not part of sourceSettingSha256. Server-only table that seeds a new cafe; its 13 rows equal ncafethemes.txt Id 1 (UI_NCafeEditor.CafeDefault) and Id 2 (UI_NCafeEditor.RoomDefault)."
     }
   }
 }

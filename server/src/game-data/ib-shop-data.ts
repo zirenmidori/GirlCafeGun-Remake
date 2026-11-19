@@ -31,6 +31,10 @@ export const MONTH_CARD_LIMIT_DAYS = 330;
 // 客户端 IBLogic:ResponseTradeNo 读取的错误码（ui.Error.<code>）。
 export const IB_SHOP_ERROR_UNKNOWN_ITEM = 20074;
 export const IB_SHOP_ERROR_LIMIT_REACHED = 20075;
+// ui.Error.20021 "You can buy no more of this": the text UI_Charge.lua shows when
+// the month card cannot be bought (there: 330 days left). The free month card
+// of this offline build is refused while any days are left.
+export const IB_SHOP_ERROR_MONTH_CARD_ACTIVE = 20021;
 
 export function makeIBShopTaskId(shopId: number): number {
   return (IB_SHOP_TASK_GROUP << 16) | (IB_SHOP_TASKID_BASE + shopId);

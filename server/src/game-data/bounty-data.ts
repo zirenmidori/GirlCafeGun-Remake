@@ -267,11 +267,12 @@ export function bountyOperationalDate(now = Date.now()): string {
   }).format(shifted);
 }
 
+/** Lib.lua GetWeekDay: hours before 04:00 belong to the previous weekday. */
 function shanghaiWeekday(now: number): number {
   const weekday = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Shanghai",
     weekday: "short",
-  }).format(new Date(now));
+  }).format(new Date(now - 4 * 60 * 60 * 1_000));
   return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(weekday) + 1;
 }
 

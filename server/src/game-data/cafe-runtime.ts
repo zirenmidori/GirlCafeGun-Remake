@@ -12,6 +12,8 @@ export interface CafeRuntimeHooks {
   updatedGirl(girlId: number): void;
   isTraining?(girlId: number): boolean;
   coffeeSold?(coffeeId: number, count: number): void;
+  /** Pieces bought in the furniture shop, after the purchase succeeded. */
+  furnitureBought?(count: number): void;
 }
 export type CafeNotification =
   | { command: number; parameters: unknown; method?: undefined }
@@ -98,10 +100,17 @@ export function cafeRoomGirls(player: Player): [number[][], number[][], number[]
     ]),
   ) as [number[][], number[][], number[][]];
 }
-export function cafeComfort(player: Player, catalog: CafeCatalog): number {
-  const level = catalog.level(player.cafe.level ?? 1)!;
+/** The part of the save that the comfort is read from. */
+export interface CafeComfortSource {
+  cafe: {
+    level?: number;
+    furniture?: readonly { roomId: number; templateId: number }[];
+  };
+}
+export function cafeComfort(player: CafeComfortSource, catalog: CafeCatalog): number {
+  const restOpen = (catalog.level(player.cafe.level ?? 1)?.OpenRest ?? 0) > 0;
   return (player.cafe.furniture ?? [])
-    .filter((item) => item.roomId === 1 || (item.roomId === 2 && level.OpenRest > 0))
+    .filter((item) => item.roomId === 1 || (item.roomId === 2 && restOpen))
     .reduce(
       (total, item) => total + (catalog.furniture(item.templateId)?.AddScore ?? 0),
       0,

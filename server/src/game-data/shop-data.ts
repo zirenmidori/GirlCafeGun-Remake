@@ -302,11 +302,15 @@ export function shopOperationalWeek(now = Date.now()): string {
 }
 
 /**
- * 常驻商店（RefreshRule=1）的货架 key：运营日 + 已过的自动刷新槽位数。
+ * 随机货架的 key：运营日 + 已过的自动刷新槽位数（RefreshRule=1/2），
+ * 或运营周（RefreshRule=3）。
  * RefreshTime 是每日自动刷新时间点（秒，UTC+8 当日）；4 点前的槽位属于
  * 当前运营日的末尾。
  */
 export function shopShelfKey(tab: ShopTabConfig, now = Date.now()): string {
+  // RefreshRule=3 是周刷（UI_ShopNew.lua:1215 注释「123 日多次刷新 日刷 周刷」），
+  // 这些店的 RefreshTime 为空，货架按运营周换。
+  if (tab.refreshRule === 3) return `${shopOperationalWeek(now)}@w`;
   const operationalDate = shopOperationalDate(now);
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Shanghai",
@@ -331,7 +335,47 @@ export interface ShelfStock {
   discount: number;
 }
 
-/** 按 Weight 不放回随机抽取 columns 个商品，并为每个商品按 DiscountList 掷折扣。 */
+/**
+ * 商品的栏位号：goods.txt 的 Group 列（形如 [3]）。客户端回包字段 pos 就是它，
+ * 社团商店用它查 OpenColumnList[pos]（GoodsLogicC.lua:227-252）。没配 Group 时为 null。
+ */
+export function goodsPos(config: GoodsConfig): number | null {
+  const pos = Number.parseInt(config.group, 10);
+  return Number.isInteger(pos) && pos > 0 ? pos : null;
+}
+
+/** 店里有商品配了 Group：每个 Group 是一个栏位，每栏按 Weight 抽一件。 */
+export function isGroupedPool(pool: readonly GoodsConfig[]): boolean {
+  return pool.some((config) => goodsPos(config) !== null);
+}
+
+function pickWeighted(candidates: GoodsConfig[], random: () => number): number {
+  const totalWeight = candidates.reduce((sum, config) => sum + config.weight, 0);
+  let roll = random() * totalWeight;
+  let picked = 0;
+  for (let index = 0; index < candidates.length; index += 1) {
+    roll -= candidates[index]!.weight;
+    if (roll < 0) {
+      picked = index;
+      break;
+    }
+    picked = index;
+  }
+  return picked;
+}
+
+function toStock(config: GoodsConfig, random: () => number): ShelfStock {
+  return { goodsId: config.goodsId, discount: rollDiscount(config, random) };
+}
+
+/**
+ * 掷一个货架，并为每个商品按 DiscountList 掷折扣。
+ *
+ * 分组商店（有 Group 列）：按 Group 号升序，每个 Group 按 Weight 抽 1 件，
+ * 不按 columns 截断（Remake 表里 20010 有 11 组而 Columns=10）。没配 Group 的
+ * 商品照旧全部附在后面。
+ * 不分组的商店：按 Weight 不放回抽取 columns 个商品（原有行为）。
+ */
 export function rollShelf(
   pool: readonly GoodsConfig[],
   columns: number,
@@ -339,24 +383,31 @@ export function rollShelf(
 ): ShelfStock[] {
   const remaining = pool.filter((config) => config.weight > 0);
   const shelf: ShelfStock[] = [];
+  if (isGroupedPool(remaining)) {
+    const byGroup = new Map<number, GoodsConfig[]>();
+    const loose: GoodsConfig[] = [];
+    for (const config of remaining) {
+      const pos = goodsPos(config);
+      if (pos === null) {
+        loose.push(config);
+        continue;
+      }
+      const bucket = byGroup.get(pos) ?? [];
+      bucket.push(config);
+      byGroup.set(pos, bucket);
+    }
+    for (const pos of [...byGroup.keys()].sort((a, b) => a - b)) {
+      const bucket = byGroup.get(pos)!;
+      shelf.push(toStock(bucket[pickWeighted(bucket, random)]!, random));
+    }
+    for (const config of loose) shelf.push(toStock(config, random));
+    return shelf;
+  }
   const target = columns > 0 ? Math.min(columns, remaining.length) : remaining.length;
   while (shelf.length < target) {
-    const totalWeight = remaining.reduce((sum, config) => sum + config.weight, 0);
-    let roll = random() * totalWeight;
-    let picked = 0;
-    for (let index = 0; index < remaining.length; index += 1) {
-      roll -= remaining[index]!.weight;
-      if (roll < 0) {
-        picked = index;
-        break;
-      }
-      picked = index;
-    }
+    const picked = pickWeighted(remaining, random);
     const [config] = remaining.splice(picked, 1);
-    shelf.push({
-      goodsId: config!.goodsId,
-      discount: rollDiscount(config!, random),
-    });
+    shelf.push(toStock(config!, random));
   }
   return shelf;
 }

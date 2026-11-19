@@ -5,15 +5,47 @@
     {
       "ID": 1,
       "forceShow": 0,
-      "priority": 1,
-      "date": "2026-11-14",
-      "title": "Offline build",
-      "content": "This game runs without the publisher's servers. The game server is inside the app on this device.\n\nYour save data stays on this device. If you uninstall the app, the save data is deleted.\n\nThe publisher's notice pages are gone. This window shows the notices that the local server holds.",
+      "priority": 3,
+      "date": "2026-11-16",
+      "title": "About this offline build",
+      "content": "This version of Girl Cafe Gun runs without the publisher's servers. The game server is inside the app and runs on this device. No internet connection is needed.\n\nYour save stays on this device. The game keeps a daily copy of it, too.\n<b>Uninstalling the app deletes your save.</b> Update with the in-game Update button instead.",
+      "startTime": "2000-01-01T00:00:00",
+      "endTime": "2099-01-01T00:00:00"
+    },
+    {
+      "ID": 2,
+      "forceShow": 0,
+      "priority": 2,
+      "date": "2026-11-16",
+      "title": "Daily power and resets",
+      "content": "Restore Power: claim free vigour twice a day, from 11:00 to 14:00 and from 18:00 to 20:00 (your device's time).\nDaily missions, shop limits and bounties reset every day at {dailyResetLocal} (your device's time).\nThe free month card can be claimed once every 30 days, when no card is active.",
       "startTime": "2000-01-01T00:00:00",
       "endTime": "2099-01-01T00:00:00"
     }
   ],
-  "activity": [],
-  "news": [],
+  "activity": [
+    {
+      "ID": 3,
+      "forceShow": 0,
+      "priority": 1,
+      "date": "2026-11-16",
+      "title": "Your first 10-pull",
+      "content": "After the story gives you the 10-pull permit, you can roll the first 10-pull as often as you like. Pick the result you want and accept it: only the accepted result is yours, including its outfits.",
+      "startTime": "2000-01-01T00:00:00",
+      "endTime": "2099-01-01T00:00:00"
+    }
+  ],
+  "news": [
+    {
+      "ID": 4,
+      "forceShow": 0,
+      "priority": 1,
+      "date": "2026-11-16",
+      "title": "Fixes in this build",
+      "content": "- A new cafe now starts with tables and chairs, so guests can visit and pay coffee coins.\n- Later character stories unlock after you read the first one.\n- Event and achievement progress updates at once, without a new login.\n- Restore Power, shop purchases and guide missions now count correctly.\n- Controller support: menus work with a gamepad.\n\nCommunity wiki: wiki.girl.cafe",
+      "startTime": "2000-01-01T00:00:00",
+      "endTime": "2099-01-01T00:00:00"
+    }
+  ],
   "LoginNotice": []
 }

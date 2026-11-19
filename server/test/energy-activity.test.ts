@@ -35,6 +35,7 @@ async function fixture(
   run: (
     players: PlayerRepository,
     reload: () => Promise<PlayerRepository>,
+    store: JsonStore<ReturnType<typeof makeInitialState>>,
   ) => Promise<void>,
 ) {
   const root = path.resolve(
@@ -51,16 +52,20 @@ async function fixture(
   const players = create(store);
   await players.getOrCreate("energy", at(17, 10));
   try {
-    await run(players, async () => {
-      await store.flush();
-      const next = new JsonStore({
-        filePath,
-        initialState: makeInitialState(),
-        logger,
-      });
-      await next.initialize();
-      return create(next);
-    });
+    await run(
+      players,
+      async () => {
+        await store.flush();
+        const next = new JsonStore({
+          filePath,
+          initialState: makeInitialState(),
+          logger,
+        });
+        await next.initialize();
+        return create(next);
+      },
+      store,
+    );
   } finally {
     await store.flush();
     await rm(directory, { recursive: true, force: true });
@@ -134,5 +139,30 @@ it("protects claim receipts from client task edits and resets them at the daily 
     expect(reset.taskValuesChanged).toBe(true);
     expect(reset.player.taskValues[String(id)]).toBe(0);
     expect(balance(players)).toBe(before);
+  });
+});
+
+it("keeps today's claim flags of a save made by the earlier phone build", async () => {
+  await fixture(async (players, _reload, store) => {
+    await players.claimEnergyActivity("energy", at(17, 11));
+    const id = String(energyActivityTaskId(1));
+    // Old shape: { lastDate } in local time instead of { operationalDate }.
+    await store.update((state) => {
+      state.players.energy!.energyActivity = { lastDate: "2026-11-17" } as never;
+    });
+    await players.getOrCreate("energy", at(17, 12));
+    expect(players.get("energy")!.energyActivity).toEqual({
+      operationalDate: "2026-11-17",
+    });
+    expect(players.get("energy")!.taskValues[id]).toBe(1);
+    expect((await players.claimEnergyActivity("energy", at(17, 12))).reason).toBe(
+      "already_claimed",
+    );
+    // A stale old-shape save resets the flags.
+    await store.update((state) => {
+      state.players.energy!.energyActivity = { lastDate: "2026-11-10" } as never;
+    });
+    await players.getOrCreate("energy", at(17, 12));
+    expect(players.get("energy")!.taskValues[id]).toBe(0);
   });
 });

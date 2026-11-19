@@ -89,6 +89,9 @@ logger.info("server.started", {
   pvpFight: `${config.pvp.fightHost}:${config.pvp.fightPort} (tcp+udp)`,
   stateFile: config.persistence.file,
   logFile: config.logging.file,
+  // Local-time features (Restore Power windows) must match the phone's clock.
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  utcOffsetMinutes: -new Date().getTimezoneOffset(),
 });
 
 let shuttingDown = false;

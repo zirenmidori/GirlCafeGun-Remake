@@ -33,7 +33,8 @@ describe("recovered café catalog", () => {
     expect(provenance.sourceSettingSha256).toBe(
       "89418a55f80c346b24673bfc2f0cabfa731a0b7c0b77913a1a19b0df6d540ef8",
     );
-    expect(Object.keys(provenance.files)).toHaveLength(29);
+    // 30 = the 29 recovered tables plus ncafedefautitems.txt (new-café furniture).
+    expect(Object.keys(provenance.files)).toHaveLength(30);
     for (const [name, expected] of Object.entries(provenance.files)) {
       const bytes = readFileSync(path.join(resourceRoot, name));
       expect(bytes.length).toBe(expected.bytes);

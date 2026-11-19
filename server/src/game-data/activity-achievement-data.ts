@@ -20,6 +20,9 @@ import type {
   ActivityHandler,
   ActivityPlayerState,
 } from "../activities/activity-engine.js";
+import type { DomainEvent } from "../activities/domain-events.js";
+import { CafeCatalog } from "./cafe-catalog.js";
+import { cafeComfort } from "./cafe-runtime.js";
 import type { BaseAward } from "./chapter-config.js";
 
 export const ACHIEVEMENT_TASK_GROUP = 6;
@@ -338,10 +341,41 @@ export interface ActivityAchievementPlayer extends ActivityPlayerState {
   girls: readonly { level: number }[];
   inventory: readonly { genre: number; enhanceLevel: number; breakLevel: number }[];
   eightDaySignUp: { cumulativeDays: number };
+  cafe?: {
+    level?: number;
+    furniture?: readonly { roomId: number; templateId: number }[];
+  };
+  formations?: readonly {
+    fightCards: readonly { mainCardGuid: number; usedCardGuid: number }[];
+  }[];
 }
 
 const CARD_GENRE = 1;
 const WEAPON_GENRE = 2;
+
+/**
+ * Values that need a table besides the player state. A missing source leaves
+ * the stored progress of its type alone.
+ */
+export interface AchievementSources {
+  /** Comfort of the placed furniture, as cafeComfort reports it to the client. */
+  cafeComfort?: () => number;
+}
+
+/** Reads the comfort once per run, and only when a type 75 row asks for it. */
+export function playerAchievementSources(
+  player: ActivityAchievementPlayer,
+  catalog: () => CafeCatalog = () => CafeCatalog.loadDefault(),
+): AchievementSources {
+  let comfort: number | undefined;
+  return {
+    cafeComfort: () => {
+      const cafe = player.cafe;
+      comfort ??= cafe ? cafeComfort({ cafe }, catalog()) : 0;
+      return comfort;
+    },
+  };
+}
 
 /**
  * The conditions of Mission/AchieveType.txt that the v1 player state answers
@@ -354,12 +388,16 @@ const WEAPON_GENRE = 2;
  * - 39 highest character card level [level]
  * - 43 login days [days, paid sign-in activity]
  * - 54 character cards with limit break N [cards, break level]
+ * - 59 secondary cards equipped in team 1 [cards]
  * - 71 weapons at level N [weapons, level]
+ * - 75 cafe comfort [comfort], from sources.cafeComfort
+ * - 79 cafe level [level]
  * - 85 girls at affection level N [girls, level]
  */
 export function derivedAchievementProgress(
   player: ActivityAchievementPlayer,
   config: AchievementConfig,
+  sources: AchievementSources = {},
 ): number | null {
   const counts = config.counts;
   const second = counts[1];
@@ -391,11 +429,20 @@ export function derivedAchievementProgress(
       return player.inventory.filter(
         ({ genre, breakLevel }) => genre === CARD_GENRE && breakLevel >= second,
       ).length;
+    case 59:
+      return (player.formations?.[0]?.fightCards ?? []).filter(
+        ({ mainCardGuid, usedCardGuid }) =>
+          usedCardGuid !== 0 && usedCardGuid !== mainCardGuid,
+      ).length;
     case 71:
       if (second === undefined) return null;
       return player.inventory.filter(
         ({ genre, enhanceLevel }) => genre === WEAPON_GENRE && enhanceLevel >= second,
       ).length;
+    case 75:
+      return sources.cafeComfort ? sources.cafeComfort() : null;
+    case 79:
+      return player.cafe?.level ?? 1;
     case 85:
       if (second === undefined) return null;
       return player.girls.filter(({ level }) => level >= second).length;
@@ -411,10 +458,11 @@ export function derivedAchievementProgress(
 export function projectAchievementProgress(
   player: ActivityAchievementPlayer,
   config: AchievementConfig,
+  sources: AchievementSources = {},
 ): number {
   const taskId = String(makeAchievementTaskId(config.group, config.id));
   const current = player.taskValues[taskId] ?? 0;
-  const derived = derivedAchievementProgress(player, config) ?? 0;
+  const derived = derivedAchievementProgress(player, config, sources) ?? 0;
   const next = makeAchievementTaskValue(
     Math.max(achievementProgress(current), derived),
     hasClaimedAchievement(current),
@@ -428,6 +476,7 @@ export function reconcileActivityAchievements(
   player: ActivityAchievementPlayer,
   catalog: ActivityAchievementCatalog,
   now: number,
+  sources: AchievementSources = {},
 ): void {
   for (const activityId of catalog.shownActivityIds(now, player.registerTime)) {
     for (const achievementId of catalog.activityAchievementIds(activityId)) {
@@ -435,7 +484,85 @@ export function reconcileActivityAchievements(
         ACTIVITY_ACHIEVEMENT_TASK_GROUP,
         achievementId,
       );
-      if (config) projectAchievementProgress(player, config);
+      if (config) projectAchievementProgress(player, config, sources);
+    }
+  }
+}
+
+/**
+ * The conditions of Mission/AchieveType.txt that only a counter answers, and
+ * how much one event adds. The rules follow the GCG2-Offline C# build
+ * (MissionCountersFeature, ChapterCombatProgress, GirlActionAchievements).
+ *
+ * - 18 gifts given [total]: one per gift item
+ * - 22 stage clears [times, difficulty]: one per won fight at that difficulty
+ * - 24 vigour spent [total]
+ * - 29 girl trainings [total]: one per finished training
+ * - 40 weapon limit breaks [total]
+ * - 42 bounty clears [total]
+ * - 76 coffees sold [total]
+ * - 137 furniture bought [total]: one per piece bought in the furniture shop
+ */
+export function countedAchievementIncrement(
+  config: AchievementConfig,
+  event: DomainEvent,
+): number {
+  switch (config.type) {
+    case 18:
+      return event.type === "girl.gift_sent" ? event.count : 0;
+    case 22:
+      return event.type === "level.cleared" &&
+        !event.story &&
+        config.counts.length === 2 &&
+        config.counts[1] === event.difficulty
+        ? 1
+        : 0;
+    case 24:
+      return event.type === "vigour.spent" ? event.amount : 0;
+    case 29:
+      return event.type === "girl.training_finished" ? 1 : 0;
+    case 40:
+      return event.type === "weapon.broken" ? 1 : 0;
+    case 42:
+      return event.type === "bounty.cleared" ? 1 : 0;
+    case 76:
+      return event.type === "coffee.sold" ? event.count : 0;
+    case 137:
+      return event.type === "cafe.furniture_bought" ? event.count : 0;
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Adds one event to the counted achievements of every page the client shows
+ * now. A page that opens later starts from zero, as an event does.
+ */
+export function countActivityAchievements(
+  player: ActivityAchievementPlayer,
+  catalog: ActivityAchievementCatalog,
+  event: DomainEvent,
+  now: number,
+): void {
+  const counted = new Set<number>();
+  for (const activityId of catalog.shownActivityIds(now, player.registerTime)) {
+    for (const achievementId of catalog.activityAchievementIds(activityId)) {
+      if (counted.has(achievementId)) continue;
+      counted.add(achievementId);
+      const config = catalog.achievement(
+        ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+        achievementId,
+      );
+      if (!config) continue;
+      const increment = countedAchievementIncrement(config, event);
+      if (!(increment > 0) || !Number.isSafeInteger(increment)) continue;
+      const taskId = String(makeAchievementTaskId(config.group, config.id));
+      const current = player.taskValues[taskId] ?? 0;
+      const next = makeAchievementTaskValue(
+        achievementProgress(current) + increment,
+        hasClaimedAchievement(current),
+      );
+      if (next !== current) player.taskValues[taskId] = next;
     }
   }
 }
@@ -443,19 +570,39 @@ export function reconcileActivityAchievements(
 export const activityAchievementActivity: ActivityHandler<ActivityAchievementPlayer> = {
   id: ACTIVITY_ACHIEVEMENT_ACTIVITY_ID,
   revision: 1,
-  subscriptions: ["level.cleared", "weapon.enhanced"],
+  subscriptions: [
+    "level.cleared",
+    "weapon.enhanced",
+    "player.level_changed",
+    "card.progressed",
+    "girl.affection_changed",
+    "girl.gift_sent",
+    "girl.training_finished",
+    "vigour.spent",
+    "bounty.cleared",
+    "coffee.sold",
+    "weapon.broken",
+    "cafe.level_changed",
+    "cafe.comfort_changed",
+    "cafe.furniture_bought",
+    "formation.updated",
+  ],
   reconcile(player, context) {
     reconcileActivityAchievements(
       player,
       ActivityAchievementCatalog.loadDefault(),
       context.now,
+      playerAchievementSources(player),
     );
   },
-  onEvent(player, _event, context) {
+  onEvent(player, event, context) {
+    const catalog = ActivityAchievementCatalog.loadDefault();
+    countActivityAchievements(player, catalog, event, context.now);
     reconcileActivityAchievements(
       player,
-      ActivityAchievementCatalog.loadDefault(),
+      catalog,
       context.now,
+      playerAchievementSources(player),
     );
   },
 };

@@ -80,4 +80,19 @@ describe("bounty battle configuration", () => {
     expect(isBountyOpen(1, tuesdayNoon)).toBe(true);
     expect(isBountyOpen(7, tuesdayNoon)).toBe(true);
   });
+
+  it("counts hours before 04:00 UTC+8 as the previous weekday, like the daily reset", () => {
+    // Lib.lua GetWeekDay: "4点以前属于前一天" (before 04:00 is the previous day).
+    const fridayHalfPastMidnight = Date.parse("2026-07-30T16:30:00Z");
+    const fridayFour = Date.parse("2026-07-30T20:00:00Z");
+    const mondayHalfPastMidnight = Date.parse("2026-07-26T16:30:00Z");
+    const mondayFour = Date.parse("2026-07-26T20:00:00Z");
+
+    expect(isBountyOpen(5, fridayHalfPastMidnight)).toBe(true);
+    expect(isBountyOpen(6, fridayHalfPastMidnight)).toBe(false);
+    expect(isBountyOpen(5, fridayFour)).toBe(false);
+    expect(isBountyOpen(6, fridayFour)).toBe(true);
+    expect(isBountyOpen(3, mondayHalfPastMidnight)).toBe(true);
+    expect(isBountyOpen(3, mondayFour)).toBe(false);
+  });
 });

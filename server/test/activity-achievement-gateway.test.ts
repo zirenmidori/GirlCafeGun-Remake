@@ -253,3 +253,107 @@ it("answers event page and achievement panel claims on the wire", async () => {
     await rm(directory, { recursive: true, force: true });
   }
 }, 20_000);
+
+it("sends the task values after a gift that only moves an event achievement", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "gcg2-activity-wire-"));
+  let server: Server | undefined;
+  let socket: Socket | undefined;
+  try {
+    const config = await loadConfig(path.resolve(import.meta.dirname, ".."));
+    const store = new JsonStore({
+      filePath: path.join(directory, "state.json"),
+      initialState: makeInitialState(),
+      logger,
+    });
+    await store.initialize();
+    const players = new PlayerRepository({
+      store,
+      defaults: config.playerDefaults,
+      logger,
+    });
+    await players.getOrCreate(account);
+    await store.update((state) => {
+      const player = state.players[account]!;
+      const girl = player.girls.find(({ girlId }) => girlId === 7)!;
+      girl.level = 1;
+      girl.exp = 0;
+      player.inventory.push({
+        guid: 900_001,
+        genre: 5,
+        detail: 2,
+        particular: 1,
+        templateLevel: 1,
+        count: 10,
+        createTime: 0,
+        enhanceLevel: 0,
+        enhanceExp: 0,
+        breakLevel: 0,
+        lockOn: 0,
+      });
+    });
+
+    server = createGatewayServer({ config, logger, players });
+    server.listen(0, "127.0.0.1");
+    await once(server, "listening");
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Missing bound port");
+    socket = createConnection({ host: "127.0.0.1", port: address.port });
+    await once(socket, "connect");
+    let serial = 0;
+    await request(
+      socket,
+      COMMAND.VERIFY_REQ,
+      ++serial,
+      Buffer.concat([fieldBytes(1, "android"), fieldBytes(2, account)]),
+      (packet) => packet.command === COMMAND.VERIFY_RSP,
+    );
+    await request(
+      socket,
+      COMMAND.LOGIN_REQ,
+      ++serial,
+      fieldBytes(1, username),
+      (packet) => packet.command === COMMAND.LOGIN_RSP,
+    );
+
+    // Three plain gifts give 90 affection: no level, secret or bond unlock.
+    const packets = await request(
+      socket,
+      COMMAND.C2S_CALL_REQ,
+      ++serial,
+      makeServerLuaCall("GirlLogic", {
+        sCmd: "GirlGift",
+        nId: 7,
+        tbItem: [5, 2, 1, 1],
+        ItemNum: 3,
+      }),
+      (packet) => callback(packet)?.method === "GirlLogic",
+    );
+    expect(callback(packets.at(-1)!)?.parameters).toMatchObject({
+      sCmd: "GirlGift",
+      nOldLevel: 1,
+      nNewLevel: 1,
+    });
+    const tasks = new Map(
+      packets
+        .filter((packet) => packet.command === COMMAND.TASK_VALUE_RSP)
+        .flatMap((packet) => parseTaskChanges(packet.payload))
+        .map(({ id, value }) => [id, value]),
+    );
+    // Achievement 55 (activity 15): give 10 gifts.
+    expect(tasks.get(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 55))).toBe(
+      makeAchievementTaskValue(3, false),
+    );
+  } finally {
+    if (socket) {
+      const closed = once(socket, "close");
+      socket.destroy();
+      await closed;
+    }
+    if (server?.listening) {
+      await new Promise<void>((resolve, reject) =>
+        server!.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+    await rm(directory, { recursive: true, force: true });
+  }
+}, 20_000);

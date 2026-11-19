@@ -290,6 +290,7 @@ export class CafeFurnitureCommerce {
     );
     this.player.shops ??= {};
     this.player.shops[String(CAFE_FURNITURE_SHOP_ID)] = state;
+    this.hooks.furnitureBought?.(ids.length);
     return response;
   }
   buyPredefinedTheme(

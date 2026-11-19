@@ -1,10 +1,4 @@
-import {
-  decodeFields,
-  fieldBytes,
-  fieldVarint,
-  firstNumber,
-  firstString,
-} from "./protobuf.js";
+import { decodeFields, fieldBytes, fieldVarint, firstString } from "./protobuf.js";
 import { runeItemSkills } from "../game-data/rune-progression-data.js";
 
 import type {
@@ -562,10 +556,19 @@ export function parseTaskChanges(payload: Buffer): TaskChange[] {
       field.wireType === 2 &&
       Buffer.isBuffer(field.value)
     ) {
+      // gsproto.TaskInt: uint32 id, int32 value. The client sends a negative
+      // value (CoffeeCommon.lua:332 writes -1) as a 64-bit two's complement.
       const taskFields = decodeFields(field.value);
+      const varint = (fieldNumber: number): bigint => {
+        const value = taskFields.find(
+          (candidate) =>
+            candidate.fieldNumber === fieldNumber && candidate.wireType === 0,
+        )?.value;
+        return typeof value === "bigint" ? value : 0n;
+      };
       const change = {
-        id: firstNumber(taskFields, 1),
-        value: firstNumber(taskFields, 2),
+        id: Number(BigInt.asUintN(32, varint(1))),
+        value: Number(BigInt.asIntN(32, varint(2))),
       };
       if (change.id > 0) changes.push(change);
     }

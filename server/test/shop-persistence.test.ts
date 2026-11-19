@@ -7,6 +7,9 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   ShopCatalog,
+  shopOperationalDate,
+  shopOperationalWeek,
+  shopShelfKey,
   type GoodsConfig,
   type ShopTabConfig,
 } from "../src/game-data/shop-data.js";
@@ -278,6 +281,15 @@ describe("shop buy", () => {
     expect(entry.discount).toBe(100);
   });
 
+  it("completes daily mission 108 on a successful purchase", async () => {
+    const { repository } = await createRepository();
+    await repository.buyShopGoods("tester", catalog, 20_010, 10, 1, NOW);
+    const player = repository.get("tester")!;
+    expect(
+      dailyMissionProgress(player.taskValues[String(makeDailyMissionTaskId(108))] ?? 0),
+    ).toBe(1);
+  });
+
   it("falls back to pay diamonds when free diamonds run out", async () => {
     const { repository, store } = await createRepository();
     await store.update((state) => {
@@ -420,5 +432,199 @@ describe("shop error contract", () => {
     expect(new ShopError("limit_reached").clientErrorKey).toBe("Error.20075");
     expect(new ShopError("insufficient_funds").clientErrorKey).toBe("Error.20013");
     expect(new ShopError("unknown_shop").clientErrorKey).toBe("Error.20074");
+  });
+});
+
+describe("shop groups (one goods per group, pos = group)", () => {
+  const WEEKLY_GROUPED = [
+    makeGoods({ goodsId: 31, shopId: 20_005, group: "2", weekLimitNum: 3 }),
+    makeGoods({ goodsId: 32, shopId: 20_005, group: "2", weekLimitNum: 3 }),
+    makeGoods({ goodsId: 33, shopId: 20_005, group: "1", weekLimitNum: 3 }),
+    makeGoods({ goodsId: 34, shopId: 20_005, group: "1", weekLimitNum: 3 }),
+  ];
+  const SHELF_LIFE_GROUPED = [
+    makeGoods({ goodsId: 41, shopId: 20_007, group: "2", shelfLifeLmt: 1 }),
+    makeGoods({ goodsId: 42, shopId: 20_007, group: "1", shelfLifeLmt: 1 }),
+  ];
+  const groupedCatalog = makeCatalog(
+    [
+      makeTab({
+        shopId: 20_005,
+        refreshRule: 3,
+        refreshTimes: [],
+        refreshFees: [],
+        refreshLimits: 0,
+        columns: 2,
+      }),
+      makeTab({
+        shopId: 20_007,
+        refreshRule: 5,
+        refreshTimes: [],
+        refreshFees: [],
+        refreshLimits: 0,
+        columns: 2,
+      }),
+    ],
+    [...WEEKLY_GROUPED, ...SHELF_LIFE_GROUPED],
+  );
+
+  it("stocks a weekly grouped shop with one goods per group and sends pos", async () => {
+    const { repository } = await createRepository();
+    const result = await repository.getShopGoodsList(
+      "tester",
+      groupedCatalog,
+      20_005,
+      NOW,
+    );
+    expect(result.goodsList.map((entry) => entry.pos)).toEqual([1, 2]);
+    expect([33, 34]).toContain(result.goodsList[0]!.goodsid);
+    expect([31, 32]).toContain(result.goodsList[1]!.goodsid);
+
+    const again = await repository.getShopGoodsList(
+      "tester",
+      groupedCatalog,
+      20_005,
+      NEXT_DAY,
+    );
+    expect(again.goodsList.map(({ goodsid }) => goodsid)).toEqual(
+      result.goodsList.map(({ goodsid }) => goodsid),
+    );
+  });
+
+  it("rejects buying a grouped goods that is not on the shelf", async () => {
+    const { repository } = await createRepository();
+    const result = await repository.getShopGoodsList(
+      "tester",
+      groupedCatalog,
+      20_005,
+      NOW,
+    );
+    const onShelf = new Set(result.goodsList.map(({ goodsid }) => goodsid));
+    const offShelf = WEEKLY_GROUPED.find((config) => !onShelf.has(config.goodsId))!;
+    await expect(
+      repository.buyShopGoods(
+        "tester",
+        groupedCatalog,
+        20_005,
+        offShelf.goodsId,
+        1,
+        NOW,
+      ),
+    ).rejects.toMatchObject({ reason: "not_on_shelf" });
+  });
+
+  it("keeps the weekly counters of a save that has no shelf yet", async () => {
+    const { repository, store } = await createRepository();
+    await store.update((state) => {
+      state.players["tester"]!.shops = {
+        "20005": {
+          operationalDate: "2026-08-19",
+          weekId: "2026-08-17",
+          refreshCount: 0,
+          shelfKey: null,
+          shelf: [],
+          counters: {
+            "31": { daily: 2, week: 2, total: 5, shelf: 5 },
+            "32": { daily: 2, week: 2, total: 5, shelf: 5 },
+          },
+        },
+      };
+    });
+    const result = await repository.getShopGoodsList(
+      "tester",
+      groupedCatalog,
+      20_005,
+      NOW,
+    );
+    expect(result.goodsList).toHaveLength(2);
+    const group2 = result.goodsList.find((entry) => entry.pos === 2)!;
+    expect(group2.weekbuynum).toBe(2);
+    expect(group2.buynum).toBe(5);
+  });
+
+  it("lists a shelf-life grouped shop in full, in pos order, and keeps its counts", async () => {
+    const { repository } = await createRepository();
+    const before = await repository.getShopGoodsList(
+      "tester",
+      groupedCatalog,
+      20_007,
+      NOW,
+    );
+    expect(before.goodsList.map(({ goodsid, pos }) => [goodsid, pos])).toEqual([
+      [42, 1],
+      [41, 2],
+    ]);
+    await repository.buyShopGoods("tester", groupedCatalog, 20_007, 41, 1, NOW);
+    await expect(
+      repository.buyShopGoods("tester", groupedCatalog, 20_007, 41, 1, NEXT_WEEK),
+    ).rejects.toMatchObject({ reason: "limit_reached" });
+  });
+
+  it("stocks the real pet shop 20010 with 11 goods, pos 1..11, at full price", async () => {
+    const { repository } = await createRepository();
+    const result = await repository.getShopGoodsList(
+      "tester",
+      ShopCatalog.loadDefault(),
+      20_010,
+      NOW,
+    );
+    expect(result.goodsList.map((entry) => entry.pos)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+    ]);
+    expect(result.goodsList.every((entry) => entry.discount === 100)).toBe(true);
+  });
+
+  it("sends pos 1..17 for the real club shop 20006", async () => {
+    const { repository } = await createRepository();
+    const result = await repository.getShopGoodsList(
+      "tester",
+      ShopCatalog.loadDefault(),
+      20_006,
+      NOW,
+    );
+    expect(result.goodsList.map((entry) => entry.pos)).toEqual(
+      Array.from({ length: 17 }, (_, index) => index + 1),
+    );
+  });
+
+  it("keeps an old 20001 shelf until the next slot and sends it in pos order", async () => {
+    const realCatalog = ShopCatalog.loadDefault();
+    const tab = realCatalog.getTab(20_001)!;
+    const group = (pos: string): number[] =>
+      realCatalog
+        .goodsForShop(20_001)
+        .filter((config) => config.group === pos)
+        .map((config) => config.goodsId);
+    const [gift1, gift2] = group("7");
+    const [first] = group("1");
+    const { repository, store } = await createRepository();
+    await store.update((state) => {
+      state.players["tester"]!.shops = {
+        "20001": {
+          operationalDate: shopOperationalDate(NOW),
+          weekId: shopOperationalWeek(NOW),
+          refreshCount: 0,
+          shelfKey: shopShelfKey(tab, NOW),
+          shelf: [
+            { goodsId: gift1!, discount: 50, bought: 1 },
+            { goodsId: first!, discount: 100, bought: 0 },
+            { goodsId: gift2!, discount: 100, bought: 0 },
+          ],
+          counters: {},
+        },
+      };
+    });
+    const result = await repository.getShopGoodsList(
+      "tester",
+      realCatalog,
+      20_001,
+      NOW,
+    );
+    expect(result.goodsList.map(({ goodsid, pos }) => [goodsid, pos])).toEqual([
+      [first, 1],
+      [gift1, 7],
+      [gift2, 7],
+    ]);
+    expect(result.goodsList[1]).toMatchObject({ discount: 50, refreshbuynum: 1 });
   });
 });

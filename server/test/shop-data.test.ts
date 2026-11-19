@@ -195,3 +195,89 @@ it("opens the actual cafe shop flag without opening disabled or expired shops", 
   expect(isShopOpen({ ...tab, end: now - 1 }, now)).toBe(false);
   expect(isShopOpen({ ...tab, begin: now + 1 }, now)).toBe(false);
 });
+
+/** Deterministic RNG (mulberry32) so the shelf tests do not depend on luck. */
+function seeded(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
+  };
+}
+
+function groupsOf(catalog: ShopCatalog, goodsIds: number[]): number[] {
+  return goodsIds.map((goodsId) =>
+    Number.parseInt(catalog.getGoods(goodsId)!.group, 10),
+  );
+}
+
+it("stocks shop 20001 with exactly one goods per group 1..8, in group order", () => {
+  const catalog = ShopCatalog.loadDefault();
+  const pool = catalog.goodsForShop(20_001);
+  const random = seeded(51);
+  for (let run = 0; run < 500; run += 1) {
+    const shelf = rollShelf(pool, catalog.getTab(20_001)!.columns, random);
+    const goodsIds = shelf.map((entry) => entry.goodsId);
+    expect(groupsOf(catalog, goodsIds)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    // Groups 3 and 4 hold one weapon material each: they are on every shelf.
+    expect(goodsIds).toContain(20_111);
+    expect(goodsIds).toContain(20_112);
+  }
+});
+
+it("stocks the pet shop 20010 with one goods per group for all 11 groups", () => {
+  const catalog = ShopCatalog.loadDefault();
+  const random = seeded(20_010);
+  for (let run = 0; run < 200; run += 1) {
+    const shelf = rollShelf(
+      catalog.goodsForShop(20_010),
+      catalog.getTab(20_010)!.columns,
+      random,
+    );
+    expect(
+      groupsOf(
+        catalog,
+        shelf.map((entry) => entry.goodsId),
+      ),
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    expect(shelf.every((entry) => entry.discount === 100)).toBe(true);
+  }
+});
+
+it("picks inside a group by weight and sorts groups numerically", () => {
+  const goods = parseGoods(
+    [
+      "INT",
+      "注释",
+      "ShopType\tShopId\tGoodsId\tGDPLNX\tName\tGroup\tWeight\tPrice1",
+      "2\t20005\t1\t[7-1-1-3-1]\ta\t[10]\t10\t3|20",
+      "2\t20005\t2\t[7-1-1-3-1]\tb\t[2]\t1\t3|20",
+      "2\t20005\t3\t[7-1-1-3-1]\tc\t[2]\t3\t3|20",
+      "2\t20005\t4\t[7-1-1-3-1]\td\t[2]\t0\t3|20",
+    ].join("\n"),
+  );
+  // Group 2 weights 1:3 (goods 4 has weight 0 and never shows).
+  expect(rollShelf([...goods.values()], 0, () => 0.2).map((e) => e.goodsId)).toEqual([
+    2, 1,
+  ]);
+  expect(rollShelf([...goods.values()], 0, () => 0.3).map((e) => e.goodsId)).toEqual([
+    3, 1,
+  ]);
+});
+
+it("keys weekly-refresh shelves (RefreshRule 3) by operational week", () => {
+  const tab = {
+    refreshRule: 3,
+    refreshTimes: [],
+  } as unknown as ReturnType<typeof parseShopTabs> extends Map<number, infer T>
+    ? T
+    : never;
+  const monday = new Date("2026-08-17T12:00:00+08:00").getTime();
+  const sunday = new Date("2026-08-23T12:00:00+08:00").getTime();
+  const nextMonday = new Date("2026-08-24T12:00:00+08:00").getTime();
+  expect(shopShelfKey(tab, monday)).toBe(shopShelfKey(tab, sunday));
+  expect(shopShelfKey(tab, nextMonday)).not.toBe(shopShelfKey(tab, sunday));
+});

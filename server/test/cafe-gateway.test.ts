@@ -7,7 +7,13 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import { loadConfig } from "../src/config.js";
+import {
+  ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+  makeAchievementTaskId,
+  makeAchievementTaskValue,
+} from "../src/game-data/activity-achievement-data.js";
 import { CafeCatalog } from "../src/game-data/cafe-catalog.js";
+import { cafeComfort } from "../src/game-data/cafe-runtime.js";
 import { ShopCatalog } from "../src/game-data/shop-data.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
@@ -111,7 +117,7 @@ function request(
     socket.write(makePacket(command, serial, payload));
   });
 }
-async function fixture() {
+async function fixture(options: { fresh?: boolean } = {}) {
   await mkdir(scratchRoot, { recursive: true });
   const directory = await mkdtemp(path.join(scratchRoot, "tcp-test-"));
   const filePath = path.join(directory, "state.json");
@@ -132,6 +138,7 @@ async function fixture() {
   });
   await players.getOrCreate(account);
   await store.update((state) => {
+    if (options.fresh) return;
     const player = state.players[account]!;
     player.cafe.level = 30;
     player.money.find((money) => money.id === 2)!.count = 10_000;
@@ -287,6 +294,80 @@ async function fixture() {
 }
 
 describe("cafe actual TCP persistence", () => {
+  it("sends the event achievement task values after furniture buys and a layout save", async () => {
+    const f = await fixture();
+    try {
+      await f.store.update((state) => {
+        state.players[account]!.money.push({ id: 7, count: 1_000_000 });
+      });
+      const task = (id: number) =>
+        makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, id);
+      const tasksOf = (packets: readonly GamePacket[]): Map<number, number> =>
+        new Map(
+          packets
+            .filter((packet) => packet.command === COMMAND.TASK_VALUE_RSP)
+            .flatMap((packet) => parseTaskChanges(packet.payload))
+            .map(({ id, value }) => [id, value]),
+        );
+      const syncedBeforeLast = (packets: readonly GamePacket[]): boolean => {
+        const index = packets.findIndex(
+          (packet) => packet.command === COMMAND.TASK_VALUE_RSP,
+        );
+        return index >= 0 && index < packets.length - 1;
+      };
+
+      // Shop_ReqBuyGoods (13), sent by UI_CafeItemTips: two pieces at once.
+      const single = await f.call(13, { shopid: 40_001, goodsid: 101, buynum: 2 });
+      expect(luaValue(single, 13)).toMatchObject({ shopid: 40_001, buynum: 2 });
+      expect(tasksOf(single).get(task(64))).toBe(makeAchievementTaskValue(2, false));
+      expect(syncedBeforeLast(single)).toBe(true);
+
+      // Shop_ReqBuyFurList (14), sent by UI_NCafeShop: one more piece.
+      const batch = await f.call(14, [{ shopid: 40_001, goodsid: 102, buynum: 1 }]);
+      expect(tasksOf(batch).get(task(64))).toBe(makeAchievementTaskValue(3, false));
+      expect(syncedBeforeLast(batch)).toBe(true);
+
+      // UPDATE_HOUSE_REQ: place the stored 101 in the cafe room.
+      const role = f.players.get(account)!.roleId;
+      const saved = await f.native(
+        COMMAND.UPDATE_HOUSE_REQ,
+        Buffer.concat([
+          fieldVarint(1, role),
+          fieldBytes(2, Buffer.concat([fieldVarint(1, 1), fieldVarint(5, 10_000)])),
+          fieldBytes(
+            3,
+            Buffer.concat([
+              fieldVarint(1, 101),
+              fieldVarint(2, 10_000),
+              fieldVarint(3, 2),
+              fieldVarint(4, 1),
+              fieldBytes(
+                5,
+                Buffer.concat([
+                  fieldVarint(1, 101),
+                  fieldVarint(2, 2),
+                  fieldVarint(4, 3),
+                  fieldVarint(5, 4),
+                  fieldVarint(6, 1),
+                ]),
+              ),
+            ]),
+          ),
+        ]),
+        COMMAND.UPDATE_HOUSE_RSP,
+      );
+      expect(saved.at(-1)!.returnCode).toBe(0);
+      const comfort = cafeComfort(f.players.get(account)!, CafeCatalog.loadDefault());
+      expect(comfort).toBeGreaterThan(0);
+      expect(tasksOf(saved).get(task(67))).toBe(
+        makeAchievementTaskValue(comfort, false),
+      );
+      expect(syncedBeforeLast(saved)).toBe(true);
+    } finally {
+      await f.cleanup();
+    }
+  }, 20_000);
+
   it("persists the stock main-story start receipt and synchronizes its cursor before the callback", async () => {
     const f = await fixture();
     const key = (3 << 16) | (2000 + 14);

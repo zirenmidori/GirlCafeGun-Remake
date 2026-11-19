@@ -34,6 +34,29 @@ function sendJson(response: ServerResponse, status: number, body: unknown): void
   send(response, status, JSON_TYPE, Buffer.from(JSON.stringify(body)));
 }
 
+/** Placeholder in notice texts for the daily reset time on the player's clock. */
+export const DAILY_RESET_PLACEHOLDER = "{dailyResetLocal}";
+
+/**
+ * The game resets daily at 04:00 UTC+8 (20:00 UTC). The server runs on the
+ * player's device, so its local clock is the player's: show that time as HH:MM.
+ */
+export function localDailyResetTime(now = new Date()): string {
+  const reset = new Date(now.getTime());
+  reset.setUTCHours(20, 0, 0, 0);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(reset.getHours())}:${pad(reset.getMinutes())}`;
+}
+
+function localizeNotice(notice: Buffer, now = new Date()): Buffer {
+  const text = notice.toString("utf8");
+  if (!text.includes(DAILY_RESET_PLACEHOLDER)) return notice;
+  return Buffer.from(
+    text.split(DAILY_RESET_PLACEHOLDER).join(localDailyResetTime(now)),
+    "utf8",
+  );
+}
+
 export function createHttpServer({
   config,
   logger,
@@ -69,10 +92,16 @@ export function createHttpServer({
   }
 
   return createServer((request, response) => {
-    const url = new URL(
-      request.url ?? "/",
-      `http://${request.headers.host ?? config.http.host}`,
-    );
+    let url: URL;
+    try {
+      url = new URL(
+        request.url ?? "/",
+        `http://${request.headers.host ?? config.http.host}`,
+      );
+    } catch {
+      sendJson(response, 400, { error: "bad_request" });
+      return;
+    }
     logger.info("http.request", {
       remote: request.socket.remoteAddress,
       method: request.method,
@@ -92,7 +121,7 @@ export function createHttpServer({
       });
     } else if (url.pathname === "/notice.txt") {
       // The notice lists. The Notice page reads them; so can the client's own reader.
-      send(response, 200, JSON_TYPE, pages.notice);
+      send(response, 200, JSON_TYPE, localizeNotice(pages.notice));
     } else {
       // /notice.html is the address the patched client asks for in its Notice window.
       const page = pages.get(

@@ -74,6 +74,13 @@ export function reconcileEnergyActivity(player: Player, now: number): boolean {
     player.energyActivity = { operationalDate: date };
     return false; // Preserve any legitimate legacy claim flags for this day.
   }
+  if (typeof player.energyActivity.operationalDate !== "string") {
+    // Save made by the earlier phone build: { lastDate } in local time. Keep
+    // the claim flags only when that day is still the current operational day.
+    const legacy = player.energyActivity as { lastDate?: string | null };
+    player.energyActivity.operationalDate = legacy.lastDate === date ? date : "";
+    delete legacy.lastDate;
+  }
   if (player.energyActivity.operationalDate >= date) return false;
   player.energyActivity.operationalDate = date;
   let changed = false;

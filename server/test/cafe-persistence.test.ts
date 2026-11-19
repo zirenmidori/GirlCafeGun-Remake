@@ -4,7 +4,13 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ShopCatalog } from "../src/game-data/shop-data.js";
+import {
+  ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+  achievementProgress,
+  makeAchievementTaskId,
+} from "../src/game-data/activity-achievement-data.js";
 import { CafeCatalog } from "../src/game-data/cafe-catalog.js";
+import { cafeComfort } from "../src/game-data/cafe-runtime.js";
 import {
   guideMissionProgress,
   makeGuideTaskId,
@@ -312,6 +318,15 @@ describe("atomic café business", () => {
         result.player.taskValues[String(makeGuideTaskId(40_017))] ?? 0,
       ),
     ).toBe(1);
+    // Event page achievement 61 (activity 16): sell 500 coffees.
+    expect(
+      achievementProgress(
+        result.player.taskValues[
+          String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 61))
+        ] ?? 0,
+      ),
+    ).toBe(1);
+    expect(result.taskValuesChanged).toBe(true);
     const before = f.store.snapshot();
     const duplicate = await f.call(116, { customeridx: id }, NOW + 240_000);
     expect(duplicate.response).toEqual(result.response);
@@ -529,5 +544,146 @@ describe("atomic café business", () => {
       nP: 0,
       nL: 0,
     });
+  });
+});
+
+// Event page achievements of activity 16 (64-66: buy furniture, 67-69: cafe
+// comfort) and activity 20 (98: cafe comfort), from achievementother.txt.
+describe("cafe event page achievements", () => {
+  const achievement = (
+    player: { taskValues: Record<string, number> },
+    id: number,
+  ): number =>
+    achievementProgress(
+      player.taskValues[
+        String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, id))
+      ] ?? 0,
+    );
+  const store = (objId: number, templateId: number): CafeFurnitureState => ({
+    ...furniture(objId, templateId),
+    parentId: 0,
+    roomId: 0,
+    pose: { templateId, parentTemplateId: 0, place: 0, posX: 0, posY: 0, rotate: 0 },
+    status: 0,
+    bizcount: 0,
+  });
+
+  it("a layout save that raises the comfort moves the comfort achievements (type 75)", async () => {
+    const f = await fixture();
+    await f.store.update((state) => {
+      state.players.tester!.cafe.furniture = [
+        furniture(10_000, 101),
+        store(10_001, 102),
+      ];
+    });
+    const before = cafeComfort(f.players.get("tester")!, catalog);
+    const result = await f.players.persistHouseChanges(
+      "tester",
+      delta(f, {
+        rooms: [{ roomId: 1, furnitureIds: [10_001] }],
+        furniture: [
+          {
+            objId: 10_001,
+            templateId: 102,
+            parentId: 2,
+            roomId: 1,
+            pose: { parentTemplateId: 2, place: 1, posX: 4 },
+          },
+        ],
+      }),
+      NOW,
+    );
+    const comfort = cafeComfort(result.player, catalog);
+    expect(comfort).toBeGreaterThan(before);
+    expect(result.player.cafe.furniture!.every((item) => item.roomId === 1)).toBe(true);
+    expect(achievement(result.player, 67)).toBe(comfort);
+    expect(achievement(result.player, 98)).toBe(comfort);
+
+    // Taking furniture out lowers the comfort but never the progress.
+    const lowered = await f.players.persistHouseChanges(
+      "tester",
+      delta(f, {
+        furniture: [{ objId: 10_001, templateId: 102, parentId: 0, roomId: 0 }],
+      }),
+      NOW,
+    );
+    expect(cafeComfort(lowered.player, catalog)).toBeLessThan(comfort);
+    expect(achievement(lowered.player, 67)).toBe(comfort);
+  });
+
+  it("a login credits the comfort of a cafe built before (type 75)", async () => {
+    const f = await fixture();
+    expect(achievement(f.players.get("tester")!, 67)).toBe(0);
+    const player = await f.players.markLogin("tester", NOW);
+    const comfort = cafeComfort(player, catalog);
+    expect(comfort).toBeGreaterThan(0);
+    expect(achievement(player, 67)).toBe(comfort);
+  });
+
+  it("a claim projects the comfort before its check (type 75)", async () => {
+    const f = await fixture();
+    // 15 x furniture 102 (AddScore 40) in the cafe room: comfort 600, without an
+    // event or a login.
+    await f.store.update((state) => {
+      state.players.tester!.cafe.furniture = Array.from({ length: 15 }, (_, index) =>
+        furniture(10_000 + index, 102),
+      );
+    });
+    expect(cafeComfort(f.players.get("tester")!, catalog)).toBe(600);
+    expect(achievement(f.players.get("tester")!, 67)).toBe(0);
+    const result = await f.players.claimActivityAchievementAward("tester", 16, 67);
+    expect(achievement(result.player, 67)).toBe(600);
+    expect(
+      result.player.taskValues[
+        String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 67))
+      ]! & 1,
+    ).toBe(1);
+  });
+
+  it("a batch furniture buy counts every piece (type 137)", async () => {
+    const f = await fixture();
+    await f.store.update((state) => {
+      state.players.tester!.money.find((money) => money.id === 7)!.count = 100_000;
+    });
+    const result = await f.call(14, [
+      { shopid: 40_001, goodsid: 101, buynum: 1 },
+      { shopid: 40_001, goodsid: 102, buynum: 2 },
+    ]);
+    expect(result.updatedFurniture).toHaveLength(3);
+    expect(achievement(result.player, 64)).toBe(3);
+    expect(achievement(result.player, 66)).toBe(3);
+    expect(result.taskValuesChanged).toBe(true);
+  });
+
+  it("a single furniture buy counts its pieces and reports the task change (type 137)", async () => {
+    const f = await fixture();
+    await f.store.update((state) => {
+      state.players.tester!.money.find((money) => money.id === 7)!.count = 100_000;
+    });
+    const bought = await f.players.buyShopGoods(
+      "tester",
+      ShopCatalog.loadDefault(),
+      40_001,
+      101,
+      2,
+      NOW,
+    );
+    expect(bought.updatedFurniture).toHaveLength(2);
+    expect(bought.taskValuesChanged).toBe(true);
+    expect(achievement(f.players.get("tester")!, 64)).toBe(2);
+  });
+
+  it("a predefined theme counts only the pieces bought from the shop (type 137)", async () => {
+    const f = await fixture();
+    await f.store.update((state) => {
+      const player = state.players.tester!;
+      player.money.find((money) => money.id === 7)!.count = 10_000_000;
+      // Theme 3 holds a 505, which the furniture shop does not sell.
+      player.cafe.furniture!.push(store(10_002, 505));
+    });
+    const result = await f.players.buyPredefinedCafeTheme("tester", 3, undefined, NOW);
+    expect(result.updatedFurniture.length).toBeGreaterThan(0);
+    expect(achievement(result.player, 64)).toBe(result.updatedFurniture.length);
+    expect(result.taskValuesChanged).toBe(true);
   });
 });

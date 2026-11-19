@@ -42,6 +42,11 @@
       "sha256": "67346a909be107bdae7534ac54035bfd9b5e176160cc913d84afcdcd8914fa6f",
       "bytes": 14869
     },
+    "energyactivity.txt": {
+      "source": "setting.u:assets/_game/settinggen/normalactivity/energyactivity.txt",
+      "sha256": "cd783b823a79c20e191e81866f88c2c0d8e5958ecf5e08f22027f982f061bdcf",
+      "bytes": 192
+    },
     "sodukuactivity.txt": {
       "source": "setting.u:assets/_game/settinggen/normalactivity/sodukuactivity.txt",
       "sha256": "697333ea39b167d11ca531ce5cd647d92e3a911184188be35f64bb7a3409b9e3",

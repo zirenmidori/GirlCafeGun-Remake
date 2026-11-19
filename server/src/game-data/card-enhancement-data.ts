@@ -59,6 +59,9 @@ export const CARD_EXP_TO_NEXT_LEVEL = [
   33_695, 34_990, 36_312, 37_661, 39_040, 40_445, 41_879, 43_341, 44_832, 46_351,
 ] as const;
 
+/** addCardExperience can never return a level above this value. */
+export const CARD_MAXIMUM_ENHANCE_LEVEL = CARD_EXP_TO_NEXT_LEVEL.length + 1;
+
 export function parseCardEnhancementRequest(
   parameters: unknown,
 ): CardEnhancementRequest | null {

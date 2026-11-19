@@ -8,6 +8,11 @@ import { describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
 import {
+  ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+  achievementProgress,
+  makeAchievementTaskId,
+} from "../src/game-data/activity-achievement-data.js";
+import {
   PromiseCatalog,
   type PromiseGirlData,
 } from "../src/game-data/girl-promise-data.js";
@@ -20,7 +25,7 @@ import {
   type InventoryEntryState,
 } from "../src/persistence/player-repository.js";
 import { COMMAND } from "../src/protocol/commands.js";
-import { makeServerLuaCall } from "../src/protocol/messages.js";
+import { makeServerLuaCall, parseTaskChanges } from "../src/protocol/messages.js";
 import {
   HEADER_SIZE,
   makePacket,
@@ -693,6 +698,41 @@ describe("Fantasy Oath actual TCP protocol", () => {
       expect(luaValue(await f.call(112), 112)).toMatchObject({ roomgirlslist: rows });
       expect(f.players.get(account)!.cafe.roomGirlsList).toEqual(storedRows);
       expect(f.players.get(account)!.promise!.assignments).toEqual(savedAssignments);
+    } finally {
+      await f.cleanup();
+    }
+  }, 20_000);
+
+  it("sends the task values when a stage card moves an event achievement", async () => {
+    const f = await fixture();
+    try {
+      await f.unlock();
+      expect(luaValue(await f.call(233, { girlid: 2 }), 233)).toMatchObject({
+        girlid: 2,
+        step: 1,
+      });
+      const taskId = makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 15);
+      const catalog = PromiseCatalog.loadDefault();
+      // Login projected achievement 15 (cards with limit break 1, type 54) from
+      // the seeded cards. Clear it so only the stage reward can set it again.
+      await f.store.update((state) => {
+        const player = state.players[account]!;
+        delete player.taskValues[String(taskId)];
+        for (const task of player.promise!.girls["2"]!.taskdatas) {
+          task.status = 2;
+          task.count = catalog.task(task.id)!.count;
+        }
+      });
+      const packets = await f.call(235, { girlid: 2 });
+      expect(luaValue(packets, 235)).toMatchObject({ step: 2, rewardstep: 1 });
+      const tasks = new Map(
+        packets
+          .filter((packet) => packet.command === COMMAND.TASK_VALUE_RSP)
+          .flatMap((packet) => parseTaskChanges(packet.payload))
+          .map(({ id, value }) => [id, value]),
+      );
+      // The fixture holds two cards with limit break 3.
+      expect(achievementProgress(tasks.get(taskId) ?? 0)).toBe(2);
     } finally {
       await f.cleanup();
     }

@@ -4,6 +4,11 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  ACTIVITY_ACHIEVEMENT_TASK_GROUP,
+  achievementProgress,
+  makeAchievementTaskId,
+} from "../src/game-data/activity-achievement-data.js";
+import {
   PromiseCatalog,
   type PromiseGirlData,
 } from "../src/game-data/girl-promise-data.js";
@@ -247,6 +252,16 @@ describe("persistent Fantasy Oath", () => {
       breakLevel: 4,
       cardSkillLevels: [4, 4, 4, 4],
     });
+    // Event page achievement 15 (activity 3): one card with limit break 1
+    // (type 54), projected by the stage reward without a new login.
+    expect(
+      achievementProgress(
+        result.player.taskValues[
+          String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 15))
+        ] ?? 0,
+      ),
+    ).toBe(1);
+    expect(result.achievementsChanged).toBe(true);
     await expect(
       repository.handlePromiseRequest("tester", 235, { girlid: 2 }, NOW),
     ).rejects.toMatchObject({ reason: "stage_not_ready" });

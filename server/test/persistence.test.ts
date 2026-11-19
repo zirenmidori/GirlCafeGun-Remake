@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { expect, it } from "vitest";
 
+import { CARD_MAXIMUM_ENHANCE_LEVEL } from "../src/game-data/card-enhancement-data.js";
 import {
   makeDailyMissionTaskId,
   DAILY_MISSIONS,
@@ -83,9 +84,10 @@ it("persists player and task changes atomically", async () => {
         ].map((id) => [String(makeDailyMissionTaskId(id)), 0]),
       ),
       // Event page achievements a new player already has progress 1 on:
-      // card level (10-12), girl affection (45-48) and commander level (100).
+      // card level (10-12), girl affection (45-48), cafe level (95) and
+      // commander level (100).
       ...Object.fromEntries(
-        [10, 11, 12, 45, 46, 47, 48, 100].map((id) => [String((18 << 16) | id), 2]),
+        [10, 11, 12, 45, 46, 47, 48, 95, 100].map((id) => [String((18 << 16) | id), 2]),
       ),
     });
     expect(
@@ -300,6 +302,62 @@ it("persists player and task changes atomically", async () => {
       "5963777": 2,
       "6029336": 1,
     });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+it("rejects card enhancement at the maximum level without spending anything", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "gcg2-store-"));
+  const filePath = path.join(directory, "state.json");
+  try {
+    const store = new JsonStore({
+      filePath,
+      initialState: makeInitialState(),
+      logger,
+    });
+    await store.initialize();
+    const repository = new PlayerRepository({
+      store,
+      defaults: {
+        name: "",
+        level: 1,
+        exp: 0,
+        fightPower: 0,
+        serverZone: 8,
+        firstLevelComplete: false,
+      },
+      logger,
+    });
+    const player = await repository.getOrCreate("tester");
+    const card = player.inventory.find(({ genre }) => genre === 1)!;
+    // Material index 24 grants 75_000 experience for 50_000 gold; 20 of
+    // them carry a level-1 card across the full 1_000_000 experience table.
+    await repository.settleLevel(
+      "tester",
+      1,
+      1,
+      1,
+      0,
+      0,
+      [
+        [15, 1, 1, 1, 2_000_000, 0],
+        [7, 1, 4, 4, 21, 0],
+      ],
+      0,
+    );
+    const enhanced = await repository.enhanceCard("tester", card.guid, [
+      { kind: 1, reference: 24, count: 20 },
+    ]);
+    expect(enhanced.card.enhanceLevel).toBe(CARD_MAXIMUM_ENHANCE_LEVEL);
+    const before = repository.get("tester")!;
+    await expect(
+      repository.enhanceCard("tester", card.guid, [
+        { kind: 1, reference: 24, count: 1 },
+      ]),
+    ).rejects.toThrow(/level cap/);
+    expect(repository.get("tester")?.inventory).toEqual(before.inventory);
+    expect(repository.get("tester")?.money).toEqual(before.money);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

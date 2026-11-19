@@ -19,11 +19,13 @@ import {
   reconcileHeadpatCharges,
   type HeadpatResponse,
 } from "../game-data/headpat-data.js";
+import { isClientWritableTaskId } from "../game-data/client-task-policy.js";
 import { createDefaultActivityEngine } from "../activities/default-activity-engine.js";
 import type { DomainEvent } from "../activities/domain-events.js";
 import {
   addCardExperience,
   CARD_EXP_MATERIALS,
+  CARD_MAXIMUM_ENHANCE_LEVEL,
   type CardEnhancementMaterial,
 } from "../game-data/card-enhancement-data.js";
 import {
@@ -83,6 +85,7 @@ import {
   type CafePetRuntimeHooks,
 } from "../game-data/cafe-pets.js";
 import {
+  CAFE_FURNITURE_SHOP_ID,
   CafeFurnitureCommerce,
   materializeCafeFurniture as materializeOwnedCafeFurniture,
 } from "../game-data/cafe-furniture-commerce.js";
@@ -98,6 +101,7 @@ import {
 import {
   CafeRuntime,
   CafeOperationError,
+  cafeComfort,
   type CafeBusinessState,
   type CafeNotification,
   type CafeRuntimeHooks,
@@ -113,10 +117,11 @@ import {
   MONTH_CARD_DAYS,
   MONTH_CARD_DIAMONDS,
   MONTH_CARD_ITEM_ID,
-  MONTH_CARD_LIMIT_DAYS,
 } from "../game-data/ib-shop-data.js";
 import {
+  goodsPos,
   isGoodsInWindow,
+  isGroupedPool,
   isShopOpen,
   nextPriceIndex,
   refreshFee,
@@ -191,6 +196,7 @@ import {
   hasClaimedAchievement,
   makeAchievementTaskId,
   makeAchievementTaskValue,
+  playerAchievementSources,
   projectAchievementProgress,
   requiredAchievementCount,
 } from "../game-data/activity-achievement-data.js";
@@ -211,6 +217,7 @@ import type {
 } from "../game-data/gacha-data.js";
 import {
   completedGuideMissionCount,
+  GUIDE_GIFT_MISSION_ID,
   guideMission,
   guideMissionProgress,
   guideProgressAward,
@@ -219,6 +226,8 @@ import {
   makeGuideMissionTaskValue,
   makeGuideTaskId,
   markGuideProgressAwardClaimed,
+  recordGuideGift,
+  recordGuideTrainingTypes,
 } from "../game-data/guide-mission-data.js";
 import { maximumFormationPower } from "../game-data/formation-power-data.js";
 import {
@@ -413,6 +422,8 @@ export interface CafeState {
   roomGirlsList?: { girlId: number; modelId: number }[][];
   coffees: CafeCoffee[];
   furniture?: CafeFurnitureState[];
+  /** Set once the starting café (NCafeDefautItems) was considered for this profile. */
+  defaultFurnitureSeeded?: boolean;
   level?: number;
 }
 
@@ -613,6 +624,10 @@ export interface GirlGiftResult {
   reachedMaxLevel: boolean;
   unlockedSecretIds: number[];
   fetterUnlocks: GirlFetterUnlock[];
+  /** Event page achievements moved: the client needs the task values again. */
+  achievementsChanged: boolean;
+  /** Guide mission 40018 moved: the client needs the task values again. */
+  guideMissionsChanged: boolean;
 }
 
 export class GirlGiftError extends Error {
@@ -734,8 +749,12 @@ export interface IBItemFreeResult {
 
 export class IBShopError extends Error {
   constructor(
-    readonly reason: "unknown_item" | "limit_reached",
-    readonly clientError: number = reason === "limit_reached" ? 20075 : 20074,
+    readonly reason: "unknown_item" | "limit_reached" | "month_card_active",
+    readonly clientError: number = reason === "limit_reached"
+      ? 20075
+      : reason === "month_card_active"
+        ? 20021
+        : 20074,
   ) {
     super(`IB shop error: ${reason}`);
     this.name = "IBShopError";
@@ -887,6 +906,13 @@ export class InsufficientGoldError extends Error {
   ) {
     super(`Insufficient gold: required ${required}, available ${available}`);
     this.name = "InsufficientGoldError";
+  }
+}
+
+export class CardLevelCapError extends Error {
+  constructor(readonly guid: number) {
+    super(`Card is already at its level cap: ${guid}`);
+    this.name = "CardLevelCapError";
   }
 }
 
@@ -1136,6 +1162,19 @@ function reconcileChapterStarTaskValues(player: Player): void {
   }
 }
 
+/** Ids that setTaskValues never overwrites, whoever asks. */
+function isSkippedTaskWrite(id: number): boolean {
+  return (
+    isDailyMissionTaskValueId(id) ||
+    isRotationSelectionTaskId(id) ||
+    isHeadpatTaskId(id) ||
+    isGirlMainStoryTaskId(id) ||
+    isEnergyActivityTaskId(id) ||
+    isCafePetTaskId(id, CafePetCatalog.loadDefault()) ||
+    (id >>> 16 === 60 && (id & 0xffff) >= 101 && (id & 0xffff) <= 104)
+  );
+}
+
 function makeGirlTaskId(group: number, girlId: number, offset: number): number {
   let taskGroup = group;
   let taskGirlId = girlId;
@@ -1177,6 +1216,51 @@ function unlockGirlLevelSecrets(
     }
   }
   return unlocked;
+}
+
+/**
+ * Credits guide missions 40014 and 40018 from what a save still shows: the
+ * types of the trainings running now, and marks only a gift can leave (the
+ * favourite-gift secrets and promise GiftCount progress). Finished trainings
+ * and other gifts from before these missions had a source leave no trace;
+ * they count again from the next training or gift.
+ */
+function reconcileGuideActionMissions(player: Player): void {
+  const trainingTypes: number[] = [];
+  let gaveGift = false;
+  for (const { girlId } of player.girls) {
+    const position =
+      player.taskValues[
+        String(
+          makeGirlTaskId(GIRL_STATE_TASK_GROUP, girlId, GIRL_TRAIN_POSITION_OFFSET),
+        )
+      ] ?? 0;
+    const training = getGirlTrainingConfig(position);
+    if (training) trainingTypes.push(training.type);
+    for (const { secretId } of favoriteGiftSecretIds(girlId)) {
+      const key = String(
+        makeGirlTaskId(
+          GIRL_STATE_TASK_GROUP,
+          girlId,
+          GIRL_SECRET_OFFSET + secretId - 1,
+        ),
+      );
+      if ((player.taskValues[key] ?? 0) !== 0) gaveGift = true;
+    }
+  }
+  if (player.promise) {
+    const catalog = PromiseCatalog.loadDefault();
+    if (
+      Object.values(player.promise.girls).some((girl) =>
+        girl.taskdatas.some(
+          (task) => task.count > 0 && catalog.task(task.id)?.strtype === "GiftCount",
+        ),
+      )
+    )
+      gaveGift = true;
+  }
+  recordGuideTrainingTypes(player, trainingTypes);
+  if (gaveGift) recordGuideGift(player);
 }
 
 export interface GirlFetterUnlock {
@@ -1892,9 +1976,28 @@ function deductShopMoney(
   }
 }
 
-/** RefreshRule=1 的常驻商店使用随机货架；其余规则直接全量上架。 */
-function shopUsesShelf(tab: ShopTabConfig): boolean {
-  return tab.refreshRule === 1;
+/**
+ * 随机货架：RefreshRule=1 的常驻商店，以及自动刷新（RefreshRule 2/3，
+ * UI_ShopNew.lua:1215）的分组商店（20005、20006、20010）。其余规则直接全量
+ * 上架；4/5 规则的分组商店每组只有一件，全量上架即每组一件，且货架期计数
+ * 不能随货架重掷清零。
+ */
+function shopUsesShelf(catalog: ShopCatalog, tab: ShopTabConfig): boolean {
+  if (tab.refreshRule === 1) return true;
+  if (tab.refreshRule !== 2 && tab.refreshRule !== 3) return false;
+  return isGroupedPool(catalog.goodsForShop(tab.shopId));
+}
+
+/** 按栏位号（pos）稳定排序，没有 pos 的排在最后；客户端按回包顺序展示。 */
+function sortByPos(goodsList: ShopGoodsListEntry[]): ShopGoodsListEntry[] {
+  return goodsList
+    .map((entry, index) => ({ entry, index }))
+    .sort(
+      (a, b) =>
+        (a.entry.pos ?? Number.MAX_SAFE_INTEGER) -
+          (b.entry.pos ?? Number.MAX_SAFE_INTEGER) || a.index - b.index,
+    )
+    .map(({ entry }) => entry);
 }
 
 function rerollShelf(
@@ -1956,7 +2059,7 @@ function reconcileShopState(
       counters.week = 0;
     }
   }
-  if (shopUsesShelf(tab)) {
+  if (shopUsesShelf(catalog, tab)) {
     const baseKey = shopShelfKey(tab, now);
     const currentBase = shopState.shelfKey?.split("#")[0] ?? null;
     if (currentBase !== baseKey) {
@@ -1976,6 +2079,10 @@ function buildShopGoodsEntry(
     goodsid: config.goodsId,
     buynum: counters?.total ?? 0,
   };
+  // pos = Group 号（栏位）。社团商店 20006 没有 pos 时整店锁住
+  // （GoodsLogicC.lua:227-252）。
+  const pos = goodsPos(config);
+  if (pos !== null) entry.pos = pos;
   if (config.refreshLimitNum !== null) {
     entry.refreshbuynum = shelfEntry?.bought ?? 0;
   }
@@ -2018,7 +2125,7 @@ function buildShopGoodsList(
   }
   const shopState = reconcileShopState(player, catalog, tab, now);
   const goodsList: ShopGoodsListEntry[] = [];
-  if (shopUsesShelf(tab)) {
+  if (shopUsesShelf(catalog, tab)) {
     for (const shelfEntry of shopState.shelf) {
       const config = catalog.getGoods(shelfEntry.goodsId);
       if (!config || !isGoodsInWindow(config, nowSeconds)) continue;
@@ -2034,7 +2141,7 @@ function buildShopGoodsList(
     shopId,
     isOpen: true,
     refreshCount: shopState.refreshCount,
-    goodsList,
+    goodsList: sortByPos(goodsList),
     endTime: tab.end ?? 0,
   };
 }
@@ -2070,6 +2177,8 @@ export interface PromiseOperationResult {
   updatedMoney: MoneyState[];
   updatedGirls: GirlState[];
   completedTaskIds: number[];
+  /** Event page achievements moved: the client needs the task values again. */
+  achievementsChanged?: boolean;
 }
 export class PromiseOperationError extends Error {
   constructor(
@@ -2360,9 +2469,9 @@ function promiseCardReward(
   catalog: PromiseCatalog,
   items: Set<number>,
   girls: Set<number>,
-): void {
+): Player["inventory"][number] | null {
   const step = catalog.getStep(girl.girlid, girl.step);
-  if (!step || step.cardgdpl.length !== 4) return;
+  if (!step || step.cardgdpl.length !== 4) return null;
   let card = player.inventory.find(
     (item) =>
       item.guid === girl.cardguid &&
@@ -2419,6 +2528,7 @@ function promiseCardReward(
   items.add(card.guid);
   const changed = reconcileGirlAppearanceState(player, items);
   for (const id of changed.updatedGirlIds) girls.add(id);
+  return card;
 }
 function promiseResult(
   player: Player,
@@ -2672,6 +2782,7 @@ export class PlayerRepository {
       );
     }
     let result: PromiseOperationResult | undefined;
+    let achievementsChanged = false;
     await this.#store.update((state) => {
       const player = state.players[account];
       if (!player) throw new PromiseOperationError("player_not_found");
@@ -2810,8 +2921,22 @@ export class PlayerRepository {
               )
                 throw new PromiseOperationError("stage_not_ready");
               if (girl.step <= 6 && girl.rewardstep < girl.step) {
-                promiseCardReward(player, girl, catalog, items, girls);
+                const card = promiseCardReward(player, girl, catalog, items, girls);
                 girl.rewardstep = girl.step;
+                if (card)
+                  achievementsChanged =
+                    this.#activities.dispatch(
+                      player,
+                      [
+                        {
+                          type: "card.progressed",
+                          guid: card.guid,
+                          level: card.enhanceLevel,
+                          breakLevel: card.breakLevel,
+                        },
+                      ],
+                      now,
+                    ).changedTaskIds.length > 0;
               }
               if (girl.step < catalog.maxStep(girlId))
                 promiseSetStage(girl, girl.step + 1, catalog, now);
@@ -2844,7 +2969,10 @@ export class PlayerRepository {
           }
         }
       }
-      result = promiseResult(player, response, items, money, girls);
+      result = {
+        ...promiseResult(player, response, items, money, girls),
+        achievementsChanged,
+      };
     });
     return result!;
   }
@@ -2929,6 +3057,11 @@ export class PlayerRepository {
         unlockGirlLevelSecrets(player, girlId, gain.oldLevel, gain.newLevel);
         reconcileGirlFetterUnlocks(player, girlId);
         updatedGirlIds.add(girlId);
+        this.#activities.dispatch(
+          player,
+          [{ type: "girl.affection_changed", girlId, level: girl.level }],
+          now,
+        );
       }
       incrementDailyMissionProgress(player, 105, 1, now);
       const completedTaskIds = promiseIncrement(player, "TouchHead", girlId, 1);
@@ -3001,6 +3134,7 @@ export class PlayerRepository {
         throw new HouseOperationError("house_not_owned");
       const integer = (value: number) =>
         Number.isSafeInteger(value) && value >= 0 && value <= 0xffff_ffff;
+      const comfortBefore = cafeComfort(player, catalog);
       const furniture = (player.cafe.furniture ??= []);
       const rooms = (player.cafe.rooms ??= [1, 2, 6].map((roomId) => ({
         roomId,
@@ -3175,6 +3309,13 @@ export class PlayerRepository {
           .filter((item) => item.roomId === room.roomId)
           .map((item) => item.objId)
           .sort((a, b) => a - b);
+      const comfort = cafeComfort(player, catalog);
+      if (comfort !== comfortBefore)
+        this.#activities.dispatch(
+          player,
+          [{ type: "cafe.comfort_changed", comfort }],
+          now,
+        );
       const snapshot = structuredClone(player);
       result = {
         ...promiseResult(player, undefined),
@@ -3232,6 +3373,8 @@ export class PlayerRepository {
       if (!player) throw new HouseOperationError("player_not_found");
       const items = new Set<number>(),
         money = new Set<number>();
+      const beforeTasks = JSON.stringify(player.taskValues);
+      let furnitureBought = 0;
       const commerce = new CafeFurnitureCommerce(player, catalog, now, {
         chargeMoney: (id, count) => {
           if (count > 0) deductShopMoney(player, id, count, money);
@@ -3239,15 +3382,24 @@ export class PlayerRepository {
         consumeItem: (gdpl, count) => promiseConsume(player, gdpl, count, items),
         grant: (awards) => grantAwards(player, awards, items, money),
         updatedGirl() {},
+        furnitureBought: (count) => {
+          furnitureBought += count;
+        },
       });
       const purchase = commerce.buyPredefinedTheme(templateThemeId, templateIds);
+      if (furnitureBought > 0)
+        this.#activities.dispatch(
+          player,
+          [{ type: "cafe.furniture_bought", count: furnitureBought }],
+          now,
+        );
       result = {
         ...promiseResult(player, purchase.theme, items, money),
         theme: structuredClone(purchase.theme),
         updatedFurniture: structuredClone(commerce.updatedFurniture),
         updatedThemes: structuredClone(commerce.updatedThemes),
         notifications: [],
-        taskValuesChanged: false,
+        taskValuesChanged: beforeTasks !== JSON.stringify(player.taskValues),
       };
     });
     return result!;
@@ -3305,6 +3457,9 @@ export class PlayerRepository {
         money = new Set<number>(),
         girls = new Set<number>();
       const beforeTasks = JSON.stringify(player.taskValues);
+      const cafeLevelBefore = player.cafe.level ?? 1;
+      let coffeesSold = 0,
+        furnitureBought = 0;
       const automaticFurniture: number[] = [];
       const hooks: CafeRuntimeHooks = {
         chargeMoney: (id, count) => {
@@ -3327,7 +3482,11 @@ export class PlayerRepository {
         updatedGirl: (id) => {
           girls.add(id);
         },
+        furnitureBought: (count) => {
+          furnitureBought += count;
+        },
         coffeeSold: (_id, count) => {
+          coffeesSold += count;
           const mission = guideMission(40_017)!;
           const key = String(makeGuideTaskId(mission.id)),
             value = player.taskValues[key] ?? 0;
@@ -3415,6 +3574,15 @@ export class PlayerRepository {
         commerce.updatedFurniture.push(
           ...materializeOwnedCafeFurniture(player, pending, catalog, hooks),
         );
+      // The offline catch-up sells coffee one cup at a time: count it once.
+      const cafeEvents: DomainEvent[] = [];
+      if (coffeesSold > 0) cafeEvents.push({ type: "coffee.sold", count: coffeesSold });
+      const cafeLevel = player.cafe.level ?? 1;
+      if (cafeLevel !== cafeLevelBefore)
+        cafeEvents.push({ type: "cafe.level_changed", level: cafeLevel });
+      if (furnitureBought > 0)
+        cafeEvents.push({ type: "cafe.furniture_bought", count: furnitureBought });
+      if (cafeEvents.length > 0) this.#activities.dispatch(player, cafeEvents, now);
       const result = promiseResult(player, response, items, money, girls);
       return {
         ...result,
@@ -3519,6 +3687,7 @@ export class PlayerRepository {
         reconcileBounty(player);
         reconcileChapterStarTaskValues(player);
         reconcileMaximumFightPower(player);
+        reconcileGuideActionMissions(player);
         this.#activities.reconcile(player);
         if (player.cafe.pets)
           new CafePetRuntime(
@@ -3636,6 +3805,7 @@ export class PlayerRepository {
       reconcileChapterStarTaskValues(player);
       reconcileMaximumFightPower(player);
       reconcileGirlFetterUnlocks(player);
+      reconcileGuideActionMissions(player);
       this.#activities.reconcile(player, now);
       reconcilePlayerPhoneEvents(player, now);
       player.lastLoginAt = new Date(now).toISOString();
@@ -3887,6 +4057,7 @@ export class PlayerRepository {
         )
       ] = DEFAULT_TRAINING_OUTDOOR_ID;
       incrementDailyMissionProgress(player, 106, 1, now);
+      recordGuideTrainingTypes(player, [config.type]);
     });
     if (!player) throw new Error(`Failed to start girl training: ${account}`);
     this.#logger.info("player.girl_training.started", {
@@ -3927,6 +4098,8 @@ export class PlayerRepository {
     let affection: GirlAffectionGain | undefined;
     const unlockedSecretIds: number[] = [];
     let fetterUnlocks: GirlFetterUnlock[] = [];
+    let achievementsChanged = false;
+    let guideMissionsChanged = false;
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
@@ -3987,6 +4160,19 @@ export class PlayerRepository {
       inventoryItem.count -= count;
       girl.level = gain.newLevel;
       girl.exp = gain.newExperience;
+      achievementsChanged =
+        this.#activities.dispatch(
+          player,
+          [
+            { type: "girl.gift_sent", girlId, count },
+            { type: "girl.affection_changed", girlId, level: girl.level },
+          ],
+          now,
+        ).changedTaskIds.length > 0;
+      const giftMissionKey = String(makeGuideTaskId(GUIDE_GIFT_MISSION_ID));
+      const giftMissionBefore = player.taskValues[giftMissionKey];
+      recordGuideGift(player);
+      guideMissionsChanged = player.taskValues[giftMissionKey] !== giftMissionBefore;
 
       const taskValues = player.taskValues;
       unlockedSecretIds.push(
@@ -4057,6 +4243,8 @@ export class PlayerRepository {
       reachedMaxLevel: affection.reachedMaxLevel,
       unlockedSecretIds,
       fetterUnlocks,
+      achievementsChanged,
+      guideMissionsChanged,
     };
   }
 
@@ -4277,6 +4465,14 @@ export class PlayerRepository {
         )
       ] = 0;
       fetterUnlocks = reconcileGirlFetterUnlocks(player, girlId);
+      this.#activities.dispatch(
+        player,
+        [
+          { type: "girl.training_finished", girlId },
+          { type: "girl.affection_changed", girlId, level: girl.level },
+        ],
+        now,
+      );
     });
     if (!player || gain === undefined) {
       throw new Error(`Failed to end girl training: ${account}`);
@@ -4320,22 +4516,49 @@ export class PlayerRepository {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
       for (const { id, value } of changes) {
-        if (
-          isDailyMissionTaskValueId(id) ||
-          isGirlMainStoryTaskId(id) ||
-          isRotationSelectionTaskId(id) ||
-          isHeadpatTaskId(id) ||
-          isEnergyActivityTaskId(id) ||
-          isCafePetTaskId(id, CafePetCatalog.loadDefault()) ||
-          (id >>> 16 === 60 && (id & 0xffff) >= 101 && (id & 0xffff) <= 104)
-        )
-          continue;
+        if (isSkippedTaskWrite(id)) continue;
         player.taskValues[String(id)] = value;
       }
     });
     this.#logger.info("player.tasks.updated", { account, changes });
     if (!player) throw new Error(`Failed to update player tasks: ${account}`);
     return structuredClone(player);
+  }
+
+  /**
+   * TASK_CHANGE_REQ from the client. Writes only the ids the client owns
+   * (client-task-policy.ts); every other id keeps its stored value and is
+   * returned in `refusedIds`, so the gateway can send the true value back.
+   */
+  async applyClientTaskChanges(
+    account: string,
+    changes: readonly TaskChange[],
+  ): Promise<{ player: Player; refusedIds: number[] }> {
+    const accepted: TaskChange[] = [];
+    const refusedIds: number[] = [];
+    for (const change of changes) {
+      if (
+        isClientWritableTaskId(change.id) &&
+        !isSkippedTaskWrite(change.id) &&
+        Number.isSafeInteger(change.value)
+      ) {
+        accepted.push(change);
+      } else {
+        refusedIds.push(change.id);
+      }
+    }
+    if (refusedIds.length > 0) {
+      this.#logger.warn("player.tasks.client_write_refused", {
+        account,
+        refused: changes.filter(({ id }) => refusedIds.includes(id)),
+      });
+    }
+    if (accepted.length > 0) {
+      return { player: await this.setTaskValues(account, accepted), refusedIds };
+    }
+    const player = this.get(account);
+    if (!player) throw new Error(`Unknown player account: ${account}`);
+    return { player: structuredClone(player), refusedIds };
   }
 
   async recordDailyMissionProgress(
@@ -4765,7 +4988,11 @@ export class PlayerRepository {
       if (!player) throw new Error(`Unknown player account: ${account}`);
       reconcileEightDaySignUp(player);
 
-      const taskValue = projectAchievementProgress(player, config);
+      const taskValue = projectAchievementProgress(
+        player,
+        config,
+        playerAchievementSources(player),
+      );
       if (hasClaimedAchievement(taskValue)) {
         throw new AchievementAwardError("already_claimed");
       }
@@ -4917,11 +5144,30 @@ export class PlayerRepository {
     poolId: number,
     ten: boolean,
     roll: GachaRollResult,
+    /**
+     * The item that unlocks the pool. A roll does not use it up (re-rolls are
+     * free until the result is saved), but without it the pool is closed: the
+     * client hides it (GachaCommon.lua GetCurPools, JudgeType 2 checks nTen),
+     * and the item is spent when the result is saved.
+     */
+    requiredItem: Gdpln | null = null,
   ): Promise<Player> {
     let player: Player | undefined;
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
+      if (requiredItem) {
+        const [genre, detail, particular, templateLevel, count] = requiredItem;
+        const held = player.inventory.some(
+          (item) =>
+            item.genre === genre &&
+            item.detail === detail &&
+            item.particular === particular &&
+            item.templateLevel === templateLevel &&
+            item.count >= count,
+        );
+        if (!held) throw new InsufficientGachaCurrencyError(poolId);
+      }
       player.gacha.pending = {
         poolId,
         ten,
@@ -4993,6 +5239,15 @@ export class PlayerRepository {
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
+      // The month card is free in this offline build, so it may not stack: a
+      // claim is allowed only when no card is active, which gives one card and
+      // 300 diamonds per 30 days. The client
+      // table sets no limit (PurchaseIB.txt Id 1: MaxBuy empty, "Unlimited").
+      const monthTaskId = String(makeMonthCardTaskId());
+      const nowSeconds = Math.floor(now / 1000);
+      if ((player.taskValues[monthTaskId] ?? 0) > nowSeconds) {
+        throw new IBShopError("month_card_active");
+      }
       const taskId = String(makeIBItemTaskId(itemId));
       purchaseCount = (player.taskValues[taskId] ?? 0) + 1;
       player.taskValues[taskId] = purchaseCount;
@@ -5005,14 +5260,7 @@ export class PlayerRepository {
       diamond.count += MONTH_CARD_DIAMONDS;
       updatedMoneyIds.add(MONEY_DIAMOND);
 
-      const monthTaskId = String(makeMonthCardTaskId());
-      const nowSeconds = Math.floor(now / 1000);
-      const currentEnd = player.taskValues[monthTaskId] ?? 0;
-      const base = Math.max(nowSeconds, currentEnd);
-      monthCardEndTime = Math.min(
-        base + MONTH_CARD_DAYS * 86_400,
-        nowSeconds + MONTH_CARD_LIMIT_DAYS * 86_400,
-      );
+      monthCardEndTime = nowSeconds + MONTH_CARD_DAYS * 86_400;
       player.taskValues[monthTaskId] = monthCardEndTime;
       incrementDailyMissionProgress(player, 108, 1, now);
     });
@@ -5125,12 +5373,13 @@ export class PlayerRepository {
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
+      const beforeTasks = JSON.stringify(player.taskValues);
       const nowSeconds = Math.floor(now / 1_000);
       if (!isShopOpen(tab, nowSeconds)) throw new ShopError("shop_closed");
       if (!isGoodsInWindow(config, nowSeconds)) throw new ShopError("unknown_goods");
       const shopState = reconcileShopState(player, catalog, tab, now);
       const shelfEntry = shopState.shelf.find((entry) => entry.goodsId === goodsId);
-      if (tab.refreshRule === 1 && !shelfEntry) {
+      if (shopUsesShelf(catalog, tab) && !shelfEntry) {
         throw new ShopError("not_on_shelf");
       }
       const counters = shopState.counters[String(goodsId)] ?? {
@@ -5232,7 +5481,15 @@ export class PlayerRepository {
       counters.total += buyNum;
       counters.shelf += buyNum;
       if (shelfEntry) shelfEntry.bought += buyNum;
-      taskValuesChanged = incrementDailyMissionProgress(player, 108, 1, now);
+      const missionChanged = incrementDailyMissionProgress(player, 108, 1, now);
+      if (shopId === CAFE_FURNITURE_SHOP_ID && config.genre === 11)
+        this.#activities.dispatch(
+          player,
+          [{ type: "cafe.furniture_bought", count: config.goodsNum * buyNum }],
+          now,
+        );
+      taskValuesChanged =
+        missionChanged || beforeTasks !== JSON.stringify(player.taskValues);
       result = buildShopGoodsList(player, catalog, shopId, now);
     });
     if (!player || !result) {
@@ -5756,6 +6013,10 @@ export class PlayerRepository {
       );
       if (!enhancedCard) throw new Error(`Unknown character card: ${guid}`);
 
+      if (enhancedCard.enhanceLevel >= CARD_MAXIMUM_ENHANCE_LEVEL) {
+        throw new CardLevelCapError(guid);
+      }
+
       for (const material of materials) {
         if (material.kind !== 1) {
           throw new Error(
@@ -5800,11 +6061,18 @@ export class PlayerRepository {
       );
       enhancedCard.enhanceLevel = enhanced.level;
       enhancedCard.enhanceExp = enhanced.experience;
+      const cardEvents: DomainEvent[] = [
+        {
+          type: "card.progressed",
+          guid,
+          level: enhancedCard.enhanceLevel,
+          breakLevel: enhancedCard.breakLevel,
+        },
+      ];
       if (reconcileMaximumFightPower(player)) {
-        this.#activities.dispatch(player, [
-          { type: "fight_power.changed", value: player.fightPower },
-        ]);
+        cardEvents.push({ type: "fight_power.changed", value: player.fightPower });
       }
+      this.#activities.dispatch(player, cardEvents);
       incrementDailyMissionProgress(player, 107);
     });
     if (!player || !enhancedCard) {
@@ -6062,10 +6330,12 @@ export class PlayerRepository {
       for (const { donor, count } of donors) donor.count -= count;
       money.count -= stage.currencyCount;
       weapon.breakLevel = stage.breakLevel;
+      const breakEvents: DomainEvent[] = [
+        { type: "weapon.broken", guid, breakLevel: weapon.breakLevel },
+      ];
       if (reconcileMaximumFightPower(player))
-        this.#activities.dispatch(player, [
-          { type: "fight_power.changed", value: player.fightPower },
-        ]);
+        breakEvents.push({ type: "fight_power.changed", value: player.fightPower });
+      this.#activities.dispatch(player, breakEvents);
       const snapshot = structuredClone(player);
       result = {
         player: snapshot,
@@ -6221,6 +6491,11 @@ export class PlayerRepository {
           affection.newLevel,
         );
         reconcileGirlFetterUnlocks(player, girl.girlId);
+        this.#activities.dispatch(
+          player,
+          [{ type: "girl.affection_changed", girlId: girl.girlId, level: girl.level }],
+          now,
+        );
       }
       return {
         player: structuredClone(player),
@@ -6304,6 +6579,9 @@ export class PlayerRepository {
         affection.newLevel,
       );
       reconcileGirlFetterUnlocks(player, girl.girlId);
+      this.#activities.dispatch(player, [
+        { type: "girl.affection_changed", girlId: girl.girlId, level: girl.level },
+      ]);
       return { player, affection, girl };
     });
     return structuredClone(result);
@@ -6460,6 +6738,10 @@ export class PlayerRepository {
         player.money.push({ id: MONEY_VIGOUR, count: -energyCost });
       }
       incrementDailyMissionProgress(player, 109, energyCost);
+      if (energyCost > 0)
+        this.#activities.dispatch(player, [
+          { type: "vigour.spent", amount: energyCost },
+        ]);
     });
     this.#logger.info("player.level.vigour_charged", { account, energyCost });
     if (!player) throw new Error(`Failed to charge level vigour: ${account}`);
@@ -6556,6 +6838,18 @@ export class PlayerRepository {
       if (experienceUpdate.vigourRecovery > 0) {
         updatedMoneyIds.add(MONEY_VIGOUR);
       }
+      const bountyEvents: DomainEvent[] = [
+        {
+          type: "bounty.cleared",
+          activityId: level.activityId,
+          difficulty: level.difficulty,
+        },
+      ];
+      if (energyCost > 0)
+        bountyEvents.push({ type: "vigour.spent", amount: energyCost });
+      if (experienceUpdate.levelsGained > 0)
+        bountyEvents.push({ type: "player.level_changed", level: player.level });
+      this.#activities.dispatch(player, bountyEvents);
       const girlReconciliation = reconcileGirlAppearanceState(player, updatedItemGuids);
       for (const girlId of girlReconciliation.updatedGirlIds) {
         updatedGirlIds.add(girlId);
@@ -6664,75 +6958,28 @@ export class PlayerRepository {
       if (experienceUpdate.vigourRecovery > 0) {
         updatedMoneyIds.add(MONEY_VIGOUR);
       }
+      const settlementEvents: DomainEvent[] = [];
+      if (energyCost > 0)
+        settlementEvents.push({ type: "vigour.spent", amount: energyCost });
+      if (experienceUpdate.levelsGained > 0)
+        settlementEvents.push({ type: "player.level_changed", level: player.level });
+      if (settlementEvents.length > 0)
+        this.#activities.dispatch(player, settlementEvents);
 
-      for (const [genre, detail, particular, templateLevel, rawCount] of awards) {
-        const count = Math.max(0, rawCount);
-        if (count === 0) continue;
-
-        const moneyId =
-          genre === 15 && detail === 1
-            ? MONEY_GOLD
-            : genre === 15 && detail === 2
-              ? MONEY_DIAMOND
-              : null;
-        if (moneyId !== null) {
-          let money = player.money.find(({ id }) => id === moneyId);
-          if (!money) {
-            money = { id: moneyId, count: 0 };
-            player.money.push(money);
-          }
-          money.count += count;
-          updatedMoneyIds.add(moneyId);
-          continue;
-        }
-
-        if (INSTANCE_GENRES.has(genre)) {
-          for (let itemIndex = 0; itemIndex < count; itemIndex += 1) {
-            const item: InventoryEntryState = {
-              guid: player.nextItemGuid++,
-              genre,
-              detail,
-              particular,
-              templateLevel,
-              count: 1,
-              createTime: unixTime(),
-              enhanceLevel: initialEnhanceLevel(genre),
-              enhanceExp: 0,
-              breakLevel: 0,
-              lockOn: 0,
-            };
-            player.inventory.push(item);
-            updatedItemGuids.add(item.guid);
-          }
-        } else {
-          let item = player.inventory.find(
-            (candidate) =>
-              !isInventoryInstance(candidate) &&
-              candidate.genre === genre &&
-              candidate.detail === detail &&
-              candidate.particular === particular &&
-              candidate.templateLevel === templateLevel,
-          );
-          if (!item) {
-            item = {
-              guid: player.nextItemGuid++,
-              genre,
-              detail,
-              particular,
-              templateLevel,
-              count: 0,
-              createTime: unixTime(),
-              enhanceLevel: 0,
-              enhanceExp: 0,
-              breakLevel: 0,
-              lockOn: 0,
-            };
-            player.inventory.push(item);
-          }
-          item.count += count;
-          updatedItemGuids.add(item.guid);
-        }
-      }
+      // Chapter first-clear awards include gallery (Riki) items, which unlock a
+      // task instead of becoming a stack: pay them like every other claim.
+      grantAwards(
+        player,
+        awards.map(([genre, detail, particular, templateLevel, count]): BaseAward => [
+          genre,
+          detail,
+          particular,
+          templateLevel,
+          count,
+        ]),
+        updatedItemGuids,
+        updatedMoneyIds,
+      );
       const girlReconciliation = reconcileGirlAppearanceState(player, updatedItemGuids);
       for (const girlId of girlReconciliation.updatedGirlIds) {
         updatedGirlIds.add(girlId);
@@ -6793,6 +7040,7 @@ export class PlayerRepository {
           difficulty,
           stars: starMask,
           firstClear: true,
+          story: true,
         },
       ]);
       return {

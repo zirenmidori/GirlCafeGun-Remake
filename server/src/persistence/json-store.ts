@@ -1,12 +1,4 @@
-import {
-  copyFile,
-  mkdir,
-  readdir,
-  readFile,
-  rename,
-  rm,
-  writeFile,
-} from "node:fs/promises";
+import { copyFile, mkdir, open, readdir, readFile, rename, rm } from "node:fs/promises";
 import path from "node:path";
 
 import type { Logger } from "../logger.js";
@@ -90,6 +82,20 @@ export function rankBackups(names: readonly string[], today: string): string[] {
   return [...past.reverse(), ...future];
 }
 
+/**
+ * Writes the body and forces it to disk before closing, so a power loss
+ * cannot leave a zero-length file where a save was renamed.
+ */
+export async function writeFileDurably(filePath: string, body: string): Promise<void> {
+  const handle = await open(filePath, "w");
+  try {
+    await handle.writeFile(body, "utf8");
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+}
+
 export class JsonStore<T extends PersistedDocument> {
   readonly #filePath: string;
   readonly #initialState: T;
@@ -128,10 +134,15 @@ export class JsonStore<T extends PersistedDocument> {
 
     let document: unknown;
     try {
-      document = JSON.parse(body);
-      this.#validate?.(document);
+      document = this.#parse(body);
     } catch (error: unknown) {
-      throw await this.#preserveUnreadable(error, now);
+      // The broken bytes are kept first (state.json.corrupt-<time>, reused for
+      // an identical file), then the newest loadable daily backup replaces the
+      // save. No daily copy after a recovery: the loaded content is a backup
+      // already, and a new copy could push out an older real backup.
+      const failure = await this.#preserveUnreadable(error, now);
+      if (await this.#recoverFromBackup(failure.preservedPath, now)) return;
+      throw failure;
     }
     this.#state = document as T;
     this.#logger.info("persistence.loaded", {
@@ -166,8 +177,51 @@ export class JsonStore<T extends PersistedDocument> {
   async #persist(state: T): Promise<void> {
     const tempPath = `${this.#filePath}.${process.pid}.tmp`;
     const body = `${JSON.stringify(state, null, 2)}\n`;
-    await writeFile(tempPath, body, "utf8");
+    await writeFileDurably(tempPath, body);
     await rename(tempPath, this.#filePath);
+  }
+
+  #parse(body: string): unknown {
+    const document: unknown = JSON.parse(body);
+    this.#validate?.(document);
+    return document;
+  }
+
+  /**
+   * The only automatic save handling in the server: when the save cannot be
+   * parsed, load the newest daily backup that parses. The caller has already
+   * kept the broken bytes at `preservedPath`. A missing save never gets here:
+   * it starts a fresh game, which the PC save tool's wipe relies on. Without a
+   * loadable backup nothing is written and the caller reports the broken save.
+   */
+  async #recoverFromBackup(preservedPath: string, now: number): Promise<boolean> {
+    const backups = this.#backups;
+    if (!backups) return false;
+    const names = rankBackups(await listBackups(backups.directory), compactDate(now));
+    for (const name of names) {
+      const backupPath = path.join(backups.directory, name);
+      let document: unknown;
+      try {
+        document = this.#parse(await readFile(backupPath, "utf8"));
+      } catch (error: unknown) {
+        this.#logger.warn("persistence.backup_unreadable", {
+          file: backupPath,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+        continue;
+      }
+      this.#state = document as T;
+      // Write the recovered save at once, so a stop before the first change
+      // still leaves a loadable state.json.
+      await this.#persist(this.#state);
+      this.#logger.warn("persistence.recovered_from_backup", {
+        file: this.#filePath,
+        broken: preservedPath,
+        backup: backupPath,
+      });
+      return true;
+    }
+    return false;
   }
 
   async #preserveUnreadable(error: unknown, now: number): Promise<SaveFileError> {
@@ -228,12 +282,26 @@ export class JsonStore<T extends PersistedDocument> {
         }
       }
       const existing = await listBackups(backups.directory);
+      // A copy dated after today means the clock is behind it now, or was
+      // ahead when that copy was written. Either clock can be the wrong one,
+      // so write today's copy but remove nothing until the clock passes the
+      // newest copy: no real backup is lost either way.
+      const newest = existing[existing.length - 1];
+      const newestDate = newest ? BACKUP_NAME.exec(newest)?.[1] : undefined;
+      const clockBehind = newestDate !== undefined && newestDate > today;
       if (!existing.includes(path.basename(target))) {
         const tempPath = `${target}.${process.pid}.tmp`;
-        await writeFile(tempPath, body, "utf8");
+        await writeFileDurably(tempPath, body);
         await rename(tempPath, target);
         existing.push(path.basename(target));
         this.#logger.info("persistence.backup_created", { file: target });
+      }
+      if (clockBehind) {
+        this.#logger.warn("persistence.backup_trim_skipped", {
+          file: target,
+          newestBackup: newest,
+        });
+        return;
       }
       for (const name of rankBackups(existing, today).slice(backups.keep)) {
         await rm(path.join(backups.directory, name), { force: true });

@@ -9,6 +9,9 @@ import {
   ACTIVITY_ACHIEVEMENT_TASK_GROUP,
   ActivityAchievementCatalog,
   achievementProgress,
+  activityAchievementActivity,
+  countActivityAchievements,
+  countedAchievementIncrement,
   derivedAchievementProgress,
   hasClaimedAchievement,
   makeAchievementTaskId,
@@ -19,6 +22,8 @@ import {
   requiredAchievementCount,
   type ActivityAchievementPlayer,
 } from "../src/game-data/activity-achievement-data.js";
+import { CafeCatalog } from "../src/game-data/cafe-catalog.js";
+import { cafeComfort } from "../src/game-data/cafe-runtime.js";
 import { EIGHT_DAY_SIGN_UP_REWARDS } from "../src/game-data/eight-day-sign-up-data.js";
 
 const catalog = ActivityAchievementCatalog.loadDefault();
@@ -51,7 +56,7 @@ describe("activity achievement tables", () => {
     const provenance = JSON.parse(
       readFileSync(path.join(root, "provenance.json"), "utf8"),
     ) as { files: Record<string, { sha256: string; bytes: number }> };
-    expect(Object.keys(provenance.files)).toHaveLength(10);
+    expect(Object.keys(provenance.files)).toHaveLength(11);
     for (const [name, expected] of Object.entries(provenance.files)) {
       const bytes = readFileSync(path.join(root, name));
       expect(bytes.length, name).toBe(expected.bytes);
@@ -172,6 +177,86 @@ describe("activity achievement progress", () => {
     expect(derivedAchievementProgress(player, other(31))).toBeNull(); // type 22 counter
   });
 
+  it("derives the secondary cards equipped in team 1 (type 59)", () => {
+    const player = makePlayer({
+      formations: [
+        {
+          fightCards: [
+            { mainCardGuid: 1, usedCardGuid: 2 },
+            { mainCardGuid: 3, usedCardGuid: 3 },
+            { mainCardGuid: 4, usedCardGuid: 0 },
+            { mainCardGuid: 5, usedCardGuid: 6 },
+          ],
+        },
+        {
+          fightCards: [
+            { mainCardGuid: 7, usedCardGuid: 8 },
+            { mainCardGuid: 9, usedCardGuid: 10 },
+          ],
+        },
+      ],
+    });
+    expect(derivedAchievementProgress(player, other(34))).toBe(2); // type 59
+    expect(derivedAchievementProgress(makePlayer({ formations: [] }), other(34))).toBe(
+      0,
+    );
+
+    // A team change moves the progress at once, without a new login.
+    expect(activityAchievementActivity.subscriptions).toContain("formation.updated");
+    activityAchievementActivity.onEvent?.(
+      player,
+      { type: "formation.updated", formationId: 1, hasEquippedWeapon: false },
+      { now, emit() {} },
+    );
+    const taskId = String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 34));
+    expect(achievementProgress(player.taskValues[taskId] ?? 0)).toBe(2);
+  });
+
+  it("derives the cafe comfort (type 75)", () => {
+    const sources = { cafeComfort: () => 750 };
+    expect(derivedAchievementProgress(makePlayer(), other(67), sources)).toBe(750);
+    expect(derivedAchievementProgress(makePlayer(), other(98), sources)).toBe(750);
+    // Without a comfort source the stored progress is left alone.
+    expect(derivedAchievementProgress(makePlayer(), other(67))).toBeNull();
+  });
+
+  it("projects the comfort of the placed furniture when the layout changes (type 75)", () => {
+    const cafe = CafeCatalog.loadDefault();
+    const player = makePlayer({
+      cafe: {
+        level: 30,
+        furniture: [
+          { roomId: 1, templateId: 101 },
+          { roomId: 0, templateId: 102 },
+        ],
+      },
+    });
+    const comfort = cafeComfort({ cafe: player.cafe! }, cafe);
+    expect(comfort).toBeGreaterThan(0);
+    expect(activityAchievementActivity.subscriptions).toContain("cafe.comfort_changed");
+    activityAchievementActivity.onEvent?.(
+      player,
+      { type: "cafe.comfort_changed", comfort },
+      { now, emit() {} },
+    );
+    const task = (id: number): number =>
+      achievementProgress(
+        player.taskValues[
+          String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, id))
+        ] ?? 0,
+      );
+    expect(task(67)).toBe(comfort); // activity 16
+    expect(task(98)).toBe(comfort); // activity 20
+    // A player without a cafe gets no value and no error.
+    const empty = makePlayer();
+    activityAchievementActivity.reconcile?.(empty, { now, emit() {} });
+    expect(
+      empty.taskValues[
+        String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 67))
+      ],
+    ).toBeUndefined();
+  });
+
   it("never lowers stored progress and keeps the claim mark", () => {
     const taskId = String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 45));
     const player = makePlayer({
@@ -201,5 +286,102 @@ describe("activity achievement progress", () => {
     const once = { ...player.taskValues };
     reconcileActivityAchievements(player, catalog, now);
     expect(player.taskValues).toEqual(once);
+  });
+});
+
+describe("counted event page achievements", () => {
+  const level = (difficulty: number, story = false) =>
+    ({
+      type: "level.cleared",
+      chapter: 1,
+      index: 1,
+      difficulty,
+      stars: 0b111,
+      firstClear: false,
+      story,
+    }) as const;
+
+  it("adds what each event means to the matching achievement type", () => {
+    const gift = { type: "girl.gift_sent", girlId: 7, count: 4 } as const;
+    expect(countedAchievementIncrement(other(55), gift)).toBe(4); // type 18
+    expect(countedAchievementIncrement(other(31), level(1))).toBe(1); // type 22 [20,1]
+    expect(countedAchievementIncrement(other(31), level(2))).toBe(0);
+    expect(countedAchievementIncrement(other(31), level(1, true))).toBe(0);
+    expect(
+      countedAchievementIncrement(other(97), { type: "vigour.spent", amount: 6 }),
+    ).toBe(6); // type 24
+    expect(
+      countedAchievementIncrement(other(58), {
+        type: "girl.training_finished",
+        girlId: 7,
+      }),
+    ).toBe(1); // type 29
+    expect(
+      countedAchievementIncrement(other(305), {
+        type: "weapon.broken",
+        guid: 1,
+        breakLevel: 1,
+      }),
+    ).toBe(1); // type 40
+    expect(
+      countedAchievementIncrement(other(36), {
+        type: "bounty.cleared",
+        activityId: 1,
+        difficulty: 1,
+      }),
+    ).toBe(1); // type 42
+    expect(
+      countedAchievementIncrement(other(61), { type: "coffee.sold", count: 3 }),
+    ).toBe(3); // type 76
+    // An event never counts toward another type.
+    expect(countedAchievementIncrement(other(61), gift)).toBe(0);
+    expect(countedAchievementIncrement(other(100), level(1))).toBe(0); // type 1
+  });
+
+  it("counts each shown achievement once and keeps the claim mark", () => {
+    const claimed = String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 56));
+    const player = makePlayer({
+      taskValues: { [claimed]: makeAchievementTaskValue(20, true) },
+    });
+    countActivityAchievements(
+      player,
+      catalog,
+      { type: "girl.gift_sent", girlId: 7, count: 2 },
+      now,
+    );
+    const task = (id: number): number | undefined =>
+      player.taskValues[
+        String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, id))
+      ];
+    expect(task(55)).toBe(makeAchievementTaskValue(2, false));
+    expect(task(56)).toBe(makeAchievementTaskValue(22, true));
+    expect(task(57)).toBe(makeAchievementTaskValue(2, false));
+    // Only gift achievements moved.
+    expect(Object.keys(player.taskValues)).toHaveLength(3);
+  });
+
+  it("counts every furniture piece bought (type 137)", () => {
+    const bought = { type: "cafe.furniture_bought", count: 3 } as const;
+    expect(countedAchievementIncrement(other(64), bought)).toBe(3);
+    expect(countedAchievementIncrement(other(67), bought)).toBe(0);
+    expect(activityAchievementActivity.subscriptions).toContain(
+      "cafe.furniture_bought",
+    );
+    const player = makePlayer();
+    activityAchievementActivity.onEvent?.(player, bought, { now, emit() {} });
+    const task = (id: number): number | undefined =>
+      player.taskValues[
+        String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, id))
+      ];
+    expect(task(64)).toBe(makeAchievementTaskValue(3, false));
+    expect(task(65)).toBe(makeAchievementTaskValue(3, false));
+    expect(task(66)).toBe(makeAchievementTaskValue(3, false));
+  });
+
+  it("derives the cafe level (type 79)", () => {
+    expect(derivedAchievementProgress(makePlayer(), other(95))).toBe(1);
+    expect(
+      derivedAchievementProgress(makePlayer({ cafe: { level: 3 } }), other(95)),
+    ).toBe(3);
   });
 });
