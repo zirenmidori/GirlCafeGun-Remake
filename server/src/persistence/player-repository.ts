@@ -23,9 +23,33 @@ import { createDefaultActivityEngine } from "../activities/default-activity-engi
 import type { DomainEvent } from "../activities/domain-events.js";
 import {
   addCardExperience,
+  CARD_ERROR_GENERIC,
+  CARD_ERROR_IN_FORMATION,
+  CARD_ERROR_LOCKED,
+  CARD_ERROR_MAXIMUM_BREAK,
+  CARD_ERROR_MAXIMUM_LEVEL,
+  CARD_ERROR_NOT_ENOUGH,
+  CARD_ERROR_NOT_ENOUGH_BREAK_GOLD,
+  CARD_ERROR_NOT_ENOUGH_BREAK_ITEMS,
+  CARD_ERROR_SKILL_MAXED,
   CARD_EXP_MATERIALS,
+  CARD_MAXIMUM_ENHANCE_LEVEL,
+  CARD_SKILL_MATERIALS,
+  CardEnhancementError,
   type CardEnhancementMaterial,
+  type ExpMaterialDefinition,
 } from "../game-data/card-enhancement-data.js";
+import {
+  CardBreakCatalog,
+  CardBreakError,
+  cardMaximumLevel,
+} from "../game-data/card-break-data.js";
+import {
+  applyCardSkillPoints,
+  cardSkillFeedPoints,
+  cardSkillPointsRemaining,
+} from "../game-data/card-skill-data.js";
+import { CharacterCardCatalog } from "../game-data/character-card-template-data.js";
 import {
   BOUNTY_DAILY_REWARD_COUNT,
   bountyOperationalDate,
@@ -37,6 +61,7 @@ import {
 } from "../game-data/bounty-data.js";
 import {
   characterCardDecompositionReward,
+  characterCardFeedValue,
   MAX_CARD_DECOMPOSITION_COUNT,
 } from "../game-data/card-decomposition-data.js";
 import {
@@ -747,6 +772,16 @@ export interface CardEnhancementResult {
   card: CharacterCardState;
   consumedItems: InventoryItemState[];
   addedExperience: number;
+  addedSkillPoints: number;
+  coinCost: number;
+  updatedMoney: MoneyState[];
+  updatedGirls: GirlState[];
+}
+
+export interface CardBreakResult {
+  player: Player;
+  card: CharacterCardState;
+  consumedItems: InventoryItemState[];
   coinCost: number;
   updatedMoney: MoneyState[];
 }
@@ -5742,30 +5777,135 @@ export class PlayerRepository {
     account: string,
     guid: number,
     materials: readonly CardEnhancementMaterial[],
+    random: () => number = Math.random,
   ): Promise<CardEnhancementResult> {
     let player: Player | undefined;
     let enhancedCard: CharacterCardState | undefined;
     let addedExperience = 0;
+    let addedSkillPoints = 0;
     let coinCost = 0;
     const consumedItemGuids = new Set<number>();
+    const removedCards: InventoryItemState[] = [];
+    const updatedGirlIds = new Set<number>();
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
-      enhancedCard = player.inventory.find(
-        (entry) => entry.guid === guid && isCharacterCard(entry),
+      const target = player.inventory.find(
+        (entry) => entry.guid === guid && entry.count > 0 && isCharacterCard(entry),
       );
-      if (!enhancedCard) throw new Error(`Unknown character card: ${guid}`);
+      if (!target) {
+        throw new CardEnhancementError("card_not_owned", CARD_ERROR_GENERIC, guid);
+      }
+      enhancedCard = target;
+      // Oath cards grow through their pledge stages, never through materials.
+      if (target.particular === 17) {
+        throw new CardEnhancementError("oath_card", CARD_ERROR_GENERIC, guid);
+      }
+      reconcileInventoryLockState(player);
+      const cards = CharacterCardCatalog.loadDefault();
+      const targetTemplate = cards.get(target);
+      const maximumLevel = targetTemplate
+        ? cardMaximumLevel(targetTemplate.breakType, target.breakLevel)
+        : CARD_MAXIMUM_ENHANCE_LEVEL;
+      const formationCardGuids = new Set(
+        player.formations.flatMap(({ fightCards }) =>
+          fightCards.flatMap(({ mainCardGuid, secondaryCardGuids, usedCardGuid }) => [
+            mainCardGuid,
+            usedCardGuid,
+            ...secondaryCardGuids,
+          ]),
+        ),
+      );
 
+      let skillPoints = 0;
+      let hasSkillMaterial = false;
+      const donors = new Set<number>();
       for (const material of materials) {
+        if (material.kind === 2) {
+          const donor = player.inventory.find(
+            (candidate) =>
+              candidate.guid === material.reference &&
+              candidate.count > 0 &&
+              isCharacterCard(candidate),
+          );
+          if (
+            !donor ||
+            donor.guid === guid ||
+            material.count !== 1 ||
+            donors.has(donor.guid) ||
+            donor.particular === 17
+          ) {
+            throw new CardEnhancementError(
+              "invalid_material",
+              CARD_ERROR_NOT_ENOUGH,
+              material.reference,
+            );
+          }
+          if (donor.lockOn === 1) {
+            throw new CardEnhancementError(
+              "card_locked",
+              CARD_ERROR_LOCKED,
+              donor.guid,
+            );
+          }
+          if (formationCardGuids.has(donor.guid)) {
+            throw new CardEnhancementError(
+              "card_in_formation",
+              CARD_ERROR_IN_FORMATION,
+              donor.guid,
+            );
+          }
+          const donorTemplate = cards.get(donor);
+          if (!donorTemplate) {
+            throw new CardEnhancementError(
+              "unknown_card",
+              CARD_ERROR_NOT_ENOUGH,
+              donor.guid,
+            );
+          }
+          const value = characterCardFeedValue(
+            donor.enhanceLevel,
+            donorTemplate.rarity,
+          );
+          if (!value) {
+            throw new CardEnhancementError(
+              "unknown_rarity",
+              CARD_ERROR_NOT_ENOUGH,
+              donor.guid,
+            );
+          }
+          donors.add(donor.guid);
+          coinCost += value.coinCost;
+          if (
+            donor.detail === target.detail &&
+            donor.particular === target.particular &&
+            donor.templateLevel === target.templateLevel
+          ) {
+            // A copy of the same card adds skill levels, never character experience.
+            hasSkillMaterial = true;
+            if (targetTemplate) {
+              skillPoints += cardSkillFeedPoints(donor, targetTemplate);
+            }
+          } else {
+            addedExperience += value.experience;
+          }
+          continue;
+        }
         if (material.kind !== 1) {
-          throw new Error(
-            `Unsupported card enhancement material kind: ${material.kind}`,
+          throw new CardEnhancementError(
+            "unsupported_material_kind",
+            CARD_ERROR_NOT_ENOUGH,
+            material.reference,
           );
         }
-        const definition = CARD_EXP_MATERIALS.get(material.reference);
+        const skillDefinition = CARD_SKILL_MATERIALS.get(material.reference);
+        const definition =
+          skillDefinition ?? CARD_EXP_MATERIALS.get(material.reference);
         if (!definition) {
-          throw new Error(
-            `Unknown card experience material index: ${material.reference}`,
+          throw new CardEnhancementError(
+            "unknown_material_index",
+            CARD_ERROR_NOT_ENOUGH,
+            material.reference,
           );
         }
         const item = player.inventory.find(
@@ -5773,17 +5913,33 @@ export class PlayerRepository {
             candidate.genre === definition.genre &&
             candidate.detail === definition.detail &&
             candidate.particular === definition.particular &&
-            candidate.templateLevel === definition.templateLevel,
+            candidate.templateLevel === definition.templateLevel &&
+            candidate.count >= material.count,
         );
-        if (!item || item.count < material.count) {
-          throw new Error(
-            `Insufficient card experience material: ${material.reference}`,
+        if (!item) {
+          throw new CardEnhancementError(
+            "insufficient_material",
+            CARD_ERROR_NOT_ENOUGH,
+            material.reference,
           );
         }
         item.count -= material.count;
         consumedItemGuids.add(item.guid);
-        addedExperience += definition.experience * material.count;
         coinCost += definition.coinCost * material.count;
+        if (skillDefinition) {
+          hasSkillMaterial = true;
+          skillPoints += material.count;
+        } else {
+          addedExperience +=
+            (definition as ExpMaterialDefinition).experience * material.count;
+        }
+      }
+
+      if (hasSkillMaterial && cardSkillPointsRemaining(target, targetTemplate) === 0) {
+        throw new CardEnhancementError("skill_maxed", CARD_ERROR_SKILL_MAXED, guid);
+      }
+      if (addedExperience > 0 && target.enhanceLevel >= maximumLevel) {
+        throw new CardEnhancementError("level_cap", CARD_ERROR_MAXIMUM_LEVEL, guid);
       }
 
       const gold = player.money.find(({ id }) => id === MONEY_GOLD);
@@ -5793,13 +5949,34 @@ export class PlayerRepository {
       }
       if (gold) gold.count -= coinCost;
 
+      // Consumed cards leave the inventory, as in card decomposition, so they
+      // no longer count as owned copies; the client gets them at count 0.
+      for (const donor of player.inventory) {
+        if (donors.has(donor.guid)) removedCards.push({ ...donor, count: 0 });
+      }
+      if (donors.size > 0) {
+        player.inventory = player.inventory.filter(({ guid }) => !donors.has(guid));
+        for (const girl of reconcileCustomGirlOutfits(player)) {
+          updatedGirlIds.add(girl.girlId);
+        }
+      }
+
       const enhanced = addCardExperience(
-        enhancedCard.enhanceLevel,
-        enhancedCard.enhanceExp,
+        target.enhanceLevel,
+        target.enhanceExp,
         addedExperience,
+        maximumLevel,
       );
-      enhancedCard.enhanceLevel = enhanced.level;
-      enhancedCard.enhanceExp = enhanced.experience;
+      target.enhanceLevel = enhanced.level;
+      target.enhanceExp = enhanced.experience;
+      if (skillPoints > 0 && targetTemplate) {
+        addedSkillPoints = applyCardSkillPoints(
+          target,
+          targetTemplate,
+          skillPoints,
+          random,
+        );
+      }
       if (reconcileMaximumFightPower(player)) {
         this.#activities.dispatch(player, [
           { type: "fight_power.changed", value: player.fightPower },
@@ -5815,6 +5992,7 @@ export class PlayerRepository {
       account,
       guid,
       addedExperience,
+      addedSkillPoints,
       coinCost,
       level: enhancedCard.enhanceLevel,
       experience: enhancedCard.enhanceExp,
@@ -5827,13 +6005,102 @@ export class PlayerRepository {
     return {
       player: snapshot,
       card,
-      consumedItems: snapshot.inventory.filter(({ guid: itemGuid }) =>
-        consumedItemGuids.has(itemGuid),
-      ),
+      consumedItems: [
+        ...snapshot.inventory.filter(({ guid: itemGuid }) =>
+          consumedItemGuids.has(itemGuid),
+        ),
+        ...structuredClone(removedCards),
+      ],
       addedExperience,
+      addedSkillPoints,
       coinCost,
       updatedMoney: snapshot.money.filter(({ id }) => id === MONEY_GOLD),
+      updatedGirls: snapshot.girls.filter(({ girlId }) => updatedGirlIds.has(girlId)),
     };
+  }
+
+  async breakCard(account: string, guid: number): Promise<CardBreakResult> {
+    let result: CardBreakResult | undefined;
+    await this.#store.update((state) => {
+      const player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      reconcileInventoryLockState(player);
+      const card = player.inventory.find(
+        (entry) => entry.guid === guid && entry.count > 0 && isCharacterCard(entry),
+      );
+      // Oath cards grow through their pledge stages, never through materials.
+      if (!card || card.particular === 17) {
+        throw new CardBreakError("card_not_owned", CARD_ERROR_GENERIC, guid);
+      }
+      const template = CharacterCardCatalog.loadDefault().get(card);
+      const stage = template
+        ? CardBreakCatalog.loadDefault().stage(template.breakType, card.breakLevel + 1)
+        : null;
+      if (!stage) {
+        throw new CardBreakError("maximum_break", CARD_ERROR_MAXIMUM_BREAK, guid);
+      }
+      const money = player.money.find((entry) => entry.id === stage.currencyId);
+      const consumedGuids = new Set<number>();
+      for (const need of stage.items) {
+        let remaining = need.count;
+        for (const item of player.inventory) {
+          if (remaining === 0) break;
+          if (
+            item.count <= 0 ||
+            item.lockOn === 1 ||
+            item.genre !== need.genre ||
+            item.detail !== need.detail ||
+            item.particular !== need.particular ||
+            item.templateLevel !== need.templateLevel
+          ) {
+            continue;
+          }
+          const taken = Math.min(item.count, remaining);
+          item.count -= taken;
+          remaining -= taken;
+          consumedGuids.add(item.guid);
+        }
+        if (remaining > 0) {
+          throw new CardBreakError(
+            "insufficient_items",
+            CARD_ERROR_NOT_ENOUGH_BREAK_ITEMS,
+            guid,
+          );
+        }
+      }
+      if (!money || money.count < stage.currencyCount) {
+        throw new CardBreakError(
+          "insufficient_money",
+          CARD_ERROR_NOT_ENOUGH_BREAK_GOLD,
+          guid,
+        );
+      }
+      money.count -= stage.currencyCount;
+      card.breakLevel = stage.breakLevel;
+      if (reconcileMaximumFightPower(player)) {
+        this.#activities.dispatch(player, [
+          { type: "fight_power.changed", value: player.fightPower },
+        ]);
+      }
+      const snapshot = structuredClone(player);
+      result = {
+        player: snapshot,
+        card: snapshot.inventory.find((entry) => entry.guid === guid)!,
+        consumedItems: snapshot.inventory.filter((entry) =>
+          consumedGuids.has(entry.guid),
+        ),
+        coinCost: stage.currencyCount,
+        updatedMoney: snapshot.money.filter((entry) => entry.id === stage.currencyId),
+      };
+    });
+    if (!result) throw new CardBreakError("not_committed", CARD_ERROR_GENERIC, guid);
+    this.#logger.info("player.card.break", {
+      account,
+      guid,
+      breakLevel: result.card.breakLevel,
+      coinCost: result.coinCost,
+    });
+    return result;
   }
 
   async enhanceWeapon(

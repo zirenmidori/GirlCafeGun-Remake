@@ -131,6 +131,37 @@ passive-skill increments and replay rejection. Formation ownership also rejects
 count-zero tombstones after consumption. Phone validation of the new artwork
 and its held/firing pose remains pending.
 
+## Card awakening and Break (2026-11-20)
+
+`LuaCall 5` (`Card_LevelUpCommon`) also accepts:
+
+- a character card `[2, guid, 1]`. A copy of the same card (same G, D, P, L)
+  adds 3 skill points plus the levels the copy had raised. Another card adds
+  `floor(min(spent exp * 0.3, 150000) + ItemRarityExp)` experience
+  (`CardCommon:GetCardExp`). Each card costs its `ItemRarityExp` in gold
+  (`UI_CardMain:GetSelectCost`). Locked cards, cards in a team and oath cards
+  are refused. The consumed card leaves the inventory, as in decomposition.
+- the skill items 7-4-1-3 and 7-4-1-4 as indexes 25 and 26 (after the 24 exp
+  materials): one skill point each, 1,500 and 3,500 gold.
+
+Skill points go to random skills below level 4 (the original screen shows a
+count, not a chosen skill). Raised levels are stored in `cardSkillLevels` and
+sent as `ItemInfo.skillinfo` (skilltype 3 tactical, 2 passive and resistance).
+
+`LuaCall 6` (`Card_Break`, `{guid}`) takes the items and gold of the next step
+of the card's `BreakType` row in `resources/card/charactercardbreak.txt`,
+raises `breakLevel` and answers `{ok = true}` after the item and money
+updates. The level cap is `MaxLevel0` (40), then `MaxLevel1..3` (50/60/70).
+A card that is already above its cap keeps its level. Experience left over at
+the cap is limited to one next-level requirement, as the client shows.
+
+Every refusal of LuaCall 5 and 6 sends one `errorKey` reply. The client shows
+the text only for LuaCall 5; for LuaCall 6 it reads only `ok`.
+
+Tables: `resources/card/charactercard.txt` (13 columns of the 0.1.3
+`CharacterCard` table) and `charactercardbreak.txt`; see `provenance.json`.
+Coverage: `card-awaken-break-data`, `-persistence` and `-gateway` tests.
+
 ## 验证
 
 - `test/card-enhancement-data.test.ts`：请求、材料顺序、经验跨级；
@@ -146,8 +177,8 @@ and its held/firing pose remains pending.
 
 ## 已知缺口
 
-- 角色卡没有按稀有度、突破或玩家等级限制最大等级；
-- 角色卡技能升级、觉醒、突破和副卡强化未实现；
+- 角色卡等级上限按突破表（40/50/60/70），不按玩家等级；
+- Card refit (LuaCall 8) is not implemented; card awakening and Break are (see above).
 - Weapon reset is not implemented; normal breakthrough and linked passive-skill increments are implemented.
 - 武器重铸技能（`skillinfo` skilltype 4）未实现；
 - 普通物品、物资、符文、武器模块和武器零件的出售/分解仍未实现；

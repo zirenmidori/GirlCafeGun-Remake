@@ -21,6 +21,7 @@ import { completeHouseRooms } from "../game-data/house-data.js";
 import type { AppConfig } from "../config.js";
 import type { CafePet } from "../game-data/cafe-pets.js";
 import { weaponPassiveSkills } from "../game-data/weapon-skill-data.js";
+import { characterCardSkills } from "../game-data/card-skill-data.js";
 import { oathCardSkills } from "../game-data/oath-card-skill-data.js";
 import type {
   CafeFurnitureState,
@@ -511,6 +512,9 @@ function makeItemInfo(item: InventoryEntryState): Buffer {
       fieldBytes(11, makeMiniSkill(skill.skillId, skill.skillLevel, skill.skillType)),
     ),
     ...oathCardSkills(item).map((skill) =>
+      fieldBytes(11, makeMiniSkill(skill.skillId, skill.skillLevel, skill.skillType)),
+    ),
+    ...characterCardSkills(item).map((skill) =>
       fieldBytes(11, makeMiniSkill(skill.skillId, skill.skillLevel, skill.skillType)),
     ),
     ...runeItemSkills(item).map((skill) =>

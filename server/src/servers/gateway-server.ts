@@ -22,9 +22,16 @@ import {
   type BountyRun,
 } from "../game-data/bounty-data.js";
 import {
+  CARD_ERROR_GENERIC,
+  CardEnhancementError,
   LUA_COMMAND_CARD_LEVEL_UP_COMMON,
   parseCardEnhancementRequest,
 } from "../game-data/card-enhancement-data.js";
+import {
+  CardBreakError,
+  LUA_COMMAND_CARD_BREAK,
+  parseCardBreakRequest,
+} from "../game-data/card-break-data.js";
 import {
   LUA_COMMAND_CARD_DECOMPOSE,
   parseCardDecompositionRequest,
@@ -3172,13 +3179,31 @@ export function createGatewayServer({
               request.materials,
             );
           } catch (error) {
+            if (error instanceof CardEnhancementError) {
+              send(
+                COMMAND.NTF_S2C_CALL,
+                0,
+                makeServerLuaCall("LuaCall", {
+                  sCmd: LUA_COMMAND_CARD_LEVEL_UP_COMMON,
+                  tbParam: { errorKey: error.errorKey },
+                }),
+              );
+              logger.warn("card.enhance.rejected", {
+                peer,
+                account: context.account,
+                guid: request.guid,
+                reason: error.reason,
+                materialGuid: error.guid,
+              });
+              return;
+            }
             if (!(error instanceof InsufficientGoldError)) throw error;
             send(
               COMMAND.NTF_S2C_CALL,
               0,
               makeServerLuaCall("LuaCall", {
                 sCmd: LUA_COMMAND_CARD_LEVEL_UP_COMMON,
-                tbParam: { errorKey: "Error.1" },
+                tbParam: { errorKey: CARD_ERROR_GENERIC },
               }),
             );
             logger.warn("card.enhance.insufficient_gold", {
@@ -3199,6 +3224,7 @@ export function createGatewayServer({
           for (const money of result.updatedMoney) {
             send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
           }
+          sendGirlUpdates(result.updatedGirls);
           send(COMMAND.TASK_VALUE_RSP, 0, makeTaskValueSync(result.player.taskValues));
           send(
             COMMAND.NTF_S2C_CALL,
@@ -3216,9 +3242,74 @@ export function createGatewayServer({
             feature: "card.enhance",
             guid: request.guid,
             addedExperience: result.addedExperience,
+            addedSkillPoints: result.addedSkillPoints,
             coinCost: result.coinCost,
             level: result.card.enhanceLevel,
             experience: result.card.enhanceExp,
+          });
+          return;
+        }
+        if (luaCommand === LUA_COMMAND_CARD_BREAK) {
+          const request = parseCardBreakRequest(call?.parameters);
+          const rejectBreak = (errorKey: string): void =>
+            send(
+              COMMAND.NTF_S2C_CALL,
+              0,
+              makeServerLuaCall("LuaCall", {
+                sCmd: LUA_COMMAND_CARD_BREAK,
+                tbParam: { errorKey },
+              }),
+            );
+          if (!request) {
+            rejectBreak(CARD_ERROR_GENERIC);
+            logger.warn("card.break.invalid_request", {
+              peer,
+              account: context.account,
+              parameters: call?.parameters,
+            });
+            return;
+          }
+          let result;
+          try {
+            result = await players.breakCard(context.account, request.guid);
+          } catch (error) {
+            if (!(error instanceof CardBreakError)) throw error;
+            rejectBreak(error.errorKey);
+            logger.warn("card.break.rejected", {
+              peer,
+              account: context.account,
+              guid: request.guid,
+              reason: error.reason,
+            });
+            return;
+          }
+          context.player = result.player;
+          send(
+            COMMAND.ITEM_UPDATE_NTF,
+            0,
+            makeItemUpdateNotification([result.card, ...result.consumedItems]),
+          );
+          for (const money of result.updatedMoney) {
+            send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+          }
+          send(COMMAND.TASK_VALUE_RSP, 0, makeTaskValueSync(result.player.taskValues));
+          send(
+            COMMAND.NTF_S2C_CALL,
+            0,
+            makeServerLuaCall("LuaCall", {
+              sCmd: LUA_COMMAND_CARD_BREAK,
+              tbParam: { ok: true },
+            }),
+          );
+          logger.info("lua.callback", {
+            peer,
+            account: context.account,
+            method: "LuaCall",
+            command: LUA_COMMAND_CARD_BREAK,
+            feature: "card.break",
+            guid: request.guid,
+            breakLevel: result.card.breakLevel,
+            coinCost: result.coinCost,
           });
           return;
         }

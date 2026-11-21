@@ -56,6 +56,38 @@ export function characterCardDecompositionReward(
   };
 }
 
+/** ItemRarityExp NeedExp2: the experience (and gold cost) a card adds as a material. */
+const FEED_BASE_BY_RARITY = new Map([
+  [1, 500],
+  [2, 2_000],
+  [3, 5_000],
+  [4, 10_000],
+  [5, 80_000],
+]);
+const FEED_MAXIMUM_EXPERIENCE = 150_000;
+
+/**
+ * Mirrors CardCommon:GetCardExp(): floor(min(spent experience * 0.3, 150000) +
+ * ItemRarityExp.NeedExp2). The material also costs NeedExp2 gold
+ * (UI_CardMain GetSelectCost).
+ */
+export function characterCardFeedValue(
+  level: number,
+  rarity: number,
+): { experience: number; coinCost: number } | null {
+  const base = FEED_BASE_BY_RARITY.get(rarity);
+  if (base === undefined) return null;
+  return {
+    experience: Math.floor(
+      Math.min(
+        cardCumulativeExperience(level) * DECOMPOSITION_EXP_RATE,
+        FEED_MAXIMUM_EXPERIENCE,
+      ) + base,
+    ),
+    coinCost: base,
+  };
+}
+
 export function parseCardDecompositionRequest(parameters: unknown): number[] | null {
   if (typeof parameters !== "object" || parameters === null) return null;
   const envelope = parameters as Record<string, unknown>;
