@@ -106,6 +106,7 @@ describe("game protocol", () => {
       },
     ],
     levels: [{ id: 65_793, star: 15 }],
+    headFrame: 12,
     cafe: { coffees: [] },
     gacha: { pending: null },
     dailySignUp: {
@@ -371,6 +372,7 @@ describe("game protocol", () => {
     const firstLevel = decodeFields(levelList[0]?.value as Buffer);
     expect(firstNumber(firstLevel, 1)).toBe(65_793);
     expect(firstNumber(firstLevel, 2)).toBe(15);
+    expect(firstNumber(fields, 13)).toBe(12);
 
     const money = fields
       .filter((field) => field.fieldNumber === 5)

@@ -642,6 +642,15 @@ export class CafeCatalog {
   furnitureItems(): readonly CafeFurnitureConfig[] {
     return [...this.#furniture.values()];
   }
+  furnitureForItem(gdpl: readonly number[]): CafeFurnitureConfig | null {
+    const target = gdpl.slice(0, 4).join("-");
+    const matches = this.furnitureItems().filter(
+      (item) => item.ItemInfo.length === 4 && item.ItemInfo.join("-") === target,
+    );
+    if (matches.length === 0) return null;
+    const primary = matches.find((item) => (item.raw.AddObjs ?? "").trim() !== "");
+    return primary ?? matches.reduce((best, item) => (item.Id < best.Id ? item : best));
+  }
   theme(id: number): CafeThemeConfig | null {
     return this.#themes.get(id) ?? null;
   }

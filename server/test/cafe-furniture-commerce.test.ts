@@ -103,6 +103,16 @@ function run(p: Player, command: number, parameters: unknown) {
 }
 
 describe("core café furniture commerce", () => {
+  it("picks the primary furniture row when an item matches several rows", () => {
+    expect(
+      [
+        [11, 22, 12, 3, 1],
+        [11, 22, 17, 3, 1],
+        [11, 9, 20, 3, 1],
+        [11, 9, 13, 3, 1],
+      ].map((gdpl) => catalog.furnitureForItem(gdpl)?.Id),
+    ).toEqual([4022, 4112, 2084, 2014]);
+  });
   it("uses exact café wallet prices and projects batch purchases into new native GUIDs", () => {
     const p = player(),
       before = p.money[0]!.count;

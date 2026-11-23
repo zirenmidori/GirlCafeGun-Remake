@@ -344,6 +344,7 @@ export function makePlayerNotification(player: Player): Buffer {
       fieldBytes(11, makeFormationInfo(formation)),
     ),
     fieldBytes(12, makeLevelList(player.levels)),
+    fieldVarint(13, player.headFrame ?? 0),
     fieldVarint(20, player.roleId),
   ]);
 }

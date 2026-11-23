@@ -25,6 +25,42 @@
         "headerRows": 3,
         "lineEndings": "LF"
       }
+    },
+    "boxitems.txt": {
+      "source": "setting.u: MonoBehaviour ItemList (ItemBaseInfo rows)",
+      "sha256": "127745cb8e37b8cd82cd7a09f36099f6225e2f2c12eb000ffe1dadcb6e98188e",
+      "bytes": 7820,
+      "projection": {
+        "sourceFormat": "binary-row-selection",
+        "sourceRows": 2431,
+        "filter": {
+          "column": "Genre",
+          "values": [
+            8
+          ]
+        },
+        "columns": [
+          "Genre",
+          "Detail",
+          "Particular",
+          "Level",
+          "AutoUse",
+          "ClassName",
+          "ExtParam1"
+        ],
+        "headerRows": 3,
+        "lineEndings": "CRLF"
+      }
+    },
+    "itemboxinfo.txt": {
+      "source": "setting.u: TextAsset Item/ItemBoxInfo.txt",
+      "sha256": "92cf3c366a254931c8761d90741d7c68818f1d0f20dfb2f6165988170ccba768",
+      "bytes": 100175,
+      "projection": {
+        "sourceFormat": "text-table",
+        "headerRows": 3,
+        "lineEndings": "CRLF"
+      }
     }
   }
 }

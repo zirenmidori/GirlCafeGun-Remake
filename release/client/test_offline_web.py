@@ -2,9 +2,9 @@
 
 run() needs no client file. It passes synthetic scripts through patch_lua.patch_script, so the release edits
 and the web patch are applied in the order of the build. Then it opens the three windows with a recording web
-view and compares every address with a second implementation of the choice in this file. Only the anchor
-lines of the patch come from the client. run_bundle() repeats the behavior steps on the module and the three
-window functions inside a patched lua.u.
+view and runs the native notice reader, comparing every address with a second implementation of the choice in
+this file. Only the anchor lines of the patch come from the client. run_bundle() repeats the behavior steps on
+the module, the three window functions and the notice reader inside a patched lua.u.
 """
 from pathlib import Path
 import re
@@ -17,6 +17,7 @@ import patch_offline_web as g
 
 NOW = 1763100000
 LOCAL = 'http://127.0.0.1:28080/'  # envir.json of the release: the address of every web window
+PUBLISHER = 'http://l3-prod-patch-sssj.bilibiligame.net/bili/10136/debug/'
 # The window functions that hold the patched calls.
 FUNCTIONS = {'UI_Notice.lua': 'function tbClass:WebNotice()\n', 'UI_User.lua': 'function tbClass:OpenURL(url, title)\n',
              'UI_ServerError.lua': 'function tbClass:WebNotice(url)\n'}
@@ -86,6 +87,18 @@ end
 function tbClass:OnClose()
 end
 ''',
+    'NoticeCommon.lua': '''-- Synthetic stand-in for the native notice reader.
+NoticeCommon = {};
+function NoticeCommon:InitURL()
+\tself.URLMap = {}
+\tself.URLMap["default"] = "http://gcg2notice.ks3-cn-beijing.ksyun.com/notice.txt"
+\tlocal url = Game.Dir.GetBaseUpdateUrl()
+\tif url ~= "" then
+\t\tself.URLMap["default"] = url .. "notice.txt";
+\tend
+\tprint("NoticeCommon's Url is " .. self.URLMap["default"])
+end
+''',
 }.items()}
 
 # Addresses for OfflineWeb.Url. A local address without a page changes:
@@ -129,7 +142,8 @@ function webview(text)
 end
 local world = {}
 Game = { Localization = { Lang = 'zh_CN' }, LangType = { zh_CN = 'zh_CN', zh_TC = 'zh_TC', en_US = 'en_US' },
-  EnvirPackage = { Ins = { cur = 'bili' } }, App = {}, ServerList = { GetNoticeUrl = function() return world.notice end } }
+  EnvirPackage = { Ins = { cur = 'bili' } }, App = {}, Dir = { GetBaseUpdateUrl = function() return update_url end },
+  ServerList = { GetNoticeUrl = function() return world.notice end } }
 GameManager = {}
 -- The windows get a web view that exists, so they must not make a second one.
 typeof, CS = function() error('a second web view was made') end, any()
@@ -148,6 +162,7 @@ function define(name, chunk)
   tbClass = nil
 end
 -- One window: the function runs on a fresh screen object.
+function setnotice(url) world.notice = url end
 function open(name, fn, view, notice, ...)
   world, printed = { view = view, notice = notice }, {}
   local screen = setmetatable({}, { __index = windows[name] })
@@ -199,7 +214,7 @@ def check_injection():
 
 def check_injection_web(patch_lua):
     block, scripts = g.module_block(), {}
-    assert set(SYNTHETIC) == g.LUA_NAMES == set(g.CALLS) | {'Lib.lua'} and g.LUA_NAMES <= patch_lua.NAMES
+    assert set(SYNTHETIC) == g.LUA_NAMES == set(g.CALLS) | {'Lib.lua', 'NoticeCommon.lua'} and g.LUA_NAMES <= patch_lua.NAMES
     for name, source in SYNTHETIC.items():
         names, g.LUA_NAMES = g.LUA_NAMES, set()
         try:
@@ -226,6 +241,17 @@ def check_injection_web(patch_lua):
             # The module must stay right after its anchor.
             count += rejected(name, text.replace(g.ANCHOR + block, block + g.ANCHOR))
             assert count == 5, count
+        elif name == 'NoticeCommon.lua':
+            stock = text
+            for old, new in zip(g.NOTICE_OLD, g.NOTICE_NEW):
+                assert plain.count(old) == 1 and stock.count(new) == 1
+                stock = stock.replace(new, old)
+            assert stock == plain
+            old_default, old_update = g.NOTICE_OLD
+            count = rejected(name, plain.replace(old_default, '')) + rejected(name, plain.replace(old_update, ''))
+            count += rejected(name, plain.replace(old_default, old_default + old_default))
+            count += rejected(name, plain + 'OfflineWeb = 1\n') + rejected(name, text.replace(g.NOTICE_NEW[1], ''))
+            assert count == 5, (name, count)
         else:
             old, new, stock_loads, loads = g.CALLS[name]
             assert plain.count(old) == 1 and plain.count(g.LOAD) == stock_loads and text.count(g.LOAD) == loads
@@ -304,14 +330,33 @@ def run(scripts=None, report=None):
     assert got == (other + '?%d' % NOW, 1, 0, 1, ''), got
     if report: report('ok Notice window: %s -> %snotice.html?<time>; another host stays' % (LOCAL, LOCAL))
 
-    # 3. Help and Glossary: the local address gets the page that says there is no copy.
+    # 3. The native notice reader asks the local server, not the publisher update host.
+    notice_chunk = function_chunk(texts['NoticeCommon.lua'], 'function NoticeCommon:InitURL()\n')
+    assert g.NOTICE_NEW[0] in notice_chunk and g.NOTICE_NEW[1] in notice_chunk
+    lua.execute('NoticeCommon = {}')
+    lua.execute(notice_chunk)
+    for update_url in (PUBLISHER, ''):
+        lua.globals().update_url, lua.globals().notice_url = update_url, LOCAL
+        lua.execute('setnotice(notice_url); printed = {}; NoticeCommon:InitURL()')
+        assert lua.eval('NoticeCommon.URLMap["default"]') == LOCAL + 'notice.txt'
+        assert lua.eval('printed[1]') == '[web] native notice: notice.txt'
+    lua.globals().update_url, lua.globals().notice_url = PUBLISHER, 'https://example.org/'
+    lua.execute('setnotice(notice_url); printed = {}; NoticeCommon:InitURL()')
+    assert lua.eval('NoticeCommon.URLMap["default"]') == PUBLISHER + 'notice.txt'
+    assert lua.eval('#printed') == 0
+    lua.globals().update_url = LOCAL
+    lua.execute('NoticeCommon:InitURL()')
+    assert lua.eval('NoticeCommon.URLMap["default"]') == LOCAL + 'notice.txt'
+    if report: report('ok native notice reader: publisher update host -> %snotice.txt; other hosts stay' % LOCAL)
+
+    # 4. Help and Glossary: the local address gets the page that says there is no copy.
     got = opened('UI_User', 'OpenURL', view(), None, LOCAL, 'Help')
     assert got == (LOCAL + 'web/offline/index.html', 1, 0, 1, '[web] local page: web/offline/index.html'), got
     got = opened('UI_User', 'OpenURL', view(), None, 'https://example.org/help/index.html', 'Help')
     assert got == ('https://example.org/help/index.html', 1, 0, 1, ''), got
     if report: report('ok settings window: %s -> %sweb/offline/index.html; another host stays' % (LOCAL, LOCAL))
 
-    # 4. The server-error window: the text from inside the script, and no request at all.
+    # 5. The server-error window: the text from inside the script, and no request at all.
     html = lua.eval('OfflineWeb.ErrorHtml()')
     assert html.startswith('<!DOCTYPE html>') and html.endswith('</html>') and '#' not in html and '%' not in html
     assert not re.search(r'https?://|src=|href=|url\(', html) and html.isascii()
@@ -330,7 +375,7 @@ def run(scripts=None, report=None):
         assert got == ('https://example.org/maintenance/?time=%d' % NOW, 1, 0, 1, ''), (text, got)
     if report: report('ok server-error window: text shown without a request; page loaded when the web view takes no text; another host stays')
 
-    # 5. The server holds the pages that the calls name, and its page says what the text in the script says.
+    # 6. The server holds the pages that the calls name, and its page says what the text in the script says.
     pages = ROOT / 'server/resources/web'
     with_server = pages.is_dir()
     if with_server:
@@ -350,7 +395,8 @@ def run(scripts=None, report=None):
         if report: report('ok whole scripts: the locals of the module do not leak, OfflineWeb is a global')
     return {'webWindowsOpenedInMockRuntime': True, 'syntheticSources': synthetic,
             'addressesChecked': len(MAPPED + KEPT) * len(g.PAGES),
-            'noticeWindowLoadsLocalNoticePage': True, 'settingsWindowLoadsLocalPage': True,
+            'noticeWindowLoadsLocalNoticePage': True, 'nativeNoticeReaderUsesLocalNoticeTxt': True,
+            'settingsWindowLoadsLocalPage': True,
             'serverErrorTextShownWithoutRequest': True, 'serverErrorPageWhenWebViewTakesNoText': True,
             'otherHostsUnchanged': True, 'textInScriptEqualsServerPage': with_server,
             'eachAnchorRequiredExactlyOnce': synthetic, 'patchIdempotent': True,

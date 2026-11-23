@@ -72,4 +72,21 @@ function P.LoadError(view, url)
 	view:Load(page)
 end
 
+function P.NoticeUrl(url)
+	local ok, address = pcall(function() return Game.ServerList.GetNoticeUrl() end)
+	if ok then
+		local localNotice = withPage(address, 'notice.txt')
+		if localNotice then
+			print('[web] native notice: notice.txt')
+			return localNotice
+		end
+	end
+	local mapped = withPage(url, 'notice.txt')
+	if mapped then
+		print('[web] native notice: notice.txt')
+		return mapped
+	end
+	return url
+end
+
 OfflineWeb = P

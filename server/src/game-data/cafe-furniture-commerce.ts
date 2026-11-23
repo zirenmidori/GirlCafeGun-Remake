@@ -157,12 +157,9 @@ export class CafeFurnitureCommerce {
     this.now = Math.floor(nowMs / 1_000);
   }
   private byItem(gdpl: readonly number[]): CafeFurnitureConfig {
-    const matches = this.catalog
-      .furnitureItems()
-      .filter((row) => row.ItemInfo.length === 4 && key(row.ItemInfo) === key(gdpl));
-    if (matches.length !== 1)
-      throw new CafeOperationError("ambiguous_furniture_item", 14);
-    return furnitureConfig(this.catalog, matches[0]!.Id, 14);
+    const match = this.catalog.furnitureForItem(gdpl);
+    if (!match) throw new CafeOperationError("ambiguous_furniture_item", 14);
+    return furnitureConfig(this.catalog, match.Id, 14);
   }
   private purchase(
     values: readonly unknown[],

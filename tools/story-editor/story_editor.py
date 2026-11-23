@@ -2,7 +2,8 @@
 """Story viewer and translation editor for Girl Cafe Gun (main story and event stories).
 
 Reads the game data (read-only), shows every story cutscene the way the game lists it, lets a translator rewrite the
-text, and tags each line as original English, machine translated or human translated.
+text, and shows the tag of each line: original English, machine translated or human translated. The tag is set by
+the tool, never by hand.
 
   python tools/story-editor/story_editor.py --data <game data folder>
       the folder that holds com.u, setting.u, lang.u, bg/, l2d/ ... (the app's files/ folder, or the unpacked data packs)
@@ -10,6 +11,9 @@ text, and tags each line as original English, machine translated or human transl
   --lang FILE       text table to show and to patch (default: <data>/lang.u)
   --official FILE   an official English lang.u, or an .obb/.apk/.zip that holds assets/lang.u; may be given more
                     than once. A line that equals an official text is tagged "original English".
+  --source FILE     the Chinese text table shown next to the English: a lang.u, or an .apk/.obb/.zip that holds
+                    assets/_lang_bundle.bin (the Remake APK) or assets/lang.u; ARCHIVE::MEMBER picks the member.
+                    Default: _lang_bundle.bin of the data folder or the archive, when there is one.
   --archive FILE    .obb or .zip with assets/<path>: used for every file the data folder does not have
   --port N          default 4310          --open     open the page in the default browser
   --rebuild         read the data again   --export   write work/export/lang.u and story-edits.json, then exit
@@ -36,16 +40,16 @@ import moc3_repair  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.path.join(HERE, "work")
-CFG = {"data": None, "archive": None, "lang": None, "official": [], "label": "data"}   # set by configure()
+CFG = {"data": None, "archive": None, "lang": None, "official": [], "source": None, "label": "data"}   # set by configure()
 SEED = 0x166920ED
-CACHE_VERSION = 6
+CACHE_VERSION = 9
+SOURCE_MEMBERS = ("assets/_lang_bundle.bin", "assets/lang.u")   # Chinese table of the Remake APK first
 
 CJK = re.compile(r"[぀-ヿ㐀-䶿一-鿿豈-﫿가-힯]")
 CJK_WORD = re.compile(r"[㐀-䶿一-鿿]{2,}|[ぁ-ゖァ-ヺ]{3,}")
 HAN = re.compile(r"[㐀-䶿一-鿿]")
 LATIN = re.compile(r"[A-Za-z]")
 RUN = re.compile(r"[A-Za-z0-9_./\-]+")
-TAGS = ("original", "machine", "human")
 
 
 def is_cjk_text(v):
@@ -105,6 +109,33 @@ def table_source(path):
     if path.lower().endswith((".obb", ".apk", ".zip")):
         return ("zip", path, "assets/lang.u")
     return path
+
+
+def source_table(path):
+    """The Chinese table: ARCHIVE::MEMBER, an archive (first of SOURCE_MEMBERS it holds) or a lang.u file."""
+    if "::" in path:
+        arc, member = path.split("::", 1)
+        return ("zip", arc, member)
+    if path.lower().endswith((".obb", ".apk", ".zip")):
+        with zipfile.ZipFile(path) as z:
+            names = set(z.namelist())
+        for m in SOURCE_MEMBERS:
+            if m in names:
+                return ("zip", path, m)
+        sys.exit("%s holds no %s" % (path, " or ".join(SOURCE_MEMBERS)))
+    return path
+
+
+def default_source():
+    """_lang_bundle.bin of the data folder or the archive, else None."""
+    q = data_path("_lang_bundle.bin")
+    if q and os.path.exists(q):
+        return q
+    if CFG["archive"]:
+        with zipfile.ZipFile(CFG["archive"]) as z:
+            if "assets/_lang_bundle.bin" in z.namelist():
+                return CFG["archive"] + "::assets/_lang_bundle.bin"
+    return None
 
 
 def read_source(spec):
@@ -429,6 +460,8 @@ def sources_for(setname=None):
                                    ("lang", CFG["lang"] or source_of("lang.u"))])
     for n, f in enumerate(CFG["official"]):
         src["official%d" % n] = table_source(f)
+    if CFG["source"]:
+        src["source"] = source_table(CFG["source"])
     return src
 
 
@@ -441,6 +474,7 @@ def build(setname, log=print):
     log("reading language tables ...")
     cur = lang_table(src["lang"])
     official = [lang_table(v) for k, v in src.items() if k.startswith("official")]
+    chinese = lang_table(src["source"]) if "source" in src else {}
     texts = Texts(cur, official)
     log("reading cartoon scripts (com.u) ...")
     scripts = text_assets(read_source(src["com"]), "assets/_game/settinggen/cartoon/")
@@ -557,6 +591,30 @@ def build(setname, log=print):
         m = re.match(r"(?:ui\.npcid\.(\d+)\.name|_GirlInfo\.(\d+)\.(?:NickName|GirlName))$", k)
         if m:
             names[k] = cur[k]
+    # Chinese line: the source table, else a Chinese value of the shown table or of a table given with --official
+    def file_label(spec):
+        return os.path.basename(source_name(spec).split("::")[0])
+
+    official_specs = [v for k, v in src.items() if k.startswith("official")]
+    tables = [(cur, file_label(src["lang"]))] + [(t, file_label(s)) for t, s in zip(official, official_specs)]
+    source_label = file_label(src["source"]) if "source" in src else None
+    def chinese_of(k):
+        """-> (Chinese value, file it comes from when that is not --source) or (None, None)"""
+        v = chinese.get(k)
+        if not is_cjk_text(v):
+            hit = next(((t[k], name) for t, name in tables if is_cjk_text(t.get(k))), None)
+            if hit:
+                return hit
+        return (v or None), None
+
+    zh, zh_from = {}, {}
+    for k in keys:
+        v, origin = chinese_of(k)
+        if v:
+            zh[k] = v
+        if origin:
+            zh_from[k] = origin
+    names_zh = {k: v for k, v in ((k, chinese_of(k)[0]) for k in names) if v}
     data = {
         "version": CACHE_VERSION, "set": setname,
         "stamps": [source_stamp(s) for s in src.values()],
@@ -566,6 +624,10 @@ def build(setname, log=print):
         "scenes": scenes,
         "texts": {k: [cur.get(k)] + [t.get(k) for t in official] for k in sorted(keys)},
         "names": names,
+        "namesZh": names_zh,
+        "source": zh,
+        "sourceFrom": zh_from,          # keys whose Chinese line comes from another table than --source
+        "sourceName": source_label or ("Chinese values of the text tables" if zh else None),
     }
     return data
 
@@ -601,6 +663,11 @@ class Store:
         if os.path.exists(self.path):
             with open(self.path, encoding="utf-8") as f:
                 self.edits = json.load(f).get("edits", {})
+        # tags are no longer set by hand: drop the old hand tags, and the entries that held only a tag
+        clean = {k: {f: v for f, v in e.items() if f != "tag"} for k, e in self.edits.items() if "text" in e}
+        if clean != self.edits:
+            self.edits = clean
+            self._write()
 
     def _write(self):
         os.makedirs(WORK, exist_ok=True)
@@ -612,46 +679,47 @@ class Store:
         return self.data["texts"].get(key) or [None]
 
     def info(self, key):
+        """The line as the page shows it. The tag follows from the text alone:
+        missing (no text) > original (equals an official English text, also after an edit) > human (saved edit)
+        > untranslated (Chinese) > untagged (no official table given) > machine (any other table text)."""
         vals = self.base(key)
         cur, refs = vals[0], vals[1:]
         e = self.edits.get(key, {})
         text = e["text"] if "text" in e else cur
         official = [v for v in refs if v and not is_cjk_text(v)]
+        source = self.data.get("source", {}).get(key)
         if text is None:
-            auto = "missing"
-        elif "text" in e and e["text"] != cur:
-            auto = "human"
-        elif is_cjk_text(text):
-            auto = "untranslated"
-        elif not refs:
-            auto = "untagged"          # no official table was given: the tool cannot tell original from machine
+            tag = "missing"
         elif text in official:
-            auto = "original"
+            tag = "original"
+        elif "text" in e and e["text"] != cur:
+            tag = "human"
+        elif is_cjk_text(text):
+            tag = "untranslated"
+        elif not refs:
+            tag = "untagged"          # no official table was given: the tool cannot tell original from machine
         else:
-            auto = "machine"
+            tag = "machine"
         names = self.data.get("official", [])
         shown = []
         for n, v in enumerate(refs):
-            if v and v != text and v not in [x["text"] for x in shown]:
+            if v and v != text and v != source and v not in [x["text"] for x in shown]:
                 shown.append({"label": ("Source text, " if is_cjk_text(v) else "Official text, ") + (names[n] if n < len(names) else "table %d" % (n + 1)),
                               "text": v, "source": is_cjk_text(v)})
-        return {"key": key, "text": text, "tag": e.get("tag") or auto, "auto": auto, "edited": "text" in e,
-                "tagSet": "tag" in e, "base": cur, "refs": shown, "updated": e.get("updated")}
+        return {"key": key, "text": text, "tag": tag, "edited": "text" in e, "base": cur, "refs": shown,
+                "source": source, "sourceFrom": self.data.get("sourceFrom", {}).get(key) or self.data.get("sourceName"),
+                "updated": e.get("updated")}
 
-    def save(self, key, text=None, tag=None):
+    def save(self, key, text=None):
         with self.lock:
             e = dict(self.edits.get(key, {}))
+            e.pop("tag", None)
             if text is not None:
                 if text == self.base(key)[0]:
                     e.pop("text", None)
                 else:
                     e["text"] = text
-            if tag is not None:
-                if tag in TAGS:
-                    e["tag"] = tag
-                else:
-                    e.pop("tag", None)
-            if "text" in e or "tag" in e:
+            if "text" in e:
                 e["updated"] = datetime.datetime.now().isoformat(timespec="seconds")
                 self.edits[key] = e
             else:
@@ -670,19 +738,21 @@ class Store:
         return {t: c[t] for t in ("original", "machine", "human", "untagged", "untranslated", "missing") if c[t]}
 
 
-def speaker_name(store, sp):
+def speaker_name(store, sp, chinese=False):
+    """The speaker's name; chinese=True: the name of the Chinese table (the English name when it has none)."""
     if sp in (None, "", "-1"):
         return ""
     if sp == "playername":
-        return "[Player]"
-    names = store.data["names"]
+        return "[玩家]" if chinese else "[Player]"
     if sp.isdigit():
-        for k in ("ui.npcid.%s.name" % sp, "_GirlInfo.%s.NickName" % sp, "_GirlInfo.%s.GirlName" % sp):
-            if names.get(k):
-                return names[k]
+        for names in ([store.data.get("namesZh", {})] if chinese else []) + [store.data["names"]]:
+            for k in ("ui.npcid.%s.name" % sp, "_GirlInfo.%s.NickName" % sp, "_GirlInfo.%s.GirlName" % sp):
+                if names.get(k):
+                    return names[k]
         return "#" + sp
     if "." in sp:
-        return store.info(sp)["text"] or sp
+        i = store.info(sp)
+        return (chinese and i["source"]) or i["text"] or sp
     return sp
 
 
@@ -713,7 +783,7 @@ def nav_payload(store):
     for s in d["scenes"].values():
         allkeys.update(s["keys"])
     rev = hashlib.sha1(json.dumps(d["stamps"]).encode()).hexdigest()[:12]
-    return {"set": os.path.basename(CFG["data"] or CFG["archive"] or ""), "official": len(d.get("official", [])), "rev": rev, "sources": d["sources"], "main": main, "events": events, "unlisted": unlisted,
+    return {"set": os.path.basename(CFG["data"] or CFG["archive"] or ""), "official": len(d.get("official", [])), "source": d.get("sourceName"), "rev": rev, "sources": d["sources"], "main": main, "events": events, "unlisted": unlisted,
             "totals": store.counts(allkeys), "edits": len(store.edits)}
 
 
@@ -728,6 +798,7 @@ def scene_payload(store, sid):
             st = dict(st)
             if "sp" in st:
                 st["name"] = speaker_name(store, st["sp"])
+                st["nameZh"] = speaker_name(store, st["sp"], chinese=True)
             steps.append(st)
         sections.append({"name": sec["name"], "steps": steps})
     return {"id": sid, "sections": sections, "texts": {k: store.info(k) for k in s["keys"]}}
@@ -739,7 +810,7 @@ def search(store, q, limit=200):
     for sid, s in store.data["scenes"].items():
         for k in s["keys"]:
             i = store.info(k)
-            if q in k.lower() or (i["text"] and q in i["text"].lower()):
+            if q in k.lower() or (i["text"] and q in i["text"].lower()) or (i["source"] and q in i["source"].lower()):
                 out.append({"scene": sid, "key": k, "text": i["text"], "tag": i["tag"]})
                 if len(out) >= limit:
                     return out
@@ -781,7 +852,7 @@ def export(store, log=print):
                    "base": source_name(src), "edits": [{"key": r["key"], "text": r["text"], "tag": r["tag"], "was": r["base"]}
                                                for r in rows]}, f, ensure_ascii=False, indent=1)
     res = {"dir": d, "lang": os.path.join(d, "lang.u"), "bytes": len(out), "entries": len(keys),
-           "changed": changed, "added": added, "tagOnly": sum(1 for e in store.edits.values() if "text" not in e)}
+           "changed": changed, "added": added}
     log("export: %(changed)d changed, %(added)d added, %(entries)d entries -> %(lang)s" % res)
     return res
 
@@ -1110,7 +1181,7 @@ class Handler(BaseHTTPRequestHandler):
                 text = body.get("text")
                 if text is not None and not isinstance(text, str):
                     return self.send(400, {"error": "text must be a string"})
-                return self.send(200, self.store.save(key, text, body.get("tag")))
+                return self.send(200, self.store.save(key, text))      # the tag follows from the text
             if u.path == "/api/revert":
                 return self.send(200, self.store.revert(body.get("key", "")))
             if u.path == "/api/export":
@@ -1126,12 +1197,16 @@ def configure(a):
     data = a.data or os.environ.get("GCG_DATA")
     if not data and not a.archive:
         sys.exit("Give the game data folder: --data <folder with com.u, setting.u, lang.u> (or set GCG_DATA).\n" + __doc__)
-    for f in [data, a.archive, a.lang] + list(a.official or []):
+    src_arc, _, src_member = (a.source or "").partition("::")
+    for f in [data, a.archive, a.lang, src_arc] + list(a.official or []):
         if f and not os.path.exists(f):
             sys.exit("not found: " + f)
     CFG.update(data=os.path.abspath(data) if data else None, archive=os.path.abspath(a.archive) if a.archive else None,
                lang=os.path.abspath(a.lang) if a.lang else None, official=[os.path.abspath(f) for f in a.official or []])
-    CFG["label"] = "|".join(str(x) for x in (CFG["data"], CFG["archive"], CFG["lang"], CFG["official"]))
+    CFG["source"] = (os.path.abspath(src_arc) + ("::" + src_member if src_member else "")) if src_arc else default_source()
+    if CFG["source"]:
+        source_table(CFG["source"])     # stops here when the archive holds no Chinese table
+    CFG["label"] = "|".join(str(x) for x in (CFG["data"], CFG["archive"], CFG["lang"], CFG["official"], CFG["source"]))
 
 
 def main():
@@ -1139,6 +1214,8 @@ def main():
     ap.add_argument("--data", help="game data folder (com.u, setting.u, lang.u, bg/, l2d/ ...)")
     ap.add_argument("--lang", help="text table to show and to patch (default: <data>/lang.u)")
     ap.add_argument("--official", action="append", help="official English lang.u, or .obb/.apk/.zip with assets/lang.u")
+    ap.add_argument("--source", help="Chinese text table: lang.u, or .apk/.obb/.zip with assets/_lang_bundle.bin "
+                                     "or assets/lang.u (ARCHIVE::MEMBER picks one)")
     ap.add_argument("--archive", help=".obb or .zip with assets/<path>, for files the data folder does not have")
     ap.add_argument("--port", type=int, default=int(os.environ.get("PORT") or 4310))
     ap.add_argument("--rebuild", action="store_true")

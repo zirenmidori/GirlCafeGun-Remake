@@ -18,6 +18,10 @@ export class RotationSelectorError extends Error {
     super("Rotation selection: " + reason);
   }
 }
+function itemKey(gdpl: readonly number[]): string {
+  return gdpl.slice(0, 4).join(":");
+}
+
 function positiveTuple(value: unknown, length: number): value is number[] {
   return (
     Array.isArray(value) &&
@@ -94,6 +98,10 @@ export class RotationSelectorCatalog {
     }
     this.definitions = value.definitions;
   }
+  isItem(gdpl: readonly number[]): boolean {
+    return gdpl.length >= 4 && this.byItem.has(itemKey(gdpl));
+  }
+
   forLineup(
     kind: SelectionKind,
     cohort: number,

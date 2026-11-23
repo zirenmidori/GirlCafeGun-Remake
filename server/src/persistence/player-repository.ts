@@ -6,6 +6,13 @@ import {
   type PromiseTaskData,
 } from "../game-data/girl-promise-data.js";
 import type { AppConfig } from "../config.js";
+import {
+  ITEM_BOX_MAX_OPEN_PER_REQUEST,
+  ITEM_BOX_SELECT_ONCE_IDS,
+  ItemBoxCatalog,
+  ItemBoxError,
+  type ItemBoxOpenRequest,
+} from "../game-data/item-box-data.js";
 import { isRotationSelectionTaskId } from "../game-data/recruitment-policy.js";
 import {
   rotationSelectorCatalog,
@@ -275,6 +282,7 @@ import {
   girlLevelAwardIndex,
   handworkGiftState,
   isFavoriteGift,
+  isLinkGirl,
   type GirlAffectionGain,
 } from "../game-data/girl-gift-data.js";
 import {
@@ -566,6 +574,7 @@ export interface Player {
   promise?: PromiseState;
   /** Card skin, list mark and chat bubble (look-data.ts). */
   profileLook?: ProfileLookState;
+  headFrame?: number;
 }
 
 export interface PersistedState {
@@ -899,6 +908,14 @@ export interface RotationSelectorOpenResult {
   player: Player;
   awards: (number | boolean)[][];
   updatedItems: InventoryItemState[];
+  updatedGirls: GirlState[];
+}
+
+export interface ItemBoxOpenResult {
+  player: Player;
+  awards: BaseAward[];
+  updatedItems: InventoryItemState[];
+  updatedMoney: MoneyState[];
   updatedGirls: GirlState[];
 }
 
@@ -1266,6 +1283,10 @@ function makeGirlTaskId(group: number, girlId: number, offset: number): number {
     taskGirlId -= LINK_GIRL_ID;
   }
   return (taskGroup << 16) | ((taskGirlId - 1) * GIRL_TASK_STRIDE + offset);
+}
+
+export function girlMainStoryTaskKey(girlId: number): string {
+  return String(makeGirlTaskId(GIRL_STATE_TASK_GROUP, girlId, GIRL_MAIN_STORY_OFFSET));
 }
 
 /**
@@ -3602,9 +3623,7 @@ export class PlayerRepository {
           grantAwards(player, awards, items, money);
           for (const award of awards)
             if (award[0] === 11 && award[4] > 0) {
-              const config = catalog
-                .furnitureItems()
-                .find((row) => row.ItemInfo.join("-") === award.slice(0, 4).join("-"));
+              const config = catalog.furnitureForItem(award.slice(0, 4));
               if (!config)
                 throw new CafeOperationError("unknown_furniture_award", command);
               for (let count = 0; count < award[4]; count++)
@@ -3865,6 +3884,7 @@ export class PlayerRepository {
         dailySignUp: makeInitialDailySignUpState(),
         eightDaySignUp: makeInitialEightDaySignUpState(),
         bounty: makeInitialBountyState(),
+        headFrame: 0,
         ...makeStarterRoster(registerTime),
       };
       if (this.#welcomeGifts) reconcileStarterCafe(player, now);
@@ -4037,6 +4057,18 @@ export class PlayerRepository {
     });
     if (!player) throw new Error(`Failed to set main girl: ${account}`);
     this.#logger.info("player.main_girl.updated", { account, girlId });
+    return structuredClone(player);
+  }
+
+  async setHeadFrame(account: string, headFrame: number): Promise<Player> {
+    let player: Player | undefined;
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      player.headFrame = headFrame;
+    });
+    if (!player) throw new Error(`Failed to set head frame: ${account}`);
+    this.#logger.info("player.head_frame.updated", { account, headFrame });
     return structuredClone(player);
   }
 
@@ -4520,21 +4552,22 @@ export class PlayerRepository {
     girlId: number,
     ordinal: number,
   ): Promise<Player> {
-    if (!Number.isSafeInteger(girlId) || !Number.isSafeInteger(ordinal) || ordinal <= 0)
+    if (!Number.isSafeInteger(girlId) || !Number.isSafeInteger(ordinal))
       throw new GirlViewStoryError("invalid_request");
+    const linkGirl = isLinkGirl(girlId);
+    if (!linkGirl && ordinal <= 0) throw new GirlViewStoryError("invalid_request");
     return this.#store.update((state) => {
       const player = state.players[account];
       const girl = player?.girls.find((entry) => entry.girlId === girlId);
       if (!player || !girl) throw new GirlViewStoryError("girl_not_owned");
+      if (linkGirl) return structuredClone(player);
       const stories = defaultGirlFetterCatalog().mainStories(girlId);
       const story = stories[ordinal - 1];
       if (!story) throw new GirlViewStoryError("story_not_found");
       const progress = reconcileGirlMainStoryProgress(player, girlId);
       if (girl.level < story.requiredLevel || ordinal > progress + 1)
         throw new GirlViewStoryError("story_locked");
-      const key = String(
-        makeGirlTaskId(GIRL_STATE_TASK_GROUP, girlId, GIRL_MAIN_STORY_OFFSET),
-      );
+      const key = girlMainStoryTaskKey(girlId);
       player.taskValues[key] = Math.max(progress, ordinal);
       return structuredClone(player);
     });
@@ -5682,24 +5715,18 @@ export class PlayerRepository {
       );
       if (config.genre === 11) {
         const cafeCatalog = CafeCatalog.loadDefault();
-        const matches = cafeCatalog
-          .furnitureItems()
-          .filter(
-            (item) =>
-              item.ItemInfo.join("-") ===
-              [
-                config.genre,
-                config.detail,
-                config.particular,
-                config.templateLevel,
-              ].join("-"),
-          );
-        if (matches.length !== 1) throw new ShopError("unknown_goods");
+        const furniture = cafeCatalog.furnitureForItem([
+          config.genre,
+          config.detail,
+          config.particular,
+          config.templateLevel,
+        ]);
+        if (!furniture) throw new ShopError("unknown_goods");
         try {
           updatedFurniture.push(
             ...materializeOwnedCafeFurniture(
               player,
-              Array.from({ length: config.goodsNum * buyNum }, () => matches[0]!.Id),
+              Array.from({ length: config.goodsNum * buyNum }, () => furniture.Id),
               cafeCatalog,
               {
                 consumeItem: (gdpl, count) =>
@@ -5798,6 +5825,68 @@ export class PlayerRepository {
       player: snapshot,
       awards,
       updatedItems: snapshot.inventory.filter(({ guid }) => updated.has(guid)),
+      updatedGirls: snapshot.girls.filter(({ girlId }) => girlIds.has(girlId)),
+    };
+  }
+
+  async openItemBox(
+    account: string,
+    request: ItemBoxOpenRequest,
+    random: () => number = Math.random,
+  ): Promise<ItemBoxOpenResult> {
+    const catalog = ItemBoxCatalog.loadDefault();
+    const boxId = catalog.boxId(request.gdpl);
+    if (boxId === null || !catalog.has(boxId)) throw new ItemBoxError("unknown_box");
+
+    const updatedItemGuids = new Set<number>();
+    const updatedMoneyIds = new Set<number>();
+    const girlIds = new Set<number>();
+    let awards: BaseAward[] = [];
+    let opened = 0;
+    const player = await this.#store.update((state) => {
+      const player = state.players[account];
+      if (!player) throw new ItemBoxError("not_owned");
+      const [genre, detail, particular, level] = request.gdpl;
+      const stack = player.inventory.find(
+        (item) =>
+          item.genre === genre &&
+          item.detail === detail &&
+          item.particular === particular &&
+          item.templateLevel === level &&
+          item.lockOn === 0 &&
+          item.count > 0,
+      );
+      if (!stack) throw new ItemBoxError("not_owned");
+
+      let times = Math.min(
+        ITEM_BOX_MAX_OPEN_PER_REQUEST,
+        Math.max(1, request.times),
+        Math.floor(stack.count),
+      );
+      if (request.select > 0 && ITEM_BOX_SELECT_ONCE_IDS.has(boxId)) times = 1;
+      opened = times;
+      awards = catalog.roll(boxId, times, request.select, random);
+      if (!awards.length) throw new ItemBoxError("empty_roll");
+
+      stack.count -= times;
+      updatedItemGuids.add(stack.guid);
+      grantAwards(player, awards, updatedItemGuids, updatedMoneyIds);
+      const reconciled = reconcileGirlAppearanceState(player, updatedItemGuids);
+      for (const id of reconciled.updatedGirlIds) girlIds.add(id);
+      return player;
+    });
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.item_box.opened", {
+      account,
+      boxId,
+      times: opened,
+      select: request.select,
+    });
+    return {
+      player: snapshot,
+      awards,
+      updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedGirls: snapshot.girls.filter(({ girlId }) => girlIds.has(girlId)),
     };
   }

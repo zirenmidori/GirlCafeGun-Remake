@@ -36,6 +36,8 @@ import path from "node:path";
 import { MAIN_ORNAMENT_TASK_GROUP } from "./main-ornament-data.js";
 
 export const HEAD_FRAME_TASK_GROUP = 11;
+export const DEFAULT_HEAD_FRAME_ID = 1;
+export const LUA_COMMAND_SET_HEAD_FRAME = 70;
 export const VISITING_CARD_TASK_GROUP = 76;
 export const PLAYER_LIST_SKIN_TASK_GROUP = 77;
 export const CHAT_BUBBLE_TASK_GROUP = 78;

@@ -25,7 +25,7 @@ PACKAGE = 'com.zirenmidori.gcg.offline'
 DATA = 'files/gcg-server/data'          # relative to the app's private folder, where run-as starts
 SAVE = DATA + '/state.json'
 DAILY = DATA + '/backups'
-TEMP = '/data/local/tmp/gcg-save-in.json'
+TEMP = '/data/local/tmp/gcg-save-in-%d-%d.json' % (os.getpid(), time.time_ns())
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
 
@@ -234,6 +234,10 @@ def backup(phone, store, label, why='', now=None):
     return folder
 
 
+def discard_bad_save(phone):
+    return phone.remove_save()
+
+
 def pick(store, name):
     path = Path(name)
     if path.is_file():
@@ -276,12 +280,16 @@ def cmd_push(a, phone):
         sys.exit('%s is not a JSON object: not a save of this game' % source)
     phone.check()
     phone.stop()
-    backup(phone, a.store, 'before-push', why='before push of ' + source.parent.name)
+    previous = backup(phone, a.store, 'before-push', why='before push of ' + source.parent.name)
     problem = phone.write_save(source)
     if problem:
         sys.exit('could not write the save on the phone: ' + problem)
     if phone.read_save() != body:
-        sys.exit('the save on the phone differs from %s after the copy' % source)
+        problem = discard_bad_save(phone)
+        kept = 'the earlier save is in %s' % previous.name if previous else 'there was no earlier save on the phone'
+        if problem:
+            sys.exit('the save on the phone differs from %s after the copy; %s; %s' % (source, problem, kept))
+        sys.exit('the save on the phone differs from %s after the copy; removed the bad copy; %s' % (source, kept))
     print('on the phone now: %s (%d bytes, sha256 %s). Start the game.' % (source, len(body), sha(body)[:12]))
 
 

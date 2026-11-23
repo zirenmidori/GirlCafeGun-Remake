@@ -1,4 +1,4 @@
-"""Web windows: offline_web.lua inside Lib.lua, and three windows ask it what to load.
+"""Web windows and the native notice reader: offline_web.lua inside Lib.lua.
 
 Ported from the GirlCafeGun-Offline phone build (MIT, GCG2-Offline contributors), tools/patch_lua_offline_web.py.
 The web windows of the client load pages of the publisher, and those pages are gone. envir.json of the release
@@ -9,6 +9,8 @@ gives each window a page of the local server (server/resources/web):
   UI_ServerError  the window that opens when the server does not answer. For the local address it shows its
                   text from inside the script, so it needs no server. A web view that cannot take a text
                   loads web/maintenance/index.html, which holds the same text.
+  NoticeCommon    the native notice reader -> notice.txt on the local server, not the publisher host that
+                  Game.Dir.GetBaseUpdateUrl() names on the phone.
 Only an address of the local server that names no page changes. Every other address loads as before, so the
 other Load calls of UI_Notice (other regions, a page that a caller names) and the two windows that load an
 address from a table (UI_OtherTip, UI_RikiComic) stay stock. No prefab or other asset changes.
@@ -16,7 +18,7 @@ Patching a patched script only refreshes the module.
 """
 from pathlib import Path
 
-LUA_NAMES = {'Lib.lua', 'UI_Notice.lua', 'UI_User.lua', 'UI_ServerError.lua'}
+LUA_NAMES = {'Lib.lua', 'UI_Notice.lua', 'UI_User.lua', 'UI_ServerError.lua', 'NoticeCommon.lua'}
 MODULE = Path(__file__).with_name('offline_web.lua')
 NAME = 'OfflineWeb'
 # The module goes after this stock function of Lib.lua. Preload.lua loads Lib.lua before any window.
@@ -41,6 +43,15 @@ CALLS = {
 }
 # The pages that the calls name. The server must hold each one (server/resources/web).
 PAGES = ('notice.html', 'web/offline/index.html', 'web/maintenance/index.html')
+NOTICE_DEFAULT = 'http://gcg2notice.ks3-cn-beijing.ksyun.com/notice.txt'
+NOTICE_OLD = (
+    '\tself.URLMap["default"] = "%s"\n' % NOTICE_DEFAULT,
+    '\t\tself.URLMap["default"] = url .. "notice.txt";\n',
+)
+NOTICE_NEW = (
+    '\tself.URLMap["default"] = OfflineWeb.NoticeUrl("%s")\n' % NOTICE_DEFAULT,
+    '\t\tself.URLMap["default"] = OfflineWeb.NoticeUrl(url .. "notice.txt");\n',
+)
 
 
 def replace_one(text, old, new):
@@ -80,4 +91,13 @@ def lua_script(name, source):
             assert NAME not in text and text.count(LOAD) == stock_loads, name
             text = replace_one(text, old, new)
         assert text.count(NAME) == 1 and text.count(LOAD) == loads, name
+    elif name == 'NoticeCommon.lua':
+        if all(new in text for new in NOTICE_NEW):
+            assert all(text.count(new) == 1 and old not in text for old, new in zip(NOTICE_OLD, NOTICE_NEW))
+        else:
+            assert NAME not in text, name
+            assert all(text.count(old) == 1 and new not in text for old, new in zip(NOTICE_OLD, NOTICE_NEW)), name
+            for old, new in zip(NOTICE_OLD, NOTICE_NEW):
+                text = replace_one(text, old, new)
+        assert all(text.count(new) == 1 and text.count(old) == 0 for old, new in zip(NOTICE_OLD, NOTICE_NEW)), name
     return text.encode('utf8')

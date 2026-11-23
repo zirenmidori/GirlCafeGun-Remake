@@ -1,7 +1,8 @@
 # Story editor
 
 A local page for translators. It shows every main-story and event-story cutscene of Girl Cafe Gun the way the game
-lists it, lets you rewrite the text, and tags each line as original English, machine translated or human translated.
+lists it, with the Chinese original next to the English, lets you rewrite the text, and tags each line as original
+English, machine translated or human translated.
 
 This folder holds code only. It reads the game data you already have; no game text, picture or model is in the
 repository.
@@ -25,6 +26,7 @@ The first start reads the bundles (a few seconds) and keeps the result in `work/
 |---|---|
 | `--lang FILE` | text table to show and to patch (default: `<data>/lang.u`) |
 | `--official FILE` | an official English `lang.u`, or an `.obb` / `.apk` / `.zip` that holds `assets/lang.u`. Give it more than once for more tables. |
+| `--source FILE` | the Chinese table shown next to the English: the release APK of this project (`GCG-Offline-v<version>.apk`, it holds `assets/_lang_bundle.bin`, the `zh_CN` table), a `lang.u`, or `ARCHIVE::MEMBER`. Default: `_lang_bundle.bin` of the data folder or of `--archive`, when there is one. |
 | `--archive FILE` | `.obb` or `.zip` with `assets/<path>`; used for every file the data folder does not have |
 | `--port N` | default 4310 |
 | `--rebuild` | read the data again |
@@ -41,6 +43,9 @@ The first start reads the bundles (a few seconds) and keeps the result in `work/
 - **Play** runs the scene script (`com.u`, `cartoon/<scene>.txt`): scene title, speaker, text, choices and branches,
   with the pictures the script shows. **Script** lists all lines of the scene. Double-click a script line to play
   from it.
+- **Chinese** (with `--source`): the EN / CN switch under the stage (key `L`) plays the scene in English or in the
+  Chinese original, with Chinese speaker names; a line with no Chinese stays English. Script shows the Chinese as a
+  second column, and the Line panel shows it above the text box.
 - Pictures are layers with the script's stacking order, zoom, position and pan time. Three checkboxes switch them:
   **backgrounds**, **CG and pictures** (CG illustrations, card art, boss and NPC art, overlays) and **characters**
   (Live2D models).
@@ -52,13 +57,16 @@ looked up in the language table of `lang.u` (one `FileLangContent` object with a
 
 ## Tags
 
-- **Original English**: the text equals the text of an official table (`--official`).
+The tool sets the tag from the text; the page only shows it. A saved text gets its new tag at once.
+
+- **Original English**: the text equals the text of an official table (`--official`), also after an edit.
 - **Machine translated**: the text is English but is not in an official table.
-- **Human translated**: the text was changed in this tool. You can also set any tag by hand.
+- **Human translated**: the text was changed in this tool and is not an official text.
 - **Not translated** / **No text**: the line holds Chinese or Japanese, or the script names a key that has no text.
 - **No tag**: no official table was given, so the tool cannot tell original from machine translated text.
 
-When an official table holds Chinese or Japanese for a line, the editor shows it as the source text.
+When the `--source` table has no Chinese for a line (or no `--source` is given), the Chinese value of the shown table
+or of an `--official` table is the Chinese line; the Line panel names the file it comes from.
 
 ## Characters need the Live2D runtime
 
@@ -89,8 +97,8 @@ file the tool works, and the characters checkbox does nothing.
 
 - The server reads the game data again when a file changes (checked on page load and when the page gets the focus),
   so a data update shows up without a restart. Edits are stored by text key and stay.
-- Edits: `work/edits.json` (key, text, tag, time). Nothing outside `work/` is written. Keep a copy of this file; it
-  is the translator's work.
+- Edits: `work/edits.json` (key, text, time). Nothing outside `work/` is written. Keep a copy of this file; it
+  is the translator's work. Hand tags of older versions are dropped from it at start.
 - **Export lang.u** writes `work/export/lang.u` (the text table with the edited lines; a line for a key with no text
   is added) and `work/export/story-edits.json`. The export is read back and compared before it is written. Use the
   file as `changes/lang.u` of an update (`docs/creating-updates.md`).
