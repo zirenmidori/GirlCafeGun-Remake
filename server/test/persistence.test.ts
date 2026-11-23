@@ -5,6 +5,10 @@ import path from "node:path";
 import { expect, it } from "vitest";
 
 import {
+  ACHIEVEMENT_TASK_GROUP,
+  ActivityAchievementCatalog,
+} from "../src/game-data/activity-achievement-data.js";
+import {
   makeDailyMissionTaskId,
   DAILY_MISSIONS,
   DAILY_MISSION_ACTIVE_AWARD_TASK_ID,
@@ -87,6 +91,24 @@ it("persists player and task changes atomically", async () => {
       // commander level (100).
       ...Object.fromEntries(
         [10, 11, 12, 45, 46, 47, 48, 95, 100].map((id) => [String((18 << 16) | id), 2]),
+      ),
+      // Achievement panel rows (task group 6) a new player already has progress 1
+      // on: commander level (type 1), best affection (37), cafe level (79), and
+      // the affection (135) and best card level (83) of each starting girl.
+      ...Object.fromEntries(
+        ActivityAchievementCatalog.loadDefault()
+          .achievements(ACHIEVEMENT_TASK_GROUP)
+          .filter(
+            ({ type, counts }) =>
+              [1, 37, 79].includes(type) ||
+              (type === 135 &&
+                player.girls.some(({ girlId }) => girlId === counts[1])) ||
+              (type === 83 &&
+                player.inventory.some(
+                  ({ genre, detail }) => genre === 1 && detail === counts[1],
+                )),
+          )
+          .map(({ id }) => [String((ACHIEVEMENT_TASK_GROUP << 16) | id), 2]),
       ),
       // Main-screen themes 1-5 have no unlock item; every player owns them.
       ...Object.fromEntries(
