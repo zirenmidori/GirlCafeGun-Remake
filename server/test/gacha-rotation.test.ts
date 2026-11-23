@@ -403,6 +403,108 @@ it("publishes the rotation over TCP and rejects stale card and weapon pulls befo
   }
 }, 15_000);
 
+it("plays the door scene for rotation card pulls unless they draw a custom girl", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "gcg-rotation-scene-"));
+  const account = "rotation-scene-test";
+  const config = await loadConfig(path.resolve(import.meta.dirname, ".."));
+  config.gachaRotationDays = 7;
+  const store = new JsonStore({
+    filePath: path.join(directory, "state.json"),
+    initialState: makeInitialState(),
+    logger,
+  });
+  await store.initialize();
+  const players = new PlayerRepository({
+    store,
+    defaults: config.playerDefaults,
+    logger,
+  });
+  await players.getOrCreate(account);
+  await store.update((state) => {
+    const player = state.players[account]!;
+    const [genre, detail, particular, templateLevel] = cards.get(1)!.costOne!;
+    player.inventory.push({
+      guid: player.nextItemGuid++,
+      genre,
+      detail,
+      particular,
+      templateLevel,
+      count: 2,
+      enhanceLevel: 0,
+      enhanceExp: 0,
+      breakLevel: 0,
+      lockOn: 0,
+      createTime: 1,
+    });
+  });
+  const custom = customCardTemplates()[0]!.gdpl;
+  const customGirls = new Set(customCardTemplates().map(({ gdpl }) => gdpl[1]));
+  const original = GachaCatalog.prototype.rollPool;
+  let drawCustom = false;
+  const roll = vi
+    .spyOn(GachaCatalog.prototype, "rollPool")
+    .mockImplementation(function (this: GachaCatalog, ...args) {
+      const result = original.apply(this, args);
+      // The first card is a stock girl (roster row 1 1 3 2), or the custom girl on demand.
+      result.awards[0]!.tbGDPL = drawCustom ? [...custom] : [1, 1, 3, 2];
+      return result;
+    });
+  const server = createGatewayServer({ config, logger, players });
+  let socket: Socket | undefined;
+  try {
+    server.listen(0, "127.0.0.1");
+    await once(server, "listening");
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("No test port");
+    const client = createConnection({ host: "127.0.0.1", port: address.port });
+    socket = client;
+    await once(client, "connect");
+    let serial = 1;
+    await request(
+      client,
+      COMMAND.LOGIN_REQ,
+      serial,
+      fieldBytes(1, account),
+      (packet) => packet.command === COMMAND.LOGIN_RSP,
+    );
+    const call = (method: string, parameters: unknown, response = method) =>
+      request(
+        client,
+        COMMAND.C2S_CALL_REQ,
+        ++serial,
+        makeServerLuaCall(method, parameters),
+        (packet) => callback(packet)?.method === response,
+      );
+    const packets = await call("GetOfflineGachaRotation", {}, "OfflineGachaRotation");
+    const manifest = callback(packets.at(-1)!)!.parameters as ReturnType<
+      GachaRotationCatalog["at"]
+    >["manifest"];
+    const pull = async () =>
+      callback(
+        (
+          await call("Lottery", {
+            nId: rotationId,
+            bTen: false,
+            rotationRevision: manifest.revision,
+          })
+        ).at(-1)!,
+      )!.parameters as { bGetCard: boolean; tbAwards: { tbGDPL: number[] }[] };
+    const stock = await pull();
+    expect(customGirls.has(stock.tbAwards[0]!.tbGDPL[1]!)).toBe(false);
+    expect(stock.bGetCard).toBe(false);
+    drawCustom = true;
+    const neptune = await pull();
+    expect(neptune.tbAwards[0]!.tbGDPL).toEqual(custom);
+    expect(neptune.bGetCard).toBe(true);
+  } finally {
+    roll.mockRestore();
+    socket?.destroy();
+    if (server.listening)
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    await rm(directory, { recursive: true, force: true });
+  }
+}, 15_000);
+
 it("earns both rotation selectors and redeems native command 76 over TCP exactly once per owned box", async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "gcg-selector-gateway-"));
   const account = "selection-gateway";

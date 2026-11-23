@@ -53,7 +53,7 @@ import {
 import { parseWeaponEnhancementRequest } from "../game-data/weapon-enhancement-data.js";
 import { RUNE_SLOT_COUNT } from "../game-data/rune-data.js";
 import { RuneOperationError } from "../game-data/rune-progression-data.js";
-import { cardRarityOf } from "../game-data/custom-card-data.js";
+import { cardRarityOf, isCustomGirlCard } from "../game-data/custom-card-data.js";
 import { RotationSelectorError } from "../game-data/rotation-selector-data.js";
 import {
   parseWeaponDecompositionRequest,
@@ -2263,10 +2263,13 @@ export function createGatewayServer({
                 bTen: ten,
                 // UI_Gacha.lua OnServerResponse skips the cafe door scene when
                 // bGetCard is true (a confirmed saved pull the player already
-                // watched). A plain draw from a stock pool must play the scene.
-                // The rotating pool can hold custom cards with no bath model,
-                // so it keeps the short path.
-                bGetCard: call.method === "GetFirstGacha" || rotation !== null,
+                // watched). A plain draw must play the scene, also from the
+                // rotating pool. The scene's last shot loads each girl's outfit
+                // model, and no stock pool ever offered a custom girl, so only
+                // a draw that holds one keeps the short path.
+                bGetCard:
+                  call.method === "GetFirstGacha" ||
+                  result.awards.some(({ tbGDPL }) => isCustomGirlCard(tbGDPL)),
                 tbAwards: result.awards,
                 ...(result.getItem ? { getItem: result.getItem } : {}),
               }),

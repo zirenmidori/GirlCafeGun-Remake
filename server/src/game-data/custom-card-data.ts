@@ -43,6 +43,13 @@ export function customCardTemplates(): readonly CustomCardTemplate[] {
   return cached;
 }
 
+/** A character card (genre 1) of a girl that only the custom catalog defines. */
+export function isCustomGirlCard(gdpl: readonly number[]): boolean {
+  return (
+    gdpl[0] === 1 && customCardTemplates().some((card) => card.gdpl[1] === gdpl[1])
+  );
+}
+
 export function cardRarityOf(
   gdpl: Gdpl,
   stock: (gdpl: Gdpl) => number | null,
