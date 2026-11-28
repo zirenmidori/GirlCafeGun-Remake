@@ -131,6 +131,10 @@ import {
   type CafeRuntimeHooks,
 } from "../game-data/cafe-runtime.js";
 export { CafeOperationError } from "../game-data/cafe-runtime.js";
+import {
+  COSMETIC_NEVER_EXPIRES,
+  cosmeticShopRow,
+} from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import {
   FREE_GIFT_PACK_AWARD,
@@ -814,6 +818,12 @@ export interface CostumePackResult {
   player: Player;
   updatedMoney: MoneyState[];
   updatedItems: InventoryEntryState[];
+  updatedTaskIds: number[];
+}
+
+export interface CosmeticPackResult {
+  player: Player;
+  updatedMoney: MoneyState[];
   updatedTaskIds: number[];
 }
 
@@ -5458,6 +5468,59 @@ export class PlayerRepository {
       player: snapshot,
       updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedTaskIds: [...updatedTaskIds],
+    };
+  }
+
+  /** Buys a profile cosmetic of the dress shop's third tab for Diamonds (cosmetic-shop-data.ts). */
+  async buyCosmeticPack(
+    account: string,
+    packId: number,
+    now = Date.now(),
+  ): Promise<CosmeticPackResult> {
+    const pack = cosmeticShopRow(packId);
+    if (!pack) throw new IBShopError("unknown_item");
+    let player: Player | undefined;
+    const updatedMoneyIds = new Set<number>();
+    const updatedTaskIds = new Set<number>();
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      const ibTaskId = makeIBShopTaskId(pack.id);
+      const ownerKey = String((pack.group << 16) | pack.cosmeticId);
+      if ((player.taskValues[String(ibTaskId)] ?? 0) >= 1) {
+        throw new IBShopError("limit_reached");
+      }
+      if ((player.taskValues[ownerKey] ?? 0) > 0) {
+        throw new IBShopError("limit_reached");
+      }
+      try {
+        deductShopMoney(player, MONEY_DIAMOND, pack.cost, updatedMoneyIds);
+      } catch (error) {
+        if (error instanceof ShopError) throw new IBShopError("insufficient_diamonds");
+        throw error;
+      }
+      const before = { ...player.taskValues };
+      player.taskValues[String(ibTaskId)] = 1;
+      player.taskValues[ownerKey] =
+        pack.type === 2
+          ? COSMETIC_NEVER_EXPIRES - pack.limitTime
+          : Math.floor(now / 1000);
+      incrementDailyMissionProgress(player, 108, 1, now);
+      for (const [key, value] of Object.entries(player.taskValues)) {
+        if (before[key] !== value) updatedTaskIds.add(Number(key));
+      }
+    });
+    if (!player) throw new Error(`Failed to buy cosmetic pack: ${account}`);
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.ib_shop.cosmetic_pack_bought", {
+      account,
+      packId: pack.id,
+      cost: pack.cost,
+    });
+    return {
+      player: snapshot,
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedTaskIds: [...updatedTaskIds],
     };
   }
