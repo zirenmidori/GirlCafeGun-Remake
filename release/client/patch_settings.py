@@ -7,6 +7,7 @@ import patch_gacha
 import patch_card_display
 import patch_selectors
 import patch_costume_shop
+import patch_cosmetic_shop
 CARD='Npc/card_neptune_release.png'
 
 def build(source):
@@ -30,6 +31,8 @@ def build(source):
     costume_replacements,costume_proof=patch_costume_shop.settings_objects(env)
     assert not set(costume_replacements)&set(replacements)
     replacements.update(costume_replacements)
+    cosmetic_replacements,cosmetic_proof=patch_cosmetic_shop.settings_objects(env,raw,replacements)
+    replacements.update(cosmetic_replacements)
     path='assets/_game/settinggen/live2d/sequence.txt';obj=env.container[path].deref();tree=obj.read_typetree()
     lines=tree['m_Script'].splitlines();header=lines[1].split('\t');schedule={}
     for i,line in enumerate(lines):
@@ -57,4 +60,4 @@ def build(source):
     before_inv=w.native.serialized_inventory(raw);after_inv=w.native.serialized_inventory(checked)
     before={o['path_id']:raw[o['start']:o['end']] for o in before_inv['objects']};after={o['path_id']:checked[o['start']:o['end']] for o in after_inv['objects']}
     assert before.keys()==after.keys() and {pid for pid in before if before[pid]!=after[pid]}==set(replacements)
-    return encoded,packed,{'characterGdpl':[1,27,1,1],'rarity':4,'rarityColor':0,'changedCardFields':{k:{'before':old[k],'after':v} for k,v in row.items() if old[k]!=v},'cardDisplay':card_display_proof,'gacha':gacha_proof,'selectors':selector_proof,'costumeShop':costume_proof,'lobbySchedule':schedule,'standSeconds':2.,'maximumConsecutiveLobbyStandSeconds':2.,'nativeMagicTbForwardCursorAllRowsConsumed':True,'neptuneOperatorCounts':counts,'magicTbObjectByteExact':True,'onlyChangedObjectIds':list(replacements),'otherSettingsObjectsByteExact':True}
+    return encoded,packed,{'characterGdpl':[1,27,1,1],'rarity':4,'rarityColor':0,'changedCardFields':{k:{'before':old[k],'after':v} for k,v in row.items() if old[k]!=v},'cardDisplay':card_display_proof,'gacha':gacha_proof,'selectors':selector_proof,'costumeShop':costume_proof,'cosmeticShop':cosmetic_proof,'lobbySchedule':schedule,'standSeconds':2.,'maximumConsecutiveLobbyStandSeconds':2.,'nativeMagicTbForwardCursorAllRowsConsumed':True,'neptuneOperatorCounts':counts,'magicTbObjectByteExact':True,'onlyChangedObjectIds':list(replacements),'otherSettingsObjectsByteExact':True}

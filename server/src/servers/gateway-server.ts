@@ -107,6 +107,7 @@ import {
   LUA_COMMAND_PAY_RESULT_SUCCESS,
   MONTH_CARD_ITEM_ID,
 } from "../game-data/ib-shop-data.js";
+import { cosmeticShopRow } from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import { getPhoneLetterDefinition } from "../game-data/phone-message-data.js";
 import { PvpSessionManager, type PvpSession } from "../game-data/pvp-session.js";
@@ -5448,6 +5449,49 @@ export function createGatewayServer({
                   Error: error.clientError,
                 });
                 logger.warn("ib_shop.costume_pack.rejected", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
+                  reason: error.reason,
+                  clientError: error.clientError,
+                });
+              }
+            } else if (
+              doRechargeCall.shopType === 1 &&
+              cosmeticShopRow(doRechargeCall.id) !== undefined
+            ) {
+              const pack = cosmeticShopRow(doRechargeCall.id)!;
+              try {
+                const result = await players.buyCosmeticPack(context.account, pack.id);
+                context.player = result.player;
+                for (const money of result.updatedMoney) {
+                  send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+                }
+                send(
+                  COMMAND.TASK_VALUE_RSP,
+                  0,
+                  makeTaskValueSync(result.player.taskValues),
+                );
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: 0,
+                  tbItem: [[...pack.item, 1]],
+                });
+                logger.info("ib_shop.cosmetic_pack.bought", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
+                  cost: pack.cost,
+                });
+              } catch (error) {
+                if (!(error instanceof IBShopError)) throw error;
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: error.clientError,
+                });
+                logger.warn("ib_shop.cosmetic_pack.rejected", {
                   peer,
                   account: context.account,
                   packId: pack.id,

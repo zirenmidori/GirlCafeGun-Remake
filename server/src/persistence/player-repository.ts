@@ -131,6 +131,12 @@ import {
   type CafeRuntimeHooks,
 } from "../game-data/cafe-runtime.js";
 export { CafeOperationError } from "../game-data/cafe-runtime.js";
+import {
+  COSMETIC_NEVER_EXPIRES,
+  cosmeticShopRow,
+  ownsCosmetic,
+  reconcileCosmeticShop,
+} from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import {
   FREE_GIFT_PACK_AWARD,
@@ -830,6 +836,12 @@ export interface CostumePackResult {
   player: Player;
   updatedMoney: MoneyState[];
   updatedItems: InventoryEntryState[];
+  updatedTaskIds: number[];
+}
+
+export interface CosmeticPackResult {
+  player: Player;
+  updatedMoney: MoneyState[];
   updatedTaskIds: number[];
 }
 
@@ -1970,10 +1982,16 @@ function applyAutoUseAward(
     case "money":
       addMoney(player, effect.moneyId, count * effect.perItem, updatedMoneyIds);
       return true;
-    case "unlock-time":
-      for (const taskId of effect.taskIds)
-        player.taskValues[String(taskId)] = unixTime();
+    case "unlock-time": {
+      // A value in the future is a cosmetic bought for good (cosmetic-shop-data.ts):
+      // a later reward of the same item must not make it run out again.
+      const now = unixTime();
+      for (const taskId of effect.taskIds) {
+        const key = String(taskId);
+        if ((player.taskValues[key] ?? 0) <= now) player.taskValues[key] = now;
+      }
       return true;
+    }
     case "unlock-flag":
       for (const taskId of effect.taskIds) player.taskValues[String(taskId)] = 1;
       return true;
@@ -3839,6 +3857,7 @@ export class PlayerRepository {
         reconcileMaximumFightPower(player);
         reconcileGuideActionMissions(player);
         reconcileMainThemes(player.taskValues, unixTime());
+        reconcileCosmeticShop(player.taskValues, unixTime());
         reconcileProfilePage(
           player,
           this.#defaults.name,
@@ -5565,6 +5584,58 @@ export class PlayerRepository {
       player: snapshot,
       updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedTaskIds: [...updatedTaskIds],
+    };
+  }
+
+  /** Buys a profile cosmetic of the dress shop's third tab for Diamonds (cosmetic-shop-data.ts). */
+  async buyCosmeticPack(
+    account: string,
+    packId: number,
+    now = Date.now(),
+  ): Promise<CosmeticPackResult> {
+    const pack = cosmeticShopRow(packId);
+    if (!pack) throw new IBShopError("unknown_item");
+    let player: Player | undefined;
+    const updatedMoneyIds = new Set<number>();
+    const updatedTaskIds = new Set<number>();
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      const ibTaskId = makeIBShopTaskId(pack.id);
+      const ownerKey = String((pack.group << 16) | pack.cosmeticId);
+      // Owned as the client counts it: a bought one is owned for good, and a timed
+      // cosmetic from an old reward that has run out can be bought.
+      if (ownsCosmetic(pack, player.taskValues, Math.floor(now / 1000))) {
+        throw new IBShopError("limit_reached");
+      }
+      try {
+        deductShopMoney(player, MONEY_DIAMOND, pack.cost, updatedMoneyIds);
+      } catch (error) {
+        if (error instanceof ShopError) throw new IBShopError("insufficient_diamonds");
+        throw error;
+      }
+      const before = { ...player.taskValues };
+      player.taskValues[String(ibTaskId)] = 1;
+      player.taskValues[ownerKey] =
+        pack.type === 2
+          ? COSMETIC_NEVER_EXPIRES - pack.limitTime
+          : Math.floor(now / 1000);
+      incrementDailyMissionProgress(player, 108, 1, now);
+      for (const [key, value] of Object.entries(player.taskValues)) {
+        if (before[key] !== value) updatedTaskIds.add(Number(key));
+      }
+    });
+    if (!player) throw new Error(`Failed to buy cosmetic pack: ${account}`);
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.ib_shop.cosmetic_pack_bought", {
+      account,
+      packId: pack.id,
+      cost: pack.cost,
+    });
+    return {
+      player: snapshot,
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedTaskIds: [...updatedTaskIds],
     };
   }
