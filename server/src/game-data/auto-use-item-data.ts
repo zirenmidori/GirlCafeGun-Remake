@@ -186,6 +186,18 @@ export class AutoUseItemCatalog {
     return AutoUseItemCatalog.#default;
   }
 
+  /** True when a costume item (SuitItem) grants this girl this model. */
+  grantsSuit(girlId: number, modelId: number): boolean {
+    for (const effect of this.#effects.values())
+      if (
+        effect.kind === "suit" &&
+        effect.girlId === girlId &&
+        effect.modelId === modelId
+      )
+        return true;
+    return false;
+  }
+
   /** The rule for an AutoUse item, or null when ItemList does not mark it AutoUse. */
   effect(
     genre: number,

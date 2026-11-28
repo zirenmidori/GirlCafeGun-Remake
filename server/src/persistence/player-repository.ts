@@ -1471,6 +1471,27 @@ function reconcileCustomGirlOutfits(player: Player): GirlState[] {
   return changed;
 }
 
+/**
+ * A costume item (SuitItem, auto-use-item-data.ts) owns its model through the
+ * suit task alone: it has no character card. Only the models that such an item
+ * grants count here; a card model still needs its card, as before.
+ */
+function ownsSuitModel(player: Player, girlId: number, modelId: number): boolean {
+  if (!Number.isSafeInteger(modelId) || modelId <= 1) return false;
+  if (!AutoUseItemCatalog.loadDefault().grantsSuit(girlId, modelId)) return false;
+  let taskId: number;
+  try {
+    taskId = makeGirlTaskId(
+      GIRL_SUIT_TASK_GROUP,
+      girlId,
+      fixGirlModelTaskOffset(modelId),
+    );
+  } catch {
+    return false;
+  }
+  return (player.taskValues[String(taskId)] ?? 0) > 0;
+}
+
 function reconcileGirlAppearanceState(
   player: Player,
   newlyAwardedItemGuids: ReadonlySet<number> = new Set<number>(),
@@ -1554,7 +1575,10 @@ function reconcileGirlAppearanceState(
       };
       player.girls.push(girl);
       updatedGirlIds.add(girlId);
-    } else if (!ownedModels.includes(girl.modelId)) {
+    } else if (
+      !ownedModels.includes(girl.modelId) &&
+      !ownsSuitModel(player, girlId, girl.modelId)
+    ) {
       girl.modelId = ownedModels[0] ?? 1;
       updatedGirlIds.add(girlId);
     }
