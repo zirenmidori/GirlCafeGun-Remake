@@ -1,7 +1,7 @@
 """Run the dead-link edits, as patched, in a mocked UI runtime.
 
 run() needs no client file: it patches synthetic scripts that hold only the anchor lines of the client, then runs
-the patched functions with recording mocks. run_bundle() repeats the behavior steps on the five scripts inside a
+the patched functions with recording mocks. run_bundle() repeats the behavior steps on the six scripts inside a
 patched lua.u (the anchors of the published client).
 """
 from pathlib import Path
@@ -21,7 +21,11 @@ SURVEY = 'https://docs.google.com/forms/d/e/1FAIpQLSevCq76gs6OF2HooAP89RdtiaZ3gp
 FUNCTIONS = {'EvaluateGuide.lua': 'function tbClass:CheckEvaluateTip(type,pEndCall)\n',
              'DropWay.lua': 'function DropWay:LoadTargetUI( target, tbParam )\n',
              'UI_User.lua': 'function tbClass:OnInit()\n',
-             'UI_JPTip.lua': 'function tbClass:OnInit()\n'}
+             'UI_JPTip.lua': 'function tbClass:OnInit()\n',
+             'UI_RikiMain.lua': 'function tbClass:OnOpen()\n'}
+# Riki.txt rows 9001 (Chinese client: Extension1 0 = the in-game web view) and 9002 (Japanese: 1 = the browser).
+COMIC_CN = 'https://manga.bilibili.com/m/mc27419/383240'
+COMIC_JP = 'https://gcg.xoyo.jp/comic/'
 # Stand-ins: the anchor lines are stock text of the 0.1.3 client; everything else is a stand-in. CRLF on purpose.
 SYNTHETIC = {name: text.replace('\n', '\r\n').encode('utf8') for name, text in {
     'Lib.lua': '''-- Synthetic stand-in for Lib.lua.
@@ -98,11 +102,49 @@ function tbClass:OnInit()
 \tend)
 end
 ''',
+    'UI_RikiMain.lua': '''-- Synthetic stand-in for the codex main window script.
+local tbClass = UI.Register('UI_RikiMain');
+function tbClass:OnOpen()
+\tfor i,v in ipairs(tbType) do
+\t\tv.Btn.onClick:RemoveAllListeners();
+\t\tif v.isUnLock then
+\t\t\tif not v.SpecialUnclock then
+\t\t\t\tlocal NowCount,AllCount,tb = Riki:GetUnLockInfoByType(i)
+\t\t\t\tif (NowCount and AllCount and tb) or v.OnlyNeedOne then
+\t\t\t\t\tif not v.OnlyNeedOne then
+\t\t\t\t\t\tv.Num.text = string.format('%d/%d',NowCount,AllCount)
+\t\t\t\t\telse
+\t\t\t\t\t\tif not tb or #tb == 0 then
+\t\t\t\t\t\t\tv.Btn.gameObject:SetActive(false)
+\t\t\t\t\t\tend
+\t\t\t\t\tend
+\t\t\t\tend
+\t\t\t\tv.Btn.onClick:AddListener(function ()
+\t\t\t\t\tif v.ui == 'UI_RikiComic' then
+\t\t\t\t\t\tif not tb or type(tb) ~= 'table' or CountTB(tb) == 0 then
+\t\t\t\t\t\t\treturn
+\t\t\t\t\t\tend
+\t\t\t\t\t\tlocal ComicInfo = tb[1];
+\t\t\t\t\t\tlocal IsComicInGame = tonumber(ComicInfo.Extension1) or 0
+\t\t\t\t\t\tif IsComicInGame ~= 0 then
+\t\t\t\t\t\t\tU3D.Application.OpenURL(ComicInfo.Extension2);
+\t\t\t\t\t\telse
+\t\t\t\t\t\t\tUI.CloseAndOpen(v.ui,ComicInfo.Extension2)
+\t\t\t\t\t\tend
+\t\t\t\t\telse
+\t\t\t\t\t\tUI.CloseAndOpen(v.ui,tb)
+\t\t\t\t\tend
+\t\t\t\tend)
+\t\t\tend
+\t\tend
+\tend
+end
+''',
 }.items()}
 
 # OfflineLinks.Url: moved, closed, and kept addresses.
 MOVED = [OLD_WIKI, OLD_WIKI.rstrip('/'), 'http://girlcafegun.boom-app.wiki/', 'HTTPS://GirlCafeGun.Boom-App.Wiki//']
-CLOSED = [SURVEY, SURVEY + '/', SURVEY.replace('https://', 'http://')]
+CLOSED = [SURVEY, SURVEY + '/', SURVEY.replace('https://', 'http://'), COMIC_CN, COMIC_JP, COMIC_JP.rstrip('/')]
 KEPT = ['https://wiki.girl.cafe/', 'https://girlcafegun.boom-app.wiki/page', 'https://girlcafegun.boom-app.wiki.example.org/',
         'https://docs.google.com/forms/', SURVEY + '?usp=1', 'https://gcg.xoyo.com', 'ftp://girlcafegun.boom-app.wiki/',
         'girlcafegun.boom-app.wiki/', 'https://', 'http:///', '', ' ' + OLD_WIKI]
@@ -310,6 +352,56 @@ def run(scripts=None, report=None):
     if report: report('ok settings: %d buttons and rows hidden after the stock code that shows them; wiki buttons open %s'
                       % (len(HIDDEN), NEW_WIKI))
 
+    # 5. The codex (UI_RikiMain): the Secrets tile hides when every comic page is closed; an open page still opens.
+    lua.globals().define('UI_RikiMain', function_chunk(texts['UI_RikiMain.lua'], FUNCTIONS['UI_RikiMain.lua']))
+    lua.execute('''
+      clicks = {}
+      local function button(name)
+        return { gameObject = { SetActive = function(_, on) record('SetActive', name, on) end },
+                 onClick = { RemoveAllListeners = function() end, AddListener = function(_, f) clicks[name] = f end } }
+      end
+      local function quiet() return { gameObject = { SetActive = function() end } } end
+      -- The nine tiles of UI_RikiMain.lua tbType: 5 and 6 have their own code, 7 (furniture) is locked.
+      tbType = {}
+      for i, name in ipairs({'BtnCard', 'BtnWeapon', 'BtnCG', 'BtnL2D', 'BtnFight', 'BtnStory', 'BtnFurniture', 'BtnBGM',
+                             'BtnSecret'}) do
+        tbType[i] = { name = name, ui = 'UI_Riki' .. i, isUnLock = i ~= 7, Btn = button(name), Num = {}, lock = quiet(),
+                      Text = quiet(), Bg = quiet() }
+      end
+      tbType[5].SpecialUnclock = function() end
+      tbType[6].SpecialUnclock = function() end
+      tbType[9].ui, tbType[9].OnlyNeedOne = 'UI_RikiComic', true
+      comics = {}
+      Riki = { UpdateUnLockInfo = function() end,
+               GetUnLockInfoByType = function(_, i) if i == 9 then return 0, #comics, comics end return 1, 3, {{}} end }
+      GuideManager = { CheckUIGuide = function() end }
+      UI.Call = function() end
+      UI.CloseAndOpen = function(name, arg) record('UI.CloseAndOpen', name, tostring(arg)) end
+      function CountTB(t) local n = 0; for _ in pairs(t) do n = n + 1 end; return n end
+      function openCodex(rows)
+        comics = rows
+        clicks = {}
+        reset()
+        windows['UI_RikiMain']:OnOpen()
+        local hidden = string.find(joined(), 'SetActive BtnSecret false', 1, true) ~= nil
+        reset()
+        clicks['BtnSecret']()
+        return hidden, joined()
+      end
+    ''')
+    open_codex = lua.eval('openCodex')
+    stock = lua.table(lua.table(Extension1='0', Extension2=COMIC_CN), lua.table(Extension1='1', Extension2=COMIC_JP))
+    hidden, clicked = open_codex(stock)
+    assert hidden is True and clicked == '', (hidden, clicked)
+    hidden, clicked = open_codex(lua.table())
+    assert hidden is True and clicked == '', (hidden, clicked)
+    page = 'https://example.org/comic/'
+    hidden, clicked = open_codex(lua.table(lua.table(Extension1='0', Extension2=COMIC_CN),
+                                           lua.table(Extension1='0', Extension2=page)))
+    assert hidden is False and clicked == 'UI.CloseAndOpen UI_RikiComic ' + page, (hidden, clicked)
+    if report: report('ok codex: the Secrets tile hides when its comic pages (%s, %s) are closed; an open page still opens'
+                      % (COMIC_CN, COMIC_JP))
+
     if synthetic:
         # The module's locals do not leak into Lib.lua; OfflineLinks is a global.
         whole = LuaRuntime(unpack_returned_tuples=True)
@@ -319,6 +411,7 @@ def run(scripts=None, report=None):
         if report: report('ok whole Lib.lua: the locals of the module do not leak, OfflineLinks is a global')
     return {'syntheticSources': synthetic, 'addressesChecked': len(MOVED + CLOSED + KEPT), 'bannerTargetsChecked': len(cases),
             'rateWindowNeverOpens': True, 'settingsButtonsHidden': [path.rsplit('/', 1)[1] for path in HIDDEN], 'wikiOpens': NEW_WIKI,
+            'codexComicTileHidden': True,
             'eachAnchorRequiredExactlyOnce': synthetic, 'patchIdempotent': True, 'patchedLuaSyntaxPassed': True}
 
 

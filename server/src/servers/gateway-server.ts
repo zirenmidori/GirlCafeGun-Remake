@@ -148,11 +148,14 @@ import {
   type PlayerRepository,
   WeaponDecompositionError,
 } from "../persistence/player-repository.js";
+import { unlockedRikiIds } from "../game-data/riki-codex-data.js";
 import { COMMAND, commandName } from "../protocol/commands.js";
 import {
   makePlayerNotification,
   makeItemNotification,
   makeItemUpdateNotification,
+  makeRikiData,
+  makeRikiList,
   makeFormationUpdateNotification,
   makeGirlUpdateNotification,
   makeHouseInfoResponse,
@@ -836,6 +839,10 @@ export function createGatewayServer({
     let pending = Buffer.alloc(0);
     let receiveQueue: Promise<void> = Promise.resolve();
     let loggedIn = false;
+    // Codex ids this socket has sent (null until the login list went out), and
+    // whether a bag or task update went out since the last codex check.
+    let rikiSent: Set<number> | null = null;
+    let rikiCheckPending = false;
     let mailDate: string | null = null;
     let mailResetTimer: ReturnType<typeof setTimeout> | undefined;
     logger.info("gateway.connected", { peer });
@@ -848,6 +855,12 @@ export function createGatewayServer({
     ): void {
       const packet = makePacket(command, serial, payload, returnCode);
       socket.write(packet);
+      if (
+        command === COMMAND.ITEM_UPDATE_NTF ||
+        command === COMMAND.ITEM_NTF ||
+        command === COMMAND.TASK_VALUE_RSP
+      )
+        rikiCheckPending = true;
       const preview = hexPreview(packet, config.logging.maxPayloadHexBytes);
       logger.debug("gateway.send", {
         peer,
@@ -1145,6 +1158,26 @@ export function createGatewayServer({
       }
     }
 
+    /**
+     * After a packet whose handling sent bag or task updates: pushes RikiData
+     * for each codex id the client does not have yet, so a new card, weapon,
+     * CG or song shows in the codex without a new login. The repository set
+     * task 53/Id in the write that added the item (riki-codex-data.ts); this
+     * only reads the save.
+     */
+    function syncRikiCodex(): void {
+      if (!rikiSent || !rikiCheckPending || !context.account || socket.destroyed)
+        return;
+      rikiCheckPending = false;
+      const player = players.get(context.account);
+      if (!player) return;
+      for (const id of unlockedRikiIds(player)) {
+        if (rikiSent.has(id)) continue;
+        rikiSent.add(id);
+        send(COMMAND.RIKI_DATA_RSP, 0, makeRikiData(id));
+      }
+    }
+
     async function handlePacket(packetBuffer: Buffer): Promise<void> {
       const packet = readPacket(packetBuffer);
       const preview = hexPreview(packet.payload, config.logging.maxPayloadHexBytes);
@@ -1235,6 +1268,11 @@ export function createGatewayServer({
           logger.warn("mail.login_sync_failed", { peer, message: String(error) });
         }
         send(COMMAND.LOGIN_RSP, packet.serial);
+        // The whole codex list after the login reply, where the earlier C#
+        // server sent it too (riki-codex-data.ts). markLogin set the tasks.
+        rikiSent = new Set(unlockedRikiIds(context.player));
+        send(COMMAND.RIKI_LIST_RSP, 0, makeRikiList([...rikiSent]));
+        rikiCheckPending = false;
         scheduleDailyMailRefresh();
         return;
       }
@@ -1723,6 +1761,45 @@ export function createGatewayServer({
             account: context.account,
             parameters,
           });
+          return;
+        }
+        if (call?.method === "BuyRikiStory") {
+          // UI_RikiStory: an event story of the codex for Riki coins (riki-codex-data.ts).
+          const parameters =
+            call.parameters && typeof call.parameters === "object"
+              ? (call.parameters as Record<string, unknown>)
+              : {};
+          const id = Number(parameters.Id);
+          const result = await players.buyRikiStory(context.account, id);
+          context.player = result.player;
+          for (const money of result.updatedMoney) {
+            send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+          }
+          if (result.status === "bought" || result.status === "owned") {
+            // The id first: RspBuyRikiStory makes UI_RikiStory read GetAllRikiState.
+            if (rikiSent && !rikiSent.has(id)) {
+              rikiSent.add(id);
+              send(COMMAND.RIKI_DATA_RSP, 0, makeRikiData(id));
+            }
+            send(
+              COMMAND.NTF_S2C_CALL,
+              0,
+              makeServerLuaCall("RspBuyRikiStory", { Id: id }),
+            );
+            logger.info("riki.story.bought", {
+              peer,
+              account: context.account,
+              id,
+              status: result.status,
+            });
+          } else {
+            logger.warn("riki.story.rejected", {
+              peer,
+              account: context.account,
+              id,
+              reason: result.status,
+            });
+          }
           return;
         }
         if (call?.method === "ExChangeMoney") {
@@ -5750,6 +5827,7 @@ export function createGatewayServer({
       for (const packet of packets) {
         receiveQueue = receiveQueue
           .then(() => handlePacket(packet))
+          .then(() => syncRikiCodex())
           .catch((error: unknown) => {
             const cause = error instanceof Error ? error : new Error(String(error));
             logger.error("gateway.packet_failed", {

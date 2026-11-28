@@ -50,6 +50,9 @@ export const COMMAND = Object.freeze({
   VERIFY_REQ: 1102,
   VERIFY_RSP: 1103,
   ITEM_NTF: 1104,
+  // gsproto CMD_RIKI_LIST_RSP / CMD_RIKI_DATA_RSP (0.1.3 client): codex ids.
+  RIKI_LIST_RSP: 1112,
+  RIKI_DATA_RSP: 1114,
   // pvpproto（联机协议族）：创建队伍申请/回包与队伍消息通知。
   PVP_APPLY_CREATE_TEAM_REQ: 1627,
   PVP_APPLY_CREATE_TEAM_RSP: 1628,

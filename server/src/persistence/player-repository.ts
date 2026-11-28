@@ -340,6 +340,13 @@ import {
   reconcileMoments,
   type MomentsState,
 } from "../game-data/moments-data.js";
+import {
+  markRikiCodex,
+  reconcileRikiCodex,
+  RikiCodexCatalog,
+  RIKI_STORY_MONEY_ID,
+  rikiTaskKey,
+} from "../game-data/riki-codex-data.js";
 import type { Logger } from "../logger.js";
 import type { JsonStore } from "./json-store.js";
 
@@ -1804,6 +1811,8 @@ function addInventoryAward(
   const [genre, detail, particular, templateLevel, rawCount] = award;
   const count = Math.max(0, rawCount);
   if (count === 0) return;
+  // Every item that enters the bag passes here: its codex entries unlock in the same write.
+  markRikiCodex(player.taskValues, genre, detail, particular, templateLevel);
   if (INSTANCE_GENRES.has(genre)) {
     for (let index = 0; index < count; index++) {
       const item: InventoryEntryState = {
@@ -3820,6 +3829,7 @@ export class PlayerRepository {
         reconcileEightDaySignUp(player);
         reconcileBounty(player);
         reconcileChapterStarTaskValues(player);
+        reconcileRikiCodex(player);
         reconcileMaximumFightPower(player);
         reconcileGuideActionMissions(player);
         reconcileMainThemes(player.taskValues, unixTime());
@@ -3877,6 +3887,7 @@ export class PlayerRepository {
       reconcileGirlFetterUnlocks(player);
       reconcileBounty(player);
       reconcileChapterStarTaskValues(player);
+      reconcileRikiCodex(player);
       reconcileMaximumFightPower(player);
       reconcileMainThemes(player.taskValues, registerTime);
       this.#activities.reconcile(player);
@@ -3942,6 +3953,7 @@ export class PlayerRepository {
       reconcileEightDaySignUp(player, now, true);
       reconcileBounty(player, now);
       reconcileChapterStarTaskValues(player);
+      reconcileRikiCodex(player);
       reconcileMaximumFightPower(player);
       reconcileGirlFetterUnlocks(player);
       reconcileGuideActionMissions(player);
@@ -3952,6 +3964,49 @@ export class PlayerRepository {
     });
     if (!player) throw new Error(`Failed to mark player login: ${account}`);
     return structuredClone(player);
+  }
+
+  /**
+   * BuyRikiStory {Id}: unlocks an event story of the codex for its RatdisNum
+   * Riki coins (riki-codex-data.ts, [INFER]). An unlocked story is not charged
+   * again and answers "owned".
+   */
+  async buyRikiStory(
+    account: string,
+    id: number,
+  ): Promise<{
+    status: "bought" | "owned" | "not_for_sale" | "insufficient_funds";
+    player: Player;
+    updatedMoney: MoneyState[];
+  }> {
+    return this.#store.update((state) => {
+      const player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      const updatedMoneyIds = new Set<number>();
+      const finish = (
+        status: "bought" | "owned" | "not_for_sale" | "insufficient_funds",
+      ) => {
+        const snapshot = structuredClone(player);
+        return {
+          status,
+          player: snapshot,
+          updatedMoney: snapshot.money.filter(({ id: moneyId }) =>
+            updatedMoneyIds.has(moneyId),
+          ),
+        };
+      };
+      const row = Number.isSafeInteger(id)
+        ? RikiCodexCatalog.loadDefault().row(id)
+        : null;
+      if (!row?.eventStory || row.storyCost <= 0) return finish("not_for_sale");
+      if ((player.taskValues[rikiTaskKey(id)] ?? 0) > 0) return finish("owned");
+      const wallet = player.money.find((money) => money.id === RIKI_STORY_MONEY_ID);
+      if (!wallet || wallet.count < row.storyCost) return finish("insufficient_funds");
+      wallet.count -= row.storyCost;
+      updatedMoneyIds.add(RIKI_STORY_MONEY_ID);
+      player.taskValues[rikiTaskKey(id)] = 1;
+      return finish("bought");
+    });
   }
 
   async updateMailbox(
