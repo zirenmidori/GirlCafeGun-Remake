@@ -12,6 +12,7 @@ import type {
   HouseThemeState,
 } from "../game-data/house-data.js";
 import { completeHouseRooms } from "../game-data/house-data.js";
+import { orderPhoneLetterTopics } from "../game-data/phone-message-data.js";
 import type { AppConfig } from "../config.js";
 import type { CafePet } from "../game-data/cafe-pets.js";
 import { weaponPassiveSkills } from "../game-data/weapon-skill-data.js";
@@ -403,7 +404,8 @@ export function makePhoneMessageNotification(player: Player): Buffer {
         fieldVarint(1, initiator),
         ...(title ? [fieldBytes(2, title)] : []),
         fieldVarint(3, latestCreateTime),
-        ...topics.map((topicState) => {
+        // The client answers only the last topic of a contact.
+        ...orderPhoneLetterTopics(topics).map((topicState) => {
           const topic = Buffer.concat([
             fieldVarint(1, topicState.topicId),
             ...topicState.replyIds.map((replyId) => fieldVarint(2, replyId)),

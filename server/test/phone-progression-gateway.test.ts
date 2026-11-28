@@ -7,6 +7,10 @@ import path from "node:path";
 import { expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
+import {
+  getPhoneLetterDefinition,
+  makePhoneReplyId,
+} from "../src/game-data/phone-message-data.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
 import {
@@ -38,6 +42,19 @@ const logger: Logger = {
   error() {},
   async close() {},
 };
+
+/** Replies that walk a letter to its end, picking the first choice the transcript allows. */
+function answeredReplies(topicId: number): number[] {
+  const definition = getPhoneLetterDefinition(topicId)!;
+  const replies: number[] = [];
+  for (;;) {
+    const next = [1, 2, 3]
+      .map((choice) => makePhoneReplyId(definition, choice, replies))
+      .find((id) => id !== null);
+    if (next === undefined || next === null) return replies;
+    replies.push(next);
+  }
+}
 
 async function* readPackets(socket: Socket): AsyncGenerator<GamePacket> {
   let buffer = Buffer.alloc(0);
@@ -210,6 +227,18 @@ it("restores progression-triggered chats and Moments, then delivers each story e
         { id: makeLevelId(2, 1, 1), star: 15 },
         { id: makeLevelId(2, 6, 1), star: 15 },
       ];
+      // A girl's next letter waits until her current one is answered and claimed, so
+      // Shi Wuxia's stage letters (12 at 2-1-1, 29 at 2-6-1) are already done here and
+      // her story letter 4 can arrive at once.
+      for (const topicId of [12, 29]) {
+        player.phone.letters.push({
+          topicId,
+          initiator: 9,
+          createTime: 1_793_000_000,
+          replyIds: answeredReplies(topicId),
+          awardClaimed: true,
+        });
+      }
     });
 
     await withLogin(port, existing, async (topics, sendStory) => {

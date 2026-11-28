@@ -111,6 +111,131 @@ export function isPhoneLetterComplete(letter: PhoneLetterState): boolean {
   return definition !== null && nextReplyPosition(definition, letter.replyIds) === null;
 }
 
+/** A letter that still waits for a reply from the player. */
+export function isPhoneLetterOpen(letter: PhoneLetterState): boolean {
+  const definition = getPhoneLetterDefinition(letter.topicId);
+  return definition !== null && nextReplyPosition(definition, letter.replyIds) !== null;
+}
+
+// The client lets the player answer only the last topic of a contact (UI_Phone.lua
+// CheckCanReply reads tbTopicIndex[#tbTopicIndex]), so a second letter from the same
+// girl hides an open one for good. Her next letter therefore waits until the current
+// one is answered and the client has shown its last line: PhoneMsgLogic:CalLastLine
+// sends the award claim (nCmd 7) then, after the per-girl reply timer has stopped.
+// LetterInfoNew.txt names one column 插队触发 ("queue-jump trigger"), so the official
+// server held letters in a queue too [INFER: its server code is not available].
+// Only the girl's last letter can still have closing lines playing, so only its claim counts.
+function busyGirls(phone: PhoneState, acceptUnclaimed: boolean): Set<number> {
+  const last = new Map<number, PhoneLetterState>();
+  const busy = new Set<number>();
+  for (const letter of phone.letters) {
+    if (!getPhoneLetterDefinition(letter.topicId)) continue;
+    last.set(letter.initiator, letter);
+    if (isPhoneLetterOpen(letter)) busy.add(letter.initiator);
+  }
+  if (!acceptUnclaimed)
+    for (const [initiator, letter] of last)
+      if (!letter.awardClaimed) busy.add(initiator);
+  return busy;
+}
+
+export interface PhoneLetterQueueOptions {
+  /** At login no closing lines are playing, so an unclaimed finished letter does not hold the queue. */
+  acceptUnclaimed?: boolean;
+}
+
+/**
+ * Queues every newly eligible letter (in trigger order) and delivers the oldest queued
+ * letter of each girl who has no letter in progress. At most one letter per girl per call.
+ */
+export function reconcilePhoneLetterQueue(
+  phone: PhoneState,
+  eligibleIds: readonly number[],
+  now: number,
+  { acceptUnclaimed = false }: PhoneLetterQueueOptions = {},
+): { added: PhoneLetterState[]; queued: number[] } {
+  const present = new Set([
+    ...phone.letters.map((letter) => letter.topicId),
+    ...(phone.deletedLetterTopicIds ?? []),
+  ]);
+  const queue: number[] = [];
+  for (const topicId of phone.queuedLetterTopicIds ?? []) {
+    if (present.has(topicId) || !getPhoneLetterDefinition(topicId)) continue;
+    queue.push(topicId);
+    present.add(topicId);
+  }
+  const queued: number[] = [];
+  for (const topicId of eligibleIds) {
+    if (present.has(topicId) || !getPhoneLetterDefinition(topicId)) continue;
+    queue.push(topicId);
+    queued.push(topicId);
+    present.add(topicId);
+  }
+
+  const busy = busyGirls(phone, acceptUnclaimed);
+  const added: PhoneLetterState[] = [];
+  for (const topicId of queue) {
+    const definition = getPhoneLetterDefinition(topicId)!;
+    if (busy.has(definition.initiator)) continue;
+    const letter: PhoneLetterState = {
+      topicId,
+      initiator: definition.initiator,
+      createTime: Math.floor(now / 1000),
+      replyIds: [],
+    };
+    phone.letters.push(letter);
+    added.push(letter);
+    busy.add(definition.initiator);
+  }
+
+  const delivered = new Set(added.map(({ topicId }) => topicId));
+  const waiting = queue.filter((topicId) => !delivered.has(topicId));
+  if (waiting.length) phone.queuedLetterTopicIds = waiting;
+  else delete phone.queuedLetterTopicIds;
+  return { added, queued };
+}
+
+/**
+ * Saves made before the queue can hold several open letters of one girl, and only the
+ * last one can be answered. Keeps one open letter per girl (a partly answered one if
+ * any, else the oldest) and puts the untouched others back at the front of the queue.
+ */
+export function queueSurplusOpenLetters(phone: PhoneState): number[] {
+  const openByGirl = new Map<number, PhoneLetterState[]>();
+  for (const letter of phone.letters) {
+    if (!isPhoneLetterOpen(letter)) continue;
+    const open = openByGirl.get(letter.initiator) ?? [];
+    open.push(letter);
+    openByGirl.set(letter.initiator, open);
+  }
+  const surplus = new Set<PhoneLetterState>();
+  for (const open of openByGirl.values()) {
+    if (open.length < 2) continue;
+    const keep = open.find(({ replyIds }) => replyIds.length > 0) ?? open[0];
+    for (const letter of open)
+      if (letter !== keep && letter.replyIds.length === 0) surplus.add(letter);
+  }
+  if (!surplus.size) return [];
+  const requeued = phone.letters
+    .filter((letter) => surplus.has(letter))
+    .map(({ topicId }) => topicId);
+  phone.letters = phone.letters.filter((letter) => !surplus.has(letter));
+  phone.queuedLetterTopicIds = [
+    ...requeued,
+    ...(phone.queuedLetterTopicIds ?? []).filter((id) => !requeued.includes(id)),
+  ];
+  return requeued;
+}
+
+/** Topic order of one contact in PHONE_MSG_NTF: delivery order, the open letter last. */
+export function orderPhoneLetterTopics(
+  topics: readonly PhoneLetterState[],
+): PhoneLetterState[] {
+  return [...topics].sort(
+    (a, b) => Number(isPhoneLetterOpen(a)) - Number(isPhoneLetterOpen(b)),
+  );
+}
+
 export function phoneLetterAffection(
   definition: PhoneLetterDefinition,
   replies: readonly number[],
@@ -141,6 +266,14 @@ export function reconcilePhoneLetters(
     phone.letters.push(letter);
     added.push(letter);
     present.add(topicId);
+  }
+  // A letter delivered directly (the guide letters) leaves the queue.
+  if (added.length && phone.queuedLetterTopicIds) {
+    const delivered = new Set(added.map(({ topicId }) => topicId));
+    phone.queuedLetterTopicIds = phone.queuedLetterTopicIds.filter(
+      (topicId) => !delivered.has(topicId),
+    );
+    if (!phone.queuedLetterTopicIds.length) delete phone.queuedLetterTopicIds;
   }
   return added;
 }
