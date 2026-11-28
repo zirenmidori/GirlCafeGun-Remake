@@ -37,7 +37,7 @@ export interface CafePetState {
   pets: CafePet[];
   nextUid: number;
   inCafe: number[];
-  /** Fractional hourly gains, when a future food table actually supplies them. */
+  /** Fractional hourly energy and love gains, carried per pet uid. */
   foodCarry?: Record<string, { hot: number; exp: number }>;
   missionWeek?: number;
   foodMissionRemainder?: number;
@@ -68,6 +68,15 @@ export class CafePetOperationError extends Error {
   }
 }
 
+// Pets in the café gain energy and love every hour that café food lasts.
+// NPet/BuffFood.txt holds only the extra of each food (Energy and Love are 0 in
+// every final-CN row), so the base rate comes from the client: UI_PetAddBuff.lua
+// ShowNowBuff shows +10 energy and +5 love per hour while food lasts, and 0
+// without food. [INFER] UI_PetAssign.lua UpdateBuffShow shows 6 and 8 instead;
+// the food screen's numbers are used because only it handles the "food, no buff
+// food" case.
+const BASE_ENERGY_PER_HOUR = 10,
+  BASE_LOVE_PER_HOUR = 5;
 const GROUP = 49,
   MAX_FOOD_SECONDS = 120_000,
   BOX_COUNT = 3,
@@ -358,12 +367,14 @@ export class CafePetRuntime {
         elapsed -= consumed;
         this.setTask(foodTimeKey(slot), remaining - consumed);
         if (remaining === consumed) this.setTask(foodIdKey(slot), 0);
-        if (food && (food.Energy > 0 || food.Love > 0)) {
+        const energyPerHour = BASE_ENERGY_PER_HOUR + (food?.Energy ?? 0),
+          lovePerHour = BASE_LOVE_PER_HOUR + (food?.Love ?? 0);
+        if (consumed > 0 && (energyPerHour > 0 || lovePerHour > 0)) {
           const carry = (this.state.foodCarry ??= {});
           for (const pet of assigned) {
             const value = (carry[String(pet.uid)] ??= { hot: 0, exp: 0 });
-            value.hot += (consumed * food.Energy) / 3_600;
-            value.exp += (consumed * food.Love) / 3_600;
+            value.hot += (consumed * energyPerHour) / 3_600;
+            value.exp += (consumed * lovePerHour) / 3_600;
             const hot = Math.floor(value.hot),
               exp = Math.floor(value.exp);
             value.hot -= hot;

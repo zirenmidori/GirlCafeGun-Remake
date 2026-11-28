@@ -655,3 +655,50 @@ describe("pet missions use the current75 achievement rows", () => {
     expect(f.items).toEqual(items);
   });
 });
+
+describe("pets in the café gain energy and love while café food lasts", () => {
+  const HOUR = 3_600 * SECOND;
+  const levelAfter = (love: number) => {
+    let lv = 1,
+      exp = love;
+    for (;;) {
+      const need = catalog.petLoveExp(lv);
+      if (need === null || need <= 0 || exp < need) return { lv, exp };
+      exp -= need;
+      lv++;
+    }
+  };
+  it("adds 10 energy and 5 love per hour of food to each placed pet only", () => {
+    const f = fixture();
+    f.own(pet(1, 101, { hot: 0 }), pet(2, 101, { hot: 0 }));
+    f.call("ChangePetCafeState", { nIndex: 1, uid: 1 });
+    // Food 4: AddPoint 3000 = 36,000 s = 10 hours of food.
+    f.call("BuyCafeFood", { nFoodId: 4, nNum: 1 });
+    expect(catalog.buffFood(4)).toMatchObject({ Energy: 0, Love: 0 });
+
+    const twoHours = f.call("GetCafeFoodNum", {}, NOW + 2 * HOUR);
+    expect(f.player.cafe.pets!.pets[0]).toMatchObject({ hot: 20, ...levelAfter(10) });
+    expect(f.player.cafe.pets!.pets[1]).toMatchObject({ hot: 0, exp: 0, lv: 1 });
+    expect(twoHours.notifications).toContainEqual({
+      method: "NCafePetLogic",
+      parameters: expect.objectContaining({
+        sCmd: "UpdatePet",
+        tbPetInfo: [expect.objectContaining({ uid: 1, hot: 20 })],
+      }),
+    });
+
+    // Half an hour: 5 energy, 2.5 love; the half point is carried.
+    f.call("GetCafeFoodNum", {}, NOW + 2.5 * HOUR);
+    expect(f.player.cafe.pets!.pets[0]).toMatchObject({ hot: 25, ...levelAfter(12) });
+    f.call("GetCafeFoodNum", {}, NOW + 3 * HOUR);
+    expect(f.player.cafe.pets!.pets[0]).toMatchObject({ hot: 30, ...levelAfter(15) });
+
+    // The food ends after 10 hours: energy stops at the cap of 100, love at 50.
+    f.call("GetCafeFoodNum", {}, NOW + 15 * HOUR);
+    expect(f.task(108)).toBe(0);
+    expect(f.player.cafe.pets!.pets[0]).toMatchObject({ hot: 100, ...levelAfter(50) });
+    const fed = structuredClone(f.player);
+    f.call("GetCafeFoodNum", {}, NOW + 20 * HOUR);
+    expect(f.player).toEqual(fed);
+  });
+});
