@@ -772,6 +772,8 @@ export interface ShopGoodsListResult {
   isOpen: boolean;
   refreshCount: number;
   goodsList: ShopGoodsListEntry[];
+  /** ShopTab Begin in seconds, 0 when the tab has none; sent as begintime (makeShopGoodsListTbParam). */
+  beginTime: number;
   endTime: number;
 }
 
@@ -2252,6 +2254,7 @@ function buildShopGoodsList(
       isOpen: false,
       refreshCount: 0,
       goodsList: [],
+      beginTime: tab?.begin ?? 0,
       endTime: tab?.end ?? 0,
     };
   }
@@ -2274,6 +2277,9 @@ function buildShopGoodsList(
     isOpen: true,
     refreshCount: shopState.refreshCount,
     goodsList: sortByPos(goodsList),
+    // An open shop has begun: the shop entry tile shows the countdown and opens the shop only
+    // while GetTime() - begintime > 0 (UI_ShopEntry.lua:109-111).
+    beginTime: Math.min(tab.begin ?? 0, nowSeconds),
     endTime: tab.end ?? 0,
   };
 }
