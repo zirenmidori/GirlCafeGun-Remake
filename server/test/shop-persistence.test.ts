@@ -194,10 +194,27 @@ describe("shop goods list", () => {
     expect(after?.shelf.every((entry) => entry.bought === 0)).toBe(true);
   });
 
+  it("reports the next auto refresh so the shop bubble has a countdown", async () => {
+    const { repository } = await createRepository();
+    const at = (iso: string): number => Math.floor(new Date(iso).getTime() / 1_000);
+    // NOW = 2026-08-19 12:00 (UTC+8); 20001 has slots 04:00 and 18:00.
+    const exchange = await repository.getShopGoodsList("tester", catalog, 20_001, NOW);
+    expect(exchange.nextRefreshTime).toBe(at("2026-08-19T18:00:00+08:00"));
+    // 20010 has RefreshRule 2 and no slots: the daily 04:00 change.
+    const daily = await repository.getShopGoodsList("tester", catalog, 20_010, NOW);
+    expect(daily.nextRefreshTime).toBe(at("2026-08-20T04:00:00+08:00"));
+    // 30001 is an event shop (RefreshRule 4): no countdown.
+    const event = await repository.getShopGoodsList("tester", catalog, 30_001, NOW);
+    expect(event.nextRefreshTime).toBe(0);
+    // A manual refresh answers with the same countdown.
+    const { result } = await repository.refreshShop("tester", catalog, 20_001, NOW);
+    expect(result.nextRefreshTime).toBe(at("2026-08-19T18:00:00+08:00"));
+  });
+
   it("reports closed and unknown shops without goods", async () => {
     const { repository } = await createRepository();
     const closed = await repository.getShopGoodsList("tester", catalog, 99_999, NOW);
-    expect(closed).toMatchObject({ isOpen: false, goodsList: [] });
+    expect(closed).toMatchObject({ isOpen: false, goodsList: [], nextRefreshTime: 0 });
     const unknown = await repository.getShopGoodsList("tester", catalog, 12_345, NOW);
     expect(unknown).toMatchObject({ isOpen: false, goodsList: [] });
   });

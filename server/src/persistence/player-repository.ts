@@ -151,6 +151,7 @@ import {
   nextPriceIndex,
   refreshFee,
   rollShelf,
+  shopNextRefreshTime,
   shopOperationalDate,
   shopOperationalWeek,
   shopShelfKey,
@@ -773,6 +774,8 @@ export interface ShopGoodsListResult {
   refreshCount: number;
   goodsList: ShopGoodsListEntry[];
   endTime: number;
+  /** Next automatic refresh (unix seconds); 0 = the shop does not refresh. */
+  nextRefreshTime: number;
 }
 
 export class ShopError extends Error {
@@ -2253,6 +2256,7 @@ function buildShopGoodsList(
       refreshCount: 0,
       goodsList: [],
       endTime: tab?.end ?? 0,
+      nextRefreshTime: 0,
     };
   }
   const shopState = reconcileShopState(player, catalog, tab, now);
@@ -2275,6 +2279,7 @@ function buildShopGoodsList(
     refreshCount: shopState.refreshCount,
     goodsList: sortByPos(goodsList),
     endTime: tab.end ?? 0,
+    nextRefreshTime: shopNextRefreshTime(tab, nowSeconds),
   };
 }
 

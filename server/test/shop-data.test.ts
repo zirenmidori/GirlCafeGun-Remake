@@ -12,6 +12,7 @@ import {
   rollShelf,
   ShopCatalog,
   shopOperationalDate,
+  shopNextRefreshTime,
   shopOperationalWeek,
   shopShelfKey,
   unitPrice,
@@ -183,6 +184,73 @@ it("maps the goods list result to the client tbParam shape", () => {
     goodslist: [{ goodsid: 20_101, buynum: 1, refreshbuynum: 0 }],
     endtime: 0,
   });
+});
+
+it("sends the next auto refresh of a refreshing shop as nextrefreshtime", () => {
+  const catalog = ShopCatalog.loadDefault();
+  const at = (iso: string): number => Math.floor(new Date(iso).getTime() / 1_000);
+
+  // 20001 Mercantile Exchange: RefreshRule 1, slots 04:00 and 18:00 (UTC+8).
+  const exchange = catalog.getTab(20_001)!;
+  expect(shopNextRefreshTime(exchange, at("2026-11-28T12:00:00+08:00"))).toBe(
+    at("2026-11-28T18:00:00+08:00"),
+  );
+  expect(shopNextRefreshTime(exchange, at("2026-11-28T19:00:00+08:00"))).toBe(
+    at("2026-11-29T04:00:00+08:00"),
+  );
+  expect(shopNextRefreshTime(exchange, at("2026-11-28T03:59:59+08:00"))).toBe(
+    at("2026-11-28T04:00:00+08:00"),
+  );
+  // On the boundary the next one is the following slot, so the client never re-pulls in a loop.
+  expect(shopNextRefreshTime(exchange, at("2026-11-28T04:00:00+08:00"))).toBe(
+    at("2026-11-28T18:00:00+08:00"),
+  );
+
+  // 20010 pet shop: RefreshRule 2, one daily slot at 04:00.
+  const pets = catalog.getTab(20_010)!;
+  expect(pets.refreshRule).toBe(2);
+  expect(shopNextRefreshTime(pets, at("2026-11-28T12:00:00+08:00"))).toBe(
+    at("2026-11-29T04:00:00+08:00"),
+  );
+
+  // 20005 card shop: RefreshRule 3, weekly, Monday 04:00 (UTC+8) like shopOperationalWeek.
+  const cards = catalog.getTab(20_005)!;
+  expect(cards.refreshRule).toBe(3);
+  expect(shopNextRefreshTime(cards, at("2026-11-28T12:00:00+08:00"))).toBe(
+    at("2026-11-30T04:00:00+08:00"),
+  );
+  expect(shopNextRefreshTime(cards, at("2026-11-30T03:00:00+08:00"))).toBe(
+    at("2026-11-30T04:00:00+08:00"),
+  );
+  expect(shopNextRefreshTime(cards, at("2026-11-30T05:00:00+08:00"))).toBe(
+    at("2026-12-07T04:00:00+08:00"),
+  );
+
+  // Event (4) and one-time (5) shops do not refresh: no countdown.
+  expect(
+    shopNextRefreshTime(catalog.getTab(30_001)!, at("2026-11-28T12:00:00+08:00")),
+  ).toBe(0);
+  expect(
+    shopNextRefreshTime(catalog.getTab(20_007)!, at("2026-11-28T12:00:00+08:00")),
+  ).toBe(0);
+});
+
+it("adds nextrefreshtime to the tbParam only when it is set", () => {
+  const base = {
+    shopId: 20_001,
+    isOpen: true,
+    refreshCount: 0,
+    goodsList: [],
+    endTime: 0,
+  };
+  expect(
+    makeShopGoodsListTbParam({ ...base, nextRefreshTime: 1_800_000_000 }),
+  ).toMatchObject({
+    nextrefreshtime: 1_800_000_000,
+  });
+  expect(makeShopGoodsListTbParam({ ...base, nextRefreshTime: 0 })).not.toHaveProperty(
+    "nextrefreshtime",
+  );
 });
 
 it("opens the actual cafe shop flag without opening disabled or expired shops", () => {
