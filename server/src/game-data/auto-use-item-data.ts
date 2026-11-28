@@ -15,7 +15,8 @@
  * - ItemDecorateAuto: ExtParam1 is the main-screen theme id; owned when task
  *   87/id holds the time it was received (MainOrnament:IsUseTheme).
  * - RikiItem: Guide/Riki.txt lists the item's GDPL; task 53/Id is 1 when the
- *   entry is unlocked (Riki.lua).
+ *   entry is unlocked (Riki.lua). The client does not read that task: the
+ *   gateway sends the unlocked ids as RikiList/RikiData (riki-codex-data.ts).
  * - ItemGiftCoffeeCoinAuto: coffee coins. Inferred: it shares description and
  *   icon with ItemCoffeeCoinAuto, and its genre 14 siblings are the diamond
  *   items that pay ExtParam1 diamonds each.

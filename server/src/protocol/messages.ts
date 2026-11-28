@@ -518,6 +518,16 @@ function makeItemInfo(item: InventoryEntryState): Buffer {
   ]);
 }
 
+/** gsproto.RikiData: field 1 uint32 rikiid. */
+export function makeRikiData(id: number): Buffer {
+  return fieldVarint(1, id);
+}
+
+/** gsproto.RikiList: field 1 repeated RikiData. */
+export function makeRikiList(ids: readonly number[]): Buffer {
+  return Buffer.concat(ids.map((id) => fieldBytes(1, makeRikiData(id))));
+}
+
 export function makeItemNotification(player: Player): Buffer {
   return Buffer.concat([
     ...player.inventory.map((item) => fieldBytes(1, makeItemInfo(item))),

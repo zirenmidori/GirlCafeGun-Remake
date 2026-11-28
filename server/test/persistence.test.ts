@@ -92,6 +92,10 @@ it("persists player and task changes atomically", async () => {
       ...Object.fromEntries(
         [1, 2, 3, 4, 5].map((id) => [String((87 << 16) | id), player.registerTime]),
       ),
+      // Codex entries (Riki.txt) of the three starter cards 1-2-1-1, 1-7-1-1, 1-9-1-3.
+      ...Object.fromEntries(
+        [1008, 1047, 1067].map((id) => [String((53 << 16) | id), 1]),
+      ),
     });
     expect(
       player.inventory
