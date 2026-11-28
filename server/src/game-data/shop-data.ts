@@ -330,6 +330,40 @@ export function shopShelfKey(tab: ShopTabConfig, now = Date.now()): string {
   return `${operationalDate}@${slot}`;
 }
 
+/**
+ * Unix seconds of the next automatic refresh of a refreshing shop, or 0 when the
+ * shop does not refresh (RefreshRule 4 event, 5 one-time). UI_ShopNew shows it as
+ * the "Time: Xh Ymin" bubble (UI_ShopNew.lua:1133) and re-pulls the shelf then
+ * (lua:1039). Without it the bubble keeps the prefab placeholder digits.
+ *
+ * Boundaries are the ones the server already acts on: RefreshRule 1/2 re-roll the
+ * shelf at each RefreshTime slot and reset manual refreshes and daily counters at
+ * 04:00 (UTC+8) (shopShelfKey, reconcileShopState); RefreshRule 3 changes at
+ * Monday 04:00 (UTC+8) (shopOperationalWeek). The result is always after
+ * nowSeconds, so a re-pull on the boundary cannot loop.
+ */
+export function shopNextRefreshTime(tab: ShopTabConfig, nowSeconds: number): number {
+  if (tab.refreshRule < 1 || tab.refreshRule > 3) return 0;
+  const shanghaiOffset = 8 * 3_600;
+  const dawn = 4 * 3_600;
+  const day = 86_400;
+  const local = nowSeconds + shanghaiOffset;
+  if (tab.refreshRule === 3) {
+    // Operational clock: its day starts at 04:00 UTC+8. 1970-01-01 was a Thursday.
+    const operationalDays = Math.floor((local - dawn) / day);
+    const daysSinceMonday = (((operationalDays + 3) % 7) + 7) % 7;
+    return (operationalDays + 7 - daysSinceMonday) * day + dawn - shanghaiOffset;
+  }
+  const dayStart = local - (((local % day) + day) % day);
+  let next = Number.POSITIVE_INFINITY;
+  for (const slot of new Set([...tab.refreshTimes, dawn])) {
+    let candidate = dayStart + slot;
+    if (candidate <= local) candidate += day;
+    next = Math.min(next, candidate);
+  }
+  return next - shanghaiOffset;
+}
+
 export interface ShelfStock {
   goodsId: number;
   discount: number;
@@ -480,25 +514,39 @@ export interface ShopGoodsListTbParam {
   isopen: number;
   refreshcount: number;
   goodslist: Record<string, number>[];
+  begintime: number;
   endtime: number;
+  nextrefreshtime?: number;
 }
 
 /**
  * GoodsLogicC 需要 shopid/isopen/refreshcount/goodslist 四个字段才接受响应；
- * endtime 供活动商店倒计时（UI_ShopNew.RefreshTimer）。
+ * endtime 供活动商店倒计时（UI_ShopNew.RefreshTimer）；nextrefreshtime 供刷新商店
+ * 的「下次刷新」气泡（0 = 不刷新，字段不下发）。
+ *
+ * begintime always goes with endtime. UI_ShopEntry:OnShowGoods (UI_ShopEntry.lua:96-105,
+ * client 0.1.3) runs for every goods list reply while the shop entry screen is open, and when
+ * endtime is non-zero its timer computes `GetTime() - tbParam.begintime or 0`: without
+ * begintime it throws on every tick. The C# build sends the two as a pair for the same reason
+ * (GirlCafeGun-Offline server/src/SssjServer.Game/Handlers/ShopFeature.cs:675-680).
  */
 export function makeShopGoodsListTbParam(result: {
   shopId: number;
   isOpen: boolean;
   refreshCount: number;
   goodsList: Record<string, number>[];
+  beginTime: number;
   endTime: number;
+  nextRefreshTime?: number;
 }): ShopGoodsListTbParam {
-  return {
+  const tbParam: ShopGoodsListTbParam = {
     shopid: result.shopId,
     isopen: result.isOpen ? 1 : 0,
     refreshcount: result.refreshCount,
     goodslist: result.goodsList,
+    begintime: result.beginTime,
     endtime: result.endTime,
   };
+  if (result.nextRefreshTime) tbParam.nextrefreshtime = result.nextRefreshTime;
+  return tbParam;
 }

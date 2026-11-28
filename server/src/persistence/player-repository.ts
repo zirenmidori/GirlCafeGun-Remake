@@ -151,6 +151,7 @@ import {
   nextPriceIndex,
   refreshFee,
   rollShelf,
+  shopNextRefreshTime,
   shopOperationalDate,
   shopOperationalWeek,
   shopShelfKey,
@@ -772,7 +773,11 @@ export interface ShopGoodsListResult {
   isOpen: boolean;
   refreshCount: number;
   goodsList: ShopGoodsListEntry[];
+  /** ShopTab Begin in seconds, 0 when the tab has none; sent as begintime (makeShopGoodsListTbParam). */
+  beginTime: number;
   endTime: number;
+  /** Next automatic refresh (unix seconds); 0 = the shop does not refresh. */
+  nextRefreshTime: number;
 }
 
 export class ShopError extends Error {
@@ -2252,7 +2257,9 @@ function buildShopGoodsList(
       isOpen: false,
       refreshCount: 0,
       goodsList: [],
+      beginTime: tab?.begin ?? 0,
       endTime: tab?.end ?? 0,
+      nextRefreshTime: 0,
     };
   }
   const shopState = reconcileShopState(player, catalog, tab, now);
@@ -2274,7 +2281,11 @@ function buildShopGoodsList(
     isOpen: true,
     refreshCount: shopState.refreshCount,
     goodsList: sortByPos(goodsList),
+    // An open shop has begun: the shop entry tile shows the countdown and opens the shop only
+    // while GetTime() - begintime > 0 (UI_ShopEntry.lua:109-111).
+    beginTime: Math.min(tab.begin ?? 0, nowSeconds),
     endTime: tab.end ?? 0,
+    nextRefreshTime: shopNextRefreshTime(tab, nowSeconds),
   };
 }
 

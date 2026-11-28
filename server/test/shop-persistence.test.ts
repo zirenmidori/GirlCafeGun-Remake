@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { mkdtemp } from "./helpers/temp.js";
 import os from "node:os";
@@ -6,6 +7,8 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  makeShopGoodsListTbParam,
+  parseShopTabs,
   ShopCatalog,
   shopOperationalDate,
   shopOperationalWeek,
@@ -194,12 +197,66 @@ describe("shop goods list", () => {
     expect(after?.shelf.every((entry) => entry.bought === 0)).toBe(true);
   });
 
+  it("reports the next auto refresh so the shop bubble has a countdown", async () => {
+    const { repository } = await createRepository();
+    const at = (iso: string): number => Math.floor(new Date(iso).getTime() / 1_000);
+    // NOW = 2026-08-19 12:00 (UTC+8); 20001 has slots 04:00 and 18:00.
+    const exchange = await repository.getShopGoodsList("tester", catalog, 20_001, NOW);
+    expect(exchange.nextRefreshTime).toBe(at("2026-08-19T18:00:00+08:00"));
+    // 20010 has RefreshRule 2 and no slots: the daily 04:00 change.
+    const daily = await repository.getShopGoodsList("tester", catalog, 20_010, NOW);
+    expect(daily.nextRefreshTime).toBe(at("2026-08-20T04:00:00+08:00"));
+    // 30001 is an event shop (RefreshRule 4): no countdown.
+    const event = await repository.getShopGoodsList("tester", catalog, 30_001, NOW);
+    expect(event.nextRefreshTime).toBe(0);
+    // A manual refresh answers with the same countdown.
+    const { result } = await repository.refreshShop("tester", catalog, 20_001, NOW);
+    expect(result.nextRefreshTime).toBe(at("2026-08-19T18:00:00+08:00"));
+  });
+
   it("reports closed and unknown shops without goods", async () => {
     const { repository } = await createRepository();
     const closed = await repository.getShopGoodsList("tester", catalog, 99_999, NOW);
-    expect(closed).toMatchObject({ isOpen: false, goodsList: [] });
+    expect(closed).toMatchObject({ isOpen: false, goodsList: [], nextRefreshTime: 0 });
     const unknown = await repository.getShopGoodsList("tester", catalog, 12_345, NOW);
     expect(unknown).toMatchObject({ isOpen: false, goodsList: [] });
+  });
+
+  // UI_ShopEntry:OnShowGoods (UI_ShopEntry.lua:96-105, client 0.1.3) runs for every goods
+  // list reply while the shop entry screen is open (GoodsLogicC.lua:318-320). When endtime
+  // is non-zero its timer computes `GetTime() - tbParam.begintime or 0`, which throws on
+  // every tick when begintime is nil (`or 0` binds to the whole difference).
+  it("sends begintime with every non-zero endtime, for every shop tab", async () => {
+    const { repository } = await createRepository();
+    const real = ShopCatalog.loadDefault();
+    const shopIds = [
+      ...parseShopTabs(
+        readFileSync(
+          path.resolve(process.cwd(), "resources/shop/shoptabs.txt"),
+          "utf8",
+        ),
+      ).keys(),
+    ];
+    const nowSeconds = Math.floor(NOW / 1_000);
+    let timed = 0;
+    for (const shopId of shopIds) {
+      const tbParam: Record<string, unknown> = {
+        ...makeShopGoodsListTbParam(
+          await repository.getShopGoodsList("tester", real, shopId, NOW),
+        ),
+      };
+      if (tbParam.endtime === 0) continue;
+      timed += 1;
+      expect(typeof tbParam.begintime, `shop ${shopId} begintime`).toBe("number");
+      // An open shop has begun: the entry tile shows its countdown and opens the shop only
+      // while GetTime() - begintime > 0 (UI_ShopEntry.lua:109-111).
+      if (tbParam.isopen === 1) {
+        expect(tbParam.begintime, `shop ${shopId} begintime`).toBeLessThanOrEqual(
+          nowSeconds,
+        );
+      }
+    }
+    expect(timed).toBeGreaterThan(0);
   });
 });
 
