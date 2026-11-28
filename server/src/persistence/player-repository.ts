@@ -1473,11 +1473,12 @@ function reconcileCustomGirlOutfits(player: Player): GirlState[] {
 
 /**
  * A costume item (SuitItem, auto-use-item-data.ts) owns its model through the
- * suit task alone: it has no character card. changeGirlClothes accepts a model
- * whose suit task is above 0, so the roster check must accept it too.
+ * suit task alone: it has no character card. Only the models that such an item
+ * grants count here; a card model still needs its card, as before.
  */
 function ownsSuitModel(player: Player, girlId: number, modelId: number): boolean {
   if (!Number.isSafeInteger(modelId) || modelId <= 1) return false;
+  if (!AutoUseItemCatalog.loadDefault().grantsSuit(girlId, modelId)) return false;
   let taskId: number;
   try {
     taskId = makeGirlTaskId(

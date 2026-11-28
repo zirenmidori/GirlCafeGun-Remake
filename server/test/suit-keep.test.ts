@@ -5,6 +5,7 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import { AutoUseItemCatalog } from "../src/game-data/auto-use-item-data.js";
 import { getBountyLevel, rollBountyRun } from "../src/game-data/bounty-data.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
@@ -131,5 +132,36 @@ describe("a costume bought as an item stays on after a battle", () => {
       null,
     );
     expect(settled.player.girls.find(({ girlId }) => girlId === GIRL)?.modelId).toBe(1);
+  });
+
+  it("knows Yui's costume 7001 (item 19-1-8-4) as a costume-item model", () => {
+    expect(AutoUseItemCatalog.loadDefault().grantsSuit(16, 7001)).toBe(true);
+    expect(AutoUseItemCatalog.loadDefault().grantsSuit(16, 1)).toBe(false);
+  });
+
+  it("still resets a card model whose card is gone and an alias of a costume id", async () => {
+    for (const modelId of [3, 7101]) {
+      const { repository, store } = await fixture();
+      await store.update((state) => {
+        const player = state.players.tester!;
+        // Suit tasks stay set after a card is decomposed; 7101 shares 7001's suit task.
+        player.taskValues[String(suitTaskId(GIRL, 3))] = 2;
+        player.taskValues[String(suitTaskId(GIRL, SUIT_MODEL))] = 2;
+        player.girls.find(({ girlId }) => girlId === GIRL)!.modelId = modelId;
+      });
+      const level = getBountyLevel(1, 1)!;
+      const run = rollBountyRun(level, `reset-${modelId}`, 2);
+      const settled = await repository.settleBounty(
+        "tester",
+        level,
+        run.awards,
+        run.dailyBonusApplied,
+        null,
+      );
+      expect(
+        settled.player.girls.find(({ girlId }) => girlId === GIRL)?.modelId,
+        `model ${modelId}`,
+      ).toBe(1);
+    }
   });
 });
