@@ -175,6 +175,7 @@ it("maps the goods list result to the client tbParam shape", () => {
       isOpen: true,
       refreshCount: 2,
       goodsList: [{ goodsid: 20_101, buynum: 1, refreshbuynum: 0 }],
+      beginTime: 0,
       endTime: 0,
     }),
   ).toEqual({
@@ -182,6 +183,7 @@ it("maps the goods list result to the client tbParam shape", () => {
     isopen: 1,
     refreshcount: 2,
     goodslist: [{ goodsid: 20_101, buynum: 1, refreshbuynum: 0 }],
+    begintime: 0,
     endtime: 0,
   });
 });

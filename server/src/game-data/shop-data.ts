@@ -514,6 +514,7 @@ export interface ShopGoodsListTbParam {
   isopen: number;
   refreshcount: number;
   goodslist: Record<string, number>[];
+  begintime: number;
   endtime: number;
   nextrefreshtime?: number;
 }
@@ -522,12 +523,19 @@ export interface ShopGoodsListTbParam {
  * GoodsLogicC 需要 shopid/isopen/refreshcount/goodslist 四个字段才接受响应；
  * endtime 供活动商店倒计时（UI_ShopNew.RefreshTimer）；nextrefreshtime 供刷新商店
  * 的「下次刷新」气泡（0 = 不刷新，字段不下发）。
+ *
+ * begintime always goes with endtime. UI_ShopEntry:OnShowGoods (UI_ShopEntry.lua:96-105,
+ * client 0.1.3) runs for every goods list reply while the shop entry screen is open, and when
+ * endtime is non-zero its timer computes `GetTime() - tbParam.begintime or 0`: without
+ * begintime it throws on every tick. The C# build sends the two as a pair for the same reason
+ * (GirlCafeGun-Offline server/src/SssjServer.Game/Handlers/ShopFeature.cs:675-680).
  */
 export function makeShopGoodsListTbParam(result: {
   shopId: number;
   isOpen: boolean;
   refreshCount: number;
   goodsList: Record<string, number>[];
+  beginTime: number;
   endTime: number;
   nextRefreshTime?: number;
 }): ShopGoodsListTbParam {
@@ -536,6 +544,7 @@ export function makeShopGoodsListTbParam(result: {
     isopen: result.isOpen ? 1 : 0,
     refreshcount: result.refreshCount,
     goodslist: result.goodsList,
+    begintime: result.beginTime,
     endtime: result.endTime,
   };
   if (result.nextRefreshTime) tbParam.nextrefreshtime = result.nextRefreshTime;
