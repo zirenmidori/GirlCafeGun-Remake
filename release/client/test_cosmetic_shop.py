@@ -74,7 +74,7 @@ def run(text, tables, items):
         assert r['OffFlag'] == r['OffStartTime'] == r['OffEndTime'] == r['OffCost'] == ''
         assert int(r['Cost']) == prices[row['id']] == row['cost']
         assert r['GDPL'] == '[%s,1]' % ','.join(str(v) for v in row['gdpl']), r['GDPL']
-        assert int(r['Sort']) == shop.SORT
+        assert int(r['Sort']) == shop.ROW_SORT == 300
         for now in (1795000000, 2100000000):
             assert check(int(r['StartTime'].strip('[]') or 0), int(r['EndTime'].strip('[]') or 0), now), r['Id']
     # the costume tab is untouched

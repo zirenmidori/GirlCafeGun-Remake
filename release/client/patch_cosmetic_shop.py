@@ -25,7 +25,7 @@ TABLE_DIR = 'assets/_game/settinggen/player/'
 FIRST_ID = 3001
 # IBLogic:GetAllIBShop lists a larger Sort first and breaks a tie by the smaller Id, so one Sort for every
 # row keeps the Id order (card skins, head frames, list marks, chat bubbles), above rows 2001-2012 (Sort 8-20).
-SORT = 300
+ROW_SORT = 300
 DIAMONDS = '-2'
 LABEL = '102'
 TEMPLATE_ID = 2001
@@ -110,7 +110,7 @@ def patch_text(text, rows):
         f = copy.copy(template)
         f[ID], f[NAME] = str(row['id']), '%s %d' % (row['kind'], row['cosmeticId'])
         f[GDPL] = '[%s,1]' % ','.join(str(v) for v in row['gdpl'])
-        f[CURRENCY], f[COST], f[SORT] = DIAMONDS, str(row['cost']), str(SORT)
+        f[CURRENCY], f[COST], f[SORT] = DIAMONDS, str(row['cost']), str(ROW_SORT)
         f[LIMIT_TYPE], f[LIMIT_TIMES] = '4', '1'
         for c in OFF + (START, END, LOCK, HIDE):
             f[c] = ''
