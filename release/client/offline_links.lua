@@ -1,6 +1,7 @@
 -- Dead online links of the client, for the offline build.
 -- release/client/patch_offline_links.py places this file at the end of Lib.lua and calls it from
--- DropWay.lua (banners and other jump targets), UI_User.lua (settings) and UI_JPTip.lua.
+-- DropWay.lua (banners and other jump targets), UI_User.lua (settings), UI_JPTip.lua and UI_RikiMain.lua
+-- (the codex).
 local P = {}
 
 -- The part of an address that names a page: no scheme, no slash at the end, lower case.
@@ -20,8 +21,13 @@ local MOVED = {
 }
 -- A page that is gone for good: the button that opens it does nothing.
 -- The player survey of the English release (a Google form) is closed.
+-- The two comic pages of the codex (Riki.txt rows 9001 and 9002): the Japanese one has no DNS; the
+-- Chinese one is a bilibili manga page, a publisher page outside the offline game that the client
+-- opened in its own web view.
 local CLOSED = {
 	[pageKey('https://docs.google.com/forms/d/e/1FAIpQLSevCq76gs6OF2HooAP89RdtiaZ3gpyg0SjTWloMs00RjJESuA/viewform')] = true,
+	[pageKey('https://manga.bilibili.com/m/mc27419/383240')] = true,
+	[pageKey('https://gcg.xoyo.jp/comic/')] = true,
 }
 
 -- The address to open in place of url. nil: the page is closed, open nothing.
@@ -39,6 +45,18 @@ function P.Url(url)
 		return moved
 	end
 	return url
+end
+
+-- The codex comic tile (UI_RikiMain, Riki.txt type 9): the comic rows whose page is not closed.
+-- UI_RikiMain hides the tile when this list is empty, and its button opens only a row of this list.
+function P.Comics(tb)
+	local open = {}
+	if type(tb) ~= 'table' then return open end
+	for _, row in ipairs(tb) do
+		if type(row) == 'table' and P.Url(row.Extension2) ~= nil then open[#open + 1] = row end
+	end
+	print('[links] codex comics open: ' .. #open)
+	return open
 end
 
 -- Settings > Other: buttons with nothing behind them in the offline build.

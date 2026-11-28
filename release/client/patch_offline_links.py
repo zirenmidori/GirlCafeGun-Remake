@@ -1,4 +1,4 @@
-"""Dead online links: offline_links.lua at the end of Lib.lua, and five scripts call it or stop early.
+"""Dead online links: offline_links.lua at the end of Lib.lua, and six scripts call it or stop early.
 
 Written for the GirlCafeGun-Offline phone build (MIT, GCG2-Offline contributors). The client opens pages and
 SDK windows of the publisher that are gone. What the player sees with this patch:
@@ -15,6 +15,9 @@ SDK windows of the publisher that are gone. What the player sees with this patch
                   account deletion and the video editor row. The call runs after the stock code that shows
                   them. The wiki button (Japanese client only) opens the new wiki.
   UI_JPTip        The wiki button of the Japanese tip window opens the new wiki.
+  UI_RikiMain     The Secrets tile of the codex (Collection) opened a comic page: bilibili manga in the web view of
+                  the Chinese client, a dead Japanese page in the browser for the Japanese one. Its rows go through
+                  OfflineLinks.Comics; both pages are closed, the list is empty, and the stock code hides the tile.
 No prefab, table or other asset changes. Patching a patched script only refreshes the module.
 """
 from pathlib import Path
@@ -31,6 +34,8 @@ RATE = 'function tbClass:CheckEvaluateTip(type,pEndCall)\n'
 RATE_STOP = ('\t-- Offline build: the window opens a store page and a help desk that are gone. false = not opened.\n'
              '\tdo return false end\n')
 OTHER_END = '\t------------------------其他界面   End-------------------------------------------\n'
+RIKI_TILE = '\t\t\t\tlocal NowCount,AllCount,tb = Riki:GetUnLockInfoByType(i)\n'
+RIKI_COMICS = '\t\t\t\tif v.OnlyNeedOne then tb = OfflineLinks.Comics(tb) end\n'
 # name -> [(stock text, patched text)]. Each stock text must be in the script exactly once.
 EDITS = {
     'EvaluateGuide.lua': [(RATE + '\tif not self:CheckNeedEvaluate() then\n',
@@ -39,6 +44,7 @@ EDITS = {
     'UI_User.lua': [('\t\t\t\tU3D.Application.OpenURL(%s);\n' % WIKI, '\t\t\t\tU3D.Application.OpenURL(OfflineLinks.Url(%s));\n' % WIKI),
                     (OTHER_END, '\tOfflineLinks.HideButtons(self.ui.qita)\n' + OTHER_END)],
     'UI_JPTip.lua': [('\t\t\tU3D.Application.OpenURL(%s);\n' % WIKI, '\t\t\tU3D.Application.OpenURL(OfflineLinks.Url(%s));\n' % WIKI)],
+    'UI_RikiMain.lua': [(RIKI_TILE, RIKI_TILE + RIKI_COMICS)],
 }
 LUA_NAMES = {'Lib.lua'} | set(EDITS)
 
