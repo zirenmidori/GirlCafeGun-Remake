@@ -1,10 +1,11 @@
-"""Checks for the error-literal text fixes: the rule, and the roundtrip on a real text table."""
+"""Checks for the text fixes (error literals, copied lines): the rule, and the roundtrip on a real text table."""
 from pathlib import Path
 import argparse
 import json
 import re
 import zipfile
 
+import patch_prose_punctuation as pp
 import patch_text_fixes as p
 import asset_tools as w
 
@@ -26,7 +27,22 @@ def run(source_apk=None, source_lang=None):
         raise AssertionError('a real value was replaced')
     except ValueError:
         pass
-    result = {'onlyListedKeysChange': True, 'onlyErrorLiteralsAreReplaced': True, 'idempotent': True}
+    assert len(p.COPIED_LINES) == 2 and not set(p.COPIED_LINES) & set(p.FIXES)
+    for key, (neighbour, copied, text) in p.COPIED_LINES.items():
+        assert neighbour != key and text == text.strip() and text and text != copied
+        assert not NON_LATIN.search(text), key
+        assert all(32 <= ord(c) < 127 for c in text), key  # glyphs every game font has
+        # The release build runs the narrative punctuation pass first: it must leave both values as they are.
+        assert pp.normalize(key, copied) == copied and pp.normalize(key, text) == text, key
+        assert p.fix(key, copied) == text
+        assert p.fix(key, text) == text  # a second run changes nothing
+    try:
+        p.fix('main.nstory03_4117', 'Some other line.')
+        raise AssertionError('a line that is not the known copy was replaced')
+    except ValueError:
+        pass
+    result = {'onlyListedKeysChange': True, 'onlyErrorLiteralsAreReplaced': True, 'onlyKnownCopiesAreReplaced': True,
+              'idempotent': True}
     if source_apk:
         source_apk = Path(source_apk)
         w.configure(source_apk)
@@ -42,13 +58,19 @@ def run(source_apk=None, source_lang=None):
         after = w.typed_tables(raw, {'zh_CN'})['zh_CN']['value']
         assert before['keys'] == after['keys']
         differ = {k: (a, b) for k, a, b in zip(before['keys'], before['values'], after['values']) if a != b}
-        assert set(differ) == set(proof['changedKeys']) and set(differ) <= set(p.FIXES)
-        assert all(a in p.ERROR_LITERALS and b == p.FIXES[k] for k, (a, b) in differ.items())
+        assert set(differ) == set(proof['changedKeys']) and set(differ) <= set(p.FIXES) | set(p.COPIED_LINES)
+        assert all(a in p.ERROR_LITERALS and b == p.FIXES[k] for k, (a, b) in differ.items() if k in p.FIXES)
+        assert all((a, b) == p.COPIED_LINES[k][1:] for k, (a, b) in differ.items() if k in p.COPIED_LINES)
+        old = dict(zip(before['keys'], before['values']))
         d = dict(zip(after['keys'], after['values']))
         assert all(d[k] == text for k, text in p.FIXES.items())
         assert not [k for k, v in d.items() if ERROR_LITERAL.search(v)]
+        for key, (neighbour, copied, text) in p.COPIED_LINES.items():
+            # The wrong value is the English of the next or previous line; after the fix the two lines differ.
+            assert old[key] in (copied, text) and old[neighbour] == copied, key
+            assert d[key] == text and d[neighbour] == copied, key
         again, proof2 = p.build_language(output)
-        assert proof2['errorLiteralValuesReplaced'] == 0 and again == output
+        assert proof2['errorLiteralValuesReplaced'] == 0 and proof2['copiedLinesReplaced'] == 0 and again == output
         result.update(actualLocaleRoundtrip=proof, valuesThatDiffer=len(differ),
                       errorLiteralsBefore=sum(1 for v in before['values'] if ERROR_LITERAL.search(v)),
                       errorLiteralsAfter=0, secondRunByteEqual=True)

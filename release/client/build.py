@@ -72,6 +72,7 @@ def main():
         changed['lang.u'],proofs['prosePunctuation']=patch_prose_punctuation.build_language(changed['lang.u'])
         changed['lang.u'],proofs['textFixes']=patch_text_fixes.build_language(changed['lang.u'])
         assert proofs['textFixes']['errorLiteralValuesReplaced']==len(patch_text_fixes.FIXES)
+        assert proofs['textFixes']['copiedLinesReplaced']==len(patch_text_fixes.COPIED_LINES)
         replacements['assets/setting_decrypted.u']=write('assets/setting_decrypted.u',plain)
         print('Verified rarity, card layout, lobby schedule, native MagicTb loader',flush=True)
         changed['npc/neptune_roster.u'],proofs['card'],crop=patch_card.build(apk.read('assets/npc/neptune_roster.u'),args.art)
