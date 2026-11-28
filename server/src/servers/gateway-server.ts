@@ -13,6 +13,14 @@ import {
   PROFILE_LOOK_LOCKED_ERROR,
   profileLookReply,
 } from "../game-data/look-data.js";
+import {
+  isProfilePageCommand,
+  LUA_COMMAND_GET_EXHIBITION_ITEM,
+  LUA_COMMAND_GET_SIGN,
+  LUA_COMMAND_SET_EXHIBITION_ITEM,
+  LUA_COMMAND_SET_EXHIBITION_WEAPON,
+  LUA_COMMAND_SET_SIGN,
+} from "../game-data/user-page-data.js";
 import { dailySignUpOperationalDate } from "../game-data/daily-sign-up-data.js";
 import { getMomentDefinition } from "../game-data/moments-data.js";
 import { dailyPullMailAwards, type MailAction } from "../game-data/mail-data.js";
@@ -99,6 +107,7 @@ import {
   LUA_COMMAND_PAY_RESULT_SUCCESS,
   MONTH_CARD_ITEM_ID,
 } from "../game-data/ib-shop-data.js";
+import { cosmeticShopRow } from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import { getPhoneLetterDefinition } from "../game-data/phone-message-data.js";
 import { PvpSessionManager, type PvpSession } from "../game-data/pvp-session.js";
@@ -1327,7 +1336,16 @@ export function createGatewayServer({
       if (packet.command === COMMAND.RENAME_REQ) {
         try {
           const name = parseRenameName(packet.payload);
+          const before = players.get(context.account)?.money ?? [];
           context.player = await players.rename(context.account, name);
+          // UI_ChangeName reads the rename count (task 1/14) the next time it
+          // opens, and the Diamond counters show the cost of this one.
+          send(COMMAND.TASK_VALUE_RSP, 0, makeTaskValueSync(context.player.taskValues));
+          for (const money of context.player.money)
+            if (
+              money.count !== before.find((previous) => previous.id === money.id)?.count
+            )
+              send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
         } catch (error) {
           // UI_ChangeName waits for this reply; a non-zero code shows
           // ui.Error.<code> ("Failed to rename. Please try again.").
@@ -3341,6 +3359,61 @@ export function createGatewayServer({
             );
             logger.warn("rune.rejected", { command: luaCommand, reason: error.reason });
           }
+          return;
+        }
+        if (isProfilePageCommand(luaCommand)) {
+          // user-page-data.ts: every reply is a bare array.
+          let player = context.player ?? (await players.getOrCreate(context.account));
+          let tbParam: unknown[];
+          if (luaCommand === LUA_COMMAND_GET_SIGN) {
+            tbParam = [player.profilePage?.sign ?? ""];
+          } else if (luaCommand === LUA_COMMAND_SET_SIGN) {
+            const result = await players.setProfileSign(
+              context.account,
+              call?.parameters,
+            );
+            player = result.player;
+            // UI_ChangeSignature reads the changes left (task 1/29) when it opens.
+            send(COMMAND.TASK_VALUE_RSP, 0, makeTaskValueSync(player.taskValues));
+            tbParam = [player.profilePage?.sign ?? ""];
+          } else {
+            const kind =
+              luaCommand === LUA_COMMAND_GET_EXHIBITION_ITEM ||
+              luaCommand === LUA_COMMAND_SET_EXHIBITION_ITEM
+                ? "cards"
+                : "weapons";
+            if (
+              luaCommand === LUA_COMMAND_SET_EXHIBITION_ITEM ||
+              luaCommand === LUA_COMMAND_SET_EXHIBITION_WEAPON
+            ) {
+              const result = await players.setProfileSlots(
+                context.account,
+                kind,
+                call?.parameters,
+              );
+              player = result.player;
+              tbParam = result.slots;
+            } else {
+              tbParam = players.profileSlots(player, kind);
+            }
+          }
+          context.player = player;
+          send(
+            COMMAND.NTF_S2C_CALL,
+            0,
+            makeServerLuaCall("LuaCall", { sCmd: luaCommand, tbParam }),
+          );
+          logger.info("lua.callback", {
+            peer,
+            account: context.account,
+            method: "LuaCall",
+            command: luaCommand,
+            feature: "profile_page",
+            tbParam:
+              luaCommand === LUA_COMMAND_GET_SIGN || luaCommand === LUA_COMMAND_SET_SIGN
+                ? { length: String(tbParam[0]).length }
+                : tbParam,
+          });
           return;
         }
         if (
@@ -5376,6 +5449,49 @@ export function createGatewayServer({
                   Error: error.clientError,
                 });
                 logger.warn("ib_shop.costume_pack.rejected", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
+                  reason: error.reason,
+                  clientError: error.clientError,
+                });
+              }
+            } else if (
+              doRechargeCall.shopType === 1 &&
+              cosmeticShopRow(doRechargeCall.id) !== undefined
+            ) {
+              const pack = cosmeticShopRow(doRechargeCall.id)!;
+              try {
+                const result = await players.buyCosmeticPack(context.account, pack.id);
+                context.player = result.player;
+                for (const money of result.updatedMoney) {
+                  send(COMMAND.MONEY_UPDATE_NTF, 0, makeMoneyUpdateNotification(money));
+                }
+                send(
+                  COMMAND.TASK_VALUE_RSP,
+                  0,
+                  makeTaskValueSync(result.player.taskValues),
+                );
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: 0,
+                  tbItem: [[...pack.item, 1]],
+                });
+                logger.info("ib_shop.cosmetic_pack.bought", {
+                  peer,
+                  account: context.account,
+                  packId: pack.id,
+                  cost: pack.cost,
+                });
+              } catch (error) {
+                if (!(error instanceof IBShopError)) throw error;
+                sendRechargeCallback({
+                  Type: 1,
+                  Id: pack.id,
+                  Error: error.clientError,
+                });
+                logger.warn("ib_shop.cosmetic_pack.rejected", {
                   peer,
                   account: context.account,
                   packId: pack.id,

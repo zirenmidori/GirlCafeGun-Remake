@@ -85,6 +85,8 @@ const CLIENT_WRITES: readonly [string, number][] = [
 
 const SERVER_OWNED: readonly [string, number][] = [
   ["month-card end time", makeMonthCardTaskId()],
+  ["rename count (priced in Diamonds)", (1 << 16) | 14],
+  ["signature changes left", (1 << 16) | 29],
   ["main girl (set through LuaCall)", MAIN_GIRL_TASK_ID],
   ["headpat charge", HEADPAT_CHARGE_TASK_ID],
   ["headpat refill", HEADPAT_REFILL_TASK_ID],

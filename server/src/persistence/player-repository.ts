@@ -131,6 +131,12 @@ import {
   type CafeRuntimeHooks,
 } from "../game-data/cafe-runtime.js";
 export { CafeOperationError } from "../game-data/cafe-runtime.js";
+import {
+  COSMETIC_NEVER_EXPIRES,
+  cosmeticShopRow,
+  ownsCosmetic,
+  reconcileCosmeticShop,
+} from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import {
   FREE_GIFT_PACK_AWARD,
@@ -206,6 +212,7 @@ import {
   makeDailyMissionTaskId,
   makeDailyMissionTaskValue,
   markDailyMissionActiveAwardClaimed,
+  dailyMissionOperationalDate,
   reconcileDailyMissions,
   DAILY_MISSIONS,
   DAILY_MISSION_ACTIVE_POINT_MAX,
@@ -213,6 +220,19 @@ import {
   type DailyMissionState,
 } from "../game-data/daily-mission-data.js";
 import { AutoUseItemCatalog } from "../game-data/auto-use-item-data.js";
+import {
+  CARD_GENRE,
+  makeProfilePage,
+  ownedSlots,
+  parseSign,
+  parseSlots,
+  reconcileProfilePage,
+  renameDiamondCost,
+  RENAME_COUNT_TASK_ID,
+  SIGN_CHANGES_LEFT_TASK_ID,
+  WEAPON_GENRE,
+  type ProfilePageState,
+} from "../game-data/user-page-data.js";
 import {
   changeBackground,
   changeDecorate,
@@ -566,6 +586,8 @@ export interface Player {
   promise?: PromiseState;
   /** Card skin, list mark and chat bubble (look-data.ts). */
   profileLook?: ProfileLookState;
+  /** Signature and show slots of the profile page (user-page-data.ts). */
+  profilePage?: ProfilePageState;
 }
 
 export interface PersistedState {
@@ -814,6 +836,12 @@ export interface CostumePackResult {
   player: Player;
   updatedMoney: MoneyState[];
   updatedItems: InventoryEntryState[];
+  updatedTaskIds: number[];
+}
+
+export interface CosmeticPackResult {
+  player: Player;
+  updatedMoney: MoneyState[];
   updatedTaskIds: number[];
 }
 
@@ -1954,10 +1982,16 @@ function applyAutoUseAward(
     case "money":
       addMoney(player, effect.moneyId, count * effect.perItem, updatedMoneyIds);
       return true;
-    case "unlock-time":
-      for (const taskId of effect.taskIds)
-        player.taskValues[String(taskId)] = unixTime();
+    case "unlock-time": {
+      // A value in the future is a cosmetic bought for good (cosmetic-shop-data.ts):
+      // a later reward of the same item must not make it run out again.
+      const now = unixTime();
+      for (const taskId of effect.taskIds) {
+        const key = String(taskId);
+        if ((player.taskValues[key] ?? 0) <= now) player.taskValues[key] = now;
+      }
       return true;
+    }
     case "unlock-flag":
       for (const taskId of effect.taskIds) player.taskValues[String(taskId)] = 1;
       return true;
@@ -3823,6 +3857,12 @@ export class PlayerRepository {
         reconcileMaximumFightPower(player);
         reconcileGuideActionMissions(player);
         reconcileMainThemes(player.taskValues, unixTime());
+        reconcileCosmeticShop(player.taskValues, unixTime());
+        reconcileProfilePage(
+          player,
+          this.#defaults.name,
+          dailyMissionOperationalDate(now),
+        );
         this.#activities.reconcile(player);
         if (player.cafe.pets)
           new CafePetRuntime(
@@ -3879,6 +3919,11 @@ export class PlayerRepository {
       reconcileChapterStarTaskValues(player);
       reconcileMaximumFightPower(player);
       reconcileMainThemes(player.taskValues, registerTime);
+      reconcileProfilePage(
+        player,
+        this.#defaults.name,
+        dailyMissionOperationalDate(now),
+      );
       this.#activities.reconcile(player);
       reconcileHeadpatCharges(player.taskValues, now);
       state.players[safeAccount] = player;
@@ -4006,18 +4051,99 @@ export class PlayerRepository {
     });
   }
 
+  /**
+   * Renames and counts the rename in task (1, 14). From the second rename on
+   * it costs PlayerRename.txt Diamonds, free ones first (user-page-data.ts).
+   */
   async rename(account: string, name: string): Promise<Player> {
     if (name.length === 0) throw new Error("Player name must not be empty");
 
     let player: Player | undefined;
+    let cost = 0;
     await this.#store.update((state) => {
       player = state.players[account];
       if (!player) throw new Error(`Unknown player account: ${account}`);
+      const key = String(RENAME_COUNT_TASK_ID);
+      const count = Math.max(0, player.taskValues[key] ?? 0);
+      cost = renameDiamondCost(count + 1);
+      if (cost > 0) {
+        const wallet = [MONEY_DIAMOND, MONEY_PAY_DIAMOND].map((id) =>
+          player!.money.find((money) => money.id === id),
+        );
+        if (wallet.reduce((sum, money) => sum + (money?.count ?? 0), 0) < cost)
+          throw new Error(`Rename needs ${cost} Diamonds`);
+        let remaining = cost;
+        for (const money of wallet) {
+          if (!money || remaining === 0) continue;
+          const taken = Math.min(money.count, remaining);
+          money.count -= taken;
+          remaining -= taken;
+        }
+      }
       player.name = name;
+      player.taskValues[key] = count + 1;
     });
-    this.#logger.info("player.renamed", { account, name });
+    this.#logger.info("player.renamed", { account, name, cost });
     if (!player) throw new Error(`Failed to rename player: ${account}`);
     return structuredClone(player);
+  }
+
+  /**
+   * LuaCall 72: stores the signature and uses one of the day's changes
+   * (task 1/29). sign is null when the call holds no text; nothing changes.
+   */
+  async setProfileSign(
+    account: string,
+    parameters: unknown,
+  ): Promise<{ player: Player; sign: string | null }> {
+    const sign = parseSign(parameters);
+    let player: Player | undefined;
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      if (sign === null) return;
+      (player.profilePage ??= makeProfilePage()).sign = sign;
+      const key = String(SIGN_CHANGES_LEFT_TASK_ID);
+      player.taskValues[key] = Math.max(0, (player.taskValues[key] ?? 0) - 1);
+    });
+    if (!player) throw new Error(`Failed to set signature: ${account}`);
+    this.#logger.info("player.profile_sign", { account, length: sign?.length ?? null });
+    return { player: structuredClone(player), sign };
+  }
+
+  /** The three show slots (cards or weapons) as the profile page draws them. */
+  profileSlots(player: Player, kind: "cards" | "weapons"): number[] {
+    return ownedSlots(
+      player.profilePage?.[kind],
+      player.inventory,
+      kind === "cards" ? CARD_GENRE : WEAPON_GENRE,
+    );
+  }
+
+  /** LuaCall 74 / 78: stores the three show slots and returns them as drawn. */
+  async setProfileSlots(
+    account: string,
+    kind: "cards" | "weapons",
+    parameters: unknown,
+  ): Promise<{ player: Player; slots: number[] }> {
+    const requested = parseSlots(parameters);
+    const genre = kind === "cards" ? CARD_GENRE : WEAPON_GENRE;
+    let player: Player | undefined;
+    let slots: number[] = [0, 0, 0];
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      if (requested !== null)
+        (player.profilePage ??= makeProfilePage())[kind] = ownedSlots(
+          requested,
+          player.inventory,
+          genre,
+        );
+      slots = ownedSlots(player.profilePage?.[kind], player.inventory, genre);
+    });
+    if (!player) throw new Error(`Failed to set ${kind}: ${account}`);
+    this.#logger.info("player.profile_slots", { account, kind, slots });
+    return { player: structuredClone(player), slots };
   }
 
   async setMainGirl(
@@ -5458,6 +5584,58 @@ export class PlayerRepository {
       player: snapshot,
       updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedItems: snapshot.inventory.filter(({ guid }) => updatedItemGuids.has(guid)),
+      updatedTaskIds: [...updatedTaskIds],
+    };
+  }
+
+  /** Buys a profile cosmetic of the dress shop's third tab for Diamonds (cosmetic-shop-data.ts). */
+  async buyCosmeticPack(
+    account: string,
+    packId: number,
+    now = Date.now(),
+  ): Promise<CosmeticPackResult> {
+    const pack = cosmeticShopRow(packId);
+    if (!pack) throw new IBShopError("unknown_item");
+    let player: Player | undefined;
+    const updatedMoneyIds = new Set<number>();
+    const updatedTaskIds = new Set<number>();
+    await this.#store.update((state) => {
+      player = state.players[account];
+      if (!player) throw new Error(`Unknown player account: ${account}`);
+      const ibTaskId = makeIBShopTaskId(pack.id);
+      const ownerKey = String((pack.group << 16) | pack.cosmeticId);
+      // Owned as the client counts it: a bought one is owned for good, and a timed
+      // cosmetic from an old reward that has run out can be bought.
+      if (ownsCosmetic(pack, player.taskValues, Math.floor(now / 1000))) {
+        throw new IBShopError("limit_reached");
+      }
+      try {
+        deductShopMoney(player, MONEY_DIAMOND, pack.cost, updatedMoneyIds);
+      } catch (error) {
+        if (error instanceof ShopError) throw new IBShopError("insufficient_diamonds");
+        throw error;
+      }
+      const before = { ...player.taskValues };
+      player.taskValues[String(ibTaskId)] = 1;
+      player.taskValues[ownerKey] =
+        pack.type === 2
+          ? COSMETIC_NEVER_EXPIRES - pack.limitTime
+          : Math.floor(now / 1000);
+      incrementDailyMissionProgress(player, 108, 1, now);
+      for (const [key, value] of Object.entries(player.taskValues)) {
+        if (before[key] !== value) updatedTaskIds.add(Number(key));
+      }
+    });
+    if (!player) throw new Error(`Failed to buy cosmetic pack: ${account}`);
+    const snapshot = structuredClone(player);
+    this.#logger.info("player.ib_shop.cosmetic_pack_bought", {
+      account,
+      packId: pack.id,
+      cost: pack.cost,
+    });
+    return {
+      player: snapshot,
+      updatedMoney: snapshot.money.filter(({ id }) => updatedMoneyIds.has(id)),
       updatedTaskIds: [...updatedTaskIds],
     };
   }
