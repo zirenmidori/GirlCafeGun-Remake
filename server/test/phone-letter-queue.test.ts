@@ -227,3 +227,23 @@ it("does not let an unclaimed but finished letter hold the queue at login", asyn
     await close();
   }
 });
+
+it("waits only for the claim of a girl's last letter, not of an older one", async () => {
+  const { players, store, close } = await open();
+  try {
+    await store.update((state) => {
+      const player = state.players[account]!;
+      player.levels = [];
+      // 74 finished but never claimed (the client was closed in its closing lines), 81 claimed.
+      player.phone.letters = [
+        letter(74, fullReplies(74)),
+        letter(81, fullReplies(81), true),
+      ];
+      player.phone.queuedLetterTopicIds = [76];
+    });
+    const sync = await players.syncPhoneEvents(account, undefined, now);
+    expect(ofGirl(sync.letters, 4)).toEqual([76]);
+  } finally {
+    await close();
+  }
+});

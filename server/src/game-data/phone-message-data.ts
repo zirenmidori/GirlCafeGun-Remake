@@ -124,9 +124,19 @@ export function isPhoneLetterOpen(letter: PhoneLetterState): boolean {
 // sends the award claim (nCmd 7) then, after the per-girl reply timer has stopped.
 // LetterInfoNew.txt names one column 插队触发 ("queue-jump trigger"), so the official
 // server held letters in a queue too [INFER: its server code is not available].
-function holdsNextLetter(letter: PhoneLetterState, acceptUnclaimed: boolean): boolean {
-  if (!getPhoneLetterDefinition(letter.topicId)) return false;
-  return isPhoneLetterOpen(letter) || (!acceptUnclaimed && !letter.awardClaimed);
+// Only the girl's last letter can still have closing lines playing, so only its claim counts.
+function busyGirls(phone: PhoneState, acceptUnclaimed: boolean): Set<number> {
+  const last = new Map<number, PhoneLetterState>();
+  const busy = new Set<number>();
+  for (const letter of phone.letters) {
+    if (!getPhoneLetterDefinition(letter.topicId)) continue;
+    last.set(letter.initiator, letter);
+    if (isPhoneLetterOpen(letter)) busy.add(letter.initiator);
+  }
+  if (!acceptUnclaimed)
+    for (const [initiator, letter] of last)
+      if (!letter.awardClaimed) busy.add(initiator);
+  return busy;
 }
 
 export interface PhoneLetterQueueOptions {
@@ -162,11 +172,7 @@ export function reconcilePhoneLetterQueue(
     present.add(topicId);
   }
 
-  const busy = new Set(
-    phone.letters
-      .filter((letter) => holdsNextLetter(letter, acceptUnclaimed))
-      .map(({ initiator }) => initiator),
-  );
+  const busy = busyGirls(phone, acceptUnclaimed);
   const added: PhoneLetterState[] = [];
   for (const topicId of queue) {
     const definition = getPhoneLetterDefinition(topicId)!;
