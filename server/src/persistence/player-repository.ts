@@ -6286,10 +6286,14 @@ export class PlayerRepository {
               candidate.count > 0 &&
               isCharacterCard(candidate),
           );
+          // A card entry is one card whatever its count says: the Awaken tab
+          // shows the copy total on its first card slot by raising that
+          // entry's count (UI_CardMain:UpdateSkillItem, card[3] = card[3] + 1)
+          // and sends it as is, so four copies arrive as [2, guid, 4] plus
+          // three [2, guid, 1]. The C# build ignored the count too.
           if (
             !donor ||
             donor.guid === guid ||
-            material.count !== 1 ||
             donors.has(donor.guid) ||
             donor.particular === 17
           ) {
