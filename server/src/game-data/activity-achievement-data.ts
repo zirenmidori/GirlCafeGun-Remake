@@ -338,8 +338,13 @@ export interface ActivityAchievementPlayer extends ActivityPlayerState {
   level: number;
   registerTime: number;
   levels: readonly { id: number; star: number }[];
-  girls: readonly { level: number }[];
-  inventory: readonly { genre: number; enhanceLevel: number; breakLevel: number }[];
+  girls: readonly { girlId: number; level: number }[];
+  inventory: readonly {
+    genre: number;
+    detail: number;
+    enhanceLevel: number;
+    breakLevel: number;
+  }[];
   eightDaySignUp: { cumulativeDays: number };
   cafe?: {
     level?: number;
@@ -392,7 +397,12 @@ export function playerAchievementSources(
  * - 71 weapons at level N [weapons, level]
  * - 75 cafe comfort [comfort], from sources.cafeComfort
  * - 79 cafe level [level]
+ * - 83 highest card level of one girl [level, girl]
  * - 85 girls at affection level N [girls, level]
+ * - 135 affection level of one girl [level, girl]
+ *
+ * Types 83 and 135 follow the GCG2-Offline C# build (EventMissionProgress.Derive,
+ * MissionFeature.DerivedProgress); a card's detail is its girl id.
  */
 export function derivedAchievementProgress(
   player: ActivityAchievementPlayer,
@@ -443,9 +453,20 @@ export function derivedAchievementProgress(
       return sources.cafeComfort ? sources.cafeComfort() : null;
     case 79:
       return player.cafe?.level ?? 1;
+    case 83:
+      if (second === undefined) return null;
+      return Math.max(
+        0,
+        ...player.inventory
+          .filter(({ genre, detail }) => genre === CARD_GENRE && detail === second)
+          .map(({ enhanceLevel }) => enhanceLevel),
+      );
     case 85:
       if (second === undefined) return null;
       return player.girls.filter(({ level }) => level >= second).length;
+    case 135:
+      if (second === undefined) return null;
+      return player.girls.find(({ girlId }) => girlId === second)?.level ?? 0;
     default:
       return null;
   }
@@ -471,13 +492,20 @@ export function projectAchievementProgress(
   return next;
 }
 
-/** Projects progress for the achievements of every page the client shows now. */
+/**
+ * Projects progress for the achievement panel (task group 6) and for the
+ * achievements of every event page the client shows now. The panel reads
+ * only the stored task values, so a value never written stays at 0 there.
+ */
 export function reconcileActivityAchievements(
   player: ActivityAchievementPlayer,
   catalog: ActivityAchievementCatalog,
   now: number,
   sources: AchievementSources = {},
 ): void {
+  for (const config of catalog.achievements(ACHIEVEMENT_TASK_GROUP)) {
+    projectAchievementProgress(player, config, sources);
+  }
   for (const activityId of catalog.shownActivityIds(now, player.registerTime)) {
     for (const achievementId of catalog.activityAchievementIds(activityId)) {
       const config = catalog.achievement(
@@ -535,8 +563,9 @@ export function countedAchievementIncrement(
 }
 
 /**
- * Adds one event to the counted achievements of every page the client shows
- * now. A page that opens later starts from zero, as an event does.
+ * Adds one event to the counted achievements of the achievement panel and of
+ * every event page the client shows now. A page that opens later starts from
+ * zero, as an event does.
  */
 export function countActivityAchievements(
   player: ActivityAchievementPlayer,
@@ -544,6 +573,9 @@ export function countActivityAchievements(
   event: DomainEvent,
   now: number,
 ): void {
+  for (const config of catalog.achievements(ACHIEVEMENT_TASK_GROUP)) {
+    addAchievementCount(player, config, countedAchievementIncrement(config, event));
+  }
   const counted = new Set<number>();
   for (const activityId of catalog.shownActivityIds(now, player.registerTime)) {
     for (const achievementId of catalog.activityAchievementIds(activityId)) {
@@ -554,17 +586,24 @@ export function countActivityAchievements(
         achievementId,
       );
       if (!config) continue;
-      const increment = countedAchievementIncrement(config, event);
-      if (!(increment > 0) || !Number.isSafeInteger(increment)) continue;
-      const taskId = String(makeAchievementTaskId(config.group, config.id));
-      const current = player.taskValues[taskId] ?? 0;
-      const next = makeAchievementTaskValue(
-        achievementProgress(current) + increment,
-        hasClaimedAchievement(current),
-      );
-      if (next !== current) player.taskValues[taskId] = next;
+      addAchievementCount(player, config, countedAchievementIncrement(config, event));
     }
   }
+}
+
+function addAchievementCount(
+  player: ActivityAchievementPlayer,
+  config: AchievementConfig,
+  increment: number,
+): void {
+  if (!(increment > 0) || !Number.isSafeInteger(increment)) return;
+  const taskId = String(makeAchievementTaskId(config.group, config.id));
+  const current = player.taskValues[taskId] ?? 0;
+  const next = makeAchievementTaskValue(
+    achievementProgress(current) + increment,
+    hasClaimedAchievement(current),
+  );
+  if (next !== current) player.taskValues[taskId] = next;
 }
 
 export const activityAchievementActivity: ActivityHandler<ActivityAchievementPlayer> = {

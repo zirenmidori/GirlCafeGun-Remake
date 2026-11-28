@@ -156,12 +156,16 @@ describe("activity achievement progress", () => {
     const player = makePlayer({
       level: 15,
       levels: [{ id: (1 << 16) | (6 << 8) | 1, star: (2 << 3) | 0b111 }],
-      girls: [{ level: 12 }, { level: 10 }, { level: 3 }],
+      girls: [
+        { girlId: 1, level: 12 },
+        { girlId: 2, level: 10 },
+        { girlId: 3, level: 3 },
+      ],
       inventory: [
-        { genre: 1, enhanceLevel: 40, breakLevel: 1 },
-        { genre: 1, enhanceLevel: 5, breakLevel: 0 },
-        { genre: 2, enhanceLevel: 20, breakLevel: 0 },
-        { genre: 2, enhanceLevel: 9, breakLevel: 0 },
+        { genre: 1, detail: 1, enhanceLevel: 40, breakLevel: 1 },
+        { genre: 1, detail: 1, enhanceLevel: 5, breakLevel: 0 },
+        { genre: 2, detail: 1, enhanceLevel: 20, breakLevel: 0 },
+        { genre: 2, detail: 1, enhanceLevel: 9, breakLevel: 0 },
       ],
       eightDaySignUp: { cumulativeDays: 3 },
     });
@@ -260,7 +264,7 @@ describe("activity achievement progress", () => {
   it("never lowers stored progress and keeps the claim mark", () => {
     const taskId = String(makeAchievementTaskId(ACTIVITY_ACHIEVEMENT_TASK_GROUP, 45));
     const player = makePlayer({
-      girls: [{ level: 4 }],
+      girls: [{ girlId: 1, level: 4 }],
       taskValues: { [taskId]: makeAchievementTaskValue(9, true) },
     });
     projectAchievementProgress(player, other(45));
@@ -356,8 +360,14 @@ describe("counted event page achievements", () => {
     expect(task(55)).toBe(makeAchievementTaskValue(2, false));
     expect(task(56)).toBe(makeAchievementTaskValue(22, true));
     expect(task(57)).toBe(makeAchievementTaskValue(2, false));
-    // Only gift achievements moved.
-    expect(Object.keys(player.taskValues)).toHaveLength(3);
+    // Only gift achievements moved: three on the event pages, the rest on the panel.
+    const moved = Object.keys(player.taskValues).map(Number);
+    expect(
+      moved.filter((id) => id >>> 16 === ACTIVITY_ACHIEVEMENT_TASK_GROUP),
+    ).toHaveLength(3);
+    for (const id of moved.filter((key) => key >>> 16 === ACHIEVEMENT_TASK_GROUP)) {
+      expect(catalog.achievement(ACHIEVEMENT_TASK_GROUP, id & 0xffff)?.type).toBe(18);
+    }
   });
 
   it("counts every furniture piece bought (type 137)", () => {
@@ -383,5 +393,86 @@ describe("counted event page achievements", () => {
     expect(
       derivedAchievementProgress(makePlayer({ cafe: { level: 3 } }), other(95)),
     ).toBe(3);
+  });
+});
+
+describe("achievement panel progress (task group 6)", () => {
+  const panel = (id: number) => {
+    const config = catalog.achievement(ACHIEVEMENT_TASK_GROUP, id);
+    if (!config) throw new Error(`Missing Achievement ${id}`);
+    return config;
+  };
+  const task = (player: ActivityAchievementPlayer, id: number): number | undefined =>
+    player.taskValues[String(makeAchievementTaskId(ACHIEVEMENT_TASK_GROUP, id))];
+
+  it("projects the commander level into the panel at reconcile (type 1)", () => {
+    // Achievement 1 "Reach Commander Lv.5": a level 31 save showed 0/5 because
+    // nothing ever wrote task (6, 1).
+    expect(panel(1).type).toBe(1);
+    const player = makePlayer({ level: 31 });
+    activityAchievementActivity.reconcile?.(player, { now, emit() {} });
+    expect(task(player, 1)).toBe(makeAchievementTaskValue(31, false));
+    expect(achievementProgress(task(player, 1) ?? 0)).toBeGreaterThanOrEqual(
+      requiredAchievementCount(panel(1)),
+    );
+  });
+
+  it("keeps the panel claim mark and never lowers panel progress", () => {
+    const key = String(makeAchievementTaskId(ACHIEVEMENT_TASK_GROUP, 1));
+    const player = makePlayer({
+      level: 6,
+      taskValues: { [key]: makeAchievementTaskValue(40, true) },
+    });
+    reconcileActivityAchievements(player, catalog, now);
+    expect(player.taskValues[key]).toBe(makeAchievementTaskValue(40, true));
+  });
+
+  it("derives one girl's affection level (type 135)", () => {
+    const rococo = panel(2200); // [50, 1]
+    expect(rococo.type).toBe(135);
+    const player = makePlayer({
+      girls: [
+        { girlId: 1, level: 50 },
+        { girlId: 2, level: 20 },
+      ],
+    });
+    expect(derivedAchievementProgress(player, rococo)).toBe(50);
+    expect(derivedAchievementProgress(player, panel(2201))).toBe(20); // girl 2
+    expect(derivedAchievementProgress(player, panel(2202))).toBe(0); // girl 3 missing
+    reconcileActivityAchievements(player, catalog, now);
+    expect(achievementProgress(task(player, 2200) ?? 0)).toBe(
+      requiredAchievementCount(rococo),
+    );
+  });
+
+  it("derives the best card level of one girl (type 83)", () => {
+    const irene = panel(1000); // [15, 7]
+    expect(irene.type).toBe(83);
+    const player = makePlayer({
+      inventory: [
+        { genre: 1, detail: 7, enhanceLevel: 18, breakLevel: 0 },
+        { genre: 1, detail: 7, enhanceLevel: 9, breakLevel: 0 },
+        { genre: 1, detail: 3, enhanceLevel: 60, breakLevel: 0 },
+        { genre: 2, detail: 7, enhanceLevel: 70, breakLevel: 0 },
+      ],
+    });
+    expect(derivedAchievementProgress(player, irene)).toBe(18);
+    expect(derivedAchievementProgress(makePlayer(), irene)).toBe(0);
+  });
+
+  it("counts panel counters from events (type 18 gifts)", () => {
+    const gifts = catalog
+      .achievements(ACHIEVEMENT_TASK_GROUP)
+      .filter(({ type }) => type === 18);
+    expect(gifts.length).toBeGreaterThan(0);
+    const player = makePlayer();
+    activityAchievementActivity.onEvent?.(
+      player,
+      { type: "girl.gift_sent", girlId: 7, count: 5 },
+      { now, emit() {} },
+    );
+    for (const config of gifts) {
+      expect(achievementProgress(task(player, config.id) ?? 0)).toBe(5);
+    }
   });
 });
