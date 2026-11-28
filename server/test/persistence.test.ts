@@ -93,7 +93,7 @@ it("persists player and task changes atomically", async () => {
         [1, 2, 3, 4, 5].map((id) => [String((87 << 16) | id), player.registerTime]),
       ),
       // Profile page: head frame 1 is the default frame, and the day's
-      // signature changes (profile-page-data.ts).
+      // signature changes (user-page-data.ts).
       [String((11 << 16) | 1)]: player.registerTime,
       [String((1 << 16) | 29)]: 5,
     });

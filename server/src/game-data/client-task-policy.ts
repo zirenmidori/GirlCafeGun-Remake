@@ -1,9 +1,6 @@
 import { MONTH_CARD_TASK_GROUP, MONTH_CARD_TASK_ID } from "./ib-shop-data.js";
 import { DAILY_SIGN_UP_TASK_GROUP } from "./daily-sign-up-data.js";
-import {
-  RENAME_COUNT_TASK_ID,
-  SIGN_CHANGES_LEFT_TASK_ID,
-} from "./profile-page-data.js";
+import { RENAME_COUNT_TASK_ID, SIGN_CHANGES_LEFT_TASK_ID } from "./user-page-data.js";
 
 /**
  * Task values the client may write with TASK_CHANGE_REQ (1027).
@@ -35,7 +32,7 @@ const CLIENT_GROUPS: ReadonlyMap<number, (taskId: number) => boolean> = new Map(
   // PlayerLogic 15 and 37, ClubCommon 35, 43, 550, 553, MusicActivityLogic 3301,
   // NormalActivityConfig.NewFlagBase 1000 + id. Id 36 is the month-card end time;
   // 14 (rename count, priced in Diamonds) and 29 (signature changes left) are
-  // the server's (profile-page-data.ts): the client only reads them.
+  // the server's (user-page-data.ts): the client only reads them.
   [
     MONTH_CARD_TASK_GROUP,
     (taskId: number) =>

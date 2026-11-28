@@ -226,7 +226,7 @@ import {
   SIGN_CHANGES_LEFT_TASK_ID,
   WEAPON_GENRE,
   type ProfilePageState,
-} from "../game-data/profile-page-data.js";
+} from "../game-data/user-page-data.js";
 import {
   changeBackground,
   changeDecorate,
@@ -580,7 +580,7 @@ export interface Player {
   promise?: PromiseState;
   /** Card skin, list mark and chat bubble (look-data.ts). */
   profileLook?: ProfileLookState;
-  /** Signature and show slots of the profile page (profile-page-data.ts). */
+  /** Signature and show slots of the profile page (user-page-data.ts). */
   profilePage?: ProfilePageState;
 }
 
@@ -4034,7 +4034,7 @@ export class PlayerRepository {
 
   /**
    * Renames and counts the rename in task (1, 14). From the second rename on
-   * it costs PlayerRename.txt Diamonds, free ones first (profile-page-data.ts).
+   * it costs PlayerRename.txt Diamonds, free ones first (user-page-data.ts).
    */
   async rename(account: string, name: string): Promise<Player> {
     if (name.length === 0) throw new Error("Player name must not be empty");

@@ -22,7 +22,7 @@ import {
   RENAME_COUNT_TASK_ID,
   SIGN_CHANGES_LEFT_TASK_ID,
   SIGN_CHANGES_PER_DAY,
-} from "../src/game-data/profile-page-data.js";
+} from "../src/game-data/user-page-data.js";
 import type { Logger } from "../src/logger.js";
 import { JsonStore } from "../src/persistence/json-store.js";
 import {
@@ -117,7 +117,7 @@ describe("profile page data", () => {
 });
 
 const account = "profile-wire:local-test";
-const scratchRoot = path.resolve(import.meta.dirname, "../../tools/profile-fix");
+const scratchRoot = path.resolve(import.meta.dirname, "../../tools/user-page-fix");
 const silent: Logger = {
   debug() {},
   info() {},

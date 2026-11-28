@@ -20,7 +20,7 @@ import {
   LUA_COMMAND_SET_EXHIBITION_ITEM,
   LUA_COMMAND_SET_EXHIBITION_WEAPON,
   LUA_COMMAND_SET_SIGN,
-} from "../game-data/profile-page-data.js";
+} from "../game-data/user-page-data.js";
 import { dailySignUpOperationalDate } from "../game-data/daily-sign-up-data.js";
 import { getMomentDefinition } from "../game-data/moments-data.js";
 import { dailyPullMailAwards, type MailAction } from "../game-data/mail-data.js";
@@ -3361,7 +3361,7 @@ export function createGatewayServer({
           return;
         }
         if (isProfilePageCommand(luaCommand)) {
-          // profile-page-data.ts: every reply is a bare array.
+          // user-page-data.ts: every reply is a bare array.
           let player = context.player ?? (await players.getOrCreate(context.account));
           let tbParam: unknown[];
           if (luaCommand === LUA_COMMAND_GET_SIGN) {
