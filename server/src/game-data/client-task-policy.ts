@@ -1,5 +1,9 @@
 import { MONTH_CARD_TASK_GROUP, MONTH_CARD_TASK_ID } from "./ib-shop-data.js";
 import { DAILY_SIGN_UP_TASK_GROUP } from "./daily-sign-up-data.js";
+import {
+  RENAME_COUNT_TASK_ID,
+  SIGN_CHANGES_LEFT_TASK_ID,
+} from "./profile-page-data.js";
 
 /**
  * Task values the client may write with TASK_CHANGE_REQ (1027).
@@ -29,8 +33,16 @@ const anyTask = (): boolean => true;
 
 const CLIENT_GROUPS: ReadonlyMap<number, (taskId: number) => boolean> = new Map([
   // PlayerLogic 15 and 37, ClubCommon 35, 43, 550, 553, MusicActivityLogic 3301,
-  // NormalActivityConfig.NewFlagBase 1000 + id. Id 36 is the month-card end time.
-  [MONTH_CARD_TASK_GROUP, (taskId: number) => taskId !== MONTH_CARD_TASK_ID],
+  // NormalActivityConfig.NewFlagBase 1000 + id. Id 36 is the month-card end time;
+  // 14 (rename count, priced in Diamonds) and 29 (signature changes left) are
+  // the server's (profile-page-data.ts): the client only reads them.
+  [
+    MONTH_CARD_TASK_GROUP,
+    (taskId: number) =>
+      taskId !== MONTH_CARD_TASK_ID &&
+      taskId !== (RENAME_COUNT_TASK_ID & 0xffff) &&
+      taskId !== (SIGN_CHANGES_LEFT_TASK_ID & 0xffff),
+  ],
   // Girl state (3) and linked girls (90): only the two offsets above. Offsets
   // 3, 9, 11, 12, 16, 100+, 300+, 400+ and 500+ are the server's.
   [3, isGirlClientOffset],

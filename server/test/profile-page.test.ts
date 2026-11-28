@@ -71,7 +71,9 @@ describe("profile page data", () => {
       { guid: 12, genre: 1, count: 0 },
     ];
     expect(parseSlots({ sCmd: 74, tbParam: [21117, 0, 0] })).toEqual([21117, 0, 0]);
-    expect(parseSlots({ 2: 11 })).toEqual([11, 0, 0]);
+    // A Lua table with a hole keeps its positions.
+    expect(parseSlots({ 2: 11 })).toEqual([0, 11, 0]);
+    expect(parseSlots({ 1: 10, 3: 11 })).toEqual([10, 0, 11]);
     expect(parseSlots({ sCmd: 74 })).toBeNull();
     expect(ownedSlots([0, 11, 10], inventory, 1)).toEqual([0, 11, 10]);
     expect(ownedSlots([10, 10, 20], inventory, 1)).toEqual([10, 0, 0]);

@@ -85,16 +85,20 @@ export function renameDiamondCost(renameNumber: number): number {
   return RENAME_DIAMONDS[Math.min(renameNumber, RENAME_DIAMONDS.length) - 1]!;
 }
 
-/** Lua sends {a, b} as [a, b] or as {"1": a, "2": b}. */
+/**
+ * Lua sends {a, b} as [a, b] or as {"1": a, "2": b}; key n is position n
+ * (a missing key leaves its position empty).
+ */
 function luaArray(value: unknown): unknown[] | null {
   if (Array.isArray(value)) return value;
   if (typeof value !== "object" || value === null) return null;
-  const entries = Object.entries(value as Record<string, unknown>)
-    .filter(([key]) => /^\d+$/.test(key))
-    .map(([key, entry]) => [Number(key), entry] as const)
-    .sort(([a], [b]) => a - b);
-  if (entries.length === 0) return null;
-  return entries.map(([, entry]) => entry);
+  const result: unknown[] = [];
+  for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
+    const position = Number(key);
+    if (/^\d+$/.test(key) && position >= 1 && position <= EXHIBITION_SLOTS)
+      result[position - 1] = entry;
+  }
+  return result.length === 0 ? null : Array.from(result);
 }
 
 /** The tbParam of a LuaCall, whether parameters is {sCmd, tbParam} or tbParam. */
