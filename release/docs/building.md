@@ -55,7 +55,9 @@ indexes. English narrative punctuation is normalized after selector language
 entries are added, preserving the translation keys and control markup.
 `patch_text_fixes.py` then gives English text to the 37 values that the text
 table holds as spreadsheet errors (`#N/A`, `#VALUE!`): the emote guide and
-screen, the emote items, one cat-ears item and one anniversary tower line.
+screen, the emote items, one cat-ears item and one anniversary tower line. It
+also gives their own English to two story lines that hold the English of the
+line next to them (`main.nstory03_4117`, `main.nstory09after036`).
 
 Generate and host the complete data packs, set their actual HTTPS direct URLs in
 the full manifest, then sign its exact bytes with `release/tools/release_crypto.py`.

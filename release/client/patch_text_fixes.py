@@ -1,4 +1,4 @@
-"""Give English text to the values that the English text table holds as spreadsheet errors.
+"""Give English text to the values that the English text table holds as spreadsheet errors or copied lines.
 
 The official English table ships `#N/A` for the 36 keys of the emote feature (its guide, its
 screen, the emote items, one cat-ears item) and `#VALUE!` for one anniversary tower line, so
@@ -6,7 +6,12 @@ the game prints those literals. No official English exists for them: the last of
 package that has the keys holds Chinese. The text below is translated from that Chinese, with
 the names and terms the table already uses (No.7, Emote, Eksistere, Soshi, "X - Y" item names).
 
-Only values change, only for the keys listed, and only when the old value is an error literal.
+Two story lines hold the English of the line next to them, so the same sentence shows twice
+while the Chinese of the two lines differs (COPIED_LINES). The official EN 1.0.9 table has the
+same copies. Their text below is translated from the Chinese of the Remake APK's zh_CN table.
+
+Only values change, only for the keys listed, and only when the old value is the known wrong
+value: an error literal, or the copied line.
 """
 import copy
 import struct
@@ -54,14 +59,30 @@ for _id, _name in EMOTES.items():
     FIXES['item.emoji%d.desc' % _id] = EMOTE_DESC
 assert len(FIXES) == 37
 
+# key -> (the line it was copied from, the copied English, the English of its own Chinese)
+COPIED_LINES = {
+    # Chapter 3-4, Grainne: 那么，感谢店长的帮助，这样我也能放心追上我们的部队了。
+    'main.nstory03_4117': ('main.nstory03_4116', "It's a really... special title.",
+                           'Well then, thank you for your help, Manager. Now I can catch up with our unit without worry.'),
+    # Chapter 9 after-story, Eksistere answers "Am I... actually dead...?": 嗯……
+    'main.nstory09after036': ('main.nstory09after037', 'Ha... haha... What magnificent technology, R.o.S.E.',
+                              'Yes...'),
+}
+
 
 def fix(key, text):
-    """The value to ship for a key: the fix when the table holds an error literal, else the text as is."""
-    new = FIXES.get(key)
-    if new is None or text == new:
+    """The value to ship for a key: the fix when the table holds the known wrong value, else the text as is."""
+    if key in FIXES:
+        new, wrong, what = FIXES[key], ERROR_LITERALS, 'an error literal'
+    elif key in COPIED_LINES:
+        _, copied, new = COPIED_LINES[key]
+        wrong, what = (copied,), 'the copied line %r' % copied
+    else:
         return text
-    if text not in ERROR_LITERALS:
-        raise ValueError('Text fix for %s: the table holds %r, not an error literal' % (key, text))
+    if text == new:
+        return text
+    if text not in wrong:
+        raise ValueError('Text fix for %s: the table holds %r, not %s' % (key, text, what))
     return new
 
 
@@ -72,7 +93,8 @@ def build_language(source):
     before = table['value']
     assert len(before['keys']) == len(before['values'])
     assert len(set(before['keys'])) == len(before['keys'])
-    missing = sorted(set(FIXES) - set(before['keys']))
+    named = set(FIXES) | set(COPIED_LINES) | {neighbour for neighbour, _, _ in COPIED_LINES.values()}
+    missing = sorted(named - set(before['keys']))
     if missing:
         raise ValueError('Text fixes name keys that the table lacks: ' + ', '.join(missing))
     value = copy.deepcopy(before)
@@ -85,6 +107,9 @@ def build_language(source):
     assert value['keys'] == before['keys']
     left = sorted(k for k, v in zip(value['keys'], value['values']) if v in ERROR_LITERALS)
     assert not left, left
+    shown = dict(zip(value['keys'], value['values']))
+    same = sorted(k for k, (neighbour, _, _) in COPIED_LINES.items() if shown[k] == shown[neighbour])
+    assert not same, same
     # Compact the changed dictionary, retaining every other serialized object.
     offset, objects = w.serialized_objects(raw)
     target = table['object']['path_id']
@@ -115,11 +140,14 @@ def build_language(source):
     return result, {
         'localeIdentityUnchanged': 'zh_CN',
         'translationKeysUnchanged': True,
-        'errorLiteralValuesReplaced': len(changed_keys),
+        'errorLiteralValuesReplaced': sum(1 for k in changed_keys if k in FIXES),
+        'copiedLinesReplaced': sum(1 for k in changed_keys if k in COPIED_LINES),
         'changedKeys': changed_keys,
         'errorLiteralValuesLeft': 0,
+        'copiedLinesLeft': 0,
         'otherLanguageObjectsByteExact': True,
         'nativeDictionaryRoundtripExact': True,
-        'source': 'translated from the Chinese of the official EN 1.0.9 package; no official English exists',
+        'source': 'error literals: translated from the Chinese of the official EN 1.0.9 package; copied lines: '
+                  'translated from the zh_CN table of the release APK; no official English exists for either',
         'runtimeRenderingVerified': False,
     }
