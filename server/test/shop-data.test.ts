@@ -243,6 +243,7 @@ it("adds nextrefreshtime to the tbParam only when it is set", () => {
     isOpen: true,
     refreshCount: 0,
     goodsList: [],
+    beginTime: 0,
     endTime: 0,
   };
   expect(
