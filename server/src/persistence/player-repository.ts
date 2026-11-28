@@ -331,6 +331,8 @@ import {
   isPhoneLetterComplete,
   makePhoneReplyId,
   phoneLetterAffection,
+  queueSurplusOpenLetters,
+  reconcilePhoneLetterQueue,
   reconcilePhoneLetters,
 } from "../game-data/phone-message-data.js";
 import {
@@ -501,6 +503,8 @@ export interface PhoneState {
   letterTitles?: Record<string, string>;
   deletedLetterTopicIds?: number[];
   completedDeletedLetterTopicIds?: number[];
+  /** Letters whose trigger is met, in trigger order, waiting until their girl has no letter in progress. */
+  queuedLetterTopicIds?: number[];
   storyPaths?: string[];
   moments?: MomentsState;
 }
@@ -1094,7 +1098,12 @@ function makeInitialPhoneState(): PhoneState {
   return { letters: [] };
 }
 
-function reconcilePlayerPhoneEvents(player: Player, now: number, storyPath?: string) {
+function reconcilePlayerPhoneEvents(
+  player: Player,
+  now: number,
+  storyPath?: string,
+  atLogin = false,
+) {
   const letterEvents = loadPhoneEvents("letter");
   const momentEvents = loadPhoneEvents("bbs");
   const phone = player.phone;
@@ -1115,7 +1124,7 @@ function reconcilePlayerPhoneEvents(player: Player, now: number, storyPath?: str
     }
   }
 
-  const letters = reconcilePhoneLetters(
+  const { added: letters, queued: queuedLetters } = reconcilePhoneLetterQueue(
     phone,
     eligiblePhoneTopics(
       letterEvents,
@@ -1129,9 +1138,11 @@ function reconcilePlayerPhoneEvents(player: Player, now: number, storyPath?: str
       new Set([
         ...phone.letters.map(({ topicId }) => topicId),
         ...(phone.deletedLetterTopicIds ?? []),
+        ...(phone.queuedLetterTopicIds ?? []),
       ]),
     ),
     now,
+    { acceptUnclaimed: atLogin },
   );
   const currentMoments = phone.moments?.topics ?? [];
   const moments = reconcileMoments(
@@ -1149,7 +1160,7 @@ function reconcilePlayerPhoneEvents(player: Player, now: number, storyPath?: str
     ),
     now,
   );
-  return { letters, moments, recordedStory };
+  return { letters, queuedLetters, moments, recordedStory };
 }
 
 function makeInitialGachaState(): GachaState {
@@ -3912,6 +3923,7 @@ export class PlayerRepository {
     if (
       !pending.recordedStory &&
       !pending.letters.length &&
+      !pending.queuedLetters.length &&
       !pending.moments.newPosts.length &&
       !pending.moments.newPublishableIds.length
     ) {
@@ -3947,7 +3959,8 @@ export class PlayerRepository {
       reconcileGuideActionMissions(player);
       reconcileMainThemes(player.taskValues, Math.floor(now / 1000));
       this.#activities.reconcile(player, now);
-      reconcilePlayerPhoneEvents(player, now);
+      queueSurplusOpenLetters(player.phone);
+      reconcilePlayerPhoneEvents(player, now, undefined, true);
       player.lastLoginAt = new Date(now).toISOString();
     });
     if (!player) throw new Error(`Failed to mark player login: ${account}`);

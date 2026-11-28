@@ -23,6 +23,21 @@ topic 10001。
 
 未知 topic 或命令只记录日志。运行记录中 `nCmd=7` 仍未实现。
 
+### 私信投递队列
+
+客户端只能回复一个联系人的最后一个话题（`UI_Phone.lua` `CheckCanReply` 读取
+`tbTopicIndex[#tbTopicIndex]`）。同一少女的新私信若在旧私信未回复时到达，旧私信将永远无法回复。
+因此：
+
+- 满足触发条件的私信先进入 `phone.queuedLetterTopicIds`（按触发顺序保存）；
+- 少女没有进行中的私信时，才投递她队列中最早的一封；进行中 = 尚未回复完，或已回复完但客户端
+  尚未领取奖励（`nCmd=7` 在最后一句显示后发送，此时客户端的回复计时器已停止）；登录时不等领奖；
+- 旧存档中同一少女有多封未回复私信时，登录会保留一封（优先已部分回复的，否则最早的），其余未动过的放回队列最前；
+- `PHONE_MSG_NTF` 中同一联系人的话题按投递顺序排列，未回复的放在最后。
+
+`LetterInfoNew.txt` 有一列名为“插队触发”，说明官方服务端也使用了队列（推断，无官方服务端代码）。
+该列在整段 ID 上都为 1（如 199–219、2001–2050），含义不明，未使用。
+
 ## 引导与互动
 
 - `LuaCall sCmd=102` 校验并回显 GuideID、StepID、GuideType、Timming；
@@ -33,6 +48,7 @@ topic 10001。
 ## 验证
 
 - `test/phone-message-data.test.ts` 验证回复 ID；
+- `test/phone-letter-queue.test.ts` 验证每位少女一次只有一封进行中的私信、按触发顺序在领奖后投递、旧存档修复和话题顺序；
 - `test/guide-data.test.ts` 验证引导回执字段；
 - `test/protocol.test.ts` 验证手机通知编码；
 - `test/persistence.test.ts` 覆盖新增、回复、删除和重载。
