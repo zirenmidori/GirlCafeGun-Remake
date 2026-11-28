@@ -362,9 +362,9 @@ describe("counted event page achievements", () => {
     expect(task(57)).toBe(makeAchievementTaskValue(2, false));
     // Only gift achievements moved: three on the event pages, the rest on the panel.
     const moved = Object.keys(player.taskValues).map(Number);
-    expect(moved.filter((id) => id >>> 16 === ACTIVITY_ACHIEVEMENT_TASK_GROUP)).toHaveLength(
-      3,
-    );
+    expect(
+      moved.filter((id) => id >>> 16 === ACTIVITY_ACHIEVEMENT_TASK_GROUP),
+    ).toHaveLength(3);
     for (const id of moved.filter((key) => key >>> 16 === ACHIEVEMENT_TASK_GROUP)) {
       expect(catalog.achievement(ACHIEVEMENT_TASK_GROUP, id & 0xffff)?.type).toBe(18);
     }
