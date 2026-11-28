@@ -153,12 +153,27 @@ describe("buyCosmeticPack", () => {
     ).rejects.toMatchObject({ reason: "limit_reached", clientError: 20075 });
     expect(diamonds(store)).toEqual([380, 0]);
     await store.update((state) => {
-      state.players.tester!.taskValues[ownerKey(FRAME_TIMED_2)] = 5;
+      // A timed frame from a reward, still running.
+      state.players.tester!.taskValues[ownerKey(FRAME_TIMED_2)] = Math.floor(
+        NOW / 1000,
+      );
     });
     await expect(
       repository.buyCosmeticPack("tester", FRAME_TIMED_2.id, NOW),
     ).rejects.toMatchObject({ reason: "limit_reached" });
     expect(diamonds(store)).toEqual([380, 0]);
+  });
+
+  it("sells a timed cosmetic whose old reward has run out", async () => {
+    const { repository, store } = await fixture();
+    await setMoney(store, 500, 0);
+    await store.update((state) => {
+      state.players.tester!.taskValues[ownerKey(FRAME_TIMED_2)] = 5;
+    });
+    await repository.buyCosmeticPack("tester", FRAME_TIMED_2.id, NOW);
+    expect(store.snapshot().players.tester!.taskValues[ownerKey(FRAME_TIMED_2)]).toBe(
+      COSMETIC_NEVER_EXPIRES - FRAME_TIMED_2.limitTime,
+    );
   });
 
   it("refuses without enough Diamonds and changes nothing", async () => {

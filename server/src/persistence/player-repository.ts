@@ -5491,7 +5491,13 @@ export class PlayerRepository {
       if ((player.taskValues[String(ibTaskId)] ?? 0) >= 1) {
         throw new IBShopError("limit_reached");
       }
-      if ((player.taskValues[ownerKey] ?? 0) > 0) {
+      // Owned as the client counts it (UI_SkinSelected/UI_HeadPortrait IsUnlock): a timed
+      // cosmetic from an old reward that has run out can be bought.
+      const owned = player.taskValues[ownerKey] ?? 0;
+      if (
+        owned > 0 &&
+        (pack.type !== 2 || owned + pack.limitTime > Math.floor(now / 1000))
+      ) {
         throw new IBShopError("limit_reached");
       }
       try {
