@@ -12,6 +12,7 @@ import {
   COSMETIC_NEVER_EXPIRES,
   COSMETIC_SHOP,
   cosmeticShopRow,
+  reconcileCosmeticShop,
 } from "../src/game-data/cosmetic-shop-data.js";
 import { AutoUseItemCatalog } from "../src/game-data/auto-use-item-data.js";
 import { makeIBShopTaskId } from "../src/game-data/ib-shop-data.js";
@@ -174,6 +175,58 @@ describe("buyCosmeticPack", () => {
     expect(store.snapshot().players.tester!.taskValues[ownerKey(FRAME_TIMED_2)]).toBe(
       COSMETIC_NEVER_EXPIRES - FRAME_TIMED_2.limitTime,
     );
+  });
+
+  it("keeps a bought timed cosmetic for good when a reward gives the same item later", async () => {
+    const { repository, store } = await fixture();
+    await setMoney(store, 500, 0);
+    await repository.buyCosmeticPack("tester", FRAME_TIMED.id, NOW);
+    await store.update((state) => {
+      const mail = (state.players.tester!.mail ??= {
+        lastDailyDate: null,
+        nextId: 9_002,
+        messages: [],
+      });
+      mail.messages.push({
+        id: 9_001,
+        operationalDate: "2026-11-28",
+        receivedAt: Math.floor(NOW / 1000),
+        read: false,
+        title: "reward",
+        sender: "test",
+        content: "",
+        attachments: [[...FRAME_TIMED.item, 1]],
+      });
+    });
+    const claimed = await repository.updateMailbox(
+      "tester",
+      { kind: "claim", ids: [9_001], autoDelete: false },
+      [],
+      NOW,
+    );
+    expect(claimed.acceptedIds).toEqual([9_001]);
+    expect(store.snapshot().players.tester!.taskValues[ownerKey(FRAME_TIMED)]).toBe(
+      COSMETIC_NEVER_EXPIRES - FRAME_TIMED.limitTime,
+    );
+  });
+
+  it("marks the shop rows of owned cosmetics sold out at login, and frees run-out rewards", () => {
+    const now = Math.floor(NOW / 1000);
+    const values: Record<string, number> = {
+      [ownerKey(CARD)]: 5, // a permanent card skin from a reward
+      [ownerKey(FRAME_TIMED)]: now, // a timed frame from a reward, still running
+      [ownerKey(FRAME_TIMED_2)]: 5, // a timed frame from a reward, run out
+      [ibKey(FRAME_TIMED_2)]: 1,
+    };
+    const changed = reconcileCosmeticShop(values, now);
+    expect(values[ibKey(CARD)]).toBe(1);
+    expect(values[ibKey(FRAME_TIMED)]).toBe(1);
+    expect(values[ibKey(FRAME_TIMED_2)]).toBe(0);
+    expect(changed.sort()).toEqual(
+      [CARD, FRAME_TIMED, FRAME_TIMED_2].map((row) => makeIBShopTaskId(row.id)).sort(),
+    );
+    expect(reconcileCosmeticShop(values, now)).toEqual([]);
+    expect(Object.keys(values)).toHaveLength(6);
   });
 
   it("refuses without enough Diamonds and changes nothing", async () => {

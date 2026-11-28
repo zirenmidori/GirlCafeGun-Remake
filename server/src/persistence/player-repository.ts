@@ -134,6 +134,8 @@ export { CafeOperationError } from "../game-data/cafe-runtime.js";
 import {
   COSMETIC_NEVER_EXPIRES,
   cosmeticShopRow,
+  ownsCosmetic,
+  reconcileCosmeticShop,
 } from "../game-data/cosmetic-shop-data.js";
 import { costumePack } from "../game-data/costume-shop-data.js";
 import {
@@ -1964,10 +1966,16 @@ function applyAutoUseAward(
     case "money":
       addMoney(player, effect.moneyId, count * effect.perItem, updatedMoneyIds);
       return true;
-    case "unlock-time":
-      for (const taskId of effect.taskIds)
-        player.taskValues[String(taskId)] = unixTime();
+    case "unlock-time": {
+      // A value in the future is a cosmetic bought for good (cosmetic-shop-data.ts):
+      // a later reward of the same item must not make it run out again.
+      const now = unixTime();
+      for (const taskId of effect.taskIds) {
+        const key = String(taskId);
+        if ((player.taskValues[key] ?? 0) <= now) player.taskValues[key] = now;
+      }
       return true;
+    }
     case "unlock-flag":
       for (const taskId of effect.taskIds) player.taskValues[String(taskId)] = 1;
       return true;
@@ -3833,6 +3841,7 @@ export class PlayerRepository {
         reconcileMaximumFightPower(player);
         reconcileGuideActionMissions(player);
         reconcileMainThemes(player.taskValues, unixTime());
+        reconcileCosmeticShop(player.taskValues, unixTime());
         this.#activities.reconcile(player);
         if (player.cafe.pets)
           new CafePetRuntime(
@@ -5488,16 +5497,9 @@ export class PlayerRepository {
       if (!player) throw new Error(`Unknown player account: ${account}`);
       const ibTaskId = makeIBShopTaskId(pack.id);
       const ownerKey = String((pack.group << 16) | pack.cosmeticId);
-      if ((player.taskValues[String(ibTaskId)] ?? 0) >= 1) {
-        throw new IBShopError("limit_reached");
-      }
-      // Owned as the client counts it (UI_SkinSelected/UI_HeadPortrait IsUnlock): a timed
+      // Owned as the client counts it: a bought one is owned for good, and a timed
       // cosmetic from an old reward that has run out can be bought.
-      const owned = player.taskValues[ownerKey] ?? 0;
-      if (
-        owned > 0 &&
-        (pack.type !== 2 || owned + pack.limitTime > Math.floor(now / 1000))
-      ) {
+      if (ownsCosmetic(pack, player.taskValues, Math.floor(now / 1000))) {
         throw new IBShopError("limit_reached");
       }
       try {

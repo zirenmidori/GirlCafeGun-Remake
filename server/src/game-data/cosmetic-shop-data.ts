@@ -21,6 +21,7 @@
  * `task value + LimitTime > now` (UI_HeadPortrait / UI_SkinSelected IsUnlock), so the server
  * stores `2147483647 - LimitTime` for it (valid until 2038) and the time of purchase for Type 1.
  */
+import { makeIBShopTaskId } from "./ib-shop-data.js";
 
 export interface CosmeticShopConfig {
   /** PurchaseIBShop Id; the client sends it as DoRecharge Type 1 Id. */
@@ -233,4 +234,36 @@ const BY_ID = new Map(COSMETIC_SHOP.map((row) => [row.id, row]));
 
 export function cosmeticShopRow(id: number): CosmeticShopConfig | undefined {
   return BY_ID.get(id);
+}
+
+/** Owned as the client counts it (UI_HeadPortrait / UI_SkinSelected IsUnlock). */
+export function ownsCosmetic(
+  row: CosmeticShopConfig,
+  taskValues: Record<string, number>,
+  nowSeconds: number,
+): boolean {
+  const value = taskValues[String((row.group << 16) | row.cosmeticId)] ?? 0;
+  return value > 0 && (row.type !== 2 || value + row.limitTime > nowSeconds);
+}
+
+/**
+ * The client marks a row Sold Out only from its purchase counter (IBLogic:GetIBTask,
+ * makeIBShopTaskId). At login the counter follows ownership: 1 for a cosmetic the player
+ * owns (bought, or from a reward), 0 again once a reward's timed cosmetic has run out, so
+ * the shop never offers what the server would refuse. Returns the changed task ids.
+ */
+export function reconcileCosmeticShop(
+  taskValues: Record<string, number>,
+  nowSeconds: number,
+): number[] {
+  const changed: number[] = [];
+  for (const row of COSMETIC_SHOP) {
+    const key = String(makeIBShopTaskId(row.id));
+    const owned = ownsCosmetic(row, taskValues, nowSeconds);
+    if (owned && (taskValues[key] ?? 0) < 1) taskValues[key] = 1;
+    else if (!owned && (taskValues[key] ?? 0) > 0) taskValues[key] = 0;
+    else continue;
+    changed.push(Number(key));
+  }
+  return changed;
 }
